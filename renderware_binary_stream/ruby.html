@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RenderWare binary stream: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Game Data Files</li>
+        <li class="active">RenderWare binary stream</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RenderWare binary stream:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Games based on RenderWare engine (Grand Theft Auto 3D series)
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RenderWare binary stream
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="RenderWare binary stream parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="RenderWare binary stream parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="RenderWare binary stream parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RenderWare binary stream parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RenderWare binary stream parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="RenderWare binary stream parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="RenderWare binary stream parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="RenderWare binary stream parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RenderWare binary stream parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RenderWare binary stream parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="RenderWare binary stream parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = RenderwareBinaryStream.from_file("path/to/local/file.RenderWare binary stream")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = RenderwareBinaryStream.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.code # => get code</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse RenderWare binary stream
+            
+        </h2>
+
+        
+
+        <h3>renderware_binary_stream.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/renderware_binary_stream.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# @see https://www.gtamodding.com/wiki/RenderWare_binary_stream_file Source
+class RenderwareBinaryStream &lt; Kaitai::Struct::Struct
+
+  SECTIONS = {
+    1 =&gt; :sections_struct,
+    2 =&gt; :sections_string,
+    3 =&gt; :sections_extension,
+    5 =&gt; :sections_camera,
+    6 =&gt; :sections_texture,
+    7 =&gt; :sections_material,
+    8 =&gt; :sections_material_list,
+    9 =&gt; :sections_atomic_section,
+    10 =&gt; :sections_plane_section,
+    11 =&gt; :sections_world,
+    12 =&gt; :sections_spline,
+    13 =&gt; :sections_matrix,
+    14 =&gt; :sections_frame_list,
+    15 =&gt; :sections_geometry,
+    16 =&gt; :sections_clump,
+    18 =&gt; :sections_light,
+    19 =&gt; :sections_unicode_string,
+    20 =&gt; :sections_atomic,
+    21 =&gt; :sections_texture_native,
+    22 =&gt; :sections_texture_dictionary,
+    23 =&gt; :sections_animation_database,
+    24 =&gt; :sections_image,
+    25 =&gt; :sections_skin_animation,
+    26 =&gt; :sections_geometry_list,
+    27 =&gt; :sections_anim_animation,
+    28 =&gt; :sections_team,
+    29 =&gt; :sections_crowd,
+    30 =&gt; :sections_delta_morph_animation,
+    31 =&gt; :sections_right_to_render,
+    32 =&gt; :sections_multitexture_effect_native,
+    33 =&gt; :sections_multitexture_effect_dictionary,
+    34 =&gt; :sections_team_dictionary,
+    35 =&gt; :sections_platform_independent_texture_dictionary,
+    36 =&gt; :sections_table_of_contents,
+    37 =&gt; :sections_particle_standard_global_data,
+    38 =&gt; :sections_altpipe,
+    39 =&gt; :sections_platform_independent_peds,
+    40 =&gt; :sections_patch_mesh,
+    41 =&gt; :sections_chunk_group_start,
+    42 =&gt; :sections_chunk_group_end,
+    43 =&gt; :sections_uv_animation_dictionary,
+    44 =&gt; :sections_coll_tree,
+    257 =&gt; :sections_metrics_plg,
+    258 =&gt; :sections_spline_plg,
+    259 =&gt; :sections_stereo_plg,
+    260 =&gt; :sections_vrml_plg,
+    261 =&gt; :sections_morph_plg,
+    262 =&gt; :sections_pvs_plg,
+    263 =&gt; :sections_memory_leak_plg,
+    264 =&gt; :sections_animation_plg,
+    265 =&gt; :sections_gloss_plg,
+    266 =&gt; :sections_logo_plg,
+    267 =&gt; :sections_memory_info_plg,
+    268 =&gt; :sections_random_plg,
+    269 =&gt; :sections_png_image_plg,
+    270 =&gt; :sections_bone_plg,
+    271 =&gt; :sections_vrml_anim_plg,
+    272 =&gt; :sections_sky_mipmap_val,
+    273 =&gt; :sections_mrm_plg,
+    274 =&gt; :sections_lod_atomic_plg,
+    275 =&gt; :sections_me_plg,
+    276 =&gt; :sections_lightmap_plg,
+    277 =&gt; :sections_refine_plg,
+    278 =&gt; :sections_skin_plg,
+    279 =&gt; :sections_label_plg,
+    280 =&gt; :sections_particles_plg,
+    281 =&gt; :sections_geomtx_plg,
+    282 =&gt; :sections_synth_core_plg,
+    283 =&gt; :sections_stqpp_plg,
+    284 =&gt; :sections_part_pp_plg,
+    285 =&gt; :sections_collision_plg,
+    286 =&gt; :sections_hanim_plg,
+    287 =&gt; :sections_user_data_plg,
+    288 =&gt; :sections_material_effects_plg,
+    289 =&gt; :sections_particle_system_plg,
+    290 =&gt; :sections_delta_morph_plg,
+    291 =&gt; :sections_patch_plg,
+    292 =&gt; :sections_team_plg,
+    293 =&gt; :sections_crowd_pp_plg,
+    294 =&gt; :sections_mip_split_plg,
+    295 =&gt; :sections_anisotropy_plg,
+    297 =&gt; :sections_gcn_material_plg,
+    298 =&gt; :sections_geometric_pvs_plg,
+    299 =&gt; :sections_xbox_material_plg,
+    300 =&gt; :sections_multi_texture_plg,
+    301 =&gt; :sections_chain_plg,
+    302 =&gt; :sections_toon_plg,
+    303 =&gt; :sections_ptank_plg,
+    304 =&gt; :sections_particle_standard_plg,
+    305 =&gt; :sections_pds_plg,
+    306 =&gt; :sections_prtadv_plg,
+    307 =&gt; :sections_normal_map_plg,
+    308 =&gt; :sections_adc_plg,
+    309 =&gt; :sections_uv_animation_plg,
+    384 =&gt; :sections_character_set_plg,
+    385 =&gt; :sections_nohs_world_plg,
+    386 =&gt; :sections_import_util_plg,
+    387 =&gt; :sections_slerp_plg,
+    388 =&gt; :sections_optim_plg,
+    389 =&gt; :sections_tl_world_plg,
+    390 =&gt; :sections_database_plg,
+    391 =&gt; :sections_raytrace_plg,
+    392 =&gt; :sections_ray_plg,
+    393 =&gt; :sections_library_plg,
+    400 =&gt; :sections_plg_2d,
+    401 =&gt; :sections_tile_render_plg,
+    402 =&gt; :sections_jpeg_image_plg,
+    403 =&gt; :sections_tga_image_plg,
+    404 =&gt; :sections_gif_image_plg,
+    405 =&gt; :sections_quat_plg,
+    406 =&gt; :sections_spline_pvs_plg,
+    407 =&gt; :sections_mipmap_plg,
+    408 =&gt; :sections_mipmapk_plg,
+    409 =&gt; :sections_font_2d,
+    410 =&gt; :sections_intersection_plg,
+    411 =&gt; :sections_tiff_image_plg,
+    412 =&gt; :sections_pick_plg,
+    413 =&gt; :sections_bmp_image_plg,
+    414 =&gt; :sections_ras_image_plg,
+    415 =&gt; :sections_skin_fx_plg,
+    416 =&gt; :sections_vcat_plg,
+    417 =&gt; :sections_path_2d,
+    418 =&gt; :sections_brush_2d,
+    419 =&gt; :sections_object_2d,
+    420 =&gt; :sections_shape_2d,
+    421 =&gt; :sections_scene_2d,
+    422 =&gt; :sections_pick_region_2d,
+    423 =&gt; :sections_object_string_2d,
+    424 =&gt; :sections_animation_plg_2d,
+    425 =&gt; :sections_animation_2d,
+    432 =&gt; :sections_keyframe_2d,
+    433 =&gt; :sections_maestro_2d,
+    434 =&gt; :sections_barycentric,
+    435 =&gt; :sections_platform_independent_texture_dictionary_tk,
+    436 =&gt; :sections_toc_tk,
+    437 =&gt; :sections_tpl_tk,
+    438 =&gt; :sections_altpipe_tk,
+    439 =&gt; :sections_animation_tk,
+    440 =&gt; :sections_skin_split_tookit,
+    441 =&gt; :sections_compressed_key_tk,
+    442 =&gt; :sections_geometry_conditioning_plg,
+    443 =&gt; :sections_wing_plg,
+    444 =&gt; :sections_generic_pipeline_tk,
+    445 =&gt; :sections_lightmap_conversion_tk,
+    446 =&gt; :sections_filesystem_plg,
+    447 =&gt; :sections_dictionary_tk,
+    448 =&gt; :sections_uv_animation_linear,
+    449 =&gt; :sections_uv_animation_parameter,
+    1294 =&gt; :sections_bin_mesh_plg,
+    1296 =&gt; :sections_native_data_plg,
+    61982 =&gt; :sections_zmodeler_lock,
+    39055872 =&gt; :sections_atomic_visibility_distance,
+    39055873 =&gt; :sections_clump_visibility_distance,
+    39055874 =&gt; :sections_frame_visibility_distance,
+    39056115 =&gt; :sections_pipeline_set,
+    39056116 =&gt; :sections_unused_5,
+    39056117 =&gt; :sections_texdictionary_link,
+    39056118 =&gt; :sections_specular_material,
+    39056119 =&gt; :sections_unused_8,
+    39056120 =&gt; :sections_effect_2d,
+    39056121 =&gt; :sections_extra_vert_colour,
+    39056122 =&gt; :sections_collision_model,
+    39056123 =&gt; :sections_gta_hanim,
+    39056124 =&gt; :sections_reflection_material,
+    39056125 =&gt; :sections_breakable,
+    39056126 =&gt; :sections_frame,
+    39056127 =&gt; :sections_unused_16,
+  }
+  I__SECTIONS = SECTIONS.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @code = Kaitai::Struct::Stream::resolve_enum(SECTIONS, @_io.read_u4le)
+    @size = @_io.read_u4le
+    @library_id_stamp = @_io.read_u4le
+    case code
+    when :sections_texture_dictionary
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    when :sections_geometry_list
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    when :sections_clump
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    when :sections_texture_native
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    when :sections_frame_list
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    when :sections_geometry
+      @_raw_body = @_io.read_bytes(size)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(io, self, @_root)
+    else
+      @body = @_io.read_bytes(size)
+    end
+    self
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/RpClump Source
+  class StructClump &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_atomics = @_io.read_u4le
+      if _parent.version &gt;= 208896
+        @num_lights = @_io.read_u4le
+      end
+      if _parent.version &gt;= 208896
+        @num_cameras = @_io.read_u4le
+      end
+      self
+    end
+    attr_reader :num_atomics
+    attr_reader :num_lights
+    attr_reader :num_cameras
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/RpGeometry Source
+  class StructGeometry &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @format = @_io.read_u4le
+      @num_triangles = @_io.read_u4le
+      @num_vertices = @_io.read_u4le
+      @num_morph_targets = @_io.read_u4le
+      if _parent.version &lt; 212992
+        @surf_prop = SurfaceProperties.new(@_io, self, @_root)
+      end
+      if !(is_native)
+        @geometry = GeometryNonNative.new(@_io, self, @_root)
+      end
+      @morph_targets = Array.new(num_morph_targets)
+      (num_morph_targets).times { |i|
+        @morph_targets[i] = MorphTarget.new(@_io, self, @_root)
+      }
+      self
+    end
+    def is_textured
+      return @is_textured unless @is_textured.nil?
+      @is_textured = (format &amp; 4) != 0
+      @is_textured
+    end
+    def is_prelit
+      return @is_prelit unless @is_prelit.nil?
+      @is_prelit = (format &amp; 8) != 0
+      @is_prelit
+    end
+    def is_textured2
+      return @is_textured2 unless @is_textured2.nil?
+      @is_textured2 = (format &amp; 128) != 0
+      @is_textured2
+    end
+    def is_native
+      return @is_native unless @is_native.nil?
+      @is_native = (format &amp; 16777216) != 0
+      @is_native
+    end
+    attr_reader :format
+    attr_reader :num_triangles
+    attr_reader :num_vertices
+    attr_reader :num_morph_targets
+    attr_reader :surf_prop
+    attr_reader :geometry
+    attr_reader :morph_targets
+  end
+  class GeometryNonNative &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      if _parent.is_prelit
+        @prelit_colors = Array.new(_parent.num_vertices)
+        (_parent.num_vertices).times { |i|
+          @prelit_colors[i] = Rgba.new(@_io, self, @_root)
+        }
+      end
+      if  ((_parent.is_textured) || (_parent.is_textured2)) 
+        @tex_coords = Array.new(_parent.num_vertices)
+        (_parent.num_vertices).times { |i|
+          @tex_coords[i] = TexCoord.new(@_io, self, @_root)
+        }
+      end
+      @triangles = Array.new(_parent.num_triangles)
+      (_parent.num_triangles).times { |i|
+        @triangles[i] = Triangle.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :prelit_colors
+    attr_reader :tex_coords
+    attr_reader :triangles
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure Source
+  class StructGeometryList &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_geometries = @_io.read_u4le
+      self
+    end
+    attr_reader :num_geometries
+  end
+  class Rgba &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @r = @_io.read_u1
+      @g = @_io.read_u1
+      @b = @_io.read_u1
+      @a = @_io.read_u1
+      self
+    end
+    attr_reader :r
+    attr_reader :g
+    attr_reader :b
+    attr_reader :a
+  end
+  class Sphere &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
+      @radius = @_io.read_f4le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+    attr_reader :radius
+  end
+  class MorphTarget &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_sphere = Sphere.new(@_io, self, @_root)
+      @has_vertices = @_io.read_u4le
+      @has_normals = @_io.read_u4le
+      if has_vertices != 0
+        @vertices = Array.new(_parent.num_vertices)
+        (_parent.num_vertices).times { |i|
+          @vertices[i] = Vector3d.new(@_io, self, @_root)
+        }
+      end
+      if has_normals != 0
+        @normals = Array.new(_parent.num_vertices)
+        (_parent.num_vertices).times { |i|
+          @normals[i] = Vector3d.new(@_io, self, @_root)
+        }
+      end
+      self
+    end
+    attr_reader :bounding_sphere
+    attr_reader :has_vertices
+    attr_reader :has_normals
+    attr_reader :vertices
+    attr_reader :normals
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/RpGeometry Source
+  class SurfaceProperties &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @ambient = @_io.read_f4le
+      @specular = @_io.read_f4le
+      @diffuse = @_io.read_f4le
+      self
+    end
+    attr_reader :ambient
+    attr_reader :specular
+    attr_reader :diffuse
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class StructFrameList &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_frames = @_io.read_u4le
+      @frames = Array.new(num_frames)
+      (num_frames).times { |i|
+        @frames[i] = Frame.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :num_frames
+    attr_reader :frames
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Matrix &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = Array.new(3)
+      (3).times { |i|
+        @entries[i] = Vector3d.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :entries
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Vector3d &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+  end
+
+  ##
+  # Typical structure used by many data types in RenderWare binary
+  # stream. Substream contains a list of binary stream entries,
+  # first entry always has type &quot;struct&quot; and carries some specific
+  # binary data it in, determined by the type of parent. All other
+  # entries, beside the first one, are normal, self-describing
+  # records.
+  class ListWithHeader &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @code = @_io.ensure_fixed_contents([1, 0, 0, 0].pack(&#39;C*&#39;))
+      @header_size = @_io.read_u4le
+      @library_id_stamp = @_io.read_u4le
+      case _parent.code
+      when :sections_texture_dictionary
+        @_raw_header = @_io.read_bytes(header_size)
+        io = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructTextureDictionary.new(io, self, @_root)
+      when :sections_geometry_list
+        @_raw_header = @_io.read_bytes(header_size)
+        io = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructGeometryList.new(io, self, @_root)
+      when :sections_clump
+        @_raw_header = @_io.read_bytes(header_size)
+        io = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructClump.new(io, self, @_root)
+      when :sections_frame_list
+        @_raw_header = @_io.read_bytes(header_size)
+        io = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructFrameList.new(io, self, @_root)
+      when :sections_geometry
+        @_raw_header = @_io.read_bytes(header_size)
+        io = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructGeometry.new(io, self, @_root)
+      else
+        @header = @_io.read_bytes(header_size)
+      end
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries &lt;&lt; RenderwareBinaryStream.new(@_io)
+        i += 1
+      end
+      self
+    end
+    def version
+      return @version unless @version.nil?
+      @version = ((library_id_stamp &amp; 4294901760) != 0 ? ((((library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((library_id_stamp &gt;&gt; 16) &amp; 63)) : (library_id_stamp &lt;&lt; 8))
+      @version
+    end
+    attr_reader :code
+    attr_reader :header_size
+    attr_reader :library_id_stamp
+    attr_reader :header
+    attr_reader :entries
+    attr_reader :_raw_header
+  end
+  class Triangle &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @vertex2 = @_io.read_u2le
+      @vertex1 = @_io.read_u2le
+      @material_id = @_io.read_u2le
+      @vertex3 = @_io.read_u2le
+      self
+    end
+    attr_reader :vertex2
+    attr_reader :vertex1
+    attr_reader :material_id
+    attr_reader :vertex3
+  end
+
+  ##
+  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Frame &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @rotation_matrix = Matrix.new(@_io, self, @_root)
+      @position = Vector3d.new(@_io, self, @_root)
+      @cur_frame_idx = @_io.read_s4le
+      @matrix_creation_flags = @_io.read_u4le
+      self
+    end
+    attr_reader :rotation_matrix
+    attr_reader :position
+    attr_reader :cur_frame_idx
+    attr_reader :matrix_creation_flags
+  end
+  class TexCoord &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @u = @_io.read_f4le
+      @v = @_io.read_f4le
+      self
+    end
+    attr_reader :u
+    attr_reader :v
+  end
+  class StructTextureDictionary &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_textures = @_io.read_u4le
+      self
+    end
+    attr_reader :num_textures
+  end
+  def version
+    return @version unless @version.nil?
+    @version = ((library_id_stamp &amp; 4294901760) != 0 ? ((((library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((library_id_stamp &gt;&gt; 16) &amp; 63)) : (library_id_stamp &lt;&lt; 8))
+    @version
+  end
+  attr_reader :code
+  attr_reader :size
+  attr_reader :library_id_stamp
+  attr_reader :body
+  attr_reader :_raw_body
+end
+</code></pre>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
