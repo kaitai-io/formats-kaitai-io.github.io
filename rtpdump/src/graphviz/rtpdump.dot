@@ -1,0 +1,48 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__rtpdump {
+		label="Rtpdump";
+		graph[style=dotted];
+
+		rtpdump__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="file_header_pos">0</TD><TD PORT="file_header_size">...</TD><TD>HeaderT</TD><TD PORT="file_header_type">file_header</TD></TR>
+			<TR><TD PORT="packets_pos">...</TD><TD PORT="packets_size">...</TD><TD>PacketT</TD><TD PORT="packets_type">packets</TD></TR>
+			<TR><TD COLSPAN="4" PORT="packets__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header_t {
+			label="Rtpdump::HeaderT";
+			graph[style=dotted];
+
+			header_t__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="shebang_pos">0</TD><TD PORT="shebang_size">12</TD><TD>23 21 72 74 70 70 6C 61 79 31 2E 30</TD><TD PORT="shebang_type">shebang</TD></TR>
+				<TR><TD PORT="space_pos">12</TD><TD PORT="space_size">1</TD><TD>20</TD><TD PORT="space_type">space</TD></TR>
+				<TR><TD PORT="ip_pos">13</TD><TD PORT="ip_size">...</TD><TD>str(term=47, ascii)</TD><TD PORT="ip_type">ip</TD></TR>
+				<TR><TD PORT="port_pos">...</TD><TD PORT="port_size">...</TD><TD>str(term=10, ascii)</TD><TD PORT="port_type">port</TD></TR>
+				<TR><TD PORT="start_sec_pos">...</TD><TD PORT="start_sec_size">4</TD><TD>u4be</TD><TD PORT="start_sec_type">start_sec</TD></TR>
+				<TR><TD PORT="start_usec_pos">...</TD><TD PORT="start_usec_size">4</TD><TD>u4be</TD><TD PORT="start_usec_type">start_usec</TD></TR>
+				<TR><TD PORT="ip2_pos">...</TD><TD PORT="ip2_size">4</TD><TD>u4be</TD><TD PORT="ip2_type">ip2</TD></TR>
+				<TR><TD PORT="port2_pos">...</TD><TD PORT="port2_size">2</TD><TD>u2be</TD><TD PORT="port2_type">port2</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">2</TD><TD>u2be</TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__packet_t {
+			label="Rtpdump::PacketT";
+			graph[style=dotted];
+
+			packet_t__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="len_body_pos">2</TD><TD PORT="len_body_size">2</TD><TD>u2be</TD><TD PORT="len_body_type">len_body</TD></TR>
+				<TR><TD PORT="packet_usec_pos">4</TD><TD PORT="packet_usec_size">4</TD><TD>u4be</TD><TD PORT="packet_usec_type">packet_usec</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">len_body</TD><TD>RtpPacket</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+	}
+	rtpdump__seq:file_header_type -> header_t__seq [style=bold];
+	rtpdump__seq:packets_type -> packet_t__seq [style=bold];
+	packet_t__seq:len_body_type -> packet_t__seq:body_size [color="#404040"];
+	packet_t__seq:body_type -> rtp_packet__seq [style=bold];
+}
