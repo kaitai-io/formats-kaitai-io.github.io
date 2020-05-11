@@ -45,12 +45,42 @@ public class WindowsMinidump extends KaitaiStruct {
         MISC_INFO(15),
         MEMORY_INFO_LIST(16),
         THREAD_INFO_LIST(17),
-        HANDLE_OPERATION_LIST(18);
+        HANDLE_OPERATION_LIST(18),
+        TOKEN(19),
+        JAVA_SCRIPT_DATA(20),
+        SYSTEM_MEMORY_INFO(21),
+        PROCESS_VM_VOUNTERS(22),
+        IPT_TRACE(23),
+        THREAD_NAMES(24),
+        CE_NULL(32768),
+        CE_SYSTEM_INFO(32769),
+        CE_EXCEPTION(32770),
+        CE_MODULE_LIST(32771),
+        CE_PROCESS_LIST(32772),
+        CE_THREAD_LIST(32773),
+        CE_THREAD_CONTEXT_LIST(32774),
+        CE_THREAD_CALL_STACK_LIST(32775),
+        CE_MEMORY_VIRTUAL_LIST(32776),
+        CE_MEMORY_PHYSICAL_LIST(32777),
+        CE_BUCKET_PARAMETERS(32778),
+        CE_PROCESS_MODULE_MAP(32779),
+        CE_DIAGNOSIS_LIST(32780),
+        MD_CRASHPAD_INFO_STREAM(1129316353),
+        MD_RAW_BREAKPAD_INFO(1197932545),
+        MD_RAW_ASSERTION_INFO(1197932546),
+        MD_LINUX_CPU_INFO(1197932547),
+        MD_LINUX_PROC_STATUS(1197932548),
+        MD_LINUX_LSB_RELEASE(1197932549),
+        MD_LINUX_CMD_LINE(1197932550),
+        MD_LINUX_ENVIRON(1197932551),
+        MD_LINUX_AUXV(1197932552),
+        MD_LINUX_MAPS(1197932553),
+        MD_LINUX_DSO_DEBUG(1197932554);
 
         private final long id;
         StreamTypes(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, StreamTypes> byId = new HashMap<Long, StreamTypes>(19);
+        private static final Map<Long, StreamTypes> byId = new HashMap<Long, StreamTypes>(49);
         static {
             for (StreamTypes e : StreamTypes.values())
                 byId.put(e.id(), e);
