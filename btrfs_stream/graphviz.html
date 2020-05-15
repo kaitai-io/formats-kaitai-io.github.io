@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>btrfs_stream: GraphViz block diagram (.dot) source: Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">btrfs_stream</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>btrfs_stream:
+            
+            GraphViz block diagram (.dot) source
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
+administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and
+integral multi-device spanning in Linux file systems.
+Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by
+using the <code>btrfs send</code> command that can be replayed later by using <code>btrfs receive</code>, possibly on a
+different Btrfs file system. The <code>btrfs send</code> command creates a set of data modifications required
+for converting one subvolume into another.
+This spec can be used to disassemble the binary diff created by the <code>btrfs send</code> command.
+If you want a text representation you may want to checkout <code>btrfs receive --dump</code> instead.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Btrfs
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of btrfs_stream
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="btrfs_stream parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="btrfs_stream parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="graphviz.html" title="btrfs_stream parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="btrfs_stream parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="btrfs_stream parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="btrfs_stream parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="btrfs_stream parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="btrfs_stream parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="btrfs_stream parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="btrfs_stream parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            GraphViz block diagram source
+            
+        </h2>
+
+        
+
+        <h3>btrfs_stream.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/btrfs_stream.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="k">digraph</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">	</span><span class="na">rankdir</span><span class="p">=</span><span class="s">LR</span><span class="p">;</span><span class="w"></span>
+<span class="w">	</span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">plaintext</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__btrfs_stream</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">		</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">		</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">		</span><span class="nt">btrfs_stream__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;header_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;header_size&quot;</span><span class="p">&gt;</span><span class="nt">17</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">SendStreamHeader</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;header_type&quot;</span><span class="p">&gt;</span><span class="nt">header</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;commands_pos&quot;</span><span class="p">&gt;</span><span class="nt">17</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;commands_size&quot;</span><span class="p">&gt;</span><span class="nt">...</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">SendCommand</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;commands_type&quot;</span><span class="p">&gt;</span><span class="nt">commands</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">COLSPAN=&quot;4&quot;</span><span class="w"> </span><span class="nt">PORT=&quot;commands__repeat&quot;</span><span class="p">&gt;</span><span class="nt">repeat</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">end</span><span class="w"> </span><span class="nt">of</span><span class="w"> </span><span class="nt">stream</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">		</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">		</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__send_stream_header</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">			</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendStreamHeader&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">			</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">			</span><span class="nt">send_stream_header__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;magic_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;magic_size&quot;</span><span class="p">&gt;</span><span class="nt">13</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">62</span><span class="w"> </span><span class="nt">74</span><span class="w"> </span><span class="nt">72</span><span class="w"> </span><span class="nt">66</span><span class="w"> </span><span class="nt">73</span><span class="w"> </span><span class="nt">2D</span><span class="w"> </span><span class="nt">73</span><span class="w"> </span><span class="nt">74</span><span class="w"> </span><span class="nt">72</span><span class="w"> </span><span class="nt">65</span><span class="w"> </span><span class="nt">61</span><span class="w"> </span><span class="nt">6D</span><span class="w"> </span><span class="nt">00</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;magic_type&quot;</span><span class="p">&gt;</span><span class="nt">magic</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;version_pos&quot;</span><span class="p">&gt;</span><span class="nt">13</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;version_size&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">u4le</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;version_type&quot;</span><span class="p">&gt;</span><span class="nt">version</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">		</span><span class="p">}</span><span class="w"></span>
+<span class="w">		</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__send_command</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">			</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">			</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">			</span><span class="nt">send_command__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;len_data_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;len_data_size&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">u4le</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;len_data_type&quot;</span><span class="p">&gt;</span><span class="nt">len_data</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_pos&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_size&quot;</span><span class="p">&gt;</span><span class="nt">2</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">u2le→Command</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_type&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;checksum_pos&quot;</span><span class="p">&gt;</span><span class="nt">6</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;checksum_size&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;checksum_type&quot;</span><span class="p">&gt;</span><span class="nt">checksum</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;data_pos&quot;</span><span class="p">&gt;</span><span class="nt">10</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;data_size&quot;</span><span class="p">&gt;</span><span class="nt">len_data</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">Tlvs</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;data_type&quot;</span><span class="p">&gt;</span><span class="nt">data</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">			</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__tlv</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">				</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand::Tlv&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">				</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">				</span><span class="nt">tlv__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_size&quot;</span><span class="p">&gt;</span><span class="nt">2</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">u2le→Attribute</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;type_type&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;length_pos&quot;</span><span class="p">&gt;</span><span class="nt">2</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;length_size&quot;</span><span class="p">&gt;</span><span class="nt">2</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">u2le</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;length_type&quot;</span><span class="p">&gt;</span><span class="nt">length</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;value_pos&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;value_size&quot;</span><span class="p">&gt;</span><span class="nt">...</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">switch</span><span class="w"> </span><span class="nt">(type)</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;value_type&quot;</span><span class="p">&gt;</span><span class="nt">value</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="nt">tlv__seq_value_switch</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#F0F2E4&quot;</span><span class="p">&gt;</span><span class="nt">case</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#F0F2E4&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_otime</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case0&quot;</span><span class="p">&gt;</span><span class="nt">Timespec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_uuid</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case1&quot;</span><span class="p">&gt;</span><span class="nt">Uuid</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_clone_uuid</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case2&quot;</span><span class="p">&gt;</span><span class="nt">Uuid</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_atime</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case3&quot;</span><span class="p">&gt;</span><span class="nt">Timespec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_path_to</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case4&quot;</span><span class="p">&gt;</span><span class="nt">String</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_mtime</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case5&quot;</span><span class="p">&gt;</span><span class="nt">Timespec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_path_link</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case6&quot;</span><span class="p">&gt;</span><span class="nt">String</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_ctime</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case7&quot;</span><span class="p">&gt;</span><span class="nt">Timespec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_clone_path</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case8&quot;</span><span class="p">&gt;</span><span class="nt">String</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_xattr_name</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case9&quot;</span><span class="p">&gt;</span><span class="nt">String</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">	</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">:attribute_path</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;case10&quot;</span><span class="p">&gt;</span><span class="nt">String</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="p">}</span><span class="w"></span>
+<span class="w">			</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__uuid</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">				</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand::Uuid&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">				</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">				</span><span class="nt">uuid__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;uuid_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;uuid_size&quot;</span><span class="p">&gt;</span><span class="nt">16</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;uuid_type&quot;</span><span class="p">&gt;</span><span class="nt">uuid</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="p">}</span><span class="w"></span>
+<span class="w">			</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__tlvs</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">				</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand::Tlvs&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">				</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">				</span><span class="nt">tlvs__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;tlv_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;tlv_size&quot;</span><span class="p">&gt;</span><span class="nt">...</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">Tlv</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;tlv_type&quot;</span><span class="p">&gt;</span><span class="nt">tlv</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">COLSPAN=&quot;4&quot;</span><span class="w"> </span><span class="nt">PORT=&quot;tlv__repeat&quot;</span><span class="p">&gt;</span><span class="nt">repeat</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">end</span><span class="w"> </span><span class="nt">of</span><span class="w"> </span><span class="nt">stream</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="p">}</span><span class="w"></span>
+<span class="w">			</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__string</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">				</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand::String&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">				</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">				</span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;string_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;string_size&quot;</span><span class="p">&gt;</span><span class="nt">⇲</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">str(UTF-8)</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;string_type&quot;</span><span class="p">&gt;</span><span class="nt">string</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="p">}</span><span class="w"></span>
+<span class="w">			</span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster__timespec</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">				</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;BtrfsStream::SendCommand::Timespec&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">				</span><span class="k">graph</span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">];</span><span class="w"></span>
+
+<span class="w">				</span><span class="nt">timespec__seq</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=&lt;&lt;</span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">BORDER=&quot;0&quot;</span><span class="w"> </span><span class="nt">CELLBORDER=&quot;1&quot;</span><span class="w"> </span><span class="nt">CELLSPACING=&quot;0&quot;</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">pos</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">size</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">type</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">BGCOLOR=&quot;#E0FFE0&quot;</span><span class="p">&gt;</span><span class="nt">id</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_sec_pos&quot;</span><span class="p">&gt;</span><span class="nt">0</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_sec_size&quot;</span><span class="p">&gt;</span><span class="nt">8</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">s8le</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_sec_type&quot;</span><span class="p">&gt;</span><span class="nt">ts_sec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">					</span><span class="p">&lt;</span><span class="nt">TR</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_nsec_pos&quot;</span><span class="p">&gt;</span><span class="nt">8</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_nsec_size&quot;</span><span class="p">&gt;</span><span class="nt">4</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="p">&gt;</span><span class="nt">s4le</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">TD</span><span class="w"> </span><span class="nt">PORT=&quot;ts_nsec_type&quot;</span><span class="p">&gt;</span><span class="nt">ts_nsec</span><span class="p">&lt;</span><span class="nt">/TD</span><span class="p">&gt;&lt;</span><span class="nt">/TR</span><span class="p">&gt;</span><span class="w"></span>
+<span class="w">				</span><span class="p">&lt;</span><span class="nt">/TABLE</span><span class="p">&gt;&gt;];</span><span class="w"></span>
+<span class="w">			</span><span class="p">}</span><span class="w"></span>
+<span class="w">		</span><span class="p">}</span><span class="w"></span>
+<span class="w">	</span><span class="p">}</span><span class="w"></span>
+<span class="w">	</span><span class="nt">btrfs_stream__seq</span><span class="p">:</span><span class="nt">header_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">send_stream_header__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">btrfs_stream__seq</span><span class="p">:</span><span class="nt">commands_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">send_command__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">send_command__seq</span><span class="p">:</span><span class="nt">len_data_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">send_command__seq</span><span class="p">:</span><span class="nt">data_size</span><span class="w"> </span><span class="p">[</span><span class="na">color</span><span class="p">=</span><span class="s2">&quot;#404040&quot;</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">send_command__seq</span><span class="p">:</span><span class="nt">data_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">tlvs__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq</span><span class="p">:</span><span class="nt">value_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">tlv__seq_value_switch</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">timespec__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case1</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">uuid__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">uuid__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case3</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">timespec__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case4</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case5</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">timespec__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case6</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case7</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">timespec__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case8</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case9</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq_value_switch</span><span class="p">:</span><span class="nt">case10</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">string__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlv__seq</span><span class="p">:</span><span class="nt">type_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">tlv__seq</span><span class="p">:</span><span class="nt">value_type</span><span class="w"> </span><span class="p">[</span><span class="na">color</span><span class="p">=</span><span class="s2">&quot;#404040&quot;</span><span class="p">];</span><span class="w"></span>
+<span class="w">	</span><span class="nt">tlvs__seq</span><span class="p">:</span><span class="nt">tlv_type</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">tlv__seq</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">bold</span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

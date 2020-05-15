@@ -1,0 +1,118 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__btrfs_stream {
+		label="BtrfsStream";
+		graph[style=dotted];
+
+		btrfs_stream__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">17</TD><TD>SendStreamHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="commands_pos">17</TD><TD PORT="commands_size">...</TD><TD>SendCommand</TD><TD PORT="commands_type">commands</TD></TR>
+			<TR><TD COLSPAN="4" PORT="commands__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__send_stream_header {
+			label="BtrfsStream::SendStreamHeader";
+			graph[style=dotted];
+
+			send_stream_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">13</TD><TD>62 74 72 66 73 2D 73 74 72 65 61 6D 00</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">13</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__send_command {
+			label="BtrfsStream::SendCommand";
+			graph[style=dotted];
+
+			send_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">2</TD><TD>u2le→Command</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="checksum_pos">6</TD><TD PORT="checksum_size">4</TD><TD></TD><TD PORT="checksum_type">checksum</TD></TR>
+				<TR><TD PORT="data_pos">10</TD><TD PORT="data_size">len_data</TD><TD>Tlvs</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			subgraph cluster__tlv {
+				label="BtrfsStream::SendCommand::Tlv";
+				graph[style=dotted];
+
+				tlv__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2le→Attribute</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2le</TD><TD PORT="length_type">length</TD></TR>
+					<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">...</TD><TD>switch (type)</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+tlv__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:attribute_otime</TD><TD PORT="case0">Timespec</TD></TR>
+	<TR><TD>:attribute_uuid</TD><TD PORT="case1">Uuid</TD></TR>
+	<TR><TD>:attribute_clone_uuid</TD><TD PORT="case2">Uuid</TD></TR>
+	<TR><TD>:attribute_atime</TD><TD PORT="case3">Timespec</TD></TR>
+	<TR><TD>:attribute_path_to</TD><TD PORT="case4">String</TD></TR>
+	<TR><TD>:attribute_mtime</TD><TD PORT="case5">Timespec</TD></TR>
+	<TR><TD>:attribute_path_link</TD><TD PORT="case6">String</TD></TR>
+	<TR><TD>:attribute_ctime</TD><TD PORT="case7">Timespec</TD></TR>
+	<TR><TD>:attribute_clone_path</TD><TD PORT="case8">String</TD></TR>
+	<TR><TD>:attribute_xattr_name</TD><TD PORT="case9">String</TD></TR>
+	<TR><TD>:attribute_path</TD><TD PORT="case10">String</TD></TR>
+</TABLE>>];
+			}
+			subgraph cluster__uuid {
+				label="BtrfsStream::SendCommand::Uuid";
+				graph[style=dotted];
+
+				uuid__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="uuid_pos">0</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__tlvs {
+				label="BtrfsStream::SendCommand::Tlvs";
+				graph[style=dotted];
+
+				tlvs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="tlv_pos">0</TD><TD PORT="tlv_size">...</TD><TD>Tlv</TD><TD PORT="tlv_type">tlv</TD></TR>
+					<TR><TD COLSPAN="4" PORT="tlv__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__string {
+				label="BtrfsStream::SendCommand::String";
+				graph[style=dotted];
+
+				string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="string_pos">0</TD><TD PORT="string_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="string_type">string</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__timespec {
+				label="BtrfsStream::SendCommand::Timespec";
+				graph[style=dotted];
+
+				timespec__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="ts_sec_pos">0</TD><TD PORT="ts_sec_size">8</TD><TD>s8le</TD><TD PORT="ts_sec_type">ts_sec</TD></TR>
+					<TR><TD PORT="ts_nsec_pos">8</TD><TD PORT="ts_nsec_size">4</TD><TD>s4le</TD><TD PORT="ts_nsec_type">ts_nsec</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	btrfs_stream__seq:header_type -> send_stream_header__seq [style=bold];
+	btrfs_stream__seq:commands_type -> send_command__seq [style=bold];
+	send_command__seq:len_data_type -> send_command__seq:data_size [color="#404040"];
+	send_command__seq:data_type -> tlvs__seq [style=bold];
+	tlv__seq:value_type -> tlv__seq_value_switch [style=bold];
+	tlv__seq_value_switch:case0 -> timespec__seq [style=bold];
+	tlv__seq_value_switch:case1 -> uuid__seq [style=bold];
+	tlv__seq_value_switch:case2 -> uuid__seq [style=bold];
+	tlv__seq_value_switch:case3 -> timespec__seq [style=bold];
+	tlv__seq_value_switch:case4 -> string__seq [style=bold];
+	tlv__seq_value_switch:case5 -> timespec__seq [style=bold];
+	tlv__seq_value_switch:case6 -> string__seq [style=bold];
+	tlv__seq_value_switch:case7 -> timespec__seq [style=bold];
+	tlv__seq_value_switch:case8 -> string__seq [style=bold];
+	tlv__seq_value_switch:case9 -> string__seq [style=bold];
+	tlv__seq_value_switch:case10 -> string__seq [style=bold];
+	tlv__seq:type_type -> tlv__seq:value_type [color="#404040"];
+	tlvs__seq:tlv_type -> tlv__seq [style=bold];
+}

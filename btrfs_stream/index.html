@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>btrfs_stream format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">btrfs_stream</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>btrfs_stream:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
+administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and
+integral multi-device spanning in Linux file systems.
+Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by
+using the <code>btrfs send</code> command that can be replayed later by using <code>btrfs receive</code>, possibly on a
+different Btrfs file system. The <code>btrfs send</code> command creates a set of data modifications required
+for converting one subvolume into another.
+This spec can be used to disassemble the binary diff created by the <code>btrfs send</code> command.
+If you want a text representation you may want to checkout <code>btrfs receive --dump</code> instead.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Btrfs
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of btrfs_stream
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="btrfs_stream parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="btrfs_stream parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="btrfs_stream parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="btrfs_stream parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="btrfs_stream parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="btrfs_stream parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="btrfs_stream parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="btrfs_stream parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="btrfs_stream parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="btrfs_stream parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="btrfs_stream.svg">
+            <img class="diagram-img" src="btrfs_stream.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">btrfs_stream</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Btrfs</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy</span>
+  <span class="no">administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and</span>
+  <span class="no">integral multi-device spanning in Linux file systems.</span>
+  <span class="no">Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by</span>
+  <span class="no">using the `btrfs send` command that can be replayed later by using `btrfs receive`, possibly on a</span>
+  <span class="no">different Btrfs file system. The `btrfs send` command creates a set of data modifications required</span>
+  <span class="no">for converting one subvolume into another.</span>
+  <span class="no">This spec can be used to disassemble the binary diff created by the `btrfs send` command.</span>
+  <span class="no">If you want a text representation you may want to checkout `btrfs receive --dump` instead.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive</span>
+
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">send_stream_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commands</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">send_command</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">send_stream_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;btrfs-stream&#39;</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4le</span>
+  <span class="nt">send_command</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4le</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2le</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">command</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CRC32 checksum of a whole send command, including the header, with this attribute set to 0.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tlvs</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">tlvs</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tlv</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tlv</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">tlv</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attribute</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2le</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2le</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="c1">#&#39;attribute::unspec&#39;:</span>
+                <span class="s">&#39;attribute::uuid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
+                <span class="s">&#39;attribute::ctransid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="c1">#&#39;attribute:ino&#39;:</span>
+                <span class="s">&#39;attribute::size&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::mode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::uid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::gid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::rdev&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::ctime&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
+                <span class="s">&#39;attribute::mtime&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
+                <span class="s">&#39;attribute::atime&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
+                <span class="s">&#39;attribute::otime&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
+                <span class="s">&#39;attribute::xattr_name&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+                <span class="c1">#&#39;attribute::xattr_data&#39;:</span>
+                <span class="s">&#39;attribute::path&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+                <span class="s">&#39;attribute::path_to&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+                <span class="s">&#39;attribute::path_link&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+                <span class="s">&#39;attribute::file_offset&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="c1">#&#39;attribute::data&#39;:</span>
+                <span class="s">&#39;attribute::clone_uuid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
+                <span class="s">&#39;attribute::clone_ctransid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::clone_path&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+                <span class="s">&#39;attribute::clone_offset&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+                <span class="s">&#39;attribute::clone_len&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
+      <span class="nt">timespec</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_sec</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s8le</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_nsec</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4le</span>
+      <span class="nt">string</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+      <span class="nt">uuid</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+
+<span class="c1"># enum btrfs_send_cmd</span>
+<span class="c1"># https://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git/tree/send.h</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">command</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unspec</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subvol</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snapshot</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mkfile</span>
+    <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mkdir</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mknod</span>
+    <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mkfifo</span>
+    <span class="nt">0x07</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mksock</span>
+    <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symlink</span>
+    <span class="nt">0x09</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rename</span>
+    <span class="nt">0x0a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link</span>
+    <span class="nt">0x0b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unlink</span>
+    <span class="nt">0x0c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rmdir</span>
+    <span class="nt">0x0d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">set_xattr</span>
+    <span class="nt">0x0e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_xattr</span>
+    <span class="nt">0x0f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">write</span>
+    <span class="nt">0x10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone</span>
+    <span class="nt">0x11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">truncate</span>
+    <span class="nt">0x12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chmod</span>
+    <span class="nt">0x13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chown</span>
+    <span class="nt">0x14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utimes</span>
+    <span class="nt">0x15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_extent</span>
+  <span class="nt">attribute</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unspec</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ctransid</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ino</span>
+    <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mode</span>
+    <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uid</span>
+    <span class="nt">0x07</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gid</span>
+    <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rdev</span>
+    <span class="nt">0x09</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ctime</span>
+    <span class="nt">0x0a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mtime</span>
+    <span class="nt">0x0b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">atime</span>
+    <span class="nt">0x0c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">otime</span>
+    <span class="nt">0x0d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xattr_name</span>
+    <span class="nt">0x0e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xattr_data</span>
+    <span class="nt">0x0f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path</span>
+    <span class="nt">0x10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path_to</span>
+    <span class="nt">0x11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path_link</span>
+    <span class="nt">0x12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_offset</span>
+    <span class="nt">0x13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+    <span class="nt">0x14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone_uuid</span>
+    <span class="nt">0x15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone_ctransid</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone_path</span>
+    <span class="nt">0x17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone_offset</span>
+    <span class="nt">0x18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clone_len</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>btrfs_stream: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">btrfs_stream</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>btrfs_stream:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
+administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and
+integral multi-device spanning in Linux file systems.
+Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by
+using the <code>btrfs send</code> command that can be replayed later by using <code>btrfs receive</code>, possibly on a
+different Btrfs file system. The <code>btrfs send</code> command creates a set of data modifications required
+for converting one subvolume into another.
+This spec can be used to disassemble the binary diff created by the <code>btrfs send</code> command.
+If you want a text representation you may want to checkout <code>btrfs receive --dump</code> instead.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Btrfs
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of btrfs_stream
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="btrfs_stream parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="btrfs_stream parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="btrfs_stream parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="btrfs_stream parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="btrfs_stream parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="btrfs_stream parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="btrfs_stream parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="btrfs_stream parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="btrfs_stream parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="btrfs_stream parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = BtrfsStream.FromFile("path/to/local/file.btrfs_stream");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new BtrfsStream(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.Header // => get header</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse btrfs_stream
+            
+        </h2>
+
+        
+
+        <h3>BtrfsStream.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/BtrfsStream.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy</span>
+    <span class="c1">/// administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and</span>
+    <span class="c1">/// integral multi-device spanning in Linux file systems.</span>
+    <span class="c1">/// Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by</span>
+    <span class="c1">/// using the `btrfs send` command that can be replayed later by using `btrfs receive`, possibly on a</span>
+    <span class="c1">/// different Btrfs file system. The `btrfs send` command creates a set of data modifications required</span>
+    <span class="c1">/// for converting one subvolume into another.</span>
+    <span class="c1">/// This spec can be used to disassemble the binary diff created by the `btrfs send` command.</span>
+    <span class="c1">/// If you want a text representation you may want to checkout `btrfs receive --dump` instead.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BtrfsStream</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">BtrfsStream</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">BtrfsStream</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Command</span>
+        <span class="p">{</span>
+            <span class="n">Unspec</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Subvol</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Snapshot</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Mkfile</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">Mkdir</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Mknod</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Mkfifo</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Mksock</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+            <span class="n">Symlink</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">Rename</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">Link</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">Unlink</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Rmdir</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">SetXattr</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">RemoveXattr</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">Write</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+            <span class="n">Clone</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">Truncate</span> <span class="p">=</span> <span class="m">17</span><span class="p">,</span>
+            <span class="n">Chmod</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
+            <span class="n">Chown</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
+            <span class="n">Utimes</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
+            <span class="n">End</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
+            <span class="n">UpdateExtent</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Attribute</span>
+        <span class="p">{</span>
+            <span class="n">Unspec</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Uuid</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Ctransid</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Ino</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">Size</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Uid</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Gid</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+            <span class="n">Rdev</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">Ctime</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">Mtime</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">Atime</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Otime</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">XattrName</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">XattrData</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">Path</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+            <span class="n">PathTo</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">PathLink</span> <span class="p">=</span> <span class="m">17</span><span class="p">,</span>
+            <span class="n">FileOffset</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
+            <span class="n">Data</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
+            <span class="n">CloneUuid</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
+            <span class="n">CloneCtransid</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
+            <span class="n">ClonePath</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
+            <span class="n">CloneOffset</span> <span class="p">=</span> <span class="m">23</span><span class="p">,</span>
+            <span class="n">CloneLen</span> <span class="p">=</span> <span class="m">24</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">BtrfsStream</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SendStreamHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_commands</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SendCommand</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_commands</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">SendCommand</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SendStreamHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SendStreamHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SendStreamHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">SendStreamHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">98</span><span class="p">,</span> <span class="m">116</span><span class="p">,</span> <span class="m">114</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">115</span><span class="p">,</span> <span class="m">45</span><span class="p">,</span> <span class="m">115</span><span class="p">,</span> <span class="m">116</span><span class="p">,</span> <span class="m">114</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">97</span><span class="p">,</span> <span class="m">109</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_version</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SendCommand</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SendCommand</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SendCommand</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">SendCommand</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lenData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Command</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">());</span>
+                <span class="n">_checksum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Tlvs</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Tlv</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Tlv</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Tlv</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Tlv</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlvs</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">());</span>
+                    <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Size</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Otime</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timespec</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Mode</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Uuid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Uuid</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">CloneUuid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Uuid</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Atime</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timespec</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Gid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Uid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">CloneCtransid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">PathTo</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Ctransid</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">CloneLen</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Mtime</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timespec</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">FileOffset</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">PathLink</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Rdev</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Ctime</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timespec</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">ClonePath</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">XattrName</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">Path</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_value</span><span class="p">);</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">io___raw_value</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">Attribute</span><span class="p">.</span><span class="n">CloneOffset</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Attribute</span> <span class="n">_type</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_length</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">object</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlvs</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_value</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Attribute</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Length</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">object</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlvs</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawValue</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Uuid</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Uuid</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Uuid</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Uuid</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_uuid</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_uuid</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Uuid</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_uuid</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Tlvs</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Tlvs</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Tlvs</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Tlvs</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_tlv</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tlv</span><span class="p">&gt;();</span>
+                    <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_tlv</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Tlv</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                            <span class="n">i</span><span class="p">++;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tlv</span><span class="p">&gt;</span> <span class="n">_tlv</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tlv</span><span class="p">&gt;</span> <span class="n">Tlv</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tlv</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">String</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">String</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_string</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">());</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">string</span> <span class="n">_string</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">string</span> <span class="n">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_string</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Timespec</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Timespec</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Timespec</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Timespec</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BtrfsStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_tsSec</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
+                    <span class="n">_tsNsec</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">long</span> <span class="n">_tsSec</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">int</span> <span class="n">_tsNsec</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">long</span> <span class="n">TsSec</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tsSec</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">int</span> <span class="n">TsNsec</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tsNsec</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">SendCommand</span><span class="p">.</span><span class="n">Tlv</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenData</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Command</span> <span class="n">_type</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_checksum</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Tlvs</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_data</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Command</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// CRC32 checksum of a whole send command, including the header, with this attribute set to 0.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Checksum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_checksum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Tlvs</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">SendStreamHeader</span> <span class="n">_header</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SendCommand</span><span class="p">&gt;</span> <span class="n">_commands</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">BtrfsStream</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">SendStreamHeader</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SendCommand</span><span class="p">&gt;</span> <span class="n">Commands</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_commands</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">BtrfsStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
