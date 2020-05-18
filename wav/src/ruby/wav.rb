@@ -308,7 +308,7 @@ class Wav < Kaitai::Struct::Struct
     @riff_id = @_io.ensure_fixed_contents([82, 73, 70, 70].pack('C*'))
     @file_size = @_io.read_u4le
     @wave_id = @_io.ensure_fixed_contents([87, 65, 86, 69].pack('C*'))
-    @_raw_chunks = @_io.read_bytes((file_size - 5))
+    @_raw_chunks = @_io.read_bytes((file_size - 4))
     io = Kaitai::Struct::Stream.new(@_raw_chunks)
     @chunks = ChunksType.new(io, self, @_root)
     self

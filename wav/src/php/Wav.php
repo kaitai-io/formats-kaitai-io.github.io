@@ -23,7 +23,7 @@ class Wav extends \Kaitai\Struct\Struct {
         $this->_m_riffId = $this->_io->ensureFixedContents("\x52\x49\x46\x46");
         $this->_m_fileSize = $this->_io->readU4le();
         $this->_m_waveId = $this->_io->ensureFixedContents("\x57\x41\x56\x45");
-        $this->_m__raw_chunks = $this->_io->readBytes(($this->fileSize() - 5));
+        $this->_m__raw_chunks = $this->_io->readBytes(($this->fileSize() - 4));
         $io = new \Kaitai\Struct\Stream($this->_m__raw_chunks);
         $this->_m_chunks = new \Wav\ChunksType($io, $this, $this->_root);
     }

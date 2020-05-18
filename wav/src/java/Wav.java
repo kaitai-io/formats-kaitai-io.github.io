@@ -343,7 +343,7 @@ public class Wav extends KaitaiStruct {
         this.riffId = this._io.ensureFixedContents(new byte[] { 82, 73, 70, 70 });
         this.fileSize = this._io.readU4le();
         this.waveId = this._io.ensureFixedContents(new byte[] { 87, 65, 86, 69 });
-        this._raw_chunks = this._io.readBytes((fileSize() - 5));
+        this._raw_chunks = this._io.readBytes((fileSize() - 4));
         KaitaiStream _io__raw_chunks = new ByteBufferKaitaiStream(_raw_chunks);
         this.chunks = new ChunksType(_io__raw_chunks, this, _root);
     }

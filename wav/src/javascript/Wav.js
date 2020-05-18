@@ -586,7 +586,7 @@ var Wav = (function() {
     this.riffId = this._io.ensureFixedContents([82, 73, 70, 70]);
     this.fileSize = this._io.readU4le();
     this.waveId = this._io.ensureFixedContents([87, 65, 86, 69]);
-    this._raw_chunks = this._io.readBytes((this.fileSize - 5));
+    this._raw_chunks = this._io.readBytes((this.fileSize - 4));
     var _io__raw_chunks = new KaitaiStream(this._raw_chunks);
     this.chunks = new ChunksType(_io__raw_chunks, this, this._root);
   }

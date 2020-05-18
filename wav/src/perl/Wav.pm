@@ -312,7 +312,7 @@ sub _read {
     $self->{riff_id} = $self->{_io}->ensure_fixed_contents(pack('C*', (82, 73, 70, 70)));
     $self->{file_size} = $self->{_io}->read_u4le();
     $self->{wave_id} = $self->{_io}->ensure_fixed_contents(pack('C*', (87, 65, 86, 69)));
-    $self->{_raw_chunks} = $self->{_io}->read_bytes(($self->file_size() - 5));
+    $self->{_raw_chunks} = $self->{_io}->read_bytes(($self->file_size() - 4));
     my $io__raw_chunks = IO::KaitaiStruct::Stream->new($self->{_raw_chunks});
     $self->{chunks} = Wav::ChunksType->new($io__raw_chunks, $self, $self->{_root});
 }

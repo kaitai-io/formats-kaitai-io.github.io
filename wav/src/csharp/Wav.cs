@@ -318,7 +318,7 @@ namespace Kaitai
             _riffId = m_io.EnsureFixedContents(new byte[] { 82, 73, 70, 70 });
             _fileSize = m_io.ReadU4le();
             _waveId = m_io.EnsureFixedContents(new byte[] { 87, 65, 86, 69 });
-            __raw_chunks = m_io.ReadBytes((FileSize - 5));
+            __raw_chunks = m_io.ReadBytes((FileSize - 4));
             var io___raw_chunks = new KaitaiStream(__raw_chunks);
             _chunks = new ChunksType(io___raw_chunks, this, m_root);
         }
