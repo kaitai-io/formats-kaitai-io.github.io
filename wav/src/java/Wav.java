@@ -346,6 +346,7 @@ public class Wav extends KaitaiStruct {
         this._raw_chunks = this._io.readBytes((fileSize() - 4));
         KaitaiStream _io__raw_chunks = new ByteBufferKaitaiStream(_raw_chunks);
         this.chunks = new ChunksType(_io__raw_chunks, this, _root);
+        this.padByte = this._io.readBytes(KaitaiStream.mod(fileSize(), 2));
     }
     public static class SampleType extends KaitaiStruct {
         public static SampleType fromFile(String fileName) throws IOException {
@@ -853,16 +854,19 @@ public class Wav extends KaitaiStruct {
                 break;
             }
             }
+            this.padByte = this._io.readBytes(KaitaiStream.mod(len(), 2));
         }
         private long chunkId;
         private long len;
         private Object data;
+        private byte[] padByte;
         private Wav _root;
         private Wav.ChunksType _parent;
         private byte[] _raw_data;
         public long chunkId() { return chunkId; }
         public long len() { return len; }
         public Object data() { return data; }
+        public byte[] padByte() { return padByte; }
         public Wav _root() { return _root; }
         public Wav.ChunksType _parent() { return _parent; }
         public byte[] _raw_data() { return _raw_data; }
@@ -946,6 +950,7 @@ public class Wav extends KaitaiStruct {
     private long fileSize;
     private byte[] waveId;
     private ChunksType chunks;
+    private byte[] padByte;
     private Wav _root;
     private KaitaiStruct _parent;
     private byte[] _raw_chunks;
@@ -953,6 +958,7 @@ public class Wav extends KaitaiStruct {
     public long fileSize() { return fileSize; }
     public byte[] waveId() { return waveId; }
     public ChunksType chunks() { return chunks; }
+    public byte[] padByte() { return padByte; }
     public Wav _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
     public byte[] _raw_chunks() { return _raw_chunks; }

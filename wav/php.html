@@ -249,6 +249,7 @@ the actual sample data.</p>
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileSize</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
         <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span><span class="p">);</span>
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ChunksType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileSize</span><span class="p">(),</span> <span class="mi">2</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="k">protected</span> <span class="nv">$_m_formatChunk</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">formatChunk</span><span class="p">()</span> <span class="p">{</span>
@@ -261,11 +262,13 @@ the actual sample data.</p>
     <span class="k">protected</span> <span class="nv">$_m_fileSize</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_waveId</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_chunks</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_padByte</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m__raw_chunks</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">riffId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_riffId</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">fileSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileSize</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">waveId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_waveId</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">chunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">padByte</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_chunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
@@ -614,14 +617,17 @@ the actual sample data.</p>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
                 <span class="k">break</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">(),</span> <span class="mi">2</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="k">protected</span> <span class="nv">$_m_chunkId</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_padByte</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m__raw_data</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">padByte</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 

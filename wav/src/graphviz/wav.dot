@@ -11,6 +11,7 @@ digraph {
 			<TR><TD PORT="file_size_pos">4</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
 			<TR><TD PORT="wave_id_pos">8</TD><TD PORT="wave_id_size">4</TD><TD>57 41 56 45</TD><TD PORT="wave_id_type">wave_id</TD></TR>
 			<TR><TD PORT="chunks_pos">12</TD><TD PORT="chunks_size">(file_size - 4)</TD><TD>ChunksType</TD><TD PORT="chunks_type">chunks</TD></TR>
+			<TR><TD PORT="pad_byte_pos">...</TD><TD PORT="pad_byte_size">(file_size % 2)</TD><TD></TD><TD PORT="pad_byte_type">pad_byte</TD></TR>
 		</TABLE>>];
 		wav__inst__format_chunk [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -171,6 +172,7 @@ digraph {
 				<TR><TD PORT="chunk_id_pos">0</TD><TD PORT="chunk_id_size">4</TD><TD>u4be</TD><TD PORT="chunk_id_type">chunk_id</TD></TR>
 				<TR><TD PORT="len_pos">4</TD><TD PORT="len_size">4</TD><TD>u4le</TD><TD PORT="len_type">len</TD></TR>
 				<TR><TD PORT="data_pos">8</TD><TD PORT="data_size">...</TD><TD>switch (chunk_id)</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="pad_byte_pos">...</TD><TD PORT="pad_byte_size">(len % 2)</TD><TD></TD><TD PORT="pad_byte_type">pad_byte</TD></TR>
 			</TABLE>>];
 chunk_type__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -205,6 +207,7 @@ chunk_type__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	}
 	wav__seq:file_size_type -> wav__seq:chunks_size [color="#404040"];
 	wav__seq:chunks_type -> chunks_type__seq [style=bold];
+	wav__seq:file_size_type -> wav__seq:pad_byte_size [color="#404040"];
 	chunk_type__seq:data_type -> wav__inst__format_chunk [color="#404040"];
 	format_chunk_type__seq:channel_mask_and_subformat_type -> channel_mask_and_subformat_type__seq [style=bold];
 	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_extensible [color="#404040"];
@@ -223,4 +226,5 @@ chunk_type__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	chunk_type__seq_data_switch:case2 -> bext_chunk_type__seq [style=bold];
 	chunk_type__seq_data_switch:case3 -> format_chunk_type__seq [style=bold];
 	chunk_type__seq:chunk_id_type -> chunk_type__seq:data_type [color="#404040"];
+	chunk_type__seq:len_type -> chunk_type__seq:pad_byte_size [color="#404040"];
 }

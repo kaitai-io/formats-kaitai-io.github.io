@@ -60,7 +60,7 @@ namespace Kaitai
             SunwVerneed = 1879048190,
             SunwVersym = 1879048191,
             SparcGotdata = 1879048192,
-            ArmExidx = 1879048193,
+            Amd64Unwind = 1879048193,
             ArmPreemptmap = 1879048194,
             ArmAttributes = 1879048195,
         }

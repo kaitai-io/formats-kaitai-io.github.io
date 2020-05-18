@@ -321,6 +321,7 @@ namespace Kaitai
             __raw_chunks = m_io.ReadBytes((FileSize - 4));
             var io___raw_chunks = new KaitaiStream(__raw_chunks);
             _chunks = new ChunksType(io___raw_chunks, this, m_root);
+            _padByte = m_io.ReadBytes(KaitaiStream.Mod(FileSize, 2));
         }
         public partial class SampleType : KaitaiStruct
         {
@@ -798,16 +799,19 @@ namespace Kaitai
                     break;
                 }
                 }
+                _padByte = m_io.ReadBytes(KaitaiStream.Mod(Len, 2));
             }
             private uint _chunkId;
             private uint _len;
             private object _data;
+            private byte[] _padByte;
             private Wav m_root;
             private Wav.ChunksType m_parent;
             private byte[] __raw_data;
             public uint ChunkId { get { return _chunkId; } }
             public uint Len { get { return _len; } }
             public object Data { get { return _data; } }
+            public byte[] PadByte { get { return _padByte; } }
             public Wav M_Root { get { return m_root; } }
             public Wav.ChunksType M_Parent { get { return m_parent; } }
             public byte[] M_RawData { get { return __raw_data; } }
@@ -892,6 +896,7 @@ namespace Kaitai
         private uint _fileSize;
         private byte[] _waveId;
         private ChunksType _chunks;
+        private byte[] _padByte;
         private Wav m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_chunks;
@@ -899,6 +904,7 @@ namespace Kaitai
         public uint FileSize { get { return _fileSize; } }
         public byte[] WaveId { get { return _waveId; } }
         public ChunksType Chunks { get { return _chunks; } }
+        public byte[] PadByte { get { return _padByte; } }
         public Wav M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawChunks { get { return __raw_chunks; } }

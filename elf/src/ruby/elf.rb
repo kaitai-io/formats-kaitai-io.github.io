@@ -53,7 +53,7 @@ class Elf < Kaitai::Struct::Struct
     1879048190 => :sh_type_sunw_verneed,
     1879048191 => :sh_type_sunw_versym,
     1879048192 => :sh_type_sparc_gotdata,
-    1879048193 => :sh_type_arm_exidx,
+    1879048193 => :sh_type_amd64_unwind,
     1879048194 => :sh_type_arm_preemptmap,
     1879048195 => :sh_type_arm_attributes,
   }

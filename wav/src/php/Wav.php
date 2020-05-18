@@ -26,6 +26,7 @@ class Wav extends \Kaitai\Struct\Struct {
         $this->_m__raw_chunks = $this->_io->readBytes(($this->fileSize() - 4));
         $io = new \Kaitai\Struct\Stream($this->_m__raw_chunks);
         $this->_m_chunks = new \Wav\ChunksType($io, $this, $this->_root);
+        $this->_m_padByte = $this->_io->readBytes(\Kaitai\Struct\Stream::mod($this->fileSize(), 2));
     }
     protected $_m_formatChunk;
     public function formatChunk() {
@@ -38,11 +39,13 @@ class Wav extends \Kaitai\Struct\Struct {
     protected $_m_fileSize;
     protected $_m_waveId;
     protected $_m_chunks;
+    protected $_m_padByte;
     protected $_m__raw_chunks;
     public function riffId() { return $this->_m_riffId; }
     public function fileSize() { return $this->_m_fileSize; }
     public function waveId() { return $this->_m_waveId; }
     public function chunks() { return $this->_m_chunks; }
+    public function padByte() { return $this->_m_padByte; }
     public function _raw_chunks() { return $this->_m__raw_chunks; }
 }
 
@@ -391,14 +394,17 @@ class ChunkType extends \Kaitai\Struct\Struct {
                 $this->_m_data = $this->_io->readBytes($this->len());
                 break;
         }
+        $this->_m_padByte = $this->_io->readBytes(\Kaitai\Struct\Stream::mod($this->len(), 2));
     }
     protected $_m_chunkId;
     protected $_m_len;
     protected $_m_data;
+    protected $_m_padByte;
     protected $_m__raw_data;
     public function chunkId() { return $this->_m_chunkId; }
     public function len() { return $this->_m_len; }
     public function data() { return $this->_m_data; }
+    public function padByte() { return $this->_m_padByte; }
     public function _raw_data() { return $this->_m__raw_data; }
 }
 

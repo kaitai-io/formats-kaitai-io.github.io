@@ -311,6 +311,7 @@ class Wav < Kaitai::Struct::Struct
     @_raw_chunks = @_io.read_bytes((file_size - 4))
     io = Kaitai::Struct::Stream.new(@_raw_chunks)
     @chunks = ChunksType.new(io, self, @_root)
+    @pad_byte = @_io.read_bytes((file_size % 2))
     self
   end
   class SampleType < Kaitai::Struct::Struct
@@ -574,11 +575,13 @@ class Wav < Kaitai::Struct::Struct
       else
         @data = @_io.read_bytes(len)
       end
+      @pad_byte = @_io.read_bytes((len % 2))
       self
     end
     attr_reader :chunk_id
     attr_reader :len
     attr_reader :data
+    attr_reader :pad_byte
     attr_reader :_raw_data
   end
   class BextChunkType < Kaitai::Struct::Struct
@@ -628,5 +631,6 @@ class Wav < Kaitai::Struct::Struct
   attr_reader :file_size
   attr_reader :wave_id
   attr_reader :chunks
+  attr_reader :pad_byte
   attr_reader :_raw_chunks
 end

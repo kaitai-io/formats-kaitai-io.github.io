@@ -315,6 +315,7 @@ sub _read {
     $self->{_raw_chunks} = $self->{_io}->read_bytes(($self->file_size() - 4));
     my $io__raw_chunks = IO::KaitaiStruct::Stream->new($self->{_raw_chunks});
     $self->{chunks} = Wav::ChunksType->new($io__raw_chunks, $self, $self->{_root});
+    $self->{pad_byte} = $self->{_io}->read_bytes(($self->file_size() % 2));
 }
 
 sub format_chunk {
@@ -342,6 +343,11 @@ sub wave_id {
 sub chunks {
     my ($self) = @_;
     return $self->{chunks};
+}
+
+sub pad_byte {
+    my ($self) = @_;
+    return $self->{pad_byte};
 }
 
 sub _raw_chunks {
@@ -1056,6 +1062,7 @@ sub _read {
     else {
         $self->{data} = $self->{_io}->read_bytes($self->len());
     }
+    $self->{pad_byte} = $self->{_io}->read_bytes(($self->len() % 2));
 }
 
 sub chunk_id {
@@ -1071,6 +1078,11 @@ sub len {
 sub data {
     my ($self) = @_;
     return $self->{data};
+}
+
+sub pad_byte {
+    my ($self) = @_;
+    return $self->{pad_byte};
 }
 
 sub _raw_data {

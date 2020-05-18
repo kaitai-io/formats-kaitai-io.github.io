@@ -538,6 +538,7 @@ the actual sample data.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_chunks</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">file_size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
     <span class="k">my</span> <span class="nv">$io__raw_chunks</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_chunks</span><span class="p">});</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">chunks</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Wav::ChunksType</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_chunks</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pad_byte</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">file_size</span><span class="p">()</span> <span class="nv">%</span> <span class="nv">2</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">format_chunk</span> <span class="p">{</span>
@@ -565,6 +566,11 @@ the actual sample data.</p>
 <span class="k">sub</span> <span class="nf">chunks</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">chunks</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">pad_byte</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pad_byte</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">_raw_chunks</span> <span class="p">{</span>
@@ -1279,6 +1285,7 @@ the actual sample data.</p>
     <span class="k">else</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
     <span class="p">}</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pad_byte</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">()</span> <span class="nv">%</span> <span class="nv">2</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">chunk_id</span> <span class="p">{</span>
@@ -1294,6 +1301,11 @@ the actual sample data.</p>
 <span class="k">sub</span> <span class="nf">data</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">pad_byte</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pad_byte</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">_raw_data</span> <span class="p">{</span>

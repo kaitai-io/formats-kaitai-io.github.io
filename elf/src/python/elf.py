@@ -54,7 +54,7 @@ class Elf(KaitaiStruct):
         sunw_verneed = 1879048190
         sunw_versym = 1879048191
         sparc_gotdata = 1879048192
-        arm_exidx = 1879048193
+        amd64_unwind = 1879048193
         arm_preemptmap = 1879048194
         arm_attributes = 1879048195
 

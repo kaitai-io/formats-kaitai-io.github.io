@@ -589,6 +589,7 @@ var Wav = (function() {
     this._raw_chunks = this._io.readBytes((this.fileSize - 4));
     var _io__raw_chunks = new KaitaiStream(this._raw_chunks);
     this.chunks = new ChunksType(_io__raw_chunks, this, this._root);
+    this.padByte = this._io.readBytes(KaitaiStream.mod(this.fileSize, 2));
   }
 
   var SampleType = Wav.SampleType = (function() {
@@ -863,6 +864,7 @@ var Wav = (function() {
         this.data = this._io.readBytes(this.len);
         break;
       }
+      this.padByte = this._io.readBytes(KaitaiStream.mod(this.len, 2));
     }
 
     return ChunkType;

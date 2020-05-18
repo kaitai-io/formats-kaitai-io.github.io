@@ -311,6 +311,7 @@ class Wav(KaitaiStruct):
         self._raw_chunks = self._io.read_bytes((self.file_size - 4))
         io = KaitaiStream(BytesIO(self._raw_chunks))
         self.chunks = self._root.ChunksType(io, self, self._root)
+        self.pad_byte = self._io.read_bytes((self.file_size % 2))
 
     class SampleType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -537,6 +538,7 @@ class Wav(KaitaiStruct):
                 self.data = self._root.FormatChunkType(io, self, self._root)
             else:
                 self.data = self._io.read_bytes(self.len)
+            self.pad_byte = self._io.read_bytes((self.len % 2))
 
 
     class BextChunkType(KaitaiStruct):
