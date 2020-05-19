@@ -190,8 +190,6 @@ public class Elf extends KaitaiStruct {
         SUNW_LDMACH(1610612763),
         SUNW_CAPCHAINENT(1610612765),
         SUNW_CAPCHAINSZ(1610612767),
-        HIOS(1879044096),
-        VALRNGLO(1879047424),
         GNU_PRELINKED(1879047669),
         GNU_CONFLICTSZ(1879047670),
         GNU_LIBLISTSZ(1879047671),
@@ -202,8 +200,7 @@ public class Elf extends KaitaiStruct {
         FEATURE_1(1879047676),
         POSFLAG_1(1879047677),
         SYMINSZ(1879047678),
-        VALRNGHI(1879047679),
-        ADDRRNGLO(1879047680),
+        SYMINENT(1879047679),
         GNU_HASH(1879047925),
         TLSDESC_PLT(1879047926),
         TLSDESC_GOT(1879047927),
@@ -214,7 +211,7 @@ public class Elf extends KaitaiStruct {
         AUDIT(1879047932),
         PLTPAD(1879047933),
         MOVETAB(1879047934),
-        ADDRRNGHI(1879047935),
+        SYMINFO(1879047935),
         VERSYM(1879048176),
         RELACOUNT(1879048185),
         RELCOUNT(1879048186),
@@ -223,16 +220,15 @@ public class Elf extends KaitaiStruct {
         VERDEFNUM(1879048189),
         VERNEED(1879048190),
         VERNEEDNUM(1879048191),
-        LOPROC(1879048192),
         SPARC_REGISTER(1879048193),
         AUXILIARY(2147483645),
         USED(2147483646),
-        HIPROC(2147483647);
+        FILTER(2147483647);
 
         private final long id;
         DynamicArrayTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(88);
+        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(84);
         static {
             for (DynamicArrayTags e : DynamicArrayTags.values())
                 byId.put(e.id(), e);

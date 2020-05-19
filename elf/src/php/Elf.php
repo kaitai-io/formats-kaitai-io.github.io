@@ -1691,8 +1691,6 @@ class DynamicArrayTags {
     const SUNW_LDMACH = 1610612763;
     const SUNW_CAPCHAINENT = 1610612765;
     const SUNW_CAPCHAINSZ = 1610612767;
-    const HIOS = 1879044096;
-    const VALRNGLO = 1879047424;
     const GNU_PRELINKED = 1879047669;
     const GNU_CONFLICTSZ = 1879047670;
     const GNU_LIBLISTSZ = 1879047671;
@@ -1703,8 +1701,7 @@ class DynamicArrayTags {
     const FEATURE_1 = 1879047676;
     const POSFLAG_1 = 1879047677;
     const SYMINSZ = 1879047678;
-    const VALRNGHI = 1879047679;
-    const ADDRRNGLO = 1879047680;
+    const SYMINENT = 1879047679;
     const GNU_HASH = 1879047925;
     const TLSDESC_PLT = 1879047926;
     const TLSDESC_GOT = 1879047927;
@@ -1715,7 +1712,7 @@ class DynamicArrayTags {
     const AUDIT = 1879047932;
     const PLTPAD = 1879047933;
     const MOVETAB = 1879047934;
-    const ADDRRNGHI = 1879047935;
+    const SYMINFO = 1879047935;
     const VERSYM = 1879048176;
     const RELACOUNT = 1879048185;
     const RELCOUNT = 1879048186;
@@ -1724,11 +1721,10 @@ class DynamicArrayTags {
     const VERDEFNUM = 1879048189;
     const VERNEED = 1879048190;
     const VERNEEDNUM = 1879048191;
-    const LOPROC = 1879048192;
     const SPARC_REGISTER = 1879048193;
     const AUXILIARY = 2147483645;
     const USED = 2147483646;
-    const HIPROC = 2147483647;
+    const FILTER = 2147483647;
 }
 
 namespace \Elf;

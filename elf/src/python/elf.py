@@ -142,8 +142,6 @@ class Elf(KaitaiStruct):
         sunw_ldmach = 1610612763
         sunw_capchainent = 1610612765
         sunw_capchainsz = 1610612767
-        hios = 1879044096
-        valrnglo = 1879047424
         gnu_prelinked = 1879047669
         gnu_conflictsz = 1879047670
         gnu_liblistsz = 1879047671
@@ -154,8 +152,7 @@ class Elf(KaitaiStruct):
         feature_1 = 1879047676
         posflag_1 = 1879047677
         syminsz = 1879047678
-        valrnghi = 1879047679
-        addrrnglo = 1879047680
+        syminent = 1879047679
         gnu_hash = 1879047925
         tlsdesc_plt = 1879047926
         tlsdesc_got = 1879047927
@@ -166,7 +163,7 @@ class Elf(KaitaiStruct):
         audit = 1879047932
         pltpad = 1879047933
         movetab = 1879047934
-        addrrnghi = 1879047935
+        syminfo = 1879047935
         versym = 1879048176
         relacount = 1879048185
         relcount = 1879048186
@@ -175,11 +172,10 @@ class Elf(KaitaiStruct):
         verdefnum = 1879048189
         verneed = 1879048190
         verneednum = 1879048191
-        loproc = 1879048192
         sparc_register = 1879048193
         auxiliary = 2147483645
         used = 2147483646
-        hiproc = 2147483647
+        filter = 2147483647
 
     class Bits(Enum):
         b32 = 1
