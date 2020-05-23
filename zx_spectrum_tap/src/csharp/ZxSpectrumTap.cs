@@ -45,11 +45,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _block = new List<Block>();
+            _blocks = new List<Block>();
             {
                 var i = 0;
                 while (!m_io.IsEof) {
-                    _block.Add(new Block(m_io, this, m_root));
+                    _blocks.Add(new Block(m_io, this, m_root));
                     i++;
                 }
             }
@@ -173,11 +173,11 @@ namespace Kaitai
                     _params = new ProgramParams(m_io, this, m_root);
                     break;
                 }
-                case ZxSpectrumTap.HeaderTypeEnum.NumArry: {
+                case ZxSpectrumTap.HeaderTypeEnum.NumArray: {
                     _params = new ArrayParams(m_io, this, m_root);
                     break;
                 }
-                case ZxSpectrumTap.HeaderTypeEnum.CharArry: {
+                case ZxSpectrumTap.HeaderTypeEnum.CharArray: {
                     _params = new ArrayParams(m_io, this, m_root);
                     break;
                 }
@@ -241,10 +241,10 @@ namespace Kaitai
             public ZxSpectrumTap M_Root { get { return m_root; } }
             public ZxSpectrumTap.Header M_Parent { get { return m_parent; } }
         }
-        private List<Block> _block;
+        private List<Block> _blocks;
         private ZxSpectrumTap m_root;
         private KaitaiStruct m_parent;
-        public List<Block> Block { get { return _block; } }
+        public List<Block> Blocks { get { return _blocks; } }
         public ZxSpectrumTap M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

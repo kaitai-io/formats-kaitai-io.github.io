@@ -42,15 +42,15 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{block} = ();
+    $self->{blocks} = ();
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{block}}, ZxSpectrumTap::Block->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blocks}}, ZxSpectrumTap::Block->new($self->{_io}, $self, $self->{_root});
     }
 }
 
-sub block {
+sub blocks {
     my ($self) = @_;
-    return $self->{block};
+    return $self->{blocks};
 }
 
 ########################################################################
@@ -246,10 +246,10 @@ sub _read {
     if ($_on == $HEADER_TYPE_ENUM_PROGRAM) {
         $self->{params} = ZxSpectrumTap::ProgramParams->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $HEADER_TYPE_ENUM_NUM_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_NUM_ARRAY) {
         $self->{params} = ZxSpectrumTap::ArrayParams->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $HEADER_TYPE_ENUM_CHAR_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_CHAR_ARRAY) {
         $self->{params} = ZxSpectrumTap::ArrayParams->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $HEADER_TYPE_ENUM_BYTES) {

@@ -243,7 +243,7 @@ var data = new ZxSpectrumTap(new KaitaiStream(someArray));</code></pre>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
-<pre><code class="csharp">data.Block // => get block</code></pre>
+<pre><code class="csharp">data.Blocks // => get blocks</code></pre>
 
     </div>
 </section>
@@ -317,11 +317,11 @@ var data = new ZxSpectrumTap(new KaitaiStream(someArray));</code></pre>
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_block</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;();</span>
+            <span class="n">_blocks</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;();</span>
             <span class="p">{</span>
                 <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
                 <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_block</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="n">_blocks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                     <span class="n">i</span><span class="p">++;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -445,11 +445,11 @@ var data = new ZxSpectrumTap(new KaitaiStream(someArray));</code></pre>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProgramParams</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="n">HeaderTypeEnum</span><span class="p">.</span><span class="n">NumArry</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="n">HeaderTypeEnum</span><span class="p">.</span><span class="n">NumArray</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ArrayParams</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="n">HeaderTypeEnum</span><span class="p">.</span><span class="n">CharArry</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="n">HeaderTypeEnum</span><span class="p">.</span><span class="n">CharArray</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ArrayParams</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -513,10 +513,10 @@ var data = new ZxSpectrumTap(new KaitaiStream(someArray));</code></pre>
             <span class="k">public</span> <span class="n">ZxSpectrumTap</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="n">Header</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span> <span class="n">_block</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span> <span class="n">_blocks</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">m_root</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span> <span class="n">Block</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_block</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span> <span class="n">Blocks</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blocks</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">ZxSpectrumTap</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
     <span class="p">}</span>

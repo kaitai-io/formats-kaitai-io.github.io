@@ -240,7 +240,7 @@ var data = new ZxSpectrumTap(new KaitaiStream(arrayBuffer));</code></pre>
 
 <p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
 
-<pre><code class="javascript">data.block // => get block</code></pre>
+<pre><code class="javascript">data.blocks // => get blocks</code></pre>
 
     </div>
 </section>
@@ -317,10 +317,10 @@ var data = new ZxSpectrumTap(new KaitaiStream(arrayBuffer));</code></pre>
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">block</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">blocks</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Block</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blocks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Block</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -398,10 +398,10 @@ var data = new ZxSpectrumTap(new KaitaiStream(arrayBuffer));</code></pre>
       <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">PROGRAM</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ProgramParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">NUM_ARRY</span><span class="o">:</span>
+      <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">NUM_ARRAY</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ArrayParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">CHAR_ARRY</span><span class="o">:</span>
+      <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">CHAR_ARRAY</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ArrayParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">ZxSpectrumTap</span><span class="p">.</span><span class="nx">HeaderTypeEnum</span><span class="p">.</span><span class="nx">BYTES</span><span class="o">:</span>

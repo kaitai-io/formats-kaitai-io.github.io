@@ -7,8 +7,8 @@ digraph {
 
 		zx_spectrum_tap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="block_pos">0</TD><TD PORT="block_size">...</TD><TD>Block</TD><TD PORT="block_type">block</TD></TR>
-			<TR><TD COLSPAN="4" PORT="block__repeat">repeat to end of stream</TD></TR>
+			<TR><TD PORT="blocks_pos">0</TD><TD PORT="blocks_size">...</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
 		subgraph cluster__block {
 			label="ZxSpectrumTap::Block";
@@ -58,8 +58,8 @@ digraph {
 header__seq_params_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:header_type_enum_program</TD><TD PORT="case0">ProgramParams</TD></TR>
-	<TR><TD>:header_type_enum_num_arry</TD><TD PORT="case1">ArrayParams</TD></TR>
-	<TR><TD>:header_type_enum_char_arry</TD><TD PORT="case2">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_num_array</TD><TD PORT="case1">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_char_array</TD><TD PORT="case2">ArrayParams</TD></TR>
 	<TR><TD>:header_type_enum_bytes</TD><TD PORT="case3">BytesParams</TD></TR>
 </TABLE>>];
 		}
@@ -75,7 +75,7 @@ header__seq_params_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="
 			</TABLE>>];
 		}
 	}
-	zx_spectrum_tap__seq:block_type -> block__seq [style=bold];
+	zx_spectrum_tap__seq:blocks_type -> block__seq [style=bold];
 	block__seq:header_type -> header__seq [style=bold];
 	header__seq:len_data_type -> block__seq:data_size [color="#404040"];
 	block__seq:len_block_type -> block__seq:headerless_data_size [color="#404040"];

@@ -48,10 +48,10 @@ var ZxSpectrumTap = (function() {
     this._read();
   }
   ZxSpectrumTap.prototype._read = function() {
-    this.block = [];
+    this.blocks = [];
     var i = 0;
     while (!this._io.isEof()) {
-      this.block.push(new Block(this._io, this, this._root));
+      this.blocks.push(new Block(this._io, this, this._root));
       i++;
     }
   }
@@ -129,10 +129,10 @@ var ZxSpectrumTap = (function() {
       case ZxSpectrumTap.HeaderTypeEnum.PROGRAM:
         this.params = new ProgramParams(this._io, this, this._root);
         break;
-      case ZxSpectrumTap.HeaderTypeEnum.NUM_ARRY:
+      case ZxSpectrumTap.HeaderTypeEnum.NUM_ARRAY:
         this.params = new ArrayParams(this._io, this, this._root);
         break;
-      case ZxSpectrumTap.HeaderTypeEnum.CHAR_ARRY:
+      case ZxSpectrumTap.HeaderTypeEnum.CHAR_ARRAY:
         this.params = new ArrayParams(this._io, this, this._root);
         break;
       case ZxSpectrumTap.HeaderTypeEnum.BYTES:

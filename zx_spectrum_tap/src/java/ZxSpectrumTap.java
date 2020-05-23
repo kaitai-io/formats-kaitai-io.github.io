@@ -70,11 +70,11 @@ public class ZxSpectrumTap extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.block = new ArrayList<Block>();
+        this.blocks = new ArrayList<Block>();
         {
             int i = 0;
             while (!this._io.isEof()) {
-                this.block.add(new Block(this._io, this, _root));
+                this.blocks.add(new Block(this._io, this, _root));
                 i++;
             }
         }
@@ -218,11 +218,11 @@ public class ZxSpectrumTap extends KaitaiStruct {
                 this.params = new ProgramParams(this._io, this, _root);
                 break;
             }
-            case NUM_ARRY: {
+            case NUM_ARRAY: {
                 this.params = new ArrayParams(this._io, this, _root);
                 break;
             }
-            case CHAR_ARRY: {
+            case CHAR_ARRAY: {
                 this.params = new ArrayParams(this._io, this, _root);
                 break;
             }
@@ -291,10 +291,10 @@ public class ZxSpectrumTap extends KaitaiStruct {
         public ZxSpectrumTap _root() { return _root; }
         public ZxSpectrumTap.Header _parent() { return _parent; }
     }
-    private ArrayList<Block> block;
+    private ArrayList<Block> blocks;
     private ZxSpectrumTap _root;
     private KaitaiStruct _parent;
-    public ArrayList<Block> block() { return block; }
+    public ArrayList<Block> blocks() { return blocks; }
     public ZxSpectrumTap _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

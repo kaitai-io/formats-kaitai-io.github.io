@@ -11,21 +11,21 @@ zx_spectrum_tap_t::zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p_
 }
 
 void zx_spectrum_tap_t::_read() {
-    m_block = new std::vector<block_t*>();
+    m_blocks = new std::vector<block_t*>();
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_block->push_back(new block_t(m__io, this, m__root));
+            m_blocks->push_back(new block_t(m__io, this, m__root));
             i++;
         }
     }
 }
 
 zx_spectrum_tap_t::~zx_spectrum_tap_t() {
-    for (std::vector<block_t*>::iterator it = m_block->begin(); it != m_block->end(); ++it) {
+    for (std::vector<block_t*>::iterator it = m_blocks->begin(); it != m_blocks->end(); ++it) {
         delete *it;
     }
-    delete m_block;
+    delete m_blocks;
 }
 
 zx_spectrum_tap_t::block_t::block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
@@ -109,12 +109,12 @@ void zx_spectrum_tap_t::header_t::_read() {
         m_params = new program_params_t(m__io, this, m__root);
         break;
     }
-    case HEADER_TYPE_ENUM_NUM_ARRY: {
+    case HEADER_TYPE_ENUM_NUM_ARRAY: {
         n_params = false;
         m_params = new array_params_t(m__io, this, m__root);
         break;
     }
-    case HEADER_TYPE_ENUM_CHAR_ARRY: {
+    case HEADER_TYPE_ENUM_CHAR_ARRAY: {
         n_params = false;
         m_params = new array_params_t(m__io, this, m__root);
         break;

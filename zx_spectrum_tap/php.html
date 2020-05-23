@@ -267,15 +267,15 @@ metainformation prepended as a header.</p>
     <span class="p">}</span>
 
     <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_block</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_block</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ZxSpectrumTap\Block</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ZxSpectrumTap\Block</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_block</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">block</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_block</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_blocks</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">blocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">\ZxSpectrumTap</span><span class="p">;</span>
@@ -363,10 +363,10 @@ metainformation prepended as a header.</p>
             <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">PROGRAM</span><span class="o">:</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ZxSpectrumTap\ProgramParams</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">NUM_ARRY</span><span class="o">:</span>
+            <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">NUM_ARRAY</span><span class="o">:</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ZxSpectrumTap\ArrayParams</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">CHAR_ARRY</span><span class="o">:</span>
+            <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">CHAR_ARRAY</span><span class="o">:</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ZxSpectrumTap\ArrayParams</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="k">case</span> <span class="nx">\ZxSpectrumTap\HeaderTypeEnum</span><span class="o">::</span><span class="na">BYTES</span><span class="o">:</span>

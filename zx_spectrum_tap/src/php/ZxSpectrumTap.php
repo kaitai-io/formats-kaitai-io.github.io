@@ -17,15 +17,15 @@ class ZxSpectrumTap extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_block = [];
+        $this->_m_blocks = [];
         $i = 0;
         while (!$this->_io->isEof()) {
-            $this->_m_block[] = new \ZxSpectrumTap\Block($this->_io, $this, $this->_root);
+            $this->_m_blocks[] = new \ZxSpectrumTap\Block($this->_io, $this, $this->_root);
             $i++;
         }
     }
-    protected $_m_block;
-    public function block() { return $this->_m_block; }
+    protected $_m_blocks;
+    public function blocks() { return $this->_m_blocks; }
 }
 
 namespace \ZxSpectrumTap;
@@ -113,10 +113,10 @@ class Header extends \Kaitai\Struct\Struct {
             case \ZxSpectrumTap\HeaderTypeEnum::PROGRAM:
                 $this->_m_params = new \ZxSpectrumTap\ProgramParams($this->_io, $this, $this->_root);
                 break;
-            case \ZxSpectrumTap\HeaderTypeEnum::NUM_ARRY:
+            case \ZxSpectrumTap\HeaderTypeEnum::NUM_ARRAY:
                 $this->_m_params = new \ZxSpectrumTap\ArrayParams($this->_io, $this, $this->_root);
                 break;
-            case \ZxSpectrumTap\HeaderTypeEnum::CHAR_ARRY:
+            case \ZxSpectrumTap\HeaderTypeEnum::CHAR_ARRAY:
                 $this->_m_params = new \ZxSpectrumTap\ArrayParams($this->_io, $this, $this->_root);
                 break;
             case \ZxSpectrumTap\HeaderTypeEnum::BYTES:

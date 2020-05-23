@@ -36,10 +36,10 @@ class ZxSpectrumTap(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.block = []
+        self.blocks = []
         i = 0
         while not self._io.is_eof():
-            self.block.append(self._root.Block(self._io, self, self._root))
+            self.blocks.append(self._root.Block(self._io, self, self._root))
             i += 1
 
 
@@ -102,9 +102,9 @@ class ZxSpectrumTap(KaitaiStruct):
             _on = self.header_type
             if _on == self._root.HeaderTypeEnum.program:
                 self.params = self._root.ProgramParams(self._io, self, self._root)
-            elif _on == self._root.HeaderTypeEnum.num_arry:
+            elif _on == self._root.HeaderTypeEnum.num_array:
                 self.params = self._root.ArrayParams(self._io, self, self._root)
-            elif _on == self._root.HeaderTypeEnum.char_arry:
+            elif _on == self._root.HeaderTypeEnum.char_array:
                 self.params = self._root.ArrayParams(self._io, self, self._root)
             elif _on == self._root.HeaderTypeEnum.bytes:
                 self.params = self._root.BytesParams(self._io, self, self._root)

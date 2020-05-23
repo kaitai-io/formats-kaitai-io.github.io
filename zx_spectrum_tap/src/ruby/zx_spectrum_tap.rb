@@ -36,10 +36,10 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
   end
 
   def _read
-    @block = []
+    @blocks = []
     i = 0
     while not @_io.eof?
-      @block << Block.new(@_io, self, @_root)
+      @blocks << Block.new(@_io, self, @_root)
       i += 1
     end
     self
@@ -111,9 +111,9 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
       case header_type
       when :header_type_enum_program
         @params = ProgramParams.new(@_io, self, @_root)
-      when :header_type_enum_num_arry
+      when :header_type_enum_num_array
         @params = ArrayParams.new(@_io, self, @_root)
-      when :header_type_enum_char_arry
+      when :header_type_enum_char_array
         @params = ArrayParams.new(@_io, self, @_root)
       when :header_type_enum_bytes
         @params = BytesParams.new(@_io, self, @_root)
@@ -149,5 +149,5 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     attr_reader :var_name
     attr_reader :reserved1
   end
-  attr_reader :block
+  attr_reader :blocks
 end

@@ -292,15 +292,15 @@ metainformation prepended as a header.</p>
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">block</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blocks</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">block</span><span class="p">}},</span> <span class="nn">ZxSpectrumTap::Block</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blocks</span><span class="p">}},</span> <span class="nn">ZxSpectrumTap::Block</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">block</span> <span class="p">{</span>
+<span class="k">sub</span> <span class="nf">blocks</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">block</span><span class="p">};</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blocks</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
@@ -496,10 +496,10 @@ metainformation prepended as a header.</p>
     <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_PROGRAM</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}</span> <span class="o">=</span> <span class="nn">ZxSpectrumTap::ProgramParams</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_NUM_ARRY</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_NUM_ARRAY</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}</span> <span class="o">=</span> <span class="nn">ZxSpectrumTap::ArrayParams</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_CHAR_ARRY</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_CHAR_ARRAY</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}</span> <span class="o">=</span> <span class="nn">ZxSpectrumTap::ArrayParams</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
     <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$HEADER_TYPE_ENUM_BYTES</span><span class="p">)</span> <span class="p">{</span>

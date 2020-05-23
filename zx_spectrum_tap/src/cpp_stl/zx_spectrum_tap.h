@@ -223,12 +223,12 @@ public:
     };
 
 private:
-    std::vector<block_t*>* m_block;
+    std::vector<block_t*>* m_blocks;
     zx_spectrum_tap_t* m__root;
     kaitai::kstruct* m__parent;
 
 public:
-    std::vector<block_t*>* block() const { return m_block; }
+    std::vector<block_t*>* blocks() const { return m_blocks; }
     zx_spectrum_tap_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };
