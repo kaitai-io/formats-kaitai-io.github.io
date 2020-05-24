@@ -212,20 +212,23 @@ or you can convert images of other formats.</li>
 
 
 
-<pre><code class="python">data = Vdi.from_file("path/to/local/file.VirtualBox Disk Image")</code></pre>
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">Vdi</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.VirtualBox Disk Image&quot;</span><span class="p">)</span>
+</pre></div>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
-raw = b"\x00\x01\x02..."
-data = Vdi(KaitaiStream(BytesIO(raw)))</code></pre>
+<span class="n">raw</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">Vdi</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">raw</span><span class="p">)))</span>
+</pre></div>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="python">data.blocks_map # => block_index = offset_in_virtual_disk / block_size actual_data_offset = blocks_map[block_index]*block_size+metadata_size+offset_in_block
-The blocks_map will take up blocks_in_image_max * sizeof(uint32_t) bytes; since the blocks_map is read and written in a single operation, its size needs to be limited to INT_MAX; furthermore, when opening an image, the blocks_map size is rounded up to be aligned on BDRV_SECTOR_SIZE. Therefore this should satisfy the following: blocks_in_image_max * sizeof(uint32_t) + BDRV_SECTOR_SIZE == INT_MAX + 1 (INT_MAX + 1 is the first value not representable as an int) This guarantees that any value below or equal to the constant will, when multiplied by sizeof(uint32_t) and rounded up to a BDRV_SECTOR_SIZE boundary, still be below or equal to INT_MAX.
-</code></pre>
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">blocks_map</span> <span class="c1"># =&gt; block_index = offset_in_virtual_disk / block_size actual_data_offset = blocks_map[block_index]*block_size+metadata_size+offset_in_block</span>
+<span class="n">The</span> <span class="n">blocks_map</span> <span class="n">will</span> <span class="n">take</span> <span class="n">up</span> <span class="n">blocks_in_image_max</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">uint32_t</span><span class="p">)</span> <span class="nb">bytes</span><span class="p">;</span> <span class="n">since</span> <span class="n">the</span> <span class="n">blocks_map</span> <span class="ow">is</span> <span class="n">read</span> <span class="ow">and</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">single</span> <span class="n">operation</span><span class="p">,</span> <span class="n">its</span> <span class="n">size</span> <span class="n">needs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">limited</span> <span class="n">to</span> <span class="n">INT_MAX</span><span class="p">;</span> <span class="n">furthermore</span><span class="p">,</span> <span class="n">when</span> <span class="n">opening</span> <span class="n">an</span> <span class="n">image</span><span class="p">,</span> <span class="n">the</span> <span class="n">blocks_map</span> <span class="n">size</span> <span class="ow">is</span> <span class="n">rounded</span> <span class="n">up</span> <span class="n">to</span> <span class="n">be</span> <span class="n">aligned</span> <span class="n">on</span> <span class="n">BDRV_SECTOR_SIZE</span><span class="o">.</span> <span class="n">Therefore</span> <span class="n">this</span> <span class="n">should</span> <span class="n">satisfy</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span> <span class="n">blocks_in_image_max</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">uint32_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">BDRV_SECTOR_SIZE</span> <span class="o">==</span> <span class="n">INT_MAX</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">(</span><span class="n">INT_MAX</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">first</span> <span class="n">value</span> <span class="ow">not</span> <span class="n">representable</span> <span class="k">as</span> <span class="n">an</span> <span class="nb">int</span><span class="p">)</span> <span class="n">This</span> <span class="n">guarantees</span> <span class="n">that</span> <span class="nb">any</span> <span class="n">value</span> <span class="n">below</span> <span class="ow">or</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">the</span> <span class="n">constant</span> <span class="n">will</span><span class="p">,</span> <span class="n">when</span> <span class="n">multiplied</span> <span class="n">by</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">uint32_t</span><span class="p">)</span> <span class="ow">and</span> <span class="n">rounded</span> <span class="n">up</span> <span class="n">to</span> <span class="n">a</span> <span class="n">BDRV_SECTOR_SIZE</span> <span class="n">boundary</span><span class="p">,</span> <span class="n">still</span> <span class="n">be</span> <span class="n">below</span> <span class="ow">or</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">INT_MAX</span><span class="o">.</span>
+</pre></div>
 
     </div>
 </section>

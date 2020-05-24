@@ -212,21 +212,24 @@ reached via the links starting from the first page. First page type
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<pre><code class="cpp">#include &lt;fstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
 
-std::ifstream is("path/to/local/file.sqlite3", std::ifstream::binary);</code></pre>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.sqlite3&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<pre><code class="cpp">#include &lt;sstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
 
-std::istringstream is(str);</code></pre>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<pre><code class="cpp">#include &lt;sstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
 
-const char buf[] = { ... };
-std::string str(buf, sizeof buf);
-std::istringstream is(str);</code></pre>
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
             </div>
         </div>
 
@@ -234,21 +237,25 @@ std::istringstream is(str);</code></pre>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
 
-kaitai::kstream ks(&amp;is);</code></pre></li>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
 
     <li>And finally, we can invoke the parsing:
-
-<pre><code class="cpp">sqlite3_t data(&amp;ks);</code></pre></li>
+<div class="highlight"><pre><span></span><span class="n">sqlite3_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
 </ol>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="cpp">data.len_page_mod() // => The database page size in bytes. Must be a power of two between
-512 and 32768 inclusive, or the value 1 representing a page size
-of 65536.
-</code></pre>
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">len_page_mod</span><span class="p">()</span> <span class="c1">// =&gt; The database page size in bytes. Must be a power of two between</span>
+<span class="mi">512</span> <span class="n">and</span> <span class="mi">32768</span> <span class="n">inclusive</span><span class="p">,</span> <span class="n">or</span> <span class="n">the</span> <span class="n">value</span> <span class="mi">1</span> <span class="n">representing</span> <span class="n">a</span> <span class="n">page</span> <span class="n">size</span>
+<span class="n">of</span> <span class="mf">65536.</span>
+</pre></div>
 
     </div>
 </section>

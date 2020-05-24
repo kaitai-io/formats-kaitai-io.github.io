@@ -221,21 +221,24 @@ or you can convert images of other formats.</li>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<pre><code class="cpp">#include &lt;fstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
 
-std::ifstream is("path/to/local/file.vdi", std::ifstream::binary);</code></pre>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.vdi&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<pre><code class="cpp">#include &lt;sstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
 
-std::istringstream is(str);</code></pre>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<pre><code class="cpp">#include &lt;sstream&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
 
-const char buf[] = { ... };
-std::string str(buf, sizeof buf);
-std::istringstream is(str);</code></pre>
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
             </div>
         </div>
 
@@ -243,20 +246,24 @@ std::istringstream is(str);</code></pre>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
 
-kaitai::kstream ks(&amp;is);</code></pre></li>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
 
     <li>And finally, we can invoke the parsing:
-
-<pre><code class="cpp">vdi_t data(&amp;ks);</code></pre></li>
+<div class="highlight"><pre><span></span><span class="n">vdi_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
 </ol>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="cpp">data.blocks_map() // => block_index = offset_in_virtual_disk / block_size actual_data_offset = blocks_map[block_index]*block_size+metadata_size+offset_in_block
-The blocks_map will take up blocks_in_image_max * sizeof(uint32_t) bytes; since the blocks_map is read and written in a single operation, its size needs to be limited to INT_MAX; furthermore, when opening an image, the blocks_map size is rounded up to be aligned on BDRV_SECTOR_SIZE. Therefore this should satisfy the following: blocks_in_image_max * sizeof(uint32_t) + BDRV_SECTOR_SIZE == INT_MAX + 1 (INT_MAX + 1 is the first value not representable as an int) This guarantees that any value below or equal to the constant will, when multiplied by sizeof(uint32_t) and rounded up to a BDRV_SECTOR_SIZE boundary, still be below or equal to INT_MAX.
-</code></pre>
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">blocks_map</span><span class="p">()</span> <span class="c1">// =&gt; block_index = offset_in_virtual_disk / block_size actual_data_offset = blocks_map[block_index]*block_size+metadata_size+offset_in_block</span>
+<span class="n">The</span> <span class="n">blocks_map</span> <span class="n">will</span> <span class="n">take</span> <span class="n">up</span> <span class="n">blocks_in_image_max</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span> <span class="n">bytes</span><span class="p">;</span> <span class="n">since</span> <span class="n">the</span> <span class="n">blocks_map</span> <span class="n">is</span> <span class="n">read</span> <span class="n">and</span> <span class="n">written</span> <span class="n">in</span> <span class="n">a</span> <span class="n">single</span> <span class="n">operation</span><span class="p">,</span> <span class="n">its</span> <span class="n">size</span> <span class="n">needs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">limited</span> <span class="n">to</span> <span class="n">INT_MAX</span><span class="p">;</span> <span class="n">furthermore</span><span class="p">,</span> <span class="n">when</span> <span class="n">opening</span> <span class="n">an</span> <span class="n">image</span><span class="p">,</span> <span class="n">the</span> <span class="n">blocks_map</span> <span class="n">size</span> <span class="n">is</span> <span class="n">rounded</span> <span class="n">up</span> <span class="n">to</span> <span class="n">be</span> <span class="n">aligned</span> <span class="n">on</span> <span class="n">BDRV_SECTOR_SIZE</span><span class="p">.</span> <span class="n">Therefore</span> <span class="k">this</span> <span class="n">should</span> <span class="n">satisfy</span> <span class="n">the</span> <span class="nl">following</span><span class="p">:</span> <span class="n">blocks_in_image_max</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">BDRV_SECTOR_SIZE</span> <span class="o">==</span> <span class="n">INT_MAX</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">(</span><span class="n">INT_MAX</span> <span class="o">+</span> <span class="mi">1</span> <span class="n">is</span> <span class="n">the</span> <span class="n">first</span> <span class="n">value</span> <span class="n">not</span> <span class="n">representable</span> <span class="n">as</span> <span class="n">an</span> <span class="kt">int</span><span class="p">)</span> <span class="n">This</span> <span class="n">guarantees</span> <span class="n">that</span> <span class="n">any</span> <span class="n">value</span> <span class="n">below</span> <span class="n">or</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">the</span> <span class="n">constant</span> <span class="n">will</span><span class="p">,</span> <span class="n">when</span> <span class="n">multiplied</span> <span class="n">by</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span> <span class="n">and</span> <span class="n">rounded</span> <span class="n">up</span> <span class="n">to</span> <span class="n">a</span> <span class="n">BDRV_SECTOR_SIZE</span> <span class="n">boundary</span><span class="p">,</span> <span class="n">still</span> <span class="n">be</span> <span class="n">below</span> <span class="n">or</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">INT_MAX</span><span class="p">.</span>
+</pre></div>
 
     </div>
 </section>
