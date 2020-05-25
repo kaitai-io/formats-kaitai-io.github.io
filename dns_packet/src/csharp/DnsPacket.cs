@@ -79,6 +79,13 @@ namespace Kaitai
                     _answers.Add(new Answer(m_io, this, m_root));
                 }
             }
+            if (Flags.IsOpcodeValid) {
+                _additionals = new List<Answer>((int) (Arcount));
+                for (var i = 0; i < Arcount; i++)
+                {
+                    _additionals.Add(new Answer(m_io, this, m_root));
+                }
+            }
         }
         public partial class PointerStruct : KaitaiStruct
         {
@@ -517,6 +524,7 @@ namespace Kaitai
         private ushort? _arcount;
         private List<Query> _queries;
         private List<Answer> _answers;
+        private List<Answer> _additionals;
         private DnsPacket m_root;
         private KaitaiStruct m_parent;
 
@@ -547,6 +555,7 @@ namespace Kaitai
         public ushort? Arcount { get { return _arcount; } }
         public List<Query> Queries { get { return _queries; } }
         public List<Answer> Answers { get { return _answers; } }
+        public List<Answer> Additionals { get { return _additionals; } }
         public DnsPacket M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

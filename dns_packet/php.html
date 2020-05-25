@@ -278,6 +278,13 @@ section#format-index .row {
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_answers</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DnsPacket\Answer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isOpcodeValid</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_additionals</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">arcount</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_additionals</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DnsPacket\Answer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">protected</span> <span class="nv">$_m_transactionId</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
@@ -287,6 +294,7 @@ section#format-index .row {
     <span class="k">protected</span> <span class="nv">$_m_arcount</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_queries</span><span class="p">;</span>
     <span class="k">protected</span> <span class="nv">$_m_answers</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_additionals</span><span class="p">;</span>
 
     <span class="sd">/**</span>
 <span class="sd">     * ID to keep track of request/responces</span>
@@ -315,6 +323,7 @@ section#format-index .row {
     <span class="k">public</span> <span class="k">function</span> <span class="nf">arcount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arcount</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">queries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_queries</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">answers</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_answers</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">additionals</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_additionals</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">\DnsPacket</span><span class="p">;</span>

@@ -70,6 +70,12 @@ class DnsPacket < Kaitai::Struct::Struct
         @answers[i] = Answer.new(@_io, self, @_root)
       }
     end
+    if flags.is_opcode_valid
+      @additionals = Array.new(arcount)
+      (arcount).times { |i|
+        @additionals[i] = Answer.new(@_io, self, @_root)
+      }
+    end
     self
   end
   class PointerStruct < Kaitai::Struct::Struct
@@ -303,4 +309,5 @@ class DnsPacket < Kaitai::Struct::Struct
   attr_reader :arcount
   attr_reader :queries
   attr_reader :answers
+  attr_reader :additionals
 end

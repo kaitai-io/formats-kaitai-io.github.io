@@ -96,6 +96,12 @@ var DnsPacket = (function() {
         this.answers[i] = new Answer(this._io, this, this._root);
       }
     }
+    if (this.flags.isOpcodeValid) {
+      this.additionals = new Array(this.arcount);
+      for (var i = 0; i < this.arcount; i++) {
+        this.additionals[i] = new Answer(this._io, this, this._root);
+      }
+    }
   }
 
   var PointerStruct = DnsPacket.PointerStruct = (function() {

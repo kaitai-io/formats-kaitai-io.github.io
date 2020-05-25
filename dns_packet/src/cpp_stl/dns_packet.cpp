@@ -53,6 +53,16 @@ void dns_packet_t::_read() {
             m_answers->push_back(new answer_t(m__io, this, m__root));
         }
     }
+    n_additionals = true;
+    if (flags()->is_opcode_valid()) {
+        n_additionals = false;
+        int l_additionals = arcount();
+        m_additionals = new std::vector<answer_t*>();
+        m_additionals->reserve(l_additionals);
+        for (int i = 0; i < l_additionals; i++) {
+            m_additionals->push_back(new answer_t(m__io, this, m__root));
+        }
+    }
 }
 
 dns_packet_t::~dns_packet_t() {
@@ -76,6 +86,12 @@ dns_packet_t::~dns_packet_t() {
             delete *it;
         }
         delete m_answers;
+    }
+    if (!n_additionals) {
+        for (std::vector<answer_t*>::iterator it = m_additionals->begin(); it != m_additionals->end(); ++it) {
+            delete *it;
+        }
+        delete m_additionals;
     }
 }
 

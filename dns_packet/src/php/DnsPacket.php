@@ -40,6 +40,13 @@ class DnsPacket extends \Kaitai\Struct\Struct {
                 $this->_m_answers[] = new \DnsPacket\Answer($this->_io, $this, $this->_root);
             }
         }
+        if ($this->flags()->isOpcodeValid()) {
+            $this->_m_additionals = [];
+            $n = $this->arcount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_additionals[] = new \DnsPacket\Answer($this->_io, $this, $this->_root);
+            }
+        }
     }
     protected $_m_transactionId;
     protected $_m_flags;
@@ -49,6 +56,7 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     protected $_m_arcount;
     protected $_m_queries;
     protected $_m_answers;
+    protected $_m_additionals;
 
     /**
      * ID to keep track of request/responces
@@ -77,6 +85,7 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     public function arcount() { return $this->_m_arcount; }
     public function queries() { return $this->_m_queries; }
     public function answers() { return $this->_m_answers; }
+    public function additionals() { return $this->_m_additionals; }
 }
 
 namespace \DnsPacket;

@@ -105,6 +105,12 @@ public class DnsPacket extends KaitaiStruct {
                 this.answers.add(new Answer(this._io, this, _root));
             }
         }
+        if (flags().isOpcodeValid()) {
+            additionals = new ArrayList<Answer>((int) (arcount()));
+            for (int i = 0; i < arcount(); i++) {
+                this.additionals.add(new Answer(this._io, this, _root));
+            }
+        }
     }
     public static class PointerStruct extends KaitaiStruct {
         public static PointerStruct fromFile(String fileName) throws IOException {
@@ -498,6 +504,7 @@ public class DnsPacket extends KaitaiStruct {
     private Integer arcount;
     private ArrayList<Query> queries;
     private ArrayList<Answer> answers;
+    private ArrayList<Answer> additionals;
     private DnsPacket _root;
     private KaitaiStruct _parent;
 
@@ -528,6 +535,7 @@ public class DnsPacket extends KaitaiStruct {
     public Integer arcount() { return arcount; }
     public ArrayList<Query> queries() { return queries; }
     public ArrayList<Answer> answers() { return answers; }
+    public ArrayList<Answer> additionals() { return additionals; }
     public DnsPacket _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

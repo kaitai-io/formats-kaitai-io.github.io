@@ -85,6 +85,13 @@ sub _read {
             $self->{answers}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
         }
     }
+    if ($self->flags()->is_opcode_valid()) {
+        $self->{additionals} = ();
+        my $n_additionals = $self->arcount();
+        for (my $i = 0; $i < $n_additionals; $i++) {
+            $self->{additionals}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+        }
+    }
 }
 
 sub transaction_id {
@@ -125,6 +132,11 @@ sub queries {
 sub answers {
     my ($self) = @_;
     return $self->{answers};
+}
+
+sub additionals {
+    my ($self) = @_;
+    return $self->{additionals};
 }
 
 ########################################################################

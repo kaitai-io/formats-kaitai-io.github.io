@@ -17,6 +17,8 @@ digraph {
 			<TR><TD COLSPAN="4" PORT="queries__repeat">repeat qdcount times</TD></TR>
 			<TR><TD PORT="answers_pos">...</TD><TD PORT="answers_size">...</TD><TD>Answer</TD><TD PORT="answers_type">answers</TD></TR>
 			<TR><TD COLSPAN="4" PORT="answers__repeat">repeat ancount times</TD></TR>
+			<TR><TD PORT="additionals_pos">...</TD><TD PORT="additionals_size">...</TD><TD>Answer</TD><TD PORT="additionals_type">additionals</TD></TR>
+			<TR><TD COLSPAN="4" PORT="additionals__repeat">repeat arcount times</TD></TR>
 		</TABLE>>];
 		subgraph cluster__pointer_struct {
 			label="DnsPacket::PointerStruct";
@@ -151,6 +153,8 @@ digraph {
 	dns_packet__seq:qdcount_type -> dns_packet__seq:queries__repeat [color="#404040"];
 	dns_packet__seq:answers_type -> answer__seq [style=bold];
 	dns_packet__seq:ancount_type -> dns_packet__seq:answers__repeat [color="#404040"];
+	dns_packet__seq:additionals_type -> answer__seq [style=bold];
+	dns_packet__seq:arcount_type -> dns_packet__seq:additionals__repeat [color="#404040"];
 	pointer_struct__seq:value_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
 	pointer_struct__inst__contents:contents_type -> domain_name__seq [style=bold];
 	label__seq:pointer_type -> pointer_struct__seq [style=bold];

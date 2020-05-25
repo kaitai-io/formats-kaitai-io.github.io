@@ -68,6 +68,12 @@ class DnsPacket(KaitaiStruct):
                 self.answers[i] = self._root.Answer(self._io, self, self._root)
 
 
+        if self.flags.is_opcode_valid:
+            self.additionals = [None] * (self.arcount)
+            for i in range(self.arcount):
+                self.additionals[i] = self._root.Answer(self._io, self, self._root)
+
+
 
     class PointerStruct(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):

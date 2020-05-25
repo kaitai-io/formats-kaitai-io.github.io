@@ -426,6 +426,13 @@ public:
     bool _is_null_answers() { answers(); return n_answers; };
 
 private:
+    std::vector<answer_t*>* m_additionals;
+    bool n_additionals;
+
+public:
+    bool _is_null_additionals() { additionals(); return n_additionals; };
+
+private:
     dns_packet_t* m__root;
     kaitai::kstruct* m__parent;
 
@@ -458,6 +465,7 @@ public:
     uint16_t arcount() const { return m_arcount; }
     std::vector<query_t*>* queries() const { return m_queries; }
     std::vector<answer_t*>* answers() const { return m_answers; }
+    std::vector<answer_t*>* additionals() const { return m_additionals; }
     dns_packet_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };

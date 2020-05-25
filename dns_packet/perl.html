@@ -323,6 +323,13 @@ section#format-index .row {
             <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">answers</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nn">DnsPacket::Answer</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
         <span class="p">}</span>
     <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">additionals</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+        <span class="k">my</span> <span class="nv">$n_additionals</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">arcount</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_additionals</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">additionals</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nn">DnsPacket::Answer</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">transaction_id</span> <span class="p">{</span>
@@ -363,6 +370,11 @@ section#format-index .row {
 <span class="k">sub</span> <span class="nf">answers</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">answers</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">additionals</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">additionals</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
