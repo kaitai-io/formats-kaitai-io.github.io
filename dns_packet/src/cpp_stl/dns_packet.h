@@ -23,6 +23,9 @@ public:
     class label_t;
     class query_t;
     class domain_name_t;
+    class service_t;
+    class txt_t;
+    class txt_body_t;
     class address_t;
     class answer_t;
     class packet_flags_t;
@@ -50,7 +53,8 @@ public:
         TYPE_TYPE_HINFO = 13,
         TYPE_TYPE_MINFO = 14,
         TYPE_TYPE_MX = 15,
-        TYPE_TYPE_TXT = 16
+        TYPE_TYPE_TXT = 16,
+        TYPE_TYPE_SRV = 33
     };
 
     dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dns_packet_t* p__root = 0);
@@ -203,6 +207,83 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    class service_t : public kaitai::kstruct {
+
+    public:
+
+        service_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~service_t();
+
+    private:
+        uint16_t m_priority;
+        uint16_t m_weight;
+        uint16_t m_port;
+        domain_name_t* m_target;
+        dns_packet_t* m__root;
+        dns_packet_t::answer_t* m__parent;
+
+    public:
+        uint16_t priority() const { return m_priority; }
+        uint16_t weight() const { return m_weight; }
+        uint16_t port() const { return m_port; }
+        domain_name_t* target() const { return m_target; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::answer_t* _parent() const { return m__parent; }
+    };
+
+    class txt_t : public kaitai::kstruct {
+
+    public:
+
+        txt_t(kaitai::kstream* p__io, dns_packet_t::txt_body_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~txt_t();
+
+    private:
+        uint8_t m_length;
+        std::string m_text;
+        dns_packet_t* m__root;
+        dns_packet_t::txt_body_t* m__parent;
+
+    public:
+        uint8_t length() const { return m_length; }
+        std::string text() const { return m_text; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::txt_body_t* _parent() const { return m__parent; }
+    };
+
+    class txt_body_t : public kaitai::kstruct {
+
+    public:
+
+        txt_body_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~txt_body_t();
+
+    private:
+        std::vector<txt_t*>* m_data;
+        dns_packet_t* m__root;
+        dns_packet_t::answer_t* m__parent;
+
+    public:
+        std::vector<txt_t*>* data() const { return m_data; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::answer_t* _parent() const { return m__parent; }
+    };
+
     class address_t : public kaitai::kstruct {
 
     public:
@@ -244,22 +325,17 @@ public:
         class_type_t m_answer_class;
         int32_t m_ttl;
         uint16_t m_rdlength;
-        domain_name_t* m_ptrdname;
-        bool n_ptrdname;
+        kaitai::kstruct* m_payload;
+        bool n_payload;
 
     public:
-        bool _is_null_ptrdname() { ptrdname(); return n_ptrdname; };
-
-    private:
-        address_t* m_address;
-        bool n_address;
-
-    public:
-        bool _is_null_address() { address(); return n_address; };
+        bool _is_null_payload() { payload(); return n_payload; };
 
     private:
         dns_packet_t* m__root;
         dns_packet_t* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
 
     public:
         domain_name_t* name() const { return m_name; }
@@ -275,10 +351,11 @@ public:
          * Length in octets of the following payload
          */
         uint16_t rdlength() const { return m_rdlength; }
-        domain_name_t* ptrdname() const { return m_ptrdname; }
-        address_t* address() const { return m_address; }
+        kaitai::kstruct* payload() const { return m_payload; }
         dns_packet_t* _root() const { return m__root; }
         dns_packet_t* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
     };
 
     class packet_flags_t : public kaitai::kstruct {

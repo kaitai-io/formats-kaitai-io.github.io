@@ -51,12 +51,13 @@ public class DnsPacket extends KaitaiStruct {
         HINFO(13),
         MINFO(14),
         MX(15),
-        TXT(16);
+        TXT(16),
+        SRV(33);
 
         private final long id;
         TypeType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, TypeType> byId = new HashMap<Long, TypeType>(16);
+        private static final Map<Long, TypeType> byId = new HashMap<Long, TypeType>(17);
         static {
             for (TypeType e : TypeType.values())
                 byId.put(e.id(), e);
@@ -140,7 +141,7 @@ public class DnsPacket extends KaitaiStruct {
                 return this.contents;
             KaitaiStream io = _root._io();
             long _pos = io.pos();
-            io.seek(value());
+            io.seek((value() + ((_parent().length() - 192) << 8)));
             this.contents = new DomainName(io, this, _root);
             io.seek(_pos);
             return this.contents;
@@ -181,14 +182,14 @@ public class DnsPacket extends KaitaiStruct {
                 this.pointer = new PointerStruct(this._io, this, _root);
             }
             if (!(isPointer())) {
-                this.name = new String(this._io.readBytes(length()), Charset.forName("ASCII"));
+                this.name = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
             }
         }
         private Boolean isPointer;
         public Boolean isPointer() {
             if (this.isPointer != null)
                 return this.isPointer;
-            boolean _tmp = (boolean) (length() == 192);
+            boolean _tmp = (boolean) (length() >= 192);
             this.isPointer = _tmp;
             return this.isPointer;
         }
@@ -274,7 +275,7 @@ public class DnsPacket extends KaitaiStruct {
                     _it = new Label(this._io, this, _root);
                     this.name.add(_it);
                     i++;
-                } while (!( ((_it.length() == 0) || (_it.length() == 192)) ));
+                } while (!( ((_it.length() == 0) || (_it.length() >= 192)) ));
             }
         }
         private ArrayList<Label> name;
@@ -287,6 +288,112 @@ public class DnsPacket extends KaitaiStruct {
         public ArrayList<Label> name() { return name; }
         public DnsPacket _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class Service extends KaitaiStruct {
+        public static Service fromFile(String fileName) throws IOException {
+            return new Service(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Service(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Service(KaitaiStream _io, DnsPacket.Answer _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Service(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.priority = this._io.readU2be();
+            this.weight = this._io.readU2be();
+            this.port = this._io.readU2be();
+            this.target = new DomainName(this._io, this, _root);
+        }
+        private int priority;
+        private int weight;
+        private int port;
+        private DomainName target;
+        private DnsPacket _root;
+        private DnsPacket.Answer _parent;
+        public int priority() { return priority; }
+        public int weight() { return weight; }
+        public int port() { return port; }
+        public DomainName target() { return target; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.Answer _parent() { return _parent; }
+    }
+    public static class Txt extends KaitaiStruct {
+        public static Txt fromFile(String fileName) throws IOException {
+            return new Txt(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Txt(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Txt(KaitaiStream _io, DnsPacket.TxtBody _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Txt(KaitaiStream _io, DnsPacket.TxtBody _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.length = this._io.readU1();
+            this.text = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
+        }
+        private int length;
+        private String text;
+        private DnsPacket _root;
+        private DnsPacket.TxtBody _parent;
+        public int length() { return length; }
+        public String text() { return text; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.TxtBody _parent() { return _parent; }
+    }
+    public static class TxtBody extends KaitaiStruct {
+        public static TxtBody fromFile(String fileName) throws IOException {
+            return new TxtBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TxtBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TxtBody(KaitaiStream _io, DnsPacket.Answer _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TxtBody(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.data = new ArrayList<Txt>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.data.add(new Txt(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+        private ArrayList<Txt> data;
+        private DnsPacket _root;
+        private DnsPacket.Answer _parent;
+        public ArrayList<Txt> data() { return data; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.Answer _parent() { return _parent; }
     }
     public static class Address extends KaitaiStruct {
         public static Address fromFile(String fileName) throws IOException {
@@ -345,11 +452,41 @@ public class DnsPacket extends KaitaiStruct {
             this.answerClass = DnsPacket.ClassType.byId(this._io.readU2be());
             this.ttl = this._io.readS4be();
             this.rdlength = this._io.readU2be();
-            if (type() == DnsPacket.TypeType.PTR) {
-                this.ptrdname = new DomainName(this._io, this, _root);
+            switch (type()) {
+            case PTR: {
+                this._raw_payload = this._io.readBytes(rdlength());
+                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                this.payload = new DomainName(_io__raw_payload, this, _root);
+                break;
             }
-            if (type() == DnsPacket.TypeType.A) {
-                this.address = new Address(this._io, this, _root);
+            case CNAME: {
+                this._raw_payload = this._io.readBytes(rdlength());
+                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                this.payload = new DomainName(_io__raw_payload, this, _root);
+                break;
+            }
+            case TXT: {
+                this._raw_payload = this._io.readBytes(rdlength());
+                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                this.payload = new TxtBody(_io__raw_payload, this, _root);
+                break;
+            }
+            case SRV: {
+                this._raw_payload = this._io.readBytes(rdlength());
+                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                this.payload = new Service(_io__raw_payload, this, _root);
+                break;
+            }
+            case A: {
+                this._raw_payload = this._io.readBytes(rdlength());
+                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                this.payload = new Address(_io__raw_payload, this, _root);
+                break;
+            }
+            default: {
+                this.payload = this._io.readBytes(rdlength());
+                break;
+            }
             }
         }
         private DomainName name;
@@ -357,10 +494,10 @@ public class DnsPacket extends KaitaiStruct {
         private ClassType answerClass;
         private int ttl;
         private int rdlength;
-        private DomainName ptrdname;
-        private Address address;
+        private Object payload;
         private DnsPacket _root;
         private DnsPacket _parent;
+        private byte[] _raw_payload;
         public DomainName name() { return name; }
         public TypeType type() { return type; }
         public ClassType answerClass() { return answerClass; }
@@ -374,10 +511,10 @@ public class DnsPacket extends KaitaiStruct {
          * Length in octets of the following payload
          */
         public int rdlength() { return rdlength; }
-        public DomainName ptrdname() { return ptrdname; }
-        public Address address() { return address; }
+        public Object payload() { return payload; }
         public DnsPacket _root() { return _root; }
         public DnsPacket _parent() { return _parent; }
+        public byte[] _raw_payload() { return _raw_payload; }
     }
     public static class PacketFlags extends KaitaiStruct {
         public static PacketFlags fromFile(String fileName) throws IOException {

@@ -305,6 +305,7 @@ section#format-index .row {
             <span class="n">Minfo</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
             <span class="n">Mx</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
             <span class="n">Txt</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">Srv</span> <span class="p">=</span> <span class="m">33</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="nf">DnsPacket</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
         <span class="p">{</span>
@@ -378,7 +379,7 @@ section#format-index .row {
                         <span class="k">return</span> <span class="n">_contents</span><span class="p">;</span>
                     <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
                     <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                    <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Value</span><span class="p">);</span>
+                    <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">Value</span> <span class="p">+</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Length</span> <span class="p">-</span> <span class="m">192</span><span class="p">)</span> <span class="p">&lt;&lt;</span> <span class="m">8</span><span class="p">)));</span>
                     <span class="n">_contents</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
                     <span class="n">f_contents</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
@@ -417,7 +418,7 @@ section#format-index .row {
                     <span class="n">_pointer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PointerStruct</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">(!(</span><span class="n">IsPointer</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">));</span>
+                    <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPointer</span><span class="p">;</span>
@@ -428,7 +429,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_isPointer</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_isPointer</span><span class="p">;</span>
-                    <span class="n">_isPointer</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">Length</span> <span class="p">==</span> <span class="m">192</span><span class="p">);</span>
+                    <span class="n">_isPointer</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">Length</span> <span class="p">&gt;=</span> <span class="m">192</span><span class="p">);</span>
                     <span class="n">f_isPointer</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_isPointer</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -505,7 +506,7 @@ section#format-index .row {
                         <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Label</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">_name</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
                         <span class="n">i</span><span class="p">++;</span>
-                    <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span> <span class="p">((</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">192</span><span class="p">))</span> <span class="p">));</span>
+                    <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span> <span class="p">((</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;=</span> <span class="m">192</span><span class="p">))</span> <span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Label</span><span class="p">&gt;</span> <span class="n">_name</span><span class="p">;</span>
@@ -518,6 +519,97 @@ section#format-index .row {
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Label</span><span class="p">&gt;</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Service</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Service</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Service</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Service</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_priority</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_weight</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_port</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_target</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_priority</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_weight</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_port</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DomainName</span> <span class="n">_target</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Priority</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_priority</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Weight</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_weight</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Port</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_port</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DomainName</span> <span class="n">Target</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_target</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Txt</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Txt</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Txt</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Txt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_text</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Length</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_length</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_text</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Length</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Text</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_text</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TxtBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TxtBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TxtBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">TxtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Txt</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_data</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Txt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Txt</span><span class="p">&gt;</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Txt</span><span class="p">&gt;</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Address</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
         <span class="p">{</span>
@@ -567,11 +659,41 @@ section#format-index .row {
                 <span class="n">_answerClass</span> <span class="p">=</span> <span class="p">((</span><span class="n">DnsPacket</span><span class="p">.</span><span class="n">ClassType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">());</span>
                 <span class="n">_ttl</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
                 <span class="n">_rdlength</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">Type</span> <span class="p">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ptr</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_ptrdname</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ptr</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">Type</span> <span class="p">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">A</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_address</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Cname</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Txt</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TxtBody</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Srv</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Service</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">A</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">DomainName</span> <span class="n">_name</span><span class="p">;</span>
@@ -579,10 +701,10 @@ section#format-index .row {
             <span class="k">private</span> <span class="n">ClassType</span> <span class="n">_answerClass</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">int</span> <span class="n">_ttl</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_rdlength</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">DomainName</span> <span class="n">_ptrdname</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Address</span> <span class="n">_address</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_payload</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">DnsPacket</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">DnsPacket</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_payload</span><span class="p">;</span>
             <span class="k">public</span> <span class="n">DomainName</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">TypeType</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">ClassType</span> <span class="n">AnswerClass</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_answerClass</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
@@ -596,10 +718,10 @@ section#format-index .row {
             <span class="c1">/// Length in octets of the following payload</span>
             <span class="c1">/// &lt;/summary&gt;</span>
             <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Rdlength</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rdlength</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">DomainName</span> <span class="n">Ptrdname</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ptrdname</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Address</span> <span class="n">Address</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_address</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">DnsPacket</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PacketFlags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
         <span class="p">{</span>

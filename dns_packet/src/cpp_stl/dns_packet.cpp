@@ -117,7 +117,7 @@ dns_packet_t::domain_name_t* dns_packet_t::pointer_struct_t::contents() {
         return m_contents;
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
-    io->seek(value());
+    io->seek((value() + ((_parent()->length() - 192) << 8)));
     m_contents = new domain_name_t(io, this, m__root);
     io->seek(_pos);
     f_contents = true;
@@ -141,7 +141,7 @@ void dns_packet_t::label_t::_read() {
     n_name = true;
     if (!(is_pointer())) {
         n_name = false;
-        m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(length()), std::string("ASCII"));
+        m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(length()), std::string("utf-8"));
     }
 }
 
@@ -156,7 +156,7 @@ dns_packet_t::label_t::~label_t() {
 bool dns_packet_t::label_t::is_pointer() {
     if (f_is_pointer)
         return m_is_pointer;
-    m_is_pointer = length() == 192;
+    m_is_pointer = length() >= 192;
     f_is_pointer = true;
     return m_is_pointer;
 }
@@ -192,7 +192,7 @@ void dns_packet_t::domain_name_t::_read() {
             _ = new label_t(m__io, this, m__root);
             m_name->push_back(_);
             i++;
-        } while (!( ((_->length() == 0) || (_->length() == 192)) ));
+        } while (!( ((_->length() == 0) || (_->length() >= 192)) ));
     }
 }
 
@@ -201,6 +201,61 @@ dns_packet_t::domain_name_t::~domain_name_t() {
         delete *it;
     }
     delete m_name;
+}
+
+dns_packet_t::service_t::service_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void dns_packet_t::service_t::_read() {
+    m_priority = m__io->read_u2be();
+    m_weight = m__io->read_u2be();
+    m_port = m__io->read_u2be();
+    m_target = new domain_name_t(m__io, this, m__root);
+}
+
+dns_packet_t::service_t::~service_t() {
+    delete m_target;
+}
+
+dns_packet_t::txt_t::txt_t(kaitai::kstream* p__io, dns_packet_t::txt_body_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void dns_packet_t::txt_t::_read() {
+    m_length = m__io->read_u1();
+    m_text = kaitai::kstream::bytes_to_str(m__io->read_bytes(length()), std::string("utf-8"));
+}
+
+dns_packet_t::txt_t::~txt_t() {
+}
+
+dns_packet_t::txt_body_t::txt_body_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void dns_packet_t::txt_body_t::_read() {
+    m_data = new std::vector<txt_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_data->push_back(new txt_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+dns_packet_t::txt_body_t::~txt_body_t() {
+    for (std::vector<txt_t*>::iterator it = m_data->begin(); it != m_data->end(); ++it) {
+        delete *it;
+    }
+    delete m_data;
 }
 
 dns_packet_t::address_t::address_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
@@ -234,25 +289,55 @@ void dns_packet_t::answer_t::_read() {
     m_answer_class = static_cast<dns_packet_t::class_type_t>(m__io->read_u2be());
     m_ttl = m__io->read_s4be();
     m_rdlength = m__io->read_u2be();
-    n_ptrdname = true;
-    if (type() == TYPE_TYPE_PTR) {
-        n_ptrdname = false;
-        m_ptrdname = new domain_name_t(m__io, this, m__root);
+    n_payload = true;
+    switch (type()) {
+    case TYPE_TYPE_PTR: {
+        n_payload = false;
+        m__raw_payload = m__io->read_bytes(rdlength());
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new domain_name_t(m__io__raw_payload, this, m__root);
+        break;
     }
-    n_address = true;
-    if (type() == TYPE_TYPE_A) {
-        n_address = false;
-        m_address = new address_t(m__io, this, m__root);
+    case TYPE_TYPE_CNAME: {
+        n_payload = false;
+        m__raw_payload = m__io->read_bytes(rdlength());
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new domain_name_t(m__io__raw_payload, this, m__root);
+        break;
+    }
+    case TYPE_TYPE_TXT: {
+        n_payload = false;
+        m__raw_payload = m__io->read_bytes(rdlength());
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new txt_body_t(m__io__raw_payload, this, m__root);
+        break;
+    }
+    case TYPE_TYPE_SRV: {
+        n_payload = false;
+        m__raw_payload = m__io->read_bytes(rdlength());
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new service_t(m__io__raw_payload, this, m__root);
+        break;
+    }
+    case TYPE_TYPE_A: {
+        n_payload = false;
+        m__raw_payload = m__io->read_bytes(rdlength());
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new address_t(m__io__raw_payload, this, m__root);
+        break;
+    }
+    default: {
+        m__raw_payload = m__io->read_bytes(rdlength());
+        break;
+    }
     }
 }
 
 dns_packet_t::answer_t::~answer_t() {
     delete m_name;
-    if (!n_ptrdname) {
-        delete m_ptrdname;
-    }
-    if (!n_address) {
-        delete m_address;
+    if (!n_payload) {
+        delete m__io__raw_payload;
+        delete m_payload;
     }
 }
 

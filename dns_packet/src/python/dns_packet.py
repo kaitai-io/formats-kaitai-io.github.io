@@ -35,6 +35,7 @@ class DnsPacket(KaitaiStruct):
         minfo = 14
         mx = 15
         txt = 16
+        srv = 33
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -92,7 +93,7 @@ class DnsPacket(KaitaiStruct):
 
             io = self._root._io
             _pos = io.pos()
-            io.seek(self.value)
+            io.seek((self.value + ((self._parent.length - 192) << 8)))
             self._m_contents = self._root.DomainName(io, self, self._root)
             io.seek(_pos)
             return self._m_contents if hasattr(self, '_m_contents') else None
@@ -111,7 +112,7 @@ class DnsPacket(KaitaiStruct):
                 self.pointer = self._root.PointerStruct(self._io, self, self._root)
 
             if not (self.is_pointer):
-                self.name = (self._io.read_bytes(self.length)).decode(u"ASCII")
+                self.name = (self._io.read_bytes(self.length)).decode(u"utf-8")
 
 
         @property
@@ -119,7 +120,7 @@ class DnsPacket(KaitaiStruct):
             if hasattr(self, '_m_is_pointer'):
                 return self._m_is_pointer if hasattr(self, '_m_is_pointer') else None
 
-            self._m_is_pointer = self.length == 192
+            self._m_is_pointer = self.length >= 192
             return self._m_is_pointer if hasattr(self, '_m_is_pointer') else None
 
 
@@ -149,9 +150,51 @@ class DnsPacket(KaitaiStruct):
             while True:
                 _ = self._root.Label(self._io, self, self._root)
                 self.name.append(_)
-                if  ((_.length == 0) or (_.length == 192)) :
+                if  ((_.length == 0) or (_.length >= 192)) :
                     break
                 i += 1
+
+
+    class Service(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.priority = self._io.read_u2be()
+            self.weight = self._io.read_u2be()
+            self.port = self._io.read_u2be()
+            self.target = self._root.DomainName(self._io, self, self._root)
+
+
+    class Txt(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.length = self._io.read_u1()
+            self.text = (self._io.read_bytes(self.length)).decode(u"utf-8")
+
+
+    class TxtBody(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.data = []
+            i = 0
+            while not self._io.is_eof():
+                self.data.append(self._root.Txt(self._io, self, self._root))
+                i += 1
+
 
 
     class Address(KaitaiStruct):
@@ -181,12 +224,29 @@ class DnsPacket(KaitaiStruct):
             self.answer_class = self._root.ClassType(self._io.read_u2be())
             self.ttl = self._io.read_s4be()
             self.rdlength = self._io.read_u2be()
-            if self.type == self._root.TypeType.ptr:
-                self.ptrdname = self._root.DomainName(self._io, self, self._root)
-
-            if self.type == self._root.TypeType.a:
-                self.address = self._root.Address(self._io, self, self._root)
-
+            _on = self.type
+            if _on == self._root.TypeType.ptr:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.DomainName(io, self, self._root)
+            elif _on == self._root.TypeType.cname:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.DomainName(io, self, self._root)
+            elif _on == self._root.TypeType.txt:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.TxtBody(io, self, self._root)
+            elif _on == self._root.TypeType.srv:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.Service(io, self, self._root)
+            elif _on == self._root.TypeType.a:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.Address(io, self, self._root)
+            else:
+                self.payload = self._io.read_bytes(self.rdlength)
 
 
     class PacketFlags(KaitaiStruct):

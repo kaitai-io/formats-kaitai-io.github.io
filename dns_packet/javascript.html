@@ -302,6 +302,7 @@ section#format-index .row {
     <span class="nx">MINFO</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="nx">MX</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
     <span class="nx">TXT</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">SRV</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
 
     <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
     <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;NS&quot;</span><span class="p">,</span>
@@ -319,6 +320,7 @@ section#format-index .row {
     <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;MINFO&quot;</span><span class="p">,</span>
     <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;MX&quot;</span><span class="p">,</span>
     <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;TXT&quot;</span><span class="p">,</span>
+    <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;SRV&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="kd">function</span> <span class="nx">DnsPacket</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -380,7 +382,7 @@ section#format-index .row {
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
         <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
         <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">+</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">192</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)));</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DomainName</span><span class="p">(</span><span class="nx">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
@@ -408,14 +410,14 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="nx">pointer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PointerStruct</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isPointer</span><span class="p">))</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Label</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isPointer&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isPointer</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPointer</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPointer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">192</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPointer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">;</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPointer</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -463,7 +465,7 @@ section#format-index .row {
         <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Label</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">192</span><span class="p">))</span> <span class="p">));</span>
+      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">))</span> <span class="p">));</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
@@ -471,6 +473,60 @@ section#format-index .row {
 <span class="cm">     */</span>
 
     <span class="k">return</span> <span class="nx">DomainName</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Service</span> <span class="o">=</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">Service</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Service</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Service</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">priority</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">weight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DomainName</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Service</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Txt</span> <span class="o">=</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">Txt</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Txt</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Txt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Txt</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">TxtBody</span> <span class="o">=</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TxtBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TxtBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TxtBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Txt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">TxtBody</span><span class="p">;</span>
   <span class="p">})();</span>
 
   <span class="kd">var</span> <span class="nx">Address</span> <span class="o">=</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">Address</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -505,11 +561,35 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">answerClass</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">ttl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">PTR</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">ptrdname</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DomainName</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">A</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">address</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Address</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">PTR</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DomainName</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">CNAME</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DomainName</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">TXT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TxtBody</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">SRV</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">DnsPacket</span><span class="p">.</span><span class="nx">TypeType</span><span class="p">.</span><span class="nx">A</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Address</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rdlength</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>
 

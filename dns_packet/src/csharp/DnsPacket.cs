@@ -42,6 +42,7 @@ namespace Kaitai
             Minfo = 14,
             Mx = 15,
             Txt = 16,
+            Srv = 33,
         }
         public DnsPacket(KaitaiStream p__io, KaitaiStruct p__parent = null, DnsPacket p__root = null) : base(p__io)
         {
@@ -115,7 +116,7 @@ namespace Kaitai
                         return _contents;
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
-                    io.Seek(Value);
+                    io.Seek((Value + ((M_Parent.Length - 192) << 8)));
                     _contents = new DomainName(io, this, m_root);
                     io.Seek(_pos);
                     f_contents = true;
@@ -154,7 +155,7 @@ namespace Kaitai
                     _pointer = new PointerStruct(m_io, this, m_root);
                 }
                 if (!(IsPointer)) {
-                    _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Length));
+                    _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(Length));
                 }
             }
             private bool f_isPointer;
@@ -165,7 +166,7 @@ namespace Kaitai
                 {
                     if (f_isPointer)
                         return _isPointer;
-                    _isPointer = (bool) (Length == 192);
+                    _isPointer = (bool) (Length >= 192);
                     f_isPointer = true;
                     return _isPointer;
                 }
@@ -242,7 +243,7 @@ namespace Kaitai
                         M_ = new Label(m_io, this, m_root);
                         _name.Add(M_);
                         i++;
-                    } while (!( ((M_.Length == 0) || (M_.Length == 192)) ));
+                    } while (!( ((M_.Length == 0) || (M_.Length >= 192)) ));
                 }
             }
             private List<Label> _name;
@@ -255,6 +256,97 @@ namespace Kaitai
             public List<Label> Name { get { return _name; } }
             public DnsPacket M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Service : KaitaiStruct
+        {
+            public static Service FromFile(string fileName)
+            {
+                return new Service(new KaitaiStream(fileName));
+            }
+
+            public Service(KaitaiStream p__io, DnsPacket.Answer p__parent = null, DnsPacket p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _priority = m_io.ReadU2be();
+                _weight = m_io.ReadU2be();
+                _port = m_io.ReadU2be();
+                _target = new DomainName(m_io, this, m_root);
+            }
+            private ushort _priority;
+            private ushort _weight;
+            private ushort _port;
+            private DomainName _target;
+            private DnsPacket m_root;
+            private DnsPacket.Answer m_parent;
+            public ushort Priority { get { return _priority; } }
+            public ushort Weight { get { return _weight; } }
+            public ushort Port { get { return _port; } }
+            public DomainName Target { get { return _target; } }
+            public DnsPacket M_Root { get { return m_root; } }
+            public DnsPacket.Answer M_Parent { get { return m_parent; } }
+        }
+        public partial class Txt : KaitaiStruct
+        {
+            public static Txt FromFile(string fileName)
+            {
+                return new Txt(new KaitaiStream(fileName));
+            }
+
+            public Txt(KaitaiStream p__io, DnsPacket.TxtBody p__parent = null, DnsPacket p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _length = m_io.ReadU1();
+                _text = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(Length));
+            }
+            private byte _length;
+            private string _text;
+            private DnsPacket m_root;
+            private DnsPacket.TxtBody m_parent;
+            public byte Length { get { return _length; } }
+            public string Text { get { return _text; } }
+            public DnsPacket M_Root { get { return m_root; } }
+            public DnsPacket.TxtBody M_Parent { get { return m_parent; } }
+        }
+        public partial class TxtBody : KaitaiStruct
+        {
+            public static TxtBody FromFile(string fileName)
+            {
+                return new TxtBody(new KaitaiStream(fileName));
+            }
+
+            public TxtBody(KaitaiStream p__io, DnsPacket.Answer p__parent = null, DnsPacket p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _data = new List<Txt>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _data.Add(new Txt(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<Txt> _data;
+            private DnsPacket m_root;
+            private DnsPacket.Answer m_parent;
+            public List<Txt> Data { get { return _data; } }
+            public DnsPacket M_Root { get { return m_root; } }
+            public DnsPacket.Answer M_Parent { get { return m_parent; } }
         }
         public partial class Address : KaitaiStruct
         {
@@ -304,11 +396,41 @@ namespace Kaitai
                 _answerClass = ((DnsPacket.ClassType) m_io.ReadU2be());
                 _ttl = m_io.ReadS4be();
                 _rdlength = m_io.ReadU2be();
-                if (Type == DnsPacket.TypeType.Ptr) {
-                    _ptrdname = new DomainName(m_io, this, m_root);
+                switch (Type) {
+                case DnsPacket.TypeType.Ptr: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new DomainName(io___raw_payload, this, m_root);
+                    break;
                 }
-                if (Type == DnsPacket.TypeType.A) {
-                    _address = new Address(m_io, this, m_root);
+                case DnsPacket.TypeType.Cname: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new DomainName(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Txt: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new TxtBody(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Srv: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new Service(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.A: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new Address(io___raw_payload, this, m_root);
+                    break;
+                }
+                default: {
+                    _payload = m_io.ReadBytes(Rdlength);
+                    break;
+                }
                 }
             }
             private DomainName _name;
@@ -316,10 +438,10 @@ namespace Kaitai
             private ClassType _answerClass;
             private int _ttl;
             private ushort _rdlength;
-            private DomainName _ptrdname;
-            private Address _address;
+            private object _payload;
             private DnsPacket m_root;
             private DnsPacket m_parent;
+            private byte[] __raw_payload;
             public DomainName Name { get { return _name; } }
             public TypeType Type { get { return _type; } }
             public ClassType AnswerClass { get { return _answerClass; } }
@@ -333,10 +455,10 @@ namespace Kaitai
             /// Length in octets of the following payload
             /// </summary>
             public ushort Rdlength { get { return _rdlength; } }
-            public DomainName Ptrdname { get { return _ptrdname; } }
-            public Address Address { get { return _address; } }
+            public object Payload { get { return _payload; } }
             public DnsPacket M_Root { get { return m_root; } }
             public DnsPacket M_Parent { get { return m_parent; } }
+            public byte[] M_RawPayload { get { return __raw_payload; } }
         }
         public partial class PacketFlags : KaitaiStruct
         {

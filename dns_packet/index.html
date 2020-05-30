@@ -232,6 +232,7 @@ section#format-index .row {
     <span class="nt">rfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1035</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">(No support for Auth-Name + Add-Name for simplicity)</span>
 <span class="nt">seq</span><span class="p">:</span>
@@ -273,7 +274,7 @@ section#format-index .row {
     <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arcount</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">query</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span> 
+    <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
@@ -298,19 +299,23 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rdlength</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Length</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">octets</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">following</span><span class="nv"> </span><span class="s">payload&quot;</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ptrdname</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;type</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">type_type::ptr&quot;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;type</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">type_type::a&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rdlength</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&quot;type_type::ptr&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+            <span class="s">&quot;type_type::a&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="s">&quot;type_type::cname&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+            <span class="s">&quot;type_type::srv&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service</span>
+            <span class="s">&quot;type_type::txt&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">txt_body</span>
   <span class="nt">domain_name</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">label</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Repeat</span><span class="nv"> </span><span class="s">until</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">length</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">pointer</span><span class="nv"> </span><span class="s">(bit-hack</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">get</span><span class="nv"> </span><span class="s">around</span><span class="nv"> </span><span class="s">lack</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">OR</span><span class="nv"> </span><span class="s">operator)&quot;</span>
-        <span class="nt">repeat-until</span><span class="p">:</span> <span class="s">&quot;_.length</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">_.length</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0b1100_0000&quot;</span>
+        <span class="nt">repeat-until</span><span class="p">:</span> <span class="s">&quot;_.length</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">_.length</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">192&quot;</span>
   <span class="nt">label</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
@@ -323,11 +328,10 @@ section#format-index .row {
         <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;not</span><span class="nv"> </span><span class="s">is_pointer&quot;</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Otherwise</span><span class="nv"> </span><span class="s">its</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">length</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">length</span><span class="nv"> </span><span class="s">value&quot;</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="s">&quot;ASCII&quot;</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">is_pointer</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length == 0b1100_0000</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length &gt;= 192</span>
   <span class="nt">pointer_struct</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
@@ -336,7 +340,7 @@ section#format-index .row {
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">contents</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
-        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value + ((_parent.length - 192) &lt;&lt; 8)</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
   <span class="nt">address</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
@@ -371,6 +375,28 @@ section#format-index .row {
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(flag &amp; 0b0000_0000_0000_1111) &gt;&gt; 0</span>
       <span class="nt">is_opcode_valid</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode == 0 or opcode == 1 or opcode == 2</span>
+  <span class="nt">service</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">weight</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+  <span class="nt">txt</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+  <span class="nt">txt_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txt</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">class_type</span><span class="p">:</span>
@@ -395,6 +421,7 @@ section#format-index .row {
     <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minfo</span>
     <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mx</span>
     <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txt</span>
+    <span class="nt">33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">srv</span>
 </pre></div>
     </div>
 </section>

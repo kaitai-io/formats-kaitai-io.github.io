@@ -105,7 +105,7 @@ class PointerStruct extends \Kaitai\Struct\Struct {
             return $this->_m_contents;
         $io = $this->_root()->_io();
         $_pos = $io->pos();
-        $io->seek($this->value());
+        $io->seek(($this->value() + (($this->_parent()->length() - 192) << 8)));
         $this->_m_contents = new \DnsPacket\DomainName($io, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_contents;
@@ -132,14 +132,14 @@ class Label extends \Kaitai\Struct\Struct {
             $this->_m_pointer = new \DnsPacket\PointerStruct($this->_io, $this, $this->_root);
         }
         if (!($this->isPointer())) {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "ASCII");
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "utf-8");
         }
     }
     protected $_m_isPointer;
     public function isPointer() {
         if ($this->_m_isPointer !== null)
             return $this->_m_isPointer;
-        $this->_m_isPointer = $this->length() == 192;
+        $this->_m_isPointer = $this->length() >= 192;
         return $this->_m_isPointer;
     }
     protected $_m_length;
@@ -194,7 +194,7 @@ class DomainName extends \Kaitai\Struct\Struct {
             $_ = new \DnsPacket\Label($this->_io, $this, $this->_root);
             $this->_m_name[] = $_;
             $i++;
-        } while (!( (($_->length() == 0) || ($_->length() == 192)) ));
+        } while (!( (($_->length() == 0) || ($_->length() >= 192)) ));
     }
     protected $_m_name;
 
@@ -202,6 +202,68 @@ class DomainName extends \Kaitai\Struct\Struct {
      * Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
      */
     public function name() { return $this->_m_name; }
+}
+
+namespace \DnsPacket;
+
+class Service extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_priority = $this->_io->readU2be();
+        $this->_m_weight = $this->_io->readU2be();
+        $this->_m_port = $this->_io->readU2be();
+        $this->_m_target = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
+    }
+    protected $_m_priority;
+    protected $_m_weight;
+    protected $_m_port;
+    protected $_m_target;
+    public function priority() { return $this->_m_priority; }
+    public function weight() { return $this->_m_weight; }
+    public function port() { return $this->_m_port; }
+    public function target() { return $this->_m_target; }
+}
+
+namespace \DnsPacket;
+
+class Txt extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\TxtBody $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_length = $this->_io->readU1();
+        $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "utf-8");
+    }
+    protected $_m_length;
+    protected $_m_text;
+    public function length() { return $this->_m_length; }
+    public function text() { return $this->_m_text; }
+}
+
+namespace \DnsPacket;
+
+class TxtBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_data = [];
+        $i = 0;
+        while (!$this->_io->isEof()) {
+            $this->_m_data[] = new \DnsPacket\Txt($this->_io, $this, $this->_root);
+            $i++;
+        }
+    }
+    protected $_m_data;
+    public function data() { return $this->_m_data; }
 }
 
 namespace \DnsPacket;
@@ -237,11 +299,35 @@ class Answer extends \Kaitai\Struct\Struct {
         $this->_m_answerClass = $this->_io->readU2be();
         $this->_m_ttl = $this->_io->readS4be();
         $this->_m_rdlength = $this->_io->readU2be();
-        if ($this->type() == \DnsPacket\TypeType::PTR) {
-            $this->_m_ptrdname = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
-        }
-        if ($this->type() == \DnsPacket\TypeType::A) {
-            $this->_m_address = new \DnsPacket\Address($this->_io, $this, $this->_root);
+        switch ($this->type()) {
+            case \DnsPacket\TypeType::PTR:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\DomainName($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::CNAME:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\DomainName($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::TXT:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\TxtBody($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::SRV:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\Service($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::A:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\Address($io, $this, $this->_root);
+                break;
+            default:
+                $this->_m_payload = $this->_io->readBytes($this->rdlength());
+                break;
         }
     }
     protected $_m_name;
@@ -249,8 +335,8 @@ class Answer extends \Kaitai\Struct\Struct {
     protected $_m_answerClass;
     protected $_m_ttl;
     protected $_m_rdlength;
-    protected $_m_ptrdname;
-    protected $_m_address;
+    protected $_m_payload;
+    protected $_m__raw_payload;
     public function name() { return $this->_m_name; }
     public function type() { return $this->_m_type; }
     public function answerClass() { return $this->_m_answerClass; }
@@ -264,8 +350,8 @@ class Answer extends \Kaitai\Struct\Struct {
      * Length in octets of the following payload
      */
     public function rdlength() { return $this->_m_rdlength; }
-    public function ptrdname() { return $this->_m_ptrdname; }
-    public function address() { return $this->_m_address; }
+    public function payload() { return $this->_m_payload; }
+    public function _raw_payload() { return $this->_m__raw_payload; }
 }
 
 namespace \DnsPacket;
@@ -388,4 +474,5 @@ class TypeType {
     const MINFO = 14;
     const MX = 15;
     const TXT = 16;
+    const SRV = 33;
 }

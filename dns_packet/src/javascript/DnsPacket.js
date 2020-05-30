@@ -43,6 +43,7 @@ var DnsPacket = (function() {
     MINFO: 14,
     MX: 15,
     TXT: 16,
+    SRV: 33,
 
     1: "A",
     2: "NS",
@@ -60,6 +61,7 @@ var DnsPacket = (function() {
     14: "MINFO",
     15: "MX",
     16: "TXT",
+    33: "SRV",
   });
 
   function DnsPacket(_io, _parent, _root) {
@@ -121,7 +123,7 @@ var DnsPacket = (function() {
           return this._m_contents;
         var io = this._root._io;
         var _pos = io.pos;
-        io.seek(this.value);
+        io.seek((this.value + ((this._parent.length - 192) << 8)));
         this._m_contents = new DomainName(io, this, this._root);
         io.seek(_pos);
         return this._m_contents;
@@ -149,14 +151,14 @@ var DnsPacket = (function() {
         this.pointer = new PointerStruct(this._io, this, this._root);
       }
       if (!(this.isPointer)) {
-        this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "ASCII");
+        this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "utf-8");
       }
     }
     Object.defineProperty(Label.prototype, 'isPointer', {
       get: function() {
         if (this._m_isPointer !== undefined)
           return this._m_isPointer;
-        this._m_isPointer = this.length == 192;
+        this._m_isPointer = this.length >= 192;
         return this._m_isPointer;
       }
     });
@@ -204,7 +206,7 @@ var DnsPacket = (function() {
         var _ = new Label(this._io, this, this._root);
         this.name.push(_);
         i++;
-      } while (!( ((_.length == 0) || (_.length == 192)) ));
+      } while (!( ((_.length == 0) || (_.length >= 192)) ));
     }
 
     /**
@@ -212,6 +214,60 @@ var DnsPacket = (function() {
      */
 
     return DomainName;
+  })();
+
+  var Service = DnsPacket.Service = (function() {
+    function Service(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Service.prototype._read = function() {
+      this.priority = this._io.readU2be();
+      this.weight = this._io.readU2be();
+      this.port = this._io.readU2be();
+      this.target = new DomainName(this._io, this, this._root);
+    }
+
+    return Service;
+  })();
+
+  var Txt = DnsPacket.Txt = (function() {
+    function Txt(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Txt.prototype._read = function() {
+      this.length = this._io.readU1();
+      this.text = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "utf-8");
+    }
+
+    return Txt;
+  })();
+
+  var TxtBody = DnsPacket.TxtBody = (function() {
+    function TxtBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    TxtBody.prototype._read = function() {
+      this.data = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.data.push(new Txt(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return TxtBody;
   })();
 
   var Address = DnsPacket.Address = (function() {
@@ -246,11 +302,35 @@ var DnsPacket = (function() {
       this.answerClass = this._io.readU2be();
       this.ttl = this._io.readS4be();
       this.rdlength = this._io.readU2be();
-      if (this.type == DnsPacket.TypeType.PTR) {
-        this.ptrdname = new DomainName(this._io, this, this._root);
-      }
-      if (this.type == DnsPacket.TypeType.A) {
-        this.address = new Address(this._io, this, this._root);
+      switch (this.type) {
+      case DnsPacket.TypeType.PTR:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new DomainName(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.CNAME:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new DomainName(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.TXT:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new TxtBody(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.SRV:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new Service(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.A:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new Address(_io__raw_payload, this, this._root);
+        break;
+      default:
+        this.payload = this._io.readBytes(this.rdlength);
+        break;
       }
     }
 

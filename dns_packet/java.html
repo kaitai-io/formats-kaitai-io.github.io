@@ -314,12 +314,13 @@ section#format-index .row {
         <span class="n">HINFO</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
         <span class="n">MINFO</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span>
         <span class="n">MX</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
-        <span class="n">TXT</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="n">TXT</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+        <span class="n">SRV</span><span class="p">(</span><span class="mi">33</span><span class="p">);</span>
 
         <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
         <span class="n">TypeType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TypeType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TypeType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TypeType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TypeType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">17</span><span class="p">);</span>
         <span class="kd">static</span> <span class="p">{</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">TypeType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">TypeType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                 <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -403,7 +404,7 @@ section#format-index .row {
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contents</span><span class="p">;</span>
             <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
             <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
-            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">value</span><span class="p">());</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">+</span> <span class="p">((</span><span class="n">_parent</span><span class="p">().</span><span class="na">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">192</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)));</span>
             <span class="k">this</span><span class="p">.</span><span class="na">contents</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
             <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contents</span><span class="p">;</span>
@@ -444,14 +445,14 @@ section#format-index .row {
                 <span class="k">this</span><span class="p">.</span><span class="na">pointer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointerStruct</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isPointer</span><span class="p">()))</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">));</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isPointer</span><span class="p">;</span>
         <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isPointer</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isPointer</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isPointer</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="n">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">192</span><span class="p">);</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="n">length</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">isPointer</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isPointer</span><span class="p">;</span>
         <span class="p">}</span>
@@ -537,7 +538,7 @@ section#format-index .row {
                     <span class="n">_it</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Label</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">_it</span><span class="p">);</span>
                     <span class="n">i</span><span class="o">++</span><span class="p">;</span>
-                <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">192</span><span class="p">))</span> <span class="p">));</span>
+                <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">))</span> <span class="p">));</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Label</span><span class="o">&gt;</span> <span class="n">name</span><span class="p">;</span>
@@ -550,6 +551,112 @@ section#format-index .row {
         <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Label</span><span class="o">&gt;</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Service</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Service</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Service</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Service</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Service</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">priority</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">weight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">port</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">target</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">weight</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DomainName</span> <span class="n">target</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">priority</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">priority</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">weight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">weight</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">port</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">port</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DomainName</span> <span class="nf">target</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">target</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Txt</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Txt</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Txt</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Txt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Txt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TxtBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Txt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TxtBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">text</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">text</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TxtBody</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">text</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">text</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TxtBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TxtBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">TxtBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">TxtBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">TxtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">TxtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">TxtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Txt</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Txt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Txt</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Txt</span><span class="o">&gt;</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">Answer</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Address</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">Address</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -608,11 +715,41 @@ section#format-index .row {
             <span class="k">this</span><span class="p">.</span><span class="na">answerClass</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">ClassType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">ttl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4be</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">rdlength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TypeType</span><span class="p">.</span><span class="na">PTR</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">ptrdname</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PTR</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="na">TypeType</span><span class="p">.</span><span class="na">A</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">address</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">case</span> <span class="n">CNAME</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">TXT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TxtBody</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">SRV</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">A</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">DomainName</span> <span class="n">name</span><span class="p">;</span>
@@ -620,10 +757,10 @@ section#format-index .row {
         <span class="kd">private</span> <span class="n">ClassType</span> <span class="n">answerClass</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">ttl</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">rdlength</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">DomainName</span> <span class="n">ptrdname</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Address</span> <span class="n">address</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">payload</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">DnsPacket</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">DnsPacket</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_payload</span><span class="p">;</span>
         <span class="kd">public</span> <span class="n">DomainName</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">TypeType</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">type</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">ClassType</span> <span class="nf">answerClass</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">answerClass</span><span class="p">;</span> <span class="p">}</span>
@@ -637,10 +774,10 @@ section#format-index .row {
 <span class="cm">         * Length in octets of the following payload</span>
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">rdlength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rdlength</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">DomainName</span> <span class="nf">ptrdname</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptrdname</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Address</span> <span class="nf">address</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">address</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">payload</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">DnsPacket</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_payload</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PacketFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">PacketFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>

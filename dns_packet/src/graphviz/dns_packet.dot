@@ -30,7 +30,7 @@ digraph {
 			</TABLE>>];
 			pointer_struct__inst__contents [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="contents_pos">value</TD><TD PORT="contents_size">...</TD><TD>DomainName</TD><TD PORT="contents_type">contents</TD></TR>
+				<TR><TD PORT="contents_pos">(value + ((_parent.length - 192) &lt;&lt; 8))</TD><TD PORT="contents_size">...</TD><TD>DomainName</TD><TD PORT="contents_type">contents</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__label {
@@ -41,11 +41,11 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
 				<TR><TD PORT="pointer_pos">1</TD><TD PORT="pointer_size">1</TD><TD>PointerStruct</TD><TD PORT="pointer_type">pointer</TD></TR>
-				<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">length</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">length</TD><TD>str(utf-8)</TD><TD PORT="name_type">name</TD></TR>
 			</TABLE>>];
 			label__inst__is_pointer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_pointer</TD><TD>length == 192</TD></TR>
+				<TR><TD>is_pointer</TD><TD>length &gt;= 192</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__query {
@@ -66,7 +66,39 @@ digraph {
 			domain_name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>Label</TD><TD PORT="name_type">name</TD></TR>
-				<TR><TD COLSPAN="4" PORT="name__repeat">repeat until  ((_.length == 0) || (_.length == 192)) </TD></TR>
+				<TR><TD COLSPAN="4" PORT="name__repeat">repeat until  ((_.length == 0) || (_.length &gt;= 192)) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__service {
+			label="DnsPacket::Service";
+			graph[style=dotted];
+
+			service__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="priority_pos">0</TD><TD PORT="priority_size">2</TD><TD>u2be</TD><TD PORT="priority_type">priority</TD></TR>
+				<TR><TD PORT="weight_pos">2</TD><TD PORT="weight_size">2</TD><TD>u2be</TD><TD PORT="weight_type">weight</TD></TR>
+				<TR><TD PORT="port_pos">4</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
+				<TR><TD PORT="target_pos">6</TD><TD PORT="target_size">...</TD><TD>DomainName</TD><TD PORT="target_type">target</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__txt {
+			label="DnsPacket::Txt";
+			graph[style=dotted];
+
+			txt__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="text_pos">1</TD><TD PORT="text_size">length</TD><TD>str(utf-8)</TD><TD PORT="text_type">text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__txt_body {
+			label="DnsPacket::TxtBody";
+			graph[style=dotted];
+
+			txt_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">...</TD><TD>Txt</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__address {
@@ -90,9 +122,16 @@ digraph {
 				<TR><TD PORT="answer_class_pos">...</TD><TD PORT="answer_class_size">2</TD><TD>u2be→ClassType</TD><TD PORT="answer_class_type">answer_class</TD></TR>
 				<TR><TD PORT="ttl_pos">...</TD><TD PORT="ttl_size">4</TD><TD>s4be</TD><TD PORT="ttl_type">ttl</TD></TR>
 				<TR><TD PORT="rdlength_pos">...</TD><TD PORT="rdlength_size">2</TD><TD>u2be</TD><TD PORT="rdlength_type">rdlength</TD></TR>
-				<TR><TD PORT="ptrdname_pos">...</TD><TD PORT="ptrdname_size">...</TD><TD>DomainName</TD><TD PORT="ptrdname_type">ptrdname</TD></TR>
-				<TR><TD PORT="address_pos">...</TD><TD PORT="address_size">4</TD><TD>Address</TD><TD PORT="address_type">address</TD></TR>
+				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">...</TD><TD>switch (type)</TD><TD PORT="payload_type">payload</TD></TR>
 			</TABLE>>];
+answer__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:type_type_ptr</TD><TD PORT="case0">DomainName</TD></TR>
+	<TR><TD>:type_type_cname</TD><TD PORT="case1">DomainName</TD></TR>
+	<TR><TD>:type_type_txt</TD><TD PORT="case2">TxtBody</TD></TR>
+	<TR><TD>:type_type_srv</TD><TD PORT="case3">Service</TD></TR>
+	<TR><TD>:type_type_a</TD><TD PORT="case4">Address</TD></TR>
+</TABLE>>];
 		}
 		subgraph cluster__packet_flags {
 			label="DnsPacket::PacketFlags";
@@ -156,6 +195,7 @@ digraph {
 	dns_packet__seq:additionals_type -> answer__seq [style=bold];
 	dns_packet__seq:arcount_type -> dns_packet__seq:additionals__repeat [color="#404040"];
 	pointer_struct__seq:value_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
+	label__seq:length_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
 	pointer_struct__inst__contents:contents_type -> domain_name__seq [style=bold];
 	label__seq:pointer_type -> pointer_struct__seq [style=bold];
 	label__seq:length_type -> label__seq:name_size [color="#404040"];
@@ -164,9 +204,17 @@ digraph {
 	domain_name__seq:name_type -> label__seq [style=bold];
 	label__seq:length_type -> domain_name__seq:name__repeat [color="#404040"];
 	label__seq:length_type -> domain_name__seq:name__repeat [color="#404040"];
+	service__seq:target_type -> domain_name__seq [style=bold];
+	txt__seq:length_type -> txt__seq:text_size [color="#404040"];
+	txt_body__seq:data_type -> txt__seq [style=bold];
 	answer__seq:name_type -> domain_name__seq [style=bold];
-	answer__seq:ptrdname_type -> domain_name__seq [style=bold];
-	answer__seq:address_type -> address__seq [style=bold];
+	answer__seq:payload_type -> answer__seq_payload_switch [style=bold];
+	answer__seq_payload_switch:case0 -> domain_name__seq [style=bold];
+	answer__seq_payload_switch:case1 -> domain_name__seq [style=bold];
+	answer__seq_payload_switch:case2 -> txt_body__seq [style=bold];
+	answer__seq_payload_switch:case3 -> service__seq [style=bold];
+	answer__seq_payload_switch:case4 -> address__seq [style=bold];
+	answer__seq:type_type -> answer__seq:payload_type [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__qr [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__ra [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__tc [color="#404040"];
