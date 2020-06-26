@@ -17,9 +17,21 @@ digraph {
 			<TR><TD COLSPAN="4" PORT="queries__repeat">repeat qdcount times</TD></TR>
 			<TR><TD PORT="answers_pos">...</TD><TD PORT="answers_size">...</TD><TD>Answer</TD><TD PORT="answers_type">answers</TD></TR>
 			<TR><TD COLSPAN="4" PORT="answers__repeat">repeat ancount times</TD></TR>
+			<TR><TD PORT="authorities_pos">...</TD><TD PORT="authorities_size">...</TD><TD>Answer</TD><TD PORT="authorities_type">authorities</TD></TR>
+			<TR><TD COLSPAN="4" PORT="authorities__repeat">repeat nscount times</TD></TR>
 			<TR><TD PORT="additionals_pos">...</TD><TD PORT="additionals_size">...</TD><TD>Answer</TD><TD PORT="additionals_type">additionals</TD></TR>
 			<TR><TD COLSPAN="4" PORT="additionals__repeat">repeat arcount times</TD></TR>
 		</TABLE>>];
+		subgraph cluster__mx_info {
+			label="DnsPacket::MxInfo";
+			graph[style=dotted];
+
+			mx_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="preference_pos">0</TD><TD PORT="preference_size">2</TD><TD>u2be</TD><TD PORT="preference_type">preference</TD></TR>
+				<TR><TD PORT="mx_pos">2</TD><TD PORT="mx_size">...</TD><TD>DomainName</TD><TD PORT="mx_type">mx</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__pointer_struct {
 			label="DnsPacket::PointerStruct";
 			graph[style=dotted];
@@ -69,6 +81,15 @@ digraph {
 				<TR><TD COLSPAN="4" PORT="name__repeat">repeat until  ((_.length == 0) || (_.length &gt;= 192)) </TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__address_v6 {
+			label="DnsPacket::AddressV6";
+			graph[style=dotted];
+
+			address_v6__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ip_v6_pos">0</TD><TD PORT="ip_v6_size">16</TD><TD></TD><TD PORT="ip_v6_type">ip_v6</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__service {
 			label="DnsPacket::Service";
 			graph[style=dotted];
@@ -107,8 +128,7 @@ digraph {
 
 			address__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ip_pos">0</TD><TD PORT="ip_size">1</TD><TD>u1</TD><TD PORT="ip_type">ip</TD></TR>
-				<TR><TD COLSPAN="4" PORT="ip__repeat">repeat 4 times</TD></TR>
+				<TR><TD PORT="ip_pos">0</TD><TD PORT="ip_size">4</TD><TD></TD><TD PORT="ip_type">ip</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__answer {
@@ -126,11 +146,15 @@ digraph {
 			</TABLE>>];
 answer__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:type_type_ptr</TD><TD PORT="case0">DomainName</TD></TR>
-	<TR><TD>:type_type_cname</TD><TD PORT="case1">DomainName</TD></TR>
-	<TR><TD>:type_type_txt</TD><TD PORT="case2">TxtBody</TD></TR>
-	<TR><TD>:type_type_srv</TD><TD PORT="case3">Service</TD></TR>
-	<TR><TD>:type_type_a</TD><TD PORT="case4">Address</TD></TR>
+	<TR><TD>:type_type_mx</TD><TD PORT="case0">MxInfo</TD></TR>
+	<TR><TD>:type_type_ptr</TD><TD PORT="case1">DomainName</TD></TR>
+	<TR><TD>:type_type_soa</TD><TD PORT="case2">AuthorityInfo</TD></TR>
+	<TR><TD>:type_type_cname</TD><TD PORT="case3">DomainName</TD></TR>
+	<TR><TD>:type_type_aaaa</TD><TD PORT="case4">AddressV6</TD></TR>
+	<TR><TD>:type_type_txt</TD><TD PORT="case5">TxtBody</TD></TR>
+	<TR><TD>:type_type_ns</TD><TD PORT="case6">DomainName</TD></TR>
+	<TR><TD>:type_type_srv</TD><TD PORT="case7">Service</TD></TR>
+	<TR><TD>:type_type_a</TD><TD PORT="case8">Address</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__packet_flags {
@@ -186,14 +210,32 @@ answer__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 				<TR><TD>ad</TD><TD>((flag &amp; 32) &gt;&gt; 5)</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__authority_info {
+			label="DnsPacket::AuthorityInfo";
+			graph[style=dotted];
+
+			authority_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="primary_ns_pos">0</TD><TD PORT="primary_ns_size">...</TD><TD>DomainName</TD><TD PORT="primary_ns_type">primary_ns</TD></TR>
+				<TR><TD PORT="resoponsible_mailbox_pos">...</TD><TD PORT="resoponsible_mailbox_size">...</TD><TD>DomainName</TD><TD PORT="resoponsible_mailbox_type">resoponsible_mailbox</TD></TR>
+				<TR><TD PORT="serial_pos">...</TD><TD PORT="serial_size">4</TD><TD>u4be</TD><TD PORT="serial_type">serial</TD></TR>
+				<TR><TD PORT="refresh_interval_pos">...</TD><TD PORT="refresh_interval_size">4</TD><TD>u4be</TD><TD PORT="refresh_interval_type">refresh_interval</TD></TR>
+				<TR><TD PORT="retry_interval_pos">...</TD><TD PORT="retry_interval_size">4</TD><TD>u4be</TD><TD PORT="retry_interval_type">retry_interval</TD></TR>
+				<TR><TD PORT="expire_limit_pos">...</TD><TD PORT="expire_limit_size">4</TD><TD>u4be</TD><TD PORT="expire_limit_type">expire_limit</TD></TR>
+				<TR><TD PORT="min_ttl_pos">...</TD><TD PORT="min_ttl_size">4</TD><TD>u4be</TD><TD PORT="min_ttl_type">min_ttl</TD></TR>
+			</TABLE>>];
+		}
 	}
 	dns_packet__seq:flags_type -> packet_flags__seq [style=bold];
 	dns_packet__seq:queries_type -> query__seq [style=bold];
 	dns_packet__seq:qdcount_type -> dns_packet__seq:queries__repeat [color="#404040"];
 	dns_packet__seq:answers_type -> answer__seq [style=bold];
 	dns_packet__seq:ancount_type -> dns_packet__seq:answers__repeat [color="#404040"];
+	dns_packet__seq:authorities_type -> answer__seq [style=bold];
+	dns_packet__seq:nscount_type -> dns_packet__seq:authorities__repeat [color="#404040"];
 	dns_packet__seq:additionals_type -> answer__seq [style=bold];
 	dns_packet__seq:arcount_type -> dns_packet__seq:additionals__repeat [color="#404040"];
+	mx_info__seq:mx_type -> domain_name__seq [style=bold];
 	pointer_struct__seq:value_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
 	label__seq:length_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
 	pointer_struct__inst__contents:contents_type -> domain_name__seq [style=bold];
@@ -209,11 +251,15 @@ answer__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	txt_body__seq:data_type -> txt__seq [style=bold];
 	answer__seq:name_type -> domain_name__seq [style=bold];
 	answer__seq:payload_type -> answer__seq_payload_switch [style=bold];
-	answer__seq_payload_switch:case0 -> domain_name__seq [style=bold];
+	answer__seq_payload_switch:case0 -> mx_info__seq [style=bold];
 	answer__seq_payload_switch:case1 -> domain_name__seq [style=bold];
-	answer__seq_payload_switch:case2 -> txt_body__seq [style=bold];
-	answer__seq_payload_switch:case3 -> service__seq [style=bold];
-	answer__seq_payload_switch:case4 -> address__seq [style=bold];
+	answer__seq_payload_switch:case2 -> authority_info__seq [style=bold];
+	answer__seq_payload_switch:case3 -> domain_name__seq [style=bold];
+	answer__seq_payload_switch:case4 -> address_v6__seq [style=bold];
+	answer__seq_payload_switch:case5 -> txt_body__seq [style=bold];
+	answer__seq_payload_switch:case6 -> domain_name__seq [style=bold];
+	answer__seq_payload_switch:case7 -> service__seq [style=bold];
+	answer__seq_payload_switch:case8 -> address__seq [style=bold];
 	answer__seq:type_type -> answer__seq:payload_type [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__qr [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__ra [color="#404040"];
@@ -228,4 +274,6 @@ answer__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	packet_flags__seq:flag_type -> packet_flags__inst__rd [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__cd [color="#404040"];
 	packet_flags__seq:flag_type -> packet_flags__inst__ad [color="#404040"];
+	authority_info__seq:primary_ns_type -> domain_name__seq [style=bold];
+	authority_info__seq:resoponsible_mailbox_type -> domain_name__seq [style=bold];
 }

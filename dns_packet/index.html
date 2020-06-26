@@ -267,6 +267,11 @@ section#format-index .row {
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">answer</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
     <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ancount</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">authorities</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags.is_opcode_valid</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">answer</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nscount</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">additionals</span>
     <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags.is_opcode_valid</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">answer</span>
@@ -306,7 +311,11 @@ section#format-index .row {
           <span class="nt">cases</span><span class="p">:</span>
             <span class="s">&quot;type_type::ptr&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
             <span class="s">&quot;type_type::a&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="s">&quot;type_type::aaaa&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">address_v6</span>
             <span class="s">&quot;type_type::cname&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+            <span class="s">&quot;type_type::soa&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">authority_info</span>
+            <span class="s">&quot;type_type::mx&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mx_info</span>
+            <span class="s">&quot;type_type::ns&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
             <span class="s">&quot;type_type::srv&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service</span>
             <span class="s">&quot;type_type::txt&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">txt_body</span>
   <span class="nt">domain_name</span><span class="p">:</span>
@@ -345,9 +354,11 @@ section#format-index .row {
   <span class="nt">address</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ip</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+  <span class="nt">address_v6</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ip_v6</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
   <span class="nt">packet_flags</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag</span>
@@ -397,7 +408,28 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txt</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-
+  <span class="nt">authority_info</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_ns</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resoponsible_mailbox</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">serial</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">refresh_interval</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">retry_interval</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expire_limit</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min_ttl</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">mx_info</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preference</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">domain_name</span>
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">class_type</span><span class="p">:</span>
     <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">in_class</span>
@@ -410,7 +442,7 @@ section#format-index .row {
     <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md</span>
     <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mf</span>
     <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cname</span>
-    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soe</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soa</span>
     <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mb</span>
     <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mg</span>
     <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mr</span>
@@ -421,6 +453,7 @@ section#format-index .row {
     <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minfo</span>
     <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mx</span>
     <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txt</span>
+    <span class="nt">28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aaaa</span>
     <span class="nt">33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">srv</span>
 </pre></div>
     </div>

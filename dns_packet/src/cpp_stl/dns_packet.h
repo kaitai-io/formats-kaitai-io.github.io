@@ -19,16 +19,19 @@
 class dns_packet_t : public kaitai::kstruct {
 
 public:
+    class mx_info_t;
     class pointer_struct_t;
     class label_t;
     class query_t;
     class domain_name_t;
+    class address_v6_t;
     class service_t;
     class txt_t;
     class txt_body_t;
     class address_t;
     class answer_t;
     class packet_flags_t;
+    class authority_info_t;
 
     enum class_type_t {
         CLASS_TYPE_IN_CLASS = 1,
@@ -43,7 +46,7 @@ public:
         TYPE_TYPE_MD = 3,
         TYPE_TYPE_MF = 4,
         TYPE_TYPE_CNAME = 5,
-        TYPE_TYPE_SOE = 6,
+        TYPE_TYPE_SOA = 6,
         TYPE_TYPE_MB = 7,
         TYPE_TYPE_MG = 8,
         TYPE_TYPE_MR = 9,
@@ -54,6 +57,7 @@ public:
         TYPE_TYPE_MINFO = 14,
         TYPE_TYPE_MX = 15,
         TYPE_TYPE_TXT = 16,
+        TYPE_TYPE_AAAA = 28,
         TYPE_TYPE_SRV = 33
     };
 
@@ -64,6 +68,31 @@ private:
 
 public:
     ~dns_packet_t();
+
+    class mx_info_t : public kaitai::kstruct {
+
+    public:
+
+        mx_info_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~mx_info_t();
+
+    private:
+        uint16_t m_preference;
+        domain_name_t* m_mx;
+        dns_packet_t* m__root;
+        dns_packet_t::answer_t* m__parent;
+
+    public:
+        uint16_t preference() const { return m_preference; }
+        domain_name_t* mx() const { return m_mx; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::answer_t* _parent() const { return m__parent; }
+    };
 
     class pointer_struct_t : public kaitai::kstruct {
 
@@ -207,6 +236,29 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    class address_v6_t : public kaitai::kstruct {
+
+    public:
+
+        address_v6_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~address_v6_t();
+
+    private:
+        std::string m_ip_v6;
+        dns_packet_t* m__root;
+        dns_packet_t::answer_t* m__parent;
+
+    public:
+        std::string ip_v6() const { return m_ip_v6; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::answer_t* _parent() const { return m__parent; }
+    };
+
     class service_t : public kaitai::kstruct {
 
     public:
@@ -297,12 +349,12 @@ public:
         ~address_t();
 
     private:
-        std::vector<uint8_t>* m_ip;
+        std::string m_ip;
         dns_packet_t* m__root;
         dns_packet_t::answer_t* m__parent;
 
     public:
-        std::vector<uint8_t>* ip() const { return m_ip; }
+        std::string ip() const { return m_ip; }
         dns_packet_t* _root() const { return m__root; }
         dns_packet_t::answer_t* _parent() const { return m__parent; }
     };
@@ -458,6 +510,41 @@ public:
         dns_packet_t* _parent() const { return m__parent; }
     };
 
+    class authority_info_t : public kaitai::kstruct {
+
+    public:
+
+        authority_info_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~authority_info_t();
+
+    private:
+        domain_name_t* m_primary_ns;
+        domain_name_t* m_resoponsible_mailbox;
+        uint32_t m_serial;
+        uint32_t m_refresh_interval;
+        uint32_t m_retry_interval;
+        uint32_t m_expire_limit;
+        uint32_t m_min_ttl;
+        dns_packet_t* m__root;
+        dns_packet_t::answer_t* m__parent;
+
+    public:
+        domain_name_t* primary_ns() const { return m_primary_ns; }
+        domain_name_t* resoponsible_mailbox() const { return m_resoponsible_mailbox; }
+        uint32_t serial() const { return m_serial; }
+        uint32_t refresh_interval() const { return m_refresh_interval; }
+        uint32_t retry_interval() const { return m_retry_interval; }
+        uint32_t expire_limit() const { return m_expire_limit; }
+        uint32_t min_ttl() const { return m_min_ttl; }
+        dns_packet_t* _root() const { return m__root; }
+        dns_packet_t::answer_t* _parent() const { return m__parent; }
+    };
+
 private:
     uint16_t m_transaction_id;
     packet_flags_t* m_flags;
@@ -503,6 +590,13 @@ public:
     bool _is_null_answers() { answers(); return n_answers; };
 
 private:
+    std::vector<answer_t*>* m_authorities;
+    bool n_authorities;
+
+public:
+    bool _is_null_authorities() { authorities(); return n_authorities; };
+
+private:
     std::vector<answer_t*>* m_additionals;
     bool n_additionals;
 
@@ -542,6 +636,7 @@ public:
     uint16_t arcount() const { return m_arcount; }
     std::vector<query_t*>* queries() const { return m_queries; }
     std::vector<answer_t*>* answers() const { return m_answers; }
+    std::vector<answer_t*>* authorities() const { return m_authorities; }
     std::vector<answer_t*>* additionals() const { return m_additionals; }
     dns_packet_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }

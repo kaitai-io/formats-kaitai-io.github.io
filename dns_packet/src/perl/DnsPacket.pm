@@ -29,7 +29,7 @@ our $TYPE_TYPE_NS = 2;
 our $TYPE_TYPE_MD = 3;
 our $TYPE_TYPE_MF = 4;
 our $TYPE_TYPE_CNAME = 5;
-our $TYPE_TYPE_SOE = 6;
+our $TYPE_TYPE_SOA = 6;
 our $TYPE_TYPE_MB = 7;
 our $TYPE_TYPE_MG = 8;
 our $TYPE_TYPE_MR = 9;
@@ -40,6 +40,7 @@ our $TYPE_TYPE_HINFO = 13;
 our $TYPE_TYPE_MINFO = 14;
 our $TYPE_TYPE_MX = 15;
 our $TYPE_TYPE_TXT = 16;
+our $TYPE_TYPE_AAAA = 28;
 our $TYPE_TYPE_SRV = 33;
 
 sub new {
@@ -84,6 +85,13 @@ sub _read {
         my $n_answers = $self->ancount();
         for (my $i = 0; $i < $n_answers; $i++) {
             $self->{answers}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    if ($self->flags()->is_opcode_valid()) {
+        $self->{authorities} = ();
+        my $n_authorities = $self->nscount();
+        for (my $i = 0; $i < $n_authorities; $i++) {
+            $self->{authorities}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ($self->flags()->is_opcode_valid()) {
@@ -135,9 +143,58 @@ sub answers {
     return $self->{answers};
 }
 
+sub authorities {
+    my ($self) = @_;
+    return $self->{authorities};
+}
+
 sub additionals {
     my ($self) = @_;
     return $self->{additionals};
+}
+
+########################################################################
+package DnsPacket::MxInfo;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{preference} = $self->{_io}->read_u2be();
+    $self->{mx} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
+}
+
+sub preference {
+    my ($self) = @_;
+    return $self->{preference};
+}
+
+sub mx {
+    my ($self) = @_;
+    return $self->{mx};
 }
 
 ########################################################################
@@ -343,6 +400,44 @@ sub name {
 }
 
 ########################################################################
+package DnsPacket::AddressV6;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{ip_v6} = $self->{_io}->read_bytes(16);
+}
+
+sub ip_v6 {
+    my ($self) = @_;
+    return $self->{ip_v6};
+}
+
+########################################################################
 package DnsPacket::Service;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -513,11 +608,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{ip} = ();
-    my $n_ip = 4;
-    for (my $i = 0; $i < $n_ip; $i++) {
-        $self->{ip}[$i] = $self->{_io}->read_u1();
-    }
+    $self->{ip} = $self->{_io}->read_bytes(4);
 }
 
 sub ip {
@@ -561,20 +652,40 @@ sub _read {
     $self->{ttl} = $self->{_io}->read_s4be();
     $self->{rdlength} = $self->{_io}->read_u2be();
     my $_on = $self->type();
-    if ($_on == $TYPE_TYPE_PTR) {
+    if ($_on == $TYPE_TYPE_MX) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::MxInfo->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $TYPE_TYPE_PTR) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $TYPE_TYPE_SOA) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::AuthorityInfo->new($io__raw_payload, $self, $self->{_root});
     }
     elsif ($_on == $TYPE_TYPE_CNAME) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
     }
+    elsif ($_on == $TYPE_TYPE_AAAA) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::AddressV6->new($io__raw_payload, $self, $self->{_root});
+    }
     elsif ($_on == $TYPE_TYPE_TXT) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = DnsPacket::TxtBody->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $TYPE_TYPE_NS) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
     }
     elsif ($_on == $TYPE_TYPE_SRV) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
@@ -739,6 +850,80 @@ sub ad {
 sub flag {
     my ($self) = @_;
     return $self->{flag};
+}
+
+########################################################################
+package DnsPacket::AuthorityInfo;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{primary_ns} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
+    $self->{resoponsible_mailbox} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
+    $self->{serial} = $self->{_io}->read_u4be();
+    $self->{refresh_interval} = $self->{_io}->read_u4be();
+    $self->{retry_interval} = $self->{_io}->read_u4be();
+    $self->{expire_limit} = $self->{_io}->read_u4be();
+    $self->{min_ttl} = $self->{_io}->read_u4be();
+}
+
+sub primary_ns {
+    my ($self) = @_;
+    return $self->{primary_ns};
+}
+
+sub resoponsible_mailbox {
+    my ($self) = @_;
+    return $self->{resoponsible_mailbox};
+}
+
+sub serial {
+    my ($self) = @_;
+    return $self->{serial};
+}
+
+sub refresh_interval {
+    my ($self) = @_;
+    return $self->{refresh_interval};
+}
+
+sub retry_interval {
+    my ($self) = @_;
+    return $self->{retry_interval};
+}
+
+sub expire_limit {
+    my ($self) = @_;
+    return $self->{expire_limit};
+}
+
+sub min_ttl {
+    my ($self) = @_;
+    return $self->{min_ttl};
 }
 
 1;

@@ -41,6 +41,13 @@ class DnsPacket extends \Kaitai\Struct\Struct {
             }
         }
         if ($this->flags()->isOpcodeValid()) {
+            $this->_m_authorities = [];
+            $n = $this->nscount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_authorities[] = new \DnsPacket\Answer($this->_io, $this, $this->_root);
+            }
+        }
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_additionals = [];
             $n = $this->arcount();
             for ($i = 0; $i < $n; $i++) {
@@ -56,6 +63,7 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     protected $_m_arcount;
     protected $_m_queries;
     protected $_m_answers;
+    protected $_m_authorities;
     protected $_m_additionals;
 
     /**
@@ -85,7 +93,26 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     public function arcount() { return $this->_m_arcount; }
     public function queries() { return $this->_m_queries; }
     public function answers() { return $this->_m_answers; }
+    public function authorities() { return $this->_m_authorities; }
     public function additionals() { return $this->_m_additionals; }
+}
+
+namespace \DnsPacket;
+
+class MxInfo extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_preference = $this->_io->readU2be();
+        $this->_m_mx = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
+    }
+    protected $_m_preference;
+    protected $_m_mx;
+    public function preference() { return $this->_m_preference; }
+    public function mx() { return $this->_m_mx; }
 }
 
 namespace \DnsPacket;
@@ -206,6 +233,21 @@ class DomainName extends \Kaitai\Struct\Struct {
 
 namespace \DnsPacket;
 
+class AddressV6 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_ipV6 = $this->_io->readBytes(16);
+    }
+    protected $_m_ipV6;
+    public function ipV6() { return $this->_m_ipV6; }
+}
+
+namespace \DnsPacket;
+
 class Service extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -275,11 +317,7 @@ class Address extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_ip = [];
-        $n = 4;
-        for ($i = 0; $i < $n; $i++) {
-            $this->_m_ip[] = $this->_io->readU1();
-        }
+        $this->_m_ip = $this->_io->readBytes(4);
     }
     protected $_m_ip;
     public function ip() { return $this->_m_ip; }
@@ -300,20 +338,40 @@ class Answer extends \Kaitai\Struct\Struct {
         $this->_m_ttl = $this->_io->readS4be();
         $this->_m_rdlength = $this->_io->readU2be();
         switch ($this->type()) {
+            case \DnsPacket\TypeType::MX:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\MxInfo($io, $this, $this->_root);
+                break;
             case \DnsPacket\TypeType::PTR:
                 $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
                 $this->_m_payload = new \DnsPacket\DomainName($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::SOA:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\AuthorityInfo($io, $this, $this->_root);
                 break;
             case \DnsPacket\TypeType::CNAME:
                 $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
                 $this->_m_payload = new \DnsPacket\DomainName($io, $this, $this->_root);
                 break;
+            case \DnsPacket\TypeType::AAAA:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\AddressV6($io, $this, $this->_root);
+                break;
             case \DnsPacket\TypeType::TXT:
                 $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
                 $this->_m_payload = new \DnsPacket\TxtBody($io, $this, $this->_root);
+                break;
+            case \DnsPacket\TypeType::NS:
+                $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \DnsPacket\DomainName($io, $this, $this->_root);
                 break;
             case \DnsPacket\TypeType::SRV:
                 $this->_m__raw_payload = $this->_io->readBytes($this->rdlength());
@@ -448,6 +506,39 @@ class PacketFlags extends \Kaitai\Struct\Struct {
 
 namespace \DnsPacket;
 
+class AuthorityInfo extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \DnsPacket\Answer $_parent = null, \DnsPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_primaryNs = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
+        $this->_m_resoponsibleMailbox = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
+        $this->_m_serial = $this->_io->readU4be();
+        $this->_m_refreshInterval = $this->_io->readU4be();
+        $this->_m_retryInterval = $this->_io->readU4be();
+        $this->_m_expireLimit = $this->_io->readU4be();
+        $this->_m_minTtl = $this->_io->readU4be();
+    }
+    protected $_m_primaryNs;
+    protected $_m_resoponsibleMailbox;
+    protected $_m_serial;
+    protected $_m_refreshInterval;
+    protected $_m_retryInterval;
+    protected $_m_expireLimit;
+    protected $_m_minTtl;
+    public function primaryNs() { return $this->_m_primaryNs; }
+    public function resoponsibleMailbox() { return $this->_m_resoponsibleMailbox; }
+    public function serial() { return $this->_m_serial; }
+    public function refreshInterval() { return $this->_m_refreshInterval; }
+    public function retryInterval() { return $this->_m_retryInterval; }
+    public function expireLimit() { return $this->_m_expireLimit; }
+    public function minTtl() { return $this->_m_minTtl; }
+}
+
+namespace \DnsPacket;
+
 class ClassType {
     const IN_CLASS = 1;
     const CS = 2;
@@ -463,7 +554,7 @@ class TypeType {
     const MD = 3;
     const MF = 4;
     const CNAME = 5;
-    const SOE = 6;
+    const SOA = 6;
     const MB = 7;
     const MG = 8;
     const MR = 9;
@@ -474,5 +565,6 @@ class TypeType {
     const MINFO = 14;
     const MX = 15;
     const TXT = 16;
+    const AAAA = 28;
     const SRV = 33;
 }

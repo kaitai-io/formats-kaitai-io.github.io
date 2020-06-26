@@ -24,7 +24,7 @@ class DnsPacket(KaitaiStruct):
         md = 3
         mf = 4
         cname = 5
-        soe = 6
+        soa = 6
         mb = 7
         mg = 8
         mr = 9
@@ -35,6 +35,7 @@ class DnsPacket(KaitaiStruct):
         minfo = 14
         mx = 15
         txt = 16
+        aaaa = 28
         srv = 33
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -70,10 +71,28 @@ class DnsPacket(KaitaiStruct):
 
 
         if self.flags.is_opcode_valid:
+            self.authorities = [None] * (self.nscount)
+            for i in range(self.nscount):
+                self.authorities[i] = self._root.Answer(self._io, self, self._root)
+
+
+        if self.flags.is_opcode_valid:
             self.additionals = [None] * (self.arcount)
             for i in range(self.arcount):
                 self.additionals[i] = self._root.Answer(self._io, self, self._root)
 
+
+
+    class MxInfo(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.preference = self._io.read_u2be()
+            self.mx = self._root.DomainName(self._io, self, self._root)
 
 
     class PointerStruct(KaitaiStruct):
@@ -155,6 +174,17 @@ class DnsPacket(KaitaiStruct):
                 i += 1
 
 
+    class AddressV6(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.ip_v6 = self._io.read_bytes(16)
+
+
     class Service(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -205,10 +235,7 @@ class DnsPacket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ip = [None] * (4)
-            for i in range(4):
-                self.ip[i] = self._io.read_u1()
-
+            self.ip = self._io.read_bytes(4)
 
 
     class Answer(KaitaiStruct):
@@ -225,18 +252,34 @@ class DnsPacket(KaitaiStruct):
             self.ttl = self._io.read_s4be()
             self.rdlength = self._io.read_u2be()
             _on = self.type
-            if _on == self._root.TypeType.ptr:
+            if _on == self._root.TypeType.mx:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.MxInfo(io, self, self._root)
+            elif _on == self._root.TypeType.ptr:
                 self._raw_payload = self._io.read_bytes(self.rdlength)
                 io = KaitaiStream(BytesIO(self._raw_payload))
                 self.payload = self._root.DomainName(io, self, self._root)
+            elif _on == self._root.TypeType.soa:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.AuthorityInfo(io, self, self._root)
             elif _on == self._root.TypeType.cname:
                 self._raw_payload = self._io.read_bytes(self.rdlength)
                 io = KaitaiStream(BytesIO(self._raw_payload))
                 self.payload = self._root.DomainName(io, self, self._root)
+            elif _on == self._root.TypeType.aaaa:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.AddressV6(io, self, self._root)
             elif _on == self._root.TypeType.txt:
                 self._raw_payload = self._io.read_bytes(self.rdlength)
                 io = KaitaiStream(BytesIO(self._raw_payload))
                 self.payload = self._root.TxtBody(io, self, self._root)
+            elif _on == self._root.TypeType.ns:
+                self._raw_payload = self._io.read_bytes(self.rdlength)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.DomainName(io, self, self._root)
             elif _on == self._root.TypeType.srv:
                 self._raw_payload = self._io.read_bytes(self.rdlength)
                 io = KaitaiStream(BytesIO(self._raw_payload))
@@ -346,6 +389,23 @@ class DnsPacket(KaitaiStruct):
 
             self._m_ad = ((self.flag & 32) >> 5)
             return self._m_ad if hasattr(self, '_m_ad') else None
+
+
+    class AuthorityInfo(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.primary_ns = self._root.DomainName(self._io, self, self._root)
+            self.resoponsible_mailbox = self._root.DomainName(self._io, self, self._root)
+            self.serial = self._io.read_u4be()
+            self.refresh_interval = self._io.read_u4be()
+            self.retry_interval = self._io.read_u4be()
+            self.expire_limit = self._io.read_u4be()
+            self.min_ttl = self._io.read_u4be()
 
 
 

@@ -25,7 +25,7 @@ class DnsPacket < Kaitai::Struct::Struct
     3 => :type_type_md,
     4 => :type_type_mf,
     5 => :type_type_cname,
-    6 => :type_type_soe,
+    6 => :type_type_soa,
     7 => :type_type_mb,
     8 => :type_type_mg,
     9 => :type_type_mr,
@@ -36,6 +36,7 @@ class DnsPacket < Kaitai::Struct::Struct
     14 => :type_type_minfo,
     15 => :type_type_mx,
     16 => :type_type_txt,
+    28 => :type_type_aaaa,
     33 => :type_type_srv,
   }
   I__TYPE_TYPE = TYPE_TYPE.invert
@@ -72,12 +73,32 @@ class DnsPacket < Kaitai::Struct::Struct
       }
     end
     if flags.is_opcode_valid
+      @authorities = Array.new(nscount)
+      (nscount).times { |i|
+        @authorities[i] = Answer.new(@_io, self, @_root)
+      }
+    end
+    if flags.is_opcode_valid
       @additionals = Array.new(arcount)
       (arcount).times { |i|
         @additionals[i] = Answer.new(@_io, self, @_root)
       }
     end
     self
+  end
+  class MxInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @preference = @_io.read_u2be
+      @mx = DomainName.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :preference
+    attr_reader :mx
   end
   class PointerStruct < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -171,6 +192,18 @@ class DnsPacket < Kaitai::Struct::Struct
     # Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
     attr_reader :name
   end
+  class AddressV6 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @ip_v6 = @_io.read_bytes(16)
+      self
+    end
+    attr_reader :ip_v6
+  end
   class Service < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -227,10 +260,7 @@ class DnsPacket < Kaitai::Struct::Struct
     end
 
     def _read
-      @ip = Array.new(4)
-      (4).times { |i|
-        @ip[i] = @_io.read_u1
-      }
+      @ip = @_io.read_bytes(4)
       self
     end
     attr_reader :ip
@@ -248,18 +278,34 @@ class DnsPacket < Kaitai::Struct::Struct
       @ttl = @_io.read_s4be
       @rdlength = @_io.read_u2be
       case type
+      when :type_type_mx
+        @_raw_payload = @_io.read_bytes(rdlength)
+        io = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = MxInfo.new(io, self, @_root)
       when :type_type_ptr
         @_raw_payload = @_io.read_bytes(rdlength)
         io = Kaitai::Struct::Stream.new(@_raw_payload)
         @payload = DomainName.new(io, self, @_root)
+      when :type_type_soa
+        @_raw_payload = @_io.read_bytes(rdlength)
+        io = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = AuthorityInfo.new(io, self, @_root)
       when :type_type_cname
         @_raw_payload = @_io.read_bytes(rdlength)
         io = Kaitai::Struct::Stream.new(@_raw_payload)
         @payload = DomainName.new(io, self, @_root)
+      when :type_type_aaaa
+        @_raw_payload = @_io.read_bytes(rdlength)
+        io = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = AddressV6.new(io, self, @_root)
       when :type_type_txt
         @_raw_payload = @_io.read_bytes(rdlength)
         io = Kaitai::Struct::Stream.new(@_raw_payload)
         @payload = TxtBody.new(io, self, @_root)
+      when :type_type_ns
+        @_raw_payload = @_io.read_bytes(rdlength)
+        io = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = DomainName.new(io, self, @_root)
       when :type_type_srv
         @_raw_payload = @_io.read_bytes(rdlength)
         io = Kaitai::Struct::Stream.new(@_raw_payload)
@@ -354,6 +400,30 @@ class DnsPacket < Kaitai::Struct::Struct
     end
     attr_reader :flag
   end
+  class AuthorityInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @primary_ns = DomainName.new(@_io, self, @_root)
+      @resoponsible_mailbox = DomainName.new(@_io, self, @_root)
+      @serial = @_io.read_u4be
+      @refresh_interval = @_io.read_u4be
+      @retry_interval = @_io.read_u4be
+      @expire_limit = @_io.read_u4be
+      @min_ttl = @_io.read_u4be
+      self
+    end
+    attr_reader :primary_ns
+    attr_reader :resoponsible_mailbox
+    attr_reader :serial
+    attr_reader :refresh_interval
+    attr_reader :retry_interval
+    attr_reader :expire_limit
+    attr_reader :min_ttl
+  end
 
   ##
   # ID to keep track of request/responces
@@ -377,5 +447,6 @@ class DnsPacket < Kaitai::Struct::Struct
   attr_reader :arcount
   attr_reader :queries
   attr_reader :answers
+  attr_reader :authorities
   attr_reader :additionals
 end

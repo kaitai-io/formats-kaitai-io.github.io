@@ -288,7 +288,7 @@ section#format-index .row {
     <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:type_type_md</span><span class="p">,</span>
     <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:type_type_mf</span><span class="p">,</span>
     <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:type_type_cname</span><span class="p">,</span>
-    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:type_type_soe</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:type_type_soa</span><span class="p">,</span>
     <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:type_type_mb</span><span class="p">,</span>
     <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:type_type_mg</span><span class="p">,</span>
     <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:type_type_mr</span><span class="p">,</span>
@@ -299,6 +299,7 @@ section#format-index .row {
     <span class="mi">14</span> <span class="o">=&gt;</span> <span class="ss">:type_type_minfo</span><span class="p">,</span>
     <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:type_type_mx</span><span class="p">,</span>
     <span class="mi">16</span> <span class="o">=&gt;</span> <span class="ss">:type_type_txt</span><span class="p">,</span>
+    <span class="mi">28</span> <span class="o">=&gt;</span> <span class="ss">:type_type_aaaa</span><span class="p">,</span>
     <span class="mi">33</span> <span class="o">=&gt;</span> <span class="ss">:type_type_srv</span><span class="p">,</span>
   <span class="p">}</span>
   <span class="no">I__TYPE_TYPE</span> <span class="o">=</span> <span class="no">TYPE_TYPE</span><span class="o">.</span><span class="n">invert</span>
@@ -335,12 +336,32 @@ section#format-index .row {
       <span class="p">}</span>
     <span class="k">end</span>
     <span class="k">if</span> <span class="n">flags</span><span class="o">.</span><span class="n">is_opcode_valid</span>
+      <span class="vi">@authorities</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nscount</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">nscount</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@authorities</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Answer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">flags</span><span class="o">.</span><span class="n">is_opcode_valid</span>
       <span class="vi">@additionals</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">arcount</span><span class="p">)</span>
       <span class="p">(</span><span class="n">arcount</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="vi">@additionals</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Answer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="k">end</span>
     <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MxInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@preference</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@mx</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:preference</span>
+    <span class="kp">attr_reader</span> <span class="ss">:mx</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">PointerStruct</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
@@ -434,6 +455,18 @@ section#format-index .row {
     <span class="c1"># Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)</span>
     <span class="kp">attr_reader</span> <span class="ss">:name</span>
   <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">AddressV6</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ip_v6</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ip_v6</span>
+  <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Service</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -490,10 +523,7 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@ip</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-      <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@ip</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="p">}</span>
+      <span class="vi">@ip</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:ip</span>
@@ -511,18 +541,34 @@ section#format-index .row {
       <span class="vi">@ttl</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@rdlength</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="k">case</span> <span class="n">type</span>
+      <span class="k">when</span> <span class="ss">:type_type_mx</span>
+        <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="no">MxInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:type_type_ptr</span>
         <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
         <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
         <span class="vi">@payload</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:type_type_soa</span>
+        <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="no">AuthorityInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:type_type_cname</span>
         <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
         <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
         <span class="vi">@payload</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:type_type_aaaa</span>
+        <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="no">AddressV6</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:type_type_txt</span>
         <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
         <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
         <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TxtBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:type_type_ns</span>
+        <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:type_type_srv</span>
         <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rdlength</span><span class="p">)</span>
         <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
@@ -617,6 +663,30 @@ section#format-index .row {
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:flag</span>
   <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">AuthorityInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@primary_ns</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@resoponsible_mailbox</span> <span class="o">=</span> <span class="no">DomainName</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@serial</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@refresh_interval</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@retry_interval</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@expire_limit</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@min_ttl</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:primary_ns</span>
+    <span class="kp">attr_reader</span> <span class="ss">:resoponsible_mailbox</span>
+    <span class="kp">attr_reader</span> <span class="ss">:serial</span>
+    <span class="kp">attr_reader</span> <span class="ss">:refresh_interval</span>
+    <span class="kp">attr_reader</span> <span class="ss">:retry_interval</span>
+    <span class="kp">attr_reader</span> <span class="ss">:expire_limit</span>
+    <span class="kp">attr_reader</span> <span class="ss">:min_ttl</span>
+  <span class="k">end</span>
 
   <span class="c1">##</span>
   <span class="c1"># ID to keep track of request/responces</span>
@@ -640,6 +710,7 @@ section#format-index .row {
   <span class="kp">attr_reader</span> <span class="ss">:arcount</span>
   <span class="kp">attr_reader</span> <span class="ss">:queries</span>
   <span class="kp">attr_reader</span> <span class="ss">:answers</span>
+  <span class="kp">attr_reader</span> <span class="ss">:authorities</span>
   <span class="kp">attr_reader</span> <span class="ss">:additionals</span>
 <span class="k">end</span>
 </pre></div>
