@@ -112,7 +112,7 @@ namespace Kaitai
             Frame = 149,
             Bytearray8 = 150,
             NextBuffer = 151,
-            ReadBuffer = 152,
+            ReadonlyBuffer = 152,
         }
         public PythonPickle(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPickle p__root = null) : base(p__io)
         {
@@ -600,14 +600,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _len = m_io.ReadU4le();
+                _len = m_io.ReadU1();
                 _val = System.Text.Encoding.GetEncoding("utf8").GetString(m_io.ReadBytes(Len));
             }
-            private uint _len;
+            private byte _len;
             private string _val;
             private PythonPickle m_root;
             private PythonPickle.Op m_parent;
-            public uint Len { get { return _len; } }
+            public byte Len { get { return _len; } }
             public string Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }

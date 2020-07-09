@@ -104,7 +104,7 @@ class PythonPickle < Kaitai::Struct::Struct
     149 => :opcode_frame,
     150 => :opcode_bytearray8,
     151 => :opcode_next_buffer,
-    152 => :opcode_read_buffer,
+    152 => :opcode_readonly_buffer,
   }
   I__OPCODE = OPCODE.invert
   def initialize(_io, _parent = nil, _root = self)
@@ -388,7 +388,7 @@ class PythonPickle < Kaitai::Struct::Struct
     end
 
     def _read
-      @len = @_io.read_u4le
+      @len = @_io.read_u1
       @val = (@_io.read_bytes(len)).force_encoding("utf8")
       self
     end

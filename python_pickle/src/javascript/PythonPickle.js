@@ -107,7 +107,7 @@ var PythonPickle = (function() {
     FRAME: 149,
     BYTEARRAY8: 150,
     NEXT_BUFFER: 151,
-    READ_BUFFER: 152,
+    READONLY_BUFFER: 152,
 
     40: "MARK",
     41: "EMPTY_TUPLE",
@@ -176,7 +176,7 @@ var PythonPickle = (function() {
     149: "FRAME",
     150: "BYTEARRAY8",
     151: "NEXT_BUFFER",
-    152: "READ_BUFFER",
+    152: "READONLY_BUFFER",
   });
 
   function PythonPickle(_io, _parent, _root) {
@@ -513,7 +513,7 @@ var PythonPickle = (function() {
       this._read();
     }
     Unicodestring1.prototype._read = function() {
-      this.len = this._io.readU4le();
+      this.len = this._io.readU1();
       this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), "utf8");
     }
 

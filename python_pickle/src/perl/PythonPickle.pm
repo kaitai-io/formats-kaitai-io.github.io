@@ -86,7 +86,7 @@ our $OPCODE_MEMOIZE = 148;
 our $OPCODE_FRAME = 149;
 our $OPCODE_BYTEARRAY8 = 150;
 our $OPCODE_NEXT_BUFFER = 151;
-our $OPCODE_READ_BUFFER = 152;
+our $OPCODE_READONLY_BUFFER = 152;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -726,7 +726,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len} = $self->{_io}->read_u4le();
+    $self->{len} = $self->{_io}->read_u1();
     $self->{val} = Encode::decode("utf8", $self->{_io}->read_bytes($self->len()));
 }
 

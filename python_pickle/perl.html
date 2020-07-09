@@ -355,7 +355,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
 <span class="k">our</span> <span class="nv">$OPCODE_FRAME</span> <span class="o">=</span> <span class="mi">149</span><span class="p">;</span>
 <span class="k">our</span> <span class="nv">$OPCODE_BYTEARRAY8</span> <span class="o">=</span> <span class="mi">150</span><span class="p">;</span>
 <span class="k">our</span> <span class="nv">$OPCODE_NEXT_BUFFER</span> <span class="o">=</span> <span class="mi">151</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$OPCODE_READ_BUFFER</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_READONLY_BUFFER</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
 
 <span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
@@ -995,7 +995,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">val</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf8&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">()));</span>
 <span class="p">}</span>
 

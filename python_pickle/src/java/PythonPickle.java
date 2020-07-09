@@ -111,7 +111,7 @@ public class PythonPickle extends KaitaiStruct {
         FRAME(149),
         BYTEARRAY8(150),
         NEXT_BUFFER(151),
-        READ_BUFFER(152);
+        READONLY_BUFFER(152);
 
         private final long id;
         Opcode(long id) { this.id = id; }
@@ -690,14 +690,14 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.len = this._io.readU4le();
+            this.len = this._io.readU1();
             this.val = new String(this._io.readBytes(len()), Charset.forName("utf8"));
         }
-        private long len;
+        private int len;
         private String val;
         private PythonPickle _root;
         private PythonPickle.Op _parent;
-        public long len() { return len; }
+        public int len() { return len; }
         public String val() { return val; }
         public PythonPickle _root() { return _root; }
         public PythonPickle.Op _parent() { return _parent; }

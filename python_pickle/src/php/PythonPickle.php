@@ -380,7 +380,7 @@ class Unicodestring1 extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_len = $this->_io->readU4le();
+        $this->_m_len = $this->_io->readU1();
         $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "utf8");
     }
     protected $_m_len;
@@ -1054,5 +1054,5 @@ class Opcode {
     /**
      * make top of stack readonly
      */
-    const READ_BUFFER = 152;
+    const READONLY_BUFFER = 152;
 }

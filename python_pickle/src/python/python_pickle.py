@@ -107,7 +107,7 @@ class PythonPickle(KaitaiStruct):
         frame = 149
         bytearray8 = 150
         next_buffer = 151
-        read_buffer = 152
+        readonly_buffer = 152
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -349,7 +349,7 @@ class PythonPickle(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len = self._io.read_u4le()
+            self.len = self._io.read_u1()
             self.val = (self._io.read_bytes(self.len)).decode(u"utf8")
 
 
