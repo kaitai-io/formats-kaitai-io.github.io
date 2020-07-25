@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Compressed Macintosh resource data, Apple `'dcmp' (0)` format: PHP parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Compressed Macintosh resource data, Apple `'dcmp' (0)` format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Compressed Macintosh resource data, Apple `'dcmp' (0)` format:
+            
+            PHP parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Compressed resource data in <code>'dcmp' (0)</code> format,
+as stored in compressed resources with header type <code>8</code> and decompressor ID <code>0</code>.</p>
+<p>The <code>'dcmp' (0)</code> decompressor resource is included in the System file of System 7.0 and later.
+This compression format is used for most compressed resources in System 7.0's files.
+This decompressor is also included with and used by some other Apple applications,
+such as ResEdit.</p>
+<p>This compression format supports some basic general-purpose compression schemes,
+including backreferences to previous data,
+run-length encoding,
+and delta encoding.
+It also includes some types of compression tailored specifically to Mac OS resources,
+including a set of single-byte codes that correspond to entries in a hard-coded lookup table,
+and a specialized kind of delta encoding for segment loader jump tables.</p>
+<p>Almost all parts of this compression format operate on units of 2 or 4 bytes.
+As a result,
+it is nearly impossible to store data with an odd length in this format.
+To work around this limitation,
+odd-length resources are padded with an extra byte before compressing them with this format.
+This extra byte is ignored after decompression,
+as the real (odd) length of the resource is stored in the compressed resource header.</p>
+<p>The <code>'dcmp' (1)</code> compression format (see dcmp_1.ksy) is very similar to this format,
+with the main difference that it operates mostly on single bytes rather than two-byte units.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Compressed Macintosh resource data, Apple `'dcmp' (0)` format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Perl library">Perl</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="php.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            PHP source code to parse Compressed Macintosh resource data, Apple `'dcmp' (0)` format
+            
+        </h2>
+
+        
+
+        <h3>Dcmp0.php</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/php/Dcmp0.php" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Compressed resource data in `&#39;dcmp&#39; (0)` format,</span>
+<span class="sd"> * as stored in compressed resources with header type `8` and decompressor ID `0`.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The `&#39;dcmp&#39; (0)` decompressor resource is included in the System file of System 7.0 and later.</span>
+<span class="sd"> * This compression format is used for most compressed resources in System 7.0&#39;s files.</span>
+<span class="sd"> * This decompressor is also included with and used by some other Apple applications,</span>
+<span class="sd"> * such as ResEdit.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This compression format supports some basic general-purpose compression schemes,</span>
+<span class="sd"> * including backreferences to previous data,</span>
+<span class="sd"> * run-length encoding,</span>
+<span class="sd"> * and delta encoding.</span>
+<span class="sd"> * It also includes some types of compression tailored specifically to Mac OS resources,</span>
+<span class="sd"> * including a set of single-byte codes that correspond to entries in a hard-coded lookup table,</span>
+<span class="sd"> * and a specialized kind of delta encoding for segment loader jump tables.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Almost all parts of this compression format operate on units of 2 or 4 bytes.</span>
+<span class="sd"> * As a result,</span>
+<span class="sd"> * it is nearly impossible to store data with an odd length in this format.</span>
+<span class="sd"> * To work around this limitation,</span>
+<span class="sd"> * odd-length resources are padded with an extra byte before compressing them with this format.</span>
+<span class="sd"> * This extra byte is ignored after decompression,</span>
+<span class="sd"> * as the real (odd) length of the resource is stored in the compressed resource header.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The `&#39;dcmp&#39; (1)` compression format (see dcmp_1.ksy) is very similar to this format,</span>
+<span class="sd"> * with the main difference that it operates mostly on single bytes rather than two-byte units.</span>
+<span class="sd"> */</span>
+
+<span class="k">class</span> <span class="nc">Dcmp0</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_chunks</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The sequence of chunks that make up the compressed data.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * A single chunk of compressed data.</span>
+<span class="sd"> * Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,</span>
+<span class="sd"> * except when `tag == 0xff`,</span>
+<span class="sd"> * which marks the end of the data and does not correspond to any bytes in the uncompressed data.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Most chunks are stateless and always expand to the same data,</span>
+<span class="sd"> * regardless of where the chunk appears in the sequence.</span>
+<span class="sd"> * However,</span>
+<span class="sd"> * some chunks affect the behavior of future chunks,</span>
+<span class="sd"> * or expand to different data depending on which chunks came before them.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Chunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">((</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">LITERAL</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">74</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">BACKREFERENCE</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">253</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">TABLE_LOOKUP</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">254</span> <span class="o">?</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">EXTENDED</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span> <span class="o">?</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">END</span> <span class="o">:</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">INVALID</span><span class="p">))))))</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">END</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\EndBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">LITERAL</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\LiteralBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">BACKREFERENCE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\BackreferenceBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">TABLE_LOOKUP</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\TableLookupBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Dcmp0\Chunk\TagKind</span><span class="o">::</span><span class="na">EXTENDED</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The chunk&#39;s tag byte.</span>
+<span class="sd">     * This controls the structure of the body and the meaning of the chunk.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The chunk&#39;s body.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Certain chunks do not have any data following the tag byte.</span>
+<span class="sd">     * In this case,</span>
+<span class="sd">     * the body is a zero-length structure.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a literal data chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The data that this chunk expands to is stored literally in the body (`literal`).</span>
+<span class="sd"> * Optionally,</span>
+<span class="sd"> * the literal data may also be stored for use by future backreference chunks (`do_store`).</span>
+<span class="sd"> * </span>
+<span class="sd"> * The length of the literal data is stored as a number of two-byte units.</span>
+<span class="sd"> * This means that the literal data always has an even length in bytes.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">LiteralBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$tag</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$tag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isLenLiteralDiv2Separate</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2Separate</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_literal</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenLiteral</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_doStore</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Whether this literal should be stored for use by future backreference chunks.</span>
+<span class="sd">     * </span>
+<span class="sd">     * See the documentation of the `backreference_body` type for details about backreference chunks.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">doStore</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_doStore</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_doStore</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_doStore</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_doStore</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenLiteralDiv2</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The length of the literal data,</span>
+<span class="sd">     * in two-byte units.</span>
+<span class="sd">     * </span>
+<span class="sd">     * In practice,</span>
+<span class="sd">     * this value is always greater than zero,</span>
+<span class="sd">     * as there is no use in storing a zero-length literal.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenLiteralDiv2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isLenLiteralDiv2Separate</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenLiteralDiv2Separate</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenLiteralDiv2InTag</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenLiteral</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The length of the literal data,</span>
+<span class="sd">     * in bytes.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenLiteral</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteral</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteral</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteral</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenLiteralDiv2</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteral</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenLiteralDiv2InTag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The part of the tag byte that indicates the length of the literal data,</span>
+<span class="sd">     * in two-byte units.</span>
+<span class="sd">     * If this value is 0,</span>
+<span class="sd">     * the length is stored in a separate byte after the tag byte and before the literal data.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenLiteralDiv2InTag</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2InTag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2InTag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2InTag</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2InTag</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isLenLiteralDiv2Separate</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Whether the length of the literal is stored separately from the tag.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isLenLiteralDiv2Separate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isLenLiteralDiv2Separate</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isLenLiteralDiv2Separate</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isLenLiteralDiv2Separate</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenLiteralDiv2InTag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isLenLiteralDiv2Separate</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenLiteralDiv2Separate</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_literal</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The length of the literal data,</span>
+<span class="sd">     * in two-byte units.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This field is only present if the tag byte&#39;s low nibble is zero.</span>
+<span class="sd">     * In practice,</span>
+<span class="sd">     * this only happens if the length is 0x10 or greater,</span>
+<span class="sd">     * because smaller lengths can be encoded into the tag byte.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenLiteralDiv2Separate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenLiteralDiv2Separate</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The literal data.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">literal</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_literal</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The tag byte preceding this chunk body.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a backreference chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk expands to the data stored in a preceding literal chunk,</span>
+<span class="sd"> * indicated by an index number (`index`).</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BackreferenceBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$tag</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$tag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isIndexSeparate</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="mi">32</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparateMinus</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">33</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparateMinus</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">34</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparateMinus</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isIndexSeparate</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Whether the index is stored separately from the tag.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isIndexSeparate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIndexSeparate</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIndexSeparate</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIndexSeparate</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">34</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIndexSeparate</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_indexInTag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The index of the referenced literal chunk,</span>
+<span class="sd">     * as stored in the tag byte.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">indexInTag</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexInTag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexInTag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexInTag</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">-</span> <span class="mi">35</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexInTag</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_indexSeparate</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The index of the referenced literal chunk,</span>
+<span class="sd">     * as stored separately from the tag byte,</span>
+<span class="sd">     * with the implicit offset corrected for.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">indexSeparate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparate</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparate</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isIndexSeparate</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparate</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">indexSeparateMinus</span><span class="p">()</span> <span class="o">+</span> <span class="mi">40</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">33</span> <span class="o">?</span> <span class="mi">256</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparate</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_index</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The index of the referenced literal chunk.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
+<span class="sd">     * starting at 0.</span>
+<span class="sd">     * Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
+<span class="sd">     * Once an index is assigned to a stored literal,</span>
+<span class="sd">     * it is never changed or unassigned for the entire length of the compressed data.</span>
+<span class="sd">     * </span>
+<span class="sd">     * As the name indicates,</span>
+<span class="sd">     * a backreference can only reference stored literal chunks found *before* the backreference,</span>
+<span class="sd">     * not ones that come after it.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isIndexSeparate</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">indexSeparate</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">indexInTag</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_indexSeparateMinus</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The index of the referenced literal chunk,</span>
+<span class="sd">     * stored separately from the tag.</span>
+<span class="sd">     * The value in this field is stored minus 0x28.</span>
+<span class="sd">     * If the tag byte is 0x21,</span>
+<span class="sd">     * the value is also stored minus 0x100,</span>
+<span class="sd">     * *on top of* the regular offset</span>
+<span class="sd">     * (i. e. minus 0x128 in total).</span>
+<span class="sd">     * </span>
+<span class="sd">     * In other words,</span>
+<span class="sd">     * for tag bytes 0x20 and 0x21,</span>
+<span class="sd">     * the index is actually 9 bits large,</span>
+<span class="sd">     * with the low 8 bits stored separately and the highest bit stored in the lowest bit of the tag byte.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This field is only present if the tag byte is 0x20 through 0x22.</span>
+<span class="sd">     * For higher tag bytes,</span>
+<span class="sd">     * the index is encoded in the tag byte.</span>
+<span class="sd">     * Values smaller than 0x28 cannot be stored in this field,</span>
+<span class="sd">     * they must always be encoded in the tag byte.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">indexSeparateMinus</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_indexSeparateMinus</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The tag byte preceding this chunk body.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a table lookup chunk.</span>
+<span class="sd"> * This body is always empty.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk always expands to two bytes (`value`),</span>
+<span class="sd"> * determined from the tag byte using a fixed lookup table (`lookup_table`).</span>
+<span class="sd"> * This lookup table is hardcoded in the decompressor and always the same for all compressed data.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">TableLookupBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$tag</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$tag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lookupTable</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Fixed lookup table that maps tag byte numbers to two bytes each.</span>
+<span class="sd">     * </span>
+<span class="sd">     * The entries in the lookup table are offset -</span>
+<span class="sd">     * index 0 stands for tag 0x4b, 1 for 0x4c, etc.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lookupTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lookupTable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lookupTable</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lookupTable</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xBA</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\x75</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x0C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xAD</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x53</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x0B</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x61\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x10</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x70\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x50</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xFC</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\xE7</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x3F\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x04</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xF8</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x0C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xED</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\x56</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x68</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\x5E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x58\x8F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4F\xEF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x18</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x60\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x50\x8F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\x90</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x26\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x14</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xF4</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4C\xEE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x0E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x41\xEE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4C\xDF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\xC0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xF0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2D\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x12</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x30\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x70\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x28</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x54</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x20</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x1C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x5F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x18\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x26\x6F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\x78</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x16</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x41\xFA</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x30\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x28\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x72\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x28\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x0C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x6B</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x55\x8F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x28</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xFE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xEC</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x22\xD8</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x0B</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x0F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x59\x8F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x01\x18</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x81\xE1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4A\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xB0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xE8</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\xC7</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x03</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x22</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x1A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xF9</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x24</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x78</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x08\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x04</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x2A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xD0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x30\x28</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x26\x5F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x04</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x30</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x43\xEE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x3F\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x1F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x1E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xF6</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x42\xA7</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xFA</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x60\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x3D\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x0C\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x26</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2D\x48</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x70\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x60\x04</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x18\x80</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4A\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x2C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x11</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xE4</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x21\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x26\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xF2</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x42\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4E\xB9</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x3D\x7C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x38</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x0D</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x60\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x42\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x0C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2D\x68</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4A\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x4A\xAE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x2E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x22\x5F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x22\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x30\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x42\x67</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x32</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x28</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x09</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\x7A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x02\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2F\x2B</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x05</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x22\x6E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xE5\x80</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x67\x0E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x50</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x3E\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x66\x0C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x2E\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xEE</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x6D</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x20\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\xFF\xE0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x53\x40</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x60\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x04\x80</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x00\x68</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x0B\x7C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x44\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x41\xE8</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\x48\x41</span><span class="s2">&quot;</span><span class="p">];</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lookupTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The two bytes that the tag byte expands to,</span>
+<span class="sd">     * based on the fixed lookup table.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lookupTable</span><span class="p">()[(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">-</span> <span class="mi">75</span><span class="p">)];</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The tag byte preceding this chunk body.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of an end chunk.</span>
+<span class="sd"> * This body is always empty.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The last chunk in the compressed data must always be an end chunk.</span>
+<span class="sd"> * An end chunk cannot appear elsewhere in the compressed data.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">EndBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of an extended chunk.</span>
+<span class="sd"> * The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ExtendedBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody\JumpTableBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody\DeltaEncoding16BitBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">6</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody\DeltaEncoding32BitBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody\RepeatBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody\RepeatBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The chunk&#39;s extended tag byte.</span>
+<span class="sd">     * This controls the structure of the body and the meaning of the chunk.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The chunk&#39;s body.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a jump table chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk generates parts of a segment loader jump table,</span>
+<span class="sd"> * in the format found in `&#39;CODE&#39; (0)` resources.</span>
+<span class="sd"> * It expands to the following data,</span>
+<span class="sd"> * with all non-constant numbers encoded as unsigned 16-bit big-endian integers:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * `0x3f 0x3c` (push following segment number onto stack)</span>
+<span class="sd"> * * The segment number</span>
+<span class="sd"> * * `0xa9 0xf0` (`_LoadSeg` trap)</span>
+<span class="sd"> * * For each address:</span>
+<span class="sd"> *   * The address</span>
+<span class="sd"> *   * `0x3f 0x3c` (push following segment number onto stack)</span>
+<span class="sd"> *   * The segment number</span>
+<span class="sd"> *   * `0xa9 0xf0` (`_LoadSeg` trap)</span>
+<span class="sd"> * </span>
+<span class="sd"> * Note that this generates one jump table entry without an address before it,</span>
+<span class="sd"> * meaning that this address needs to be generated by the preceding chunk.</span>
+<span class="sd"> * All following jump table entries are generated with the addresses encoded in this chunk.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">JumpTableBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumberRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddressesRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_addressesRaw</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numAddresses</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_addressesRaw</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_segmentNumber</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The segment number for all of the generated jump table entries.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Although it is stored as a variable-length integer,</span>
+<span class="sd">     * the segment number must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+<span class="sd">     * i. e. an unsigned 16-bit integer.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">segmentNumber</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumber</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumber</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">segmentNumberRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumber</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numAddresses</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The number of addresses stored in this chunk.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This number must be greater than 0.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numAddresses</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddresses</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddresses</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddresses</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numAddressesRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddresses</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_segmentNumberRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numAddressesRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_addressesRaw</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `segment_number`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">segmentNumberRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segmentNumberRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `num_addresses`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numAddressesRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numAddressesRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The addresses for each generated jump table entry,</span>
+<span class="sd">     * stored as variable-length integers.</span>
+<span class="sd">     * </span>
+<span class="sd">     * The first address is stored literally and must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+<span class="sd">     * i. e. an unsigned 16-bit integer.</span>
+<span class="sd">     * </span>
+<span class="sd">     * All following addresses are stored as deltas relative to the previous address.</span>
+<span class="sd">     * Each of these deltas is stored plus 6;</span>
+<span class="sd">     * this value needs to be subtracted before (or after) adding it to the previous address.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Each delta (after subtracting 6) should be positive,</span>
+<span class="sd">     * and adding it to the previous address should not result in a value larger than `0xffff`,</span>
+<span class="sd">     * i. e. there should be no 16-bit unsigned integer wraparound.</span>
+<span class="sd">     * These conditions are always met in all known jump table chunks,</span>
+<span class="sd">     * so it is not known how the original decompressor behaves otherwise.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">addressesRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_addressesRaw</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a repeat chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk expands to a 1-byte or 2-byte value repeated a number of times,</span>
+<span class="sd"> * i. e. it implements a form of run-length encoding.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">RepeatBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$tag</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$tag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeatRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1Raw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_byteCount</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The length in bytes of the value to be repeated.</span>
+<span class="sd">     * Regardless of the byte count,</span>
+<span class="sd">     * the value to be repeated is stored as a variable-length integer.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byteCount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteCount</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteCount</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteCount</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteCount</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_toRepeat</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The value to repeat.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Although it is stored as a variable-length integer,</span>
+<span class="sd">     * this value must fit into an unsigned big-endian integer that is as long as `byte_count`,</span>
+<span class="sd">     * i. e. either 8 or 16 bits.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toRepeat</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeat</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeat</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">toRepeatRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeat</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_repeatCountM1</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The number of times to repeat the value,</span>
+<span class="sd">     * minus one.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This value must not be negative.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">repeatCountM1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repeatCountM1Raw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_repeatCount</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The number of times to repeat the value.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This value must be positive.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">repeatCount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCount</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCount</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCount</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repeatCountM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCount</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_toRepeatRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_repeatCountM1Raw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `to_repeat`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toRepeatRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_toRepeatRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `repeat_count_m1`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">repeatCountM1Raw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_repeatCountM1Raw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The extended tag byte preceding this chunk body.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a 16-bit delta encoding chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk expands to a sequence of 16-bit big-endian integer values.</span>
+<span class="sd"> * The first value is stored literally.</span>
+<span class="sd"> * All following values are stored as deltas relative to the previous value.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">DeltaEncoding16BitBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValueRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltasRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltas</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numDeltas</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltas</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS1</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstValue</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The first value in the sequence.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Although it is stored as a variable-length integer,</span>
+<span class="sd">     * this value must be in the range `-0x8000 &lt;= x &lt;= 0x7fff`,</span>
+<span class="sd">     * i. e. a signed 16-bit integer.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstValue</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">firstValueRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numDeltas</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The number of deltas stored in this chunk.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This number must not be negative.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numDeltas</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numDeltasRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstValueRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numDeltasRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_deltas</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `first_value`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstValueRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValueRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `num_deltas`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numDeltasRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltasRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The deltas for each value relative to the previous value.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Each of these deltas is a signed 8-bit value.</span>
+<span class="sd">     * When adding the delta to the previous value,</span>
+<span class="sd">     * 16-bit integer wraparound is performed if necessary,</span>
+<span class="sd">     * so that the resulting value always fits into a 16-bit signed integer.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">deltas</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltas</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The body of a 32-bit delta encoding chunk.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This chunk expands to a sequence of 32-bit big-endian integer values.</span>
+<span class="sd"> * The first value is stored literally.</span>
+<span class="sd"> * All following values are stored as deltas relative to the previous value.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">DeltaEncoding32BitBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Dcmp0\Chunk\ExtendedBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Dcmp0</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValueRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltasRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltasRaw</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numDeltas</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltasRaw</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstValue</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The first value in the sequence.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstValue</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">firstValueRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numDeltas</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The number of deltas stored in this chunk.</span>
+<span class="sd">     * </span>
+<span class="sd">     * This number must not be negative.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numDeltas</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numDeltasRaw</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltas</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstValueRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numDeltasRaw</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_deltasRaw</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `first_value`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstValueRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstValueRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Raw variable-length integer representation of `num_deltas`.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numDeltasRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numDeltasRaw</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * The deltas for each value relative to the previous value,</span>
+<span class="sd">     * stored as variable-length integers.</span>
+<span class="sd">     * </span>
+<span class="sd">     * Each of these deltas is a signed value.</span>
+<span class="sd">     * When adding the delta to the previous value,</span>
+<span class="sd">     * 32-bit integer wraparound is performed if necessary,</span>
+<span class="sd">     * so that the resulting value always fits into a 32-bit signed integer.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">deltasRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_deltasRaw</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Dcmp0\Chunk</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">TagKind</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">INVALID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LITERAL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BACKREFERENCE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TABLE_LOOKUP</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">EXTENDED</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">END</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

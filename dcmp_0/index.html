@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Compressed Macintosh resource data, Apple `'dcmp' (0)` format format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Compressed Macintosh resource data, Apple `'dcmp' (0)` format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Compressed Macintosh resource data, Apple `'dcmp' (0)` format:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Compressed resource data in <code>'dcmp' (0)</code> format,
+as stored in compressed resources with header type <code>8</code> and decompressor ID <code>0</code>.</p>
+<p>The <code>'dcmp' (0)</code> decompressor resource is included in the System file of System 7.0 and later.
+This compression format is used for most compressed resources in System 7.0's files.
+This decompressor is also included with and used by some other Apple applications,
+such as ResEdit.</p>
+<p>This compression format supports some basic general-purpose compression schemes,
+including backreferences to previous data,
+run-length encoding,
+and delta encoding.
+It also includes some types of compression tailored specifically to Mac OS resources,
+including a set of single-byte codes that correspond to entries in a hard-coded lookup table,
+and a specialized kind of delta encoding for segment loader jump tables.</p>
+<p>Almost all parts of this compression format operate on units of 2 or 4 bytes.
+As a result,
+it is nearly impossible to store data with an odd length in this format.
+To work around this limitation,
+odd-length resources are padded with an extra byte before compressing them with this format.
+This extra byte is ignored after decompression,
+as the real (odd) length of the resource is stored in the compressed resource header.</p>
+<p>The <code>'dcmp' (1)</code> compression format (see dcmp_1.ksy) is very similar to this format,
+with the main difference that it operates mostly on single bytes rather than two-byte units.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Compressed Macintosh resource data, Apple `'dcmp' (0)` format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="dcmp_0.svg">
+            <img class="diagram-img" src="dcmp_0.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_0</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Compressed Macintosh resource data, Apple `&#39;dcmp&#39; (0)` format</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mac OS</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="s">&quot;0.8&quot;</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Compressed resource data in `&#39;dcmp&#39; (0)` format,</span>
+  <span class="no">as stored in compressed resources with header type `8` and decompressor ID `0`.</span>
+
+  <span class="no">The `&#39;dcmp&#39; (0)` decompressor resource is included in the System file of System 7.0 and later.</span>
+  <span class="no">This compression format is used for most compressed resources in System 7.0&#39;s files.</span>
+  <span class="no">This decompressor is also included with and used by some other Apple applications,</span>
+  <span class="no">such as ResEdit.</span>
+
+  <span class="no">This compression format supports some basic general-purpose compression schemes,</span>
+  <span class="no">including backreferences to previous data,</span>
+  <span class="no">run-length encoding,</span>
+  <span class="no">and delta encoding.</span>
+  <span class="no">It also includes some types of compression tailored specifically to Mac OS resources,</span>
+  <span class="no">including a set of single-byte codes that correspond to entries in a hard-coded lookup table,</span>
+  <span class="no">and a specialized kind of delta encoding for segment loader jump tables.</span>
+
+  <span class="no">Almost all parts of this compression format operate on units of 2 or 4 bytes.</span>
+  <span class="no">As a result,</span>
+  <span class="no">it is nearly impossible to store data with an odd length in this format.</span>
+  <span class="no">To work around this limitation,</span>
+  <span class="no">odd-length resources are padded with an extra byte before compressing them with this format.</span>
+  <span class="no">This extra byte is ignored after decompression,</span>
+  <span class="no">as the real (odd) length of the resource is stored in the compressed resource header.</span>
+
+  <span class="no">The `&#39;dcmp&#39; (1)` compression format (see dcmp_1.ksy) is very similar to this format,</span>
+  <span class="no">with the main difference that it operates mostly on single bytes rather than two-byte units.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp0.py&#39;</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunks</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.tag == 0xff</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The sequence of chunks that make up the compressed data.</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">A single chunk of compressed data.</span>
+      <span class="no">Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,</span>
+      <span class="no">except when `tag == 0xff`,</span>
+      <span class="no">which marks the end of the data and does not correspond to any bytes in the uncompressed data.</span>
+
+      <span class="no">Most chunks are stateless and always expand to the same data,</span>
+      <span class="no">regardless of where the chunk appears in the sequence.</span>
+      <span class="no">However,</span>
+      <span class="no">some chunks affect the behavior of future chunks,</span>
+      <span class="no">or expand to different data depending on which chunks came before them.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The chunk&#39;s tag byte.</span>
+          <span class="no">This controls the structure of the body and the meaning of the chunk.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+            <span class="no">tag &gt;= 0x00 and tag &lt;= 0x1f ? tag_kind::literal</span>
+            <span class="no">: tag &gt;= 0x20 and tag &lt;= 0x4a ? tag_kind::backreference</span>
+            <span class="no">: tag &gt;= 0x4b and tag &lt;= 0xfd ? tag_kind::table_lookup</span>
+            <span class="no">: tag == 0xfe ? tag_kind::extended</span>
+            <span class="no">: tag == 0xff ? tag_kind::end</span>
+            <span class="no">: tag_kind::invalid</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;tag_kind::literal&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">literal_body(tag)</span>
+            <span class="s">&#39;tag_kind::backreference&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">backreference_body(tag)</span>
+            <span class="s">&#39;tag_kind::table_lookup&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">table_lookup_body(tag)</span>
+            <span class="s">&#39;tag_kind::extended&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">extended_body</span>
+            <span class="s">&#39;tag_kind::end&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">end_body</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The chunk&#39;s body.</span>
+
+          <span class="no">Certain chunks do not have any data following the tag byte.</span>
+          <span class="no">In this case,</span>
+          <span class="no">the body is a zero-length structure.</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="c1"># Internal enum, only for use in the type switch above.</span>
+      <span class="c1"># This is a workaround for kaitai-io/kaitai_struct#489.</span>
+      <span class="nt">tag_kind</span><span class="p">:</span>
+        <span class="nt">-1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">invalid</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">literal</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backreference</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_lookup</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extended</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">literal_body</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The body of a literal data chunk.</span>
+
+          <span class="no">The data that this chunk expands to is stored literally in the body (`literal`).</span>
+          <span class="no">Optionally,</span>
+          <span class="no">the literal data may also be stored for use by future backreference chunks (`do_store`).</span>
+
+          <span class="no">The length of the literal data is stored as a number of two-byte units.</span>
+          <span class="no">This means that the literal data always has an even length in bytes.</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The tag byte preceding this chunk body.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_literal_div2_separate</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_len_literal_div2_separate</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The length of the literal data,</span>
+              <span class="no">in two-byte units.</span>
+
+              <span class="no">This field is only present if the tag byte&#39;s low nibble is zero.</span>
+              <span class="no">In practice,</span>
+              <span class="no">this only happens if the length is 0x10 or greater,</span>
+              <span class="no">because smaller lengths can be encoded into the tag byte.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">literal</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_literal</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The literal data.</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">do_store</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(tag &amp; 0x10) != 0</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Whether this literal should be stored for use by future backreference chunks.</span>
+
+              <span class="no">See the documentation of the `backreference_body` type for details about backreference chunks.</span>
+          <span class="nt">len_literal_div2_in_tag</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag &amp; 0x0f</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The part of the tag byte that indicates the length of the literal data,</span>
+              <span class="no">in two-byte units.</span>
+              <span class="no">If this value is 0,</span>
+              <span class="no">the length is stored in a separate byte after the tag byte and before the literal data.</span>
+          <span class="nt">is_len_literal_div2_separate</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_literal_div2_in_tag == 0</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Whether the length of the literal is stored separately from the tag.</span>
+          <span class="nt">len_literal_div2</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">is_len_literal_div2_separate</span>
+              <span class="no">? len_literal_div2_separate</span>
+              <span class="no">: len_literal_div2_in_tag</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The length of the literal data,</span>
+              <span class="no">in two-byte units.</span>
+
+              <span class="no">In practice,</span>
+              <span class="no">this value is always greater than zero,</span>
+              <span class="no">as there is no use in storing a zero-length literal.</span>
+          <span class="nt">len_literal</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_literal_div2 * 2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The length of the literal data,</span>
+              <span class="no">in bytes.</span>
+      <span class="nt">backreference_body</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The body of a backreference chunk.</span>
+
+          <span class="no">This chunk expands to the data stored in a preceding literal chunk,</span>
+          <span class="no">indicated by an index number (`index`).</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The tag byte preceding this chunk body.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">index_separate_minus</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="nt">0x20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">0x21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">0x22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_index_separate</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The index of the referenced literal chunk,</span>
+              <span class="no">stored separately from the tag.</span>
+              <span class="no">The value in this field is stored minus 0x28.</span>
+              <span class="no">If the tag byte is 0x21,</span>
+              <span class="no">the value is also stored minus 0x100,</span>
+              <span class="no">*on top of* the regular offset</span>
+              <span class="no">(i. e. minus 0x128 in total).</span>
+
+              <span class="no">In other words,</span>
+              <span class="no">for tag bytes 0x20 and 0x21,</span>
+              <span class="no">the index is actually 9 bits large,</span>
+              <span class="no">with the low 8 bits stored separately and the highest bit stored in the lowest bit of the tag byte.</span>
+
+              <span class="no">This field is only present if the tag byte is 0x20 through 0x22.</span>
+              <span class="no">For higher tag bytes,</span>
+              <span class="no">the index is encoded in the tag byte.</span>
+              <span class="no">Values smaller than 0x28 cannot be stored in this field,</span>
+              <span class="no">they must always be encoded in the tag byte.</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">is_index_separate</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag &gt;= 0x20 and tag &lt;= 0x22</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Whether the index is stored separately from the tag.</span>
+          <span class="nt">index_in_tag</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag - 0x23</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The index of the referenced literal chunk,</span>
+              <span class="no">as stored in the tag byte.</span>
+          <span class="nt">index_separate</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">index_separate_minus + 0x28 + (tag == 0x21 ? 0x100 : 0)</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_index_separate</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The index of the referenced literal chunk,</span>
+              <span class="no">as stored separately from the tag byte,</span>
+              <span class="no">with the implicit offset corrected for.</span>
+          <span class="nt">index</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">is_index_separate ? index_separate : index_in_tag</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The index of the referenced literal chunk.</span>
+
+              <span class="no">Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
+              <span class="no">starting at 0.</span>
+              <span class="no">Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
+              <span class="no">Once an index is assigned to a stored literal,</span>
+              <span class="no">it is never changed or unassigned for the entire length of the compressed data.</span>
+
+              <span class="no">As the name indicates,</span>
+              <span class="no">a backreference can only reference stored literal chunks found *before* the backreference,</span>
+              <span class="no">not ones that come after it.</span>
+      <span class="nt">table_lookup_body</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The body of a table lookup chunk.</span>
+          <span class="no">This body is always empty.</span>
+
+          <span class="no">This chunk always expands to two bytes (`value`),</span>
+          <span class="no">determined from the tag byte using a fixed lookup table (`lookup_table`).</span>
+          <span class="no">This lookup table is hardcoded in the decompressor and always the same for all compressed data.</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The tag byte preceding this chunk body.</span>
+        <span class="nt">seq</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">lookup_table</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">[</span>
+                <span class="no">[0x00, 0x00],</span>
+                <span class="no">[0x4e, 0xba], [0x00, 0x08], [0x4e, 0x75], [0x00, 0x0c],</span>
+                <span class="no">[0x4e, 0xad], [0x20, 0x53], [0x2f, 0x0b], [0x61, 0x00],</span>
+                <span class="no">[0x00, 0x10], [0x70, 0x00], [0x2f, 0x00], [0x48, 0x6e],</span>
+                <span class="no">[0x20, 0x50], [0x20, 0x6e], [0x2f, 0x2e], [0xff, 0xfc],</span>
+                <span class="no">[0x48, 0xe7], [0x3f, 0x3c], [0x00, 0x04], [0xff, 0xf8],</span>
+                <span class="no">[0x2f, 0x0c], [0x20, 0x06], [0x4e, 0xed], [0x4e, 0x56],</span>
+                <span class="no">[0x20, 0x68], [0x4e, 0x5e], [0x00, 0x01], [0x58, 0x8f],</span>
+                <span class="no">[0x4f, 0xef], [0x00, 0x02], [0x00, 0x18], [0x60, 0x00],</span>
+                <span class="no">[0xff, 0xff], [0x50, 0x8f], [0x4e, 0x90], [0x00, 0x06],</span>
+                <span class="no">[0x26, 0x6e], [0x00, 0x14], [0xff, 0xf4], [0x4c, 0xee],</span>
+                <span class="no">[0x00, 0x0a], [0x00, 0x0e], [0x41, 0xee], [0x4c, 0xdf],</span>
+                <span class="no">[0x48, 0xc0], [0xff, 0xf0], [0x2d, 0x40], [0x00, 0x12],</span>
+                <span class="no">[0x30, 0x2e], [0x70, 0x01], [0x2f, 0x28], [0x20, 0x54],</span>
+                <span class="no">[0x67, 0x00], [0x00, 0x20], [0x00, 0x1c], [0x20, 0x5f],</span>
+                <span class="no">[0x18, 0x00], [0x26, 0x6f], [0x48, 0x78], [0x00, 0x16],</span>
+                <span class="no">[0x41, 0xfa], [0x30, 0x3c], [0x28, 0x40], [0x72, 0x00],</span>
+                <span class="no">[0x28, 0x6e], [0x20, 0x0c], [0x66, 0x00], [0x20, 0x6b],</span>
+                <span class="no">[0x2f, 0x07], [0x55, 0x8f], [0x00, 0x28], [0xff, 0xfe],</span>
+                <span class="no">[0xff, 0xec], [0x22, 0xd8], [0x20, 0x0b], [0x00, 0x0f],</span>
+                <span class="no">[0x59, 0x8f], [0x2f, 0x3c], [0xff, 0x00], [0x01, 0x18],</span>
+                <span class="no">[0x81, 0xe1], [0x4a, 0x00], [0x4e, 0xb0], [0xff, 0xe8],</span>
+                <span class="no">[0x48, 0xc7], [0x00, 0x03], [0x00, 0x22], [0x00, 0x07],</span>
+                <span class="no">[0x00, 0x1a], [0x67, 0x06], [0x67, 0x08], [0x4e, 0xf9],</span>
+                <span class="no">[0x00, 0x24], [0x20, 0x78], [0x08, 0x00], [0x66, 0x04],</span>
+                <span class="no">[0x00, 0x2a], [0x4e, 0xd0], [0x30, 0x28], [0x26, 0x5f],</span>
+                <span class="no">[0x67, 0x04], [0x00, 0x30], [0x43, 0xee], [0x3f, 0x00],</span>
+                <span class="no">[0x20, 0x1f], [0x00, 0x1e], [0xff, 0xf6], [0x20, 0x2e],</span>
+                <span class="no">[0x42, 0xa7], [0x20, 0x07], [0xff, 0xfa], [0x60, 0x02],</span>
+                <span class="no">[0x3d, 0x40], [0x0c, 0x40], [0x66, 0x06], [0x00, 0x26],</span>
+                <span class="no">[0x2d, 0x48], [0x2f, 0x01], [0x70, 0xff], [0x60, 0x04],</span>
+                <span class="no">[0x18, 0x80], [0x4a, 0x40], [0x00, 0x40], [0x00, 0x2c],</span>
+                <span class="no">[0x2f, 0x08], [0x00, 0x11], [0xff, 0xe4], [0x21, 0x40],</span>
+                <span class="no">[0x26, 0x40], [0xff, 0xf2], [0x42, 0x6e], [0x4e, 0xb9],</span>
+                <span class="no">[0x3d, 0x7c], [0x00, 0x38], [0x00, 0x0d], [0x60, 0x06],</span>
+                <span class="no">[0x42, 0x2e], [0x20, 0x3c], [0x67, 0x0c], [0x2d, 0x68],</span>
+                <span class="no">[0x66, 0x08], [0x4a, 0x2e], [0x4a, 0xae], [0x00, 0x2e],</span>
+                <span class="no">[0x48, 0x40], [0x22, 0x5f], [0x22, 0x00], [0x67, 0x0a],</span>
+                <span class="no">[0x30, 0x07], [0x42, 0x67], [0x00, 0x32], [0x20, 0x28],</span>
+                <span class="no">[0x00, 0x09], [0x48, 0x7a], [0x02, 0x00], [0x2f, 0x2b],</span>
+                <span class="no">[0x00, 0x05], [0x22, 0x6e], [0x66, 0x02], [0xe5, 0x80],</span>
+                <span class="no">[0x67, 0x0e], [0x66, 0x0a], [0x00, 0x50], [0x3e, 0x00],</span>
+                <span class="no">[0x66, 0x0c], [0x2e, 0x00], [0xff, 0xee], [0x20, 0x6d],</span>
+                <span class="no">[0x20, 0x40], [0xff, 0xe0], [0x53, 0x40], [0x60, 0x08],</span>
+                <span class="no">[0x04, 0x80], [0x00, 0x68], [0x0b, 0x7c], [0x44, 0x00],</span>
+                <span class="no">[0x41, 0xe8], [0x48, 0x41],</span>
+              <span class="no">]</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Fixed lookup table that maps tag byte numbers to two bytes each.</span>
+
+              <span class="no">The entries in the lookup table are offset -</span>
+              <span class="no">index 0 stands for tag 0x4b, 1 for 0x4c, etc.</span>
+          <span class="nt">value</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lookup_table[tag - 0x4b]</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The two bytes that the tag byte expands to,</span>
+              <span class="no">based on the fixed lookup table.</span>
+      <span class="nt">extended_body</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The body of an extended chunk.</span>
+          <span class="no">The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The chunk&#39;s extended tag byte.</span>
+              <span class="no">This controls the structure of the body and the meaning of the chunk.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jump_table_body</span>
+                <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repeat_body(tag)</span>
+                <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repeat_body(tag)</span>
+                <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delta_encoding_16_bit_body</span>
+                <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delta_encoding_32_bit_body</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The chunk&#39;s body.</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">jump_table_body</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The body of a jump table chunk.</span>
+
+              <span class="no">This chunk generates parts of a segment loader jump table,</span>
+              <span class="no">in the format found in `&#39;CODE&#39; (0)` resources.</span>
+              <span class="no">It expands to the following data,</span>
+              <span class="no">with all non-constant numbers encoded as unsigned 16-bit big-endian integers:</span>
+
+              <span class="no">* `0x3f 0x3c` (push following segment number onto stack)</span>
+              <span class="no">* The segment number</span>
+              <span class="no">* `0xa9 0xf0` (`_LoadSeg` trap)</span>
+              <span class="no">* For each address:</span>
+                <span class="no">* The address</span>
+                <span class="no">* `0x3f 0x3c` (push following segment number onto stack)</span>
+                <span class="no">* The segment number</span>
+                <span class="no">* `0xa9 0xf0` (`_LoadSeg` trap)</span>
+
+              <span class="no">Note that this generates one jump table entry without an address before it,</span>
+              <span class="no">meaning that this address needs to be generated by the preceding chunk.</span>
+              <span class="no">All following jump table entries are generated with the addresses encoded in this chunk.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">segment_number_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `segment_number`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_addresses_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `num_addresses`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addresses_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_addresses</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The addresses for each generated jump table entry,</span>
+                  <span class="no">stored as variable-length integers.</span>
+
+                  <span class="no">The first address is stored literally and must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+                  <span class="no">i. e. an unsigned 16-bit integer.</span>
+
+                  <span class="no">All following addresses are stored as deltas relative to the previous address.</span>
+                  <span class="no">Each of these deltas is stored plus 6;</span>
+                  <span class="no">this value needs to be subtracted before (or after) adding it to the previous address.</span>
+
+                  <span class="no">Each delta (after subtracting 6) should be positive,</span>
+                  <span class="no">and adding it to the previous address should not result in a value larger than `0xffff`,</span>
+                  <span class="no">i. e. there should be no 16-bit unsigned integer wraparound.</span>
+                  <span class="no">These conditions are always met in all known jump table chunks,</span>
+                  <span class="no">so it is not known how the original decompressor behaves otherwise.</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">segment_number</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">segment_number_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The segment number for all of the generated jump table entries.</span>
+
+                  <span class="no">Although it is stored as a variable-length integer,</span>
+                  <span class="no">the segment number must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+                  <span class="no">i. e. an unsigned 16-bit integer.</span>
+              <span class="nt">num_addresses</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_addresses_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of addresses stored in this chunk.</span>
+
+                  <span class="no">This number must be greater than 0.</span>
+          <span class="nt">repeat_body</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The body of a repeat chunk.</span>
+
+              <span class="no">This chunk expands to a 1-byte or 2-byte value repeated a number of times,</span>
+              <span class="no">i. e. it implements a form of run-length encoding.</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The extended tag byte preceding this chunk body.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">to_repeat_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `to_repeat`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repeat_count_m1_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `repeat_count_m1`.</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">byte_count</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">tag == 0x02 ? 1</span>
+                  <span class="no">: tag == 0x03 ? 2</span>
+                  <span class="no">: -1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The length in bytes of the value to be repeated.</span>
+                  <span class="no">Regardless of the byte count,</span>
+                  <span class="no">the value to be repeated is stored as a variable-length integer.</span>
+              <span class="nt">to_repeat</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">to_repeat_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The value to repeat.</span>
+
+                  <span class="no">Although it is stored as a variable-length integer,</span>
+                  <span class="no">this value must fit into an unsigned big-endian integer that is as long as `byte_count`,</span>
+                  <span class="no">i. e. either 8 or 16 bits.</span>
+              <span class="nt">repeat_count_m1</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repeat_count_m1_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of times to repeat the value,</span>
+                  <span class="no">minus one.</span>
+
+                  <span class="no">This value must not be negative.</span>
+              <span class="nt">repeat_count</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repeat_count_m1 + 1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of times to repeat the value.</span>
+
+                  <span class="no">This value must be positive.</span>
+          <span class="nt">delta_encoding_16_bit_body</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The body of a 16-bit delta encoding chunk.</span>
+
+              <span class="no">This chunk expands to a sequence of 16-bit big-endian integer values.</span>
+              <span class="no">The first value is stored literally.</span>
+              <span class="no">All following values are stored as deltas relative to the previous value.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_value_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `first_value`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `num_deltas`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deltas</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The deltas for each value relative to the previous value.</span>
+
+                  <span class="no">Each of these deltas is a signed 8-bit value.</span>
+                  <span class="no">When adding the delta to the previous value,</span>
+                  <span class="no">16-bit integer wraparound is performed if necessary,</span>
+                  <span class="no">so that the resulting value always fits into a 16-bit signed integer.</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">first_value</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_value_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The first value in the sequence.</span>
+
+                  <span class="no">Although it is stored as a variable-length integer,</span>
+                  <span class="no">this value must be in the range `-0x8000 &lt;= x &lt;= 0x7fff`,</span>
+                  <span class="no">i. e. a signed 16-bit integer.</span>
+              <span class="nt">num_deltas</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of deltas stored in this chunk.</span>
+
+                  <span class="no">This number must not be negative.</span>
+          <span class="nt">delta_encoding_32_bit_body</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The body of a 32-bit delta encoding chunk.</span>
+
+              <span class="no">This chunk expands to a sequence of 32-bit big-endian integer values.</span>
+              <span class="no">The first value is stored literally.</span>
+              <span class="no">All following values are stored as deltas relative to the previous value.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_value_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `first_value`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">Raw variable-length integer representation of `num_deltas`.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deltas_raw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The deltas for each value relative to the previous value,</span>
+                  <span class="no">stored as variable-length integers.</span>
+
+                  <span class="no">Each of these deltas is a signed value.</span>
+                  <span class="no">When adding the delta to the previous value,</span>
+                  <span class="no">32-bit integer wraparound is performed if necessary,</span>
+                  <span class="no">so that the resulting value always fits into a 32-bit signed integer.</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">first_value</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_value_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The first value in the sequence.</span>
+              <span class="nt">num_deltas</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deltas_raw.value</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of deltas stored in this chunk.</span>
+
+                  <span class="no">This number must not be negative.</span>
+      <span class="nt">end_body</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The body of an end chunk.</span>
+          <span class="no">This body is always empty.</span>
+
+          <span class="no">The last chunk in the compressed data must always be an end chunk.</span>
+          <span class="no">An end chunk cannot appear elsewhere in the compressed data.</span>
+        <span class="nt">seq</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

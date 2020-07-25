@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Compressed Macintosh resource data, Apple `'dcmp' (0)` format: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Compressed Macintosh resource data, Apple `'dcmp' (0)` format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Compressed Macintosh resource data, Apple `'dcmp' (0)` format:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Compressed resource data in <code>'dcmp' (0)</code> format,
+as stored in compressed resources with header type <code>8</code> and decompressor ID <code>0</code>.</p>
+<p>The <code>'dcmp' (0)</code> decompressor resource is included in the System file of System 7.0 and later.
+This compression format is used for most compressed resources in System 7.0's files.
+This decompressor is also included with and used by some other Apple applications,
+such as ResEdit.</p>
+<p>This compression format supports some basic general-purpose compression schemes,
+including backreferences to previous data,
+run-length encoding,
+and delta encoding.
+It also includes some types of compression tailored specifically to Mac OS resources,
+including a set of single-byte codes that correspond to entries in a hard-coded lookup table,
+and a specialized kind of delta encoding for segment loader jump tables.</p>
+<p>Almost all parts of this compression format operate on units of 2 or 4 bytes.
+As a result,
+it is nearly impossible to store data with an odd length in this format.
+To work around this limitation,
+odd-length resources are padded with an extra byte before compressing them with this format.
+This extra byte is ignored after decompression,
+as the real (odd) length of the resource is stored in the compressed resource header.</p>
+<p>The <code>'dcmp' (1)</code> compression format (see dcmp_1.ksy) is very similar to this format,
+with the main difference that it operates mostly on single bytes rather than two-byte units.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Compressed Macintosh resource data, Apple `'dcmp' (0)` format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Compressed Macintosh resource data, Apple `'dcmp' (0)` format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+<p>See the usage examples in the <a href="http://doc.kaitai.io/lang_javascript.html" target="_blank">JavaScript notes</a>.</p>
+
+<p>Parse structure from an ArrayBuffer:</p>
+
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">arrayBuffer</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dcmp0</span><span class="p">(</span><span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="nx">data</span><span class="p">.</span><span class="nx">chunks</span> <span class="c1">// =&gt; The sequence of chunks that make up the compressed data.</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse Compressed Macintosh resource data, Apple `'dcmp' (0)` format
+            
+        </h2>
+
+        
+
+        <h3>Dcmp0.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Dcmp0.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span> <span class="s1">&#39;./DcmpVariableLengthInteger&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./DcmpVariableLengthInteger&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Dcmp0</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">DcmpVariableLengthInteger</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Compressed resource data in `&#39;dcmp&#39; (0)` format,</span>
+<span class="cm"> * as stored in compressed resources with header type `8` and decompressor ID `0`.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The `&#39;dcmp&#39; (0)` decompressor resource is included in the System file of System 7.0 and later.</span>
+<span class="cm"> * This compression format is used for most compressed resources in System 7.0&#39;s files.</span>
+<span class="cm"> * This decompressor is also included with and used by some other Apple applications,</span>
+<span class="cm"> * such as ResEdit.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This compression format supports some basic general-purpose compression schemes,</span>
+<span class="cm"> * including backreferences to previous data,</span>
+<span class="cm"> * run-length encoding,</span>
+<span class="cm"> * and delta encoding.</span>
+<span class="cm"> * It also includes some types of compression tailored specifically to Mac OS resources,</span>
+<span class="cm"> * including a set of single-byte codes that correspond to entries in a hard-coded lookup table,</span>
+<span class="cm"> * and a specialized kind of delta encoding for segment loader jump tables.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Almost all parts of this compression format operate on units of 2 or 4 bytes.</span>
+<span class="cm"> * As a result,</span>
+<span class="cm"> * it is nearly impossible to store data with an odd length in this format.</span>
+<span class="cm"> * To work around this limitation,</span>
+<span class="cm"> * odd-length resources are padded with an extra byte before compressing them with this format.</span>
+<span class="cm"> * This extra byte is ignored after decompression,</span>
+<span class="cm"> * as the real (odd) length of the resource is stored in the compressed resource header.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The `&#39;dcmp&#39; (1)` compression format (see dcmp_1.ksy) is very similar to this format,</span>
+<span class="cm"> * with the main difference that it operates mostly on single bytes rather than two-byte units.</span>
+<span class="cm"> * @see {@link https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp0.py|Source}</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">Dcmp0</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Dcmp0</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">255</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * A single chunk of compressed data.</span>
+<span class="cm">   * Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,</span>
+<span class="cm">   * except when `tag == 0xff`,</span>
+<span class="cm">   * which marks the end of the data and does not correspond to any bytes in the uncompressed data.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Most chunks are stateless and always expand to the same data,</span>
+<span class="cm">   * regardless of where the chunk appears in the sequence.</span>
+<span class="cm">   * However,</span>
+<span class="cm">   * some chunks affect the behavior of future chunks,</span>
+<span class="cm">   * or expand to different data depending on which chunks came before them.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Chunk</span> <span class="o">=</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">INVALID</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">LITERAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">BACKREFERENCE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">TABLE_LOOKUP</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">EXTENDED</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">END</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+
+      <span class="s2">&quot;-1&quot;</span><span class="o">:</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;LITERAL&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;BACKREFERENCE&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;TABLE_LOOKUP&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;EXTENDED&quot;</span><span class="p">,</span>
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;END&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">Chunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Chunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">((</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">LITERAL</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&lt;=</span> <span class="mi">74</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">BACKREFERENCE</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&gt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&lt;=</span> <span class="mi">253</span><span class="p">))</span>  <span class="o">?</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">TABLE_LOOKUP</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">254</span> <span class="o">?</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">EXTENDED</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">255</span> <span class="o">?</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">END</span> <span class="o">:</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">INVALID</span><span class="p">))))))</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">END</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EndBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">LITERAL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LiteralBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">BACKREFERENCE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BackreferenceBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">TABLE_LOOKUP</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TableLookupBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Dcmp0</span><span class="p">.</span><span class="nx">Chunk</span><span class="p">.</span><span class="nx">TagKind</span><span class="p">.</span><span class="nx">EXTENDED</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ExtendedBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The body of a literal data chunk.</span>
+<span class="cm">     * </span>
+<span class="cm">     * The data that this chunk expands to is stored literally in the body (`literal`).</span>
+<span class="cm">     * Optionally,</span>
+<span class="cm">     * the literal data may also be stored for use by future backreference chunks (`do_store`).</span>
+<span class="cm">     * </span>
+<span class="cm">     * The length of the literal data is stored as a number of two-byte units.</span>
+<span class="cm">     * This means that the literal data always has an even length in bytes.</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">LiteralBody</span> <span class="o">=</span> <span class="nx">Chunk</span><span class="p">.</span><span class="nx">LiteralBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">LiteralBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="nx">tag</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isLenLiteralDiv2Separate</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">lenLiteralDiv2Separate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">literal</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenLiteral</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Whether this literal should be stored for use by future backreference chunks.</span>
+<span class="cm">       * </span>
+<span class="cm">       * See the documentation of the `backreference_body` type for details about backreference chunks.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;doStore&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_doStore</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_doStore</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_doStore</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_doStore</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The length of the literal data,</span>
+<span class="cm">       * in two-byte units.</span>
+<span class="cm">       * </span>
+<span class="cm">       * In practice,</span>
+<span class="cm">       * this value is always greater than zero,</span>
+<span class="cm">       * as there is no use in storing a zero-length literal.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lenLiteralDiv2&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isLenLiteralDiv2Separate</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenLiteralDiv2Separate</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenLiteralDiv2InTag</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The length of the literal data,</span>
+<span class="cm">       * in bytes.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lenLiteral&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteral</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteral</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteral</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenLiteralDiv2</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteral</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The part of the tag byte that indicates the length of the literal data,</span>
+<span class="cm">       * in two-byte units.</span>
+<span class="cm">       * If this value is 0,</span>
+<span class="cm">       * the length is stored in a separate byte after the tag byte and before the literal data.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lenLiteralDiv2InTag&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2InTag</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2InTag</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2InTag</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenLiteralDiv2InTag</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Whether the length of the literal is stored separately from the tag.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">LiteralBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isLenLiteralDiv2Separate&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isLenLiteralDiv2Separate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isLenLiteralDiv2Separate</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isLenLiteralDiv2Separate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenLiteralDiv2InTag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isLenLiteralDiv2Separate</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The length of the literal data,</span>
+<span class="cm">       * in two-byte units.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This field is only present if the tag byte&#39;s low nibble is zero.</span>
+<span class="cm">       * In practice,</span>
+<span class="cm">       * this only happens if the length is 0x10 or greater,</span>
+<span class="cm">       * because smaller lengths can be encoded into the tag byte.</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The literal data.</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The tag byte preceding this chunk body.</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">LiteralBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The body of a backreference chunk.</span>
+<span class="cm">     * </span>
+<span class="cm">     * This chunk expands to the data stored in a preceding literal chunk,</span>
+<span class="cm">     * indicated by an index number (`index`).</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">BackreferenceBody</span> <span class="o">=</span> <span class="nx">Chunk</span><span class="p">.</span><span class="nx">BackreferenceBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">BackreferenceBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="nx">tag</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">BackreferenceBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isIndexSeparate</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="mi">32</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">indexSeparateMinus</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="mi">33</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">indexSeparateMinus</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="mi">34</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">indexSeparateMinus</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Whether the index is stored separately from the tag.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BackreferenceBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isIndexSeparate&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isIndexSeparate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isIndexSeparate</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isIndexSeparate</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">&lt;=</span> <span class="mi">34</span><span class="p">))</span> <span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isIndexSeparate</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The index of the referenced literal chunk,</span>
+<span class="cm">       * as stored in the tag byte.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BackreferenceBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;indexInTag&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_indexInTag</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexInTag</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexInTag</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">-</span> <span class="mi">35</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexInTag</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The index of the referenced literal chunk,</span>
+<span class="cm">       * as stored separately from the tag byte,</span>
+<span class="cm">       * with the implicit offset corrected for.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BackreferenceBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;indexSeparate&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_indexSeparate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexSeparate</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isIndexSeparate</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexSeparate</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">indexSeparateMinus</span> <span class="o">+</span> <span class="mi">40</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">33</span> <span class="o">?</span> <span class="mi">256</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_indexSeparate</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The index of the referenced literal chunk.</span>
+<span class="cm">       * </span>
+<span class="cm">       * Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
+<span class="cm">       * starting at 0.</span>
+<span class="cm">       * Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
+<span class="cm">       * Once an index is assigned to a stored literal,</span>
+<span class="cm">       * it is never changed or unassigned for the entire length of the compressed data.</span>
+<span class="cm">       * </span>
+<span class="cm">       * As the name indicates,</span>
+<span class="cm">       * a backreference can only reference stored literal chunks found *before* the backreference,</span>
+<span class="cm">       * not ones that come after it.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BackreferenceBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isIndexSeparate</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">indexSeparate</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">indexInTag</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The index of the referenced literal chunk,</span>
+<span class="cm">       * stored separately from the tag.</span>
+<span class="cm">       * The value in this field is stored minus 0x28.</span>
+<span class="cm">       * If the tag byte is 0x21,</span>
+<span class="cm">       * the value is also stored minus 0x100,</span>
+<span class="cm">       * *on top of* the regular offset</span>
+<span class="cm">       * (i. e. minus 0x128 in total).</span>
+<span class="cm">       * </span>
+<span class="cm">       * In other words,</span>
+<span class="cm">       * for tag bytes 0x20 and 0x21,</span>
+<span class="cm">       * the index is actually 9 bits large,</span>
+<span class="cm">       * with the low 8 bits stored separately and the highest bit stored in the lowest bit of the tag byte.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This field is only present if the tag byte is 0x20 through 0x22.</span>
+<span class="cm">       * For higher tag bytes,</span>
+<span class="cm">       * the index is encoded in the tag byte.</span>
+<span class="cm">       * Values smaller than 0x28 cannot be stored in this field,</span>
+<span class="cm">       * they must always be encoded in the tag byte.</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The tag byte preceding this chunk body.</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">BackreferenceBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The body of a table lookup chunk.</span>
+<span class="cm">     * This body is always empty.</span>
+<span class="cm">     * </span>
+<span class="cm">     * This chunk always expands to two bytes (`value`),</span>
+<span class="cm">     * determined from the tag byte using a fixed lookup table (`lookup_table`).</span>
+<span class="cm">     * This lookup table is hardcoded in the decompressor and always the same for all compressed data.</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">TableLookupBody</span> <span class="o">=</span> <span class="nx">Chunk</span><span class="p">.</span><span class="nx">TableLookupBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">TableLookupBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="nx">tag</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">TableLookupBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Fixed lookup table that maps tag byte numbers to two bytes each.</span>
+<span class="cm">       * </span>
+<span class="cm">       * The entries in the lookup table are offset -</span>
+<span class="cm">       * index 0 stands for tag 0x4b, 1 for 0x4c, etc.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TableLookupBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lookupTable&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lookupTable</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lookupTable</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lookupTable</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">186</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">117</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">173</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">83</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="p">[</span><span class="mi">112</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">252</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">231</span><span class="p">],</span> <span class="p">[</span><span class="mi">63</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">248</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">237</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">86</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">104</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">94</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span> <span class="mi">143</span><span class="p">],</span> <span class="p">[</span><span class="mi">79</span><span class="p">,</span> <span class="mi">239</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">143</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">144</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">244</span><span class="p">],</span> <span class="p">[</span><span class="mi">76</span><span class="p">,</span> <span class="mi">238</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">238</span><span class="p">],</span> <span class="p">[</span><span class="mi">76</span><span class="p">,</span> <span class="mi">223</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">192</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">240</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span> <span class="p">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">112</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">95</span><span class="p">],</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">111</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="p">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">250</span><span class="p">],</span> <span class="p">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">114</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">107</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">143</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">254</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">236</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">216</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">89</span><span class="p">,</span> <span class="mi">143</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="p">[</span><span class="mi">129</span><span class="p">,</span> <span class="mi">225</span><span class="p">],</span> <span class="p">[</span><span class="mi">74</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">176</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">232</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">199</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">34</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">249</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">36</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">42</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">208</span><span class="p">],</span> <span class="p">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">95</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">],</span> <span class="p">[</span><span class="mi">67</span><span class="p">,</span> <span class="mi">238</span><span class="p">],</span> <span class="p">[</span><span class="mi">63</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">31</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">246</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">167</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">250</span><span class="p">],</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">61</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">38</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">72</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">112</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="p">[</span><span class="mi">74</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">17</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">228</span><span class="p">],</span> <span class="p">[</span><span class="mi">33</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">242</span><span class="p">],</span> <span class="p">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">185</span><span class="p">],</span> <span class="p">[</span><span class="mi">61</span><span class="p">,</span> <span class="mi">124</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">],</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">104</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">74</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">74</span><span class="p">,</span> <span class="mi">174</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">95</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">103</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">122</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span> <span class="mi">43</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">229</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span> <span class="p">[</span><span class="mi">62</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="p">[</span><span class="mi">46</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">238</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">109</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">224</span><span class="p">],</span> <span class="p">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">104</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">124</span><span class="p">],</span> <span class="p">[</span><span class="mi">68</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">232</span><span class="p">],</span> <span class="p">[</span><span class="mi">72</span><span class="p">,</span> <span class="mi">65</span><span class="p">]];</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lookupTable</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The two bytes that the tag byte expands to,</span>
+<span class="cm">       * based on the fixed lookup table.</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TableLookupBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lookupTable</span><span class="p">[(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">-</span> <span class="mi">75</span><span class="p">)];</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The tag byte preceding this chunk body.</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">TableLookupBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The body of an end chunk.</span>
+<span class="cm">     * This body is always empty.</span>
+<span class="cm">     * </span>
+<span class="cm">     * The last chunk in the compressed data must always be an end chunk.</span>
+<span class="cm">     * An end chunk cannot appear elsewhere in the compressed data.</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">EndBody</span> <span class="o">=</span> <span class="nx">Chunk</span><span class="p">.</span><span class="nx">EndBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">EndBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">EndBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">EndBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The body of an extended chunk.</span>
+<span class="cm">     * The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">ExtendedBody</span> <span class="o">=</span> <span class="nx">Chunk</span><span class="p">.</span><span class="nx">ExtendedBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">ExtendedBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">ExtendedBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JumpTableBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DeltaEncoding16BitBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">6</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DeltaEncoding32BitBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RepeatBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RepeatBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The body of a jump table chunk.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This chunk generates parts of a segment loader jump table,</span>
+<span class="cm">       * in the format found in `&#39;CODE&#39; (0)` resources.</span>
+<span class="cm">       * It expands to the following data,</span>
+<span class="cm">       * with all non-constant numbers encoded as unsigned 16-bit big-endian integers:</span>
+<span class="cm">       * </span>
+<span class="cm">       * * `0x3f 0x3c` (push following segment number onto stack)</span>
+<span class="cm">       * * The segment number</span>
+<span class="cm">       * * `0xa9 0xf0` (`_LoadSeg` trap)</span>
+<span class="cm">       * * For each address:</span>
+<span class="cm">       *   * The address</span>
+<span class="cm">       *   * `0x3f 0x3c` (push following segment number onto stack)</span>
+<span class="cm">       *   * The segment number</span>
+<span class="cm">       *   * `0xa9 0xf0` (`_LoadSeg` trap)</span>
+<span class="cm">       * </span>
+<span class="cm">       * Note that this generates one jump table entry without an address before it,</span>
+<span class="cm">       * meaning that this address needs to be generated by the preceding chunk.</span>
+<span class="cm">       * All following jump table entries are generated with the addresses encoded in this chunk.</span>
+<span class="cm">       */</span>
+
+      <span class="kd">var</span> <span class="nx">JumpTableBody</span> <span class="o">=</span> <span class="nx">ExtendedBody</span><span class="p">.</span><span class="nx">JumpTableBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">JumpTableBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">JumpTableBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">segmentNumberRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">numAddressesRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">addressesRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numAddresses</span><span class="p">);</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numAddresses</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">addressesRaw</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The segment number for all of the generated jump table entries.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is stored as a variable-length integer,</span>
+<span class="cm">         * the segment number must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+<span class="cm">         * i. e. an unsigned 16-bit integer.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">JumpTableBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;segmentNumber&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_segmentNumber</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_segmentNumber</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_segmentNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">segmentNumberRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_segmentNumber</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of addresses stored in this chunk.</span>
+<span class="cm">         * </span>
+<span class="cm">         * This number must be greater than 0.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">JumpTableBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numAddresses&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numAddresses</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numAddresses</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_numAddresses</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">numAddressesRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numAddresses</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `segment_number`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `num_addresses`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The addresses for each generated jump table entry,</span>
+<span class="cm">         * stored as variable-length integers.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The first address is stored literally and must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
+<span class="cm">         * i. e. an unsigned 16-bit integer.</span>
+<span class="cm">         * </span>
+<span class="cm">         * All following addresses are stored as deltas relative to the previous address.</span>
+<span class="cm">         * Each of these deltas is stored plus 6;</span>
+<span class="cm">         * this value needs to be subtracted before (or after) adding it to the previous address.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Each delta (after subtracting 6) should be positive,</span>
+<span class="cm">         * and adding it to the previous address should not result in a value larger than `0xffff`,</span>
+<span class="cm">         * i. e. there should be no 16-bit unsigned integer wraparound.</span>
+<span class="cm">         * These conditions are always met in all known jump table chunks,</span>
+<span class="cm">         * so it is not known how the original decompressor behaves otherwise.</span>
+<span class="cm">         */</span>
+
+        <span class="k">return</span> <span class="nx">JumpTableBody</span><span class="p">;</span>
+      <span class="p">})();</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The body of a repeat chunk.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This chunk expands to a 1-byte or 2-byte value repeated a number of times,</span>
+<span class="cm">       * i. e. it implements a form of run-length encoding.</span>
+<span class="cm">       */</span>
+
+      <span class="kd">var</span> <span class="nx">RepeatBody</span> <span class="o">=</span> <span class="nx">ExtendedBody</span><span class="p">.</span><span class="nx">RepeatBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">RepeatBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="nx">tag</span><span class="p">;</span>
+
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">RepeatBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">toRepeatRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">repeatCountM1Raw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length in bytes of the value to be repeated.</span>
+<span class="cm">         * Regardless of the byte count,</span>
+<span class="cm">         * the value to be repeated is stored as a variable-length integer.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RepeatBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;byteCount&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_byteCount</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_byteCount</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_byteCount</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_byteCount</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value to repeat.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is stored as a variable-length integer,</span>
+<span class="cm">         * this value must fit into an unsigned big-endian integer that is as long as `byte_count`,</span>
+<span class="cm">         * i. e. either 8 or 16 bits.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RepeatBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;toRepeat&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_toRepeat</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_toRepeat</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_toRepeat</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">toRepeatRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_toRepeat</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of times to repeat the value,</span>
+<span class="cm">         * minus one.</span>
+<span class="cm">         * </span>
+<span class="cm">         * This value must not be negative.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RepeatBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;repeatCountM1&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCountM1</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCountM1</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCountM1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">repeatCountM1Raw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCountM1</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of times to repeat the value.</span>
+<span class="cm">         * </span>
+<span class="cm">         * This value must be positive.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RepeatBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;repeatCount&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCount</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCount</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCount</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">repeatCountM1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_repeatCount</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `to_repeat`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `repeat_count_m1`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The extended tag byte preceding this chunk body.</span>
+<span class="cm">         */</span>
+
+        <span class="k">return</span> <span class="nx">RepeatBody</span><span class="p">;</span>
+      <span class="p">})();</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The body of a 16-bit delta encoding chunk.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This chunk expands to a sequence of 16-bit big-endian integer values.</span>
+<span class="cm">       * The first value is stored literally.</span>
+<span class="cm">       * All following values are stored as deltas relative to the previous value.</span>
+<span class="cm">       */</span>
+
+      <span class="kd">var</span> <span class="nx">DeltaEncoding16BitBody</span> <span class="o">=</span> <span class="nx">ExtendedBody</span><span class="p">.</span><span class="nx">DeltaEncoding16BitBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">DeltaEncoding16BitBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">DeltaEncoding16BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">firstValueRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">numDeltasRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">deltas</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numDeltas</span><span class="p">);</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDeltas</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">deltas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The first value in the sequence.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is stored as a variable-length integer,</span>
+<span class="cm">         * this value must be in the range `-0x8000 &lt;= x &lt;= 0x7fff`,</span>
+<span class="cm">         * i. e. a signed 16-bit integer.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DeltaEncoding16BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;firstValue&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstValueRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of deltas stored in this chunk.</span>
+<span class="cm">         * </span>
+<span class="cm">         * This number must not be negative.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DeltaEncoding16BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numDeltas&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDeltasRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `first_value`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `num_deltas`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The deltas for each value relative to the previous value.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Each of these deltas is a signed 8-bit value.</span>
+<span class="cm">         * When adding the delta to the previous value,</span>
+<span class="cm">         * 16-bit integer wraparound is performed if necessary,</span>
+<span class="cm">         * so that the resulting value always fits into a 16-bit signed integer.</span>
+<span class="cm">         */</span>
+
+        <span class="k">return</span> <span class="nx">DeltaEncoding16BitBody</span><span class="p">;</span>
+      <span class="p">})();</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The body of a 32-bit delta encoding chunk.</span>
+<span class="cm">       * </span>
+<span class="cm">       * This chunk expands to a sequence of 32-bit big-endian integer values.</span>
+<span class="cm">       * The first value is stored literally.</span>
+<span class="cm">       * All following values are stored as deltas relative to the previous value.</span>
+<span class="cm">       */</span>
+
+      <span class="kd">var</span> <span class="nx">DeltaEncoding32BitBody</span> <span class="o">=</span> <span class="nx">ExtendedBody</span><span class="p">.</span><span class="nx">DeltaEncoding32BitBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">DeltaEncoding32BitBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">DeltaEncoding32BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">firstValueRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">numDeltasRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">deltasRaw</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numDeltas</span><span class="p">);</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDeltas</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">deltasRaw</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DcmpVariableLengthInteger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The first value in the sequence.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DeltaEncoding32BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;firstValue&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstValueRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstValue</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of deltas stored in this chunk.</span>
+<span class="cm">         * </span>
+<span class="cm">         * This number must not be negative.</span>
+<span class="cm">         */</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DeltaEncoding32BitBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numDeltas&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDeltasRaw</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numDeltas</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `first_value`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Raw variable-length integer representation of `num_deltas`.</span>
+<span class="cm">         */</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The deltas for each value relative to the previous value,</span>
+<span class="cm">         * stored as variable-length integers.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Each of these deltas is a signed value.</span>
+<span class="cm">         * When adding the delta to the previous value,</span>
+<span class="cm">         * 32-bit integer wraparound is performed if necessary,</span>
+<span class="cm">         * so that the resulting value always fits into a 32-bit signed integer.</span>
+<span class="cm">         */</span>
+
+        <span class="k">return</span> <span class="nx">DeltaEncoding32BitBody</span><span class="p">;</span>
+      <span class="p">})();</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The chunk&#39;s extended tag byte.</span>
+<span class="cm">       * This controls the structure of the body and the meaning of the chunk.</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * The chunk&#39;s body.</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">ExtendedBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The chunk&#39;s tag byte.</span>
+<span class="cm">     * This controls the structure of the body and the meaning of the chunk.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The chunk&#39;s body.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Certain chunks do not have any data following the tag byte.</span>
+<span class="cm">     * In this case,</span>
+<span class="cm">     * the body is a zero-length structure.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Chunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * The sequence of chunks that make up the compressed data.</span>
+<span class="cm">   */</span>
+
+  <span class="k">return</span> <span class="nx">Dcmp0</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Dcmp0</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

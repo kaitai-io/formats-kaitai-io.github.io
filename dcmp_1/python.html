@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Compressed Macintosh resource data, Apple `'dcmp' (1)` format: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Compressed Macintosh resource data, Apple `'dcmp' (1)` format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Compressed Macintosh resource data, Apple `'dcmp' (1)` format:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Compressed resource data in <code>'dcmp' (1)</code> format,
+as stored in compressed resources with header type <code>8</code> and decompressor ID <code>1</code>.</p>
+<p>The <code>'dcmp' (1)</code> decompressor resource is included in the System file of System 7.0 and later.
+This compression format is used for a few compressed resources in System 7.0's files
+(such as the Finder Help file).
+This decompressor is also included with and used by some other Apple applications,
+such as ResEdit.
+(Note: ResEdit includes the <code>'dcmp' (1)</code> resource,
+but none of its resources actually use this decompressor.)</p>
+<p>This compression format supports some basic general-purpose compression schemes,
+including backreferences to previous data and run-length encoding.
+It also includes some types of compression tailored specifically to Mac OS resources,
+including a set of single-byte codes that correspond to entries in a hard-coded lookup table.</p>
+<p>The <code>'dcmp' (0)</code> compression format (see dcmp_0.ksy) is very similar to this format,
+with the main difference that it operates mostly on units of 2 or 4 bytes.
+This makes the ``dcmp' (0)<code>format more suitable for word-aligned data, such as executable code, bitmaps, sounds, etc. The</code>'dcmp' (0)` format also appears to be generally preferred over `'dcmp' (1)`,
+with the latter only being used in resource files that contain mostly unaligned data,
+such as text.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Compressed Macintosh resource data, Apple `'dcmp' (1)` format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">Dcmp1</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.Compressed Macintosh resource data, Apple `&#39;dcmp&#39; (1)` format&quot;</span><span class="p">)</span>
+</pre></div>
+
+<p>Or parse structure from a bytes:</p>
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+
+<span class="n">raw</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">Dcmp1</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">raw</span><span class="p">)))</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">chunks</span> <span class="c1"># =&gt; The sequence of chunks that make up the compressed data.</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse Compressed Macintosh resource data, Apple `'dcmp' (1)` format
+            
+        </h2>
+
+        
+
+        <h3>dcmp_1.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/dcmp_1.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">dcmp_variable_length_integer</span> <span class="kn">import</span> <span class="n">DcmpVariableLengthInteger</span>
+<span class="k">class</span> <span class="nc">Dcmp1</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compressed resource data in `&#39;dcmp&#39; (1)` format,</span>
+<span class="sd">    as stored in compressed resources with header type `8` and decompressor ID `1`.</span>
+<span class="sd">    </span>
+<span class="sd">    The `&#39;dcmp&#39; (1)` decompressor resource is included in the System file of System 7.0 and later.</span>
+<span class="sd">    This compression format is used for a few compressed resources in System 7.0&#39;s files</span>
+<span class="sd">    (such as the Finder Help file).</span>
+<span class="sd">    This decompressor is also included with and used by some other Apple applications,</span>
+<span class="sd">    such as ResEdit.</span>
+<span class="sd">    (Note: ResEdit includes the `&#39;dcmp&#39; (1)` resource,</span>
+<span class="sd">    but none of its resources actually use this decompressor.)</span>
+<span class="sd">    </span>
+<span class="sd">    This compression format supports some basic general-purpose compression schemes,</span>
+<span class="sd">    including backreferences to previous data and run-length encoding.</span>
+<span class="sd">    It also includes some types of compression tailored specifically to Mac OS resources,</span>
+<span class="sd">    including a set of single-byte codes that correspond to entries in a hard-coded lookup table.</span>
+<span class="sd">    </span>
+<span class="sd">    The `&#39;dcmp&#39; (0)` compression format (see dcmp_0.ksy) is very similar to this format,</span>
+<span class="sd">    with the main difference that it operates mostly on units of 2 or 4 bytes.</span>
+<span class="sd">    This makes the ``dcmp&#39; (0)` format more suitable for word-aligned data,</span>
+<span class="sd">    such as executable code, bitmaps, sounds, etc.</span>
+<span class="sd">    The `&#39;dcmp&#39; (0)` format also appears to be generally preferred over `&#39;dcmp&#39; (1)`,</span>
+<span class="sd">    with the latter only being used in resource files that contain mostly unaligned data,</span>
+<span class="sd">    such as text.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">255</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">class</span> <span class="nc">Chunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A single chunk of compressed data.</span>
+<span class="sd">        Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,</span>
+<span class="sd">        except when `tag == 0xff`,</span>
+<span class="sd">        which marks the end of the data and does not correspond to any bytes in the uncompressed data.</span>
+<span class="sd">        </span>
+<span class="sd">        Most chunks are stateless and always expand to the same data,</span>
+<span class="sd">        regardless of where the chunk appears in the sequence.</span>
+<span class="sd">        However,</span>
+<span class="sd">        some chunks affect the behavior of future chunks,</span>
+<span class="sd">        or expand to different data depending on which chunks came before them.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">class</span> <span class="nc">TagKind</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">invalid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">literal</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">backreference</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">table_lookup</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">extended</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">literal</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">))</span>  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">backreference</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&lt;=</span> <span class="mi">207</span><span class="p">))</span>  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">literal</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">208</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&lt;=</span> <span class="mi">209</span><span class="p">))</span>  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">backreference</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">210</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">table_lookup</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">213</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&lt;=</span> <span class="mi">253</span><span class="p">))</span>  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">extended</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">254</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">end</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">255</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">invalid</span><span class="p">)))))))</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">EndBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">literal</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">LiteralBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">backreference</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">BackreferenceBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">table_lookup</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TableLookupBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">TagKind</span><span class="o">.</span><span class="n">extended</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">ExtendedBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">LiteralBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;The body of a literal data chunk.</span>
+<span class="sd">            </span>
+<span class="sd">            The data that this chunk expands to is stored literally in the body (`literal`).</span>
+<span class="sd">            Optionally,</span>
+<span class="sd">            the literal data may also be stored for use by future backreference chunks (`do_store`).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">len_literal_separate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_literal</span><span class="p">)</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">do_store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Whether this literal should be stored for use by future backreference chunks.</span>
+<span class="sd">                </span>
+<span class="sd">                See the documentation of the `backreference_body` type for details about backreference chunks.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">209</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">len_literal_m1_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The part of the tag byte that indicates the length of the literal data,</span>
+<span class="sd">                in bytes,</span>
+<span class="sd">                minus one.</span>
+<span class="sd">                </span>
+<span class="sd">                If the tag byte is 0xd0 or 0xd1,</span>
+<span class="sd">                the length is stored in a separate byte after the tag byte and before the literal data.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_len_literal_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Whether the length of the literal is stored separately from the tag.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">208</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">len_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The length of the literal data,</span>
+<span class="sd">                in bytes.</span>
+<span class="sd">                </span>
+<span class="sd">                In practice,</span>
+<span class="sd">                this value is always greater than zero,</span>
+<span class="sd">                as there is no use in storing a zero-length literal.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_literal_separate</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_literal_m1_in_tag</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+        <span class="k">class</span> <span class="nc">BackreferenceBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;The body of a backreference chunk.</span>
+<span class="sd">            </span>
+<span class="sd">            This chunk expands to the data stored in a preceding literal chunk,</span>
+<span class="sd">            indicated by an index number (`index`).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_index_separate</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">index_separate_minus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_index_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Whether the index is stored separately from the tag.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">210</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">index_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
+<span class="sd">                as stored in the tag byte.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">index_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
+<span class="sd">                as stored separately from the tag byte,</span>
+<span class="sd">                with the implicit offset corrected for.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_index_separate</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_separate_minus</span> <span class="o">+</span> <span class="mi">176</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk.</span>
+<span class="sd">                </span>
+<span class="sd">                Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
+<span class="sd">                starting at 0.</span>
+<span class="sd">                Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
+<span class="sd">                Once an index is assigned to a stored literal,</span>
+<span class="sd">                it is never changed or unassigned for the entire length of the compressed data.</span>
+<span class="sd">                </span>
+<span class="sd">                As the name indicates,</span>
+<span class="sd">                a backreference can only reference stored literal chunks found *before* the backreference,</span>
+<span class="sd">                not ones that come after it.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_separate</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_index_separate</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_in_tag</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+        <span class="k">class</span> <span class="nc">TableLookupBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;The body of a table lookup chunk.</span>
+<span class="sd">            This body is always empty.</span>
+<span class="sd">            </span>
+<span class="sd">            This chunk always expands to two bytes (`value`),</span>
+<span class="sd">            determined from the tag byte using a fixed lookup table (`lookup_table`).</span>
+<span class="sd">            This lookup table is hardcoded in the decompressor and always the same for all compressed data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">lookup_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Fixed lookup table that maps tag byte numbers to two bytes each.</span>
+<span class="sd">                </span>
+<span class="sd">                The entries in the lookup table are offset -</span>
+<span class="sd">                index 0 stands for tag 0xd5, 1 for 0xd6, etc.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="o">=</span> <span class="p">[</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x03</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x2E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x3E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x1E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xFF\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x0E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x31\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x11\x12</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x33\x32</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x12\x39</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xED\x10</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x27</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x23\x22</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x37</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x17</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x23</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x2F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x0E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xFD\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x35</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x15</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x3E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x05\xD5</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x02\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x06\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x33</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x10</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x17\x16</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x37\x3E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x36\x37</span><span class="s2">&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The two bytes that the tag byte expands to,</span>
+<span class="sd">                based on the fixed lookup table.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_table</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">-</span> <span class="mi">213</span><span class="p">)]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+        <span class="k">class</span> <span class="nc">EndBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;The body of an end chunk.</span>
+<span class="sd">            This body is always empty.</span>
+<span class="sd">            </span>
+<span class="sd">            The last chunk in the compressed data must always be an end chunk.</span>
+<span class="sd">            An end chunk cannot appear elsewhere in the compressed data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+
+        <span class="k">class</span> <span class="nc">ExtendedBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;The body of an extended chunk.</span>
+<span class="sd">            The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+                <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span>
+                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">ExtendedBody</span><span class="o">.</span><span class="n">RepeatBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">class</span> <span class="nc">RepeatBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;The body of a repeat chunk.</span>
+<span class="sd">                </span>
+<span class="sd">                This chunk expands to the same byte repeated a number of times,</span>
+<span class="sd">                i. e. it implements a form of run-length encoding.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+                <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">to_repeat_raw</span> <span class="o">=</span> <span class="n">DcmpVariableLengthInteger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">repeat_count_m1_raw</span> <span class="o">=</span> <span class="n">DcmpVariableLengthInteger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+
+                <span class="nd">@property</span>
+                <span class="k">def</span> <span class="nf">to_repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="sd">&quot;&quot;&quot;The value to repeat.</span>
+<span class="sd">                    </span>
+<span class="sd">                    Although it is stored as a variable-length integer,</span>
+<span class="sd">                    this value must fit into an unsigned 8-bit integer.</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_repeat_raw</span><span class="o">.</span><span class="n">value</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="nd">@property</span>
+                <span class="k">def</span> <span class="nf">repeat_count_m1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="sd">&quot;&quot;&quot;The number of times to repeat the value,</span>
+<span class="sd">                    minus one.</span>
+<span class="sd">                    </span>
+<span class="sd">                    This value must not be negative.</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeat_count_m1_raw</span><span class="o">.</span><span class="n">value</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="nd">@property</span>
+                <span class="k">def</span> <span class="nf">repeat_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="sd">&quot;&quot;&quot;The number of times to repeat the value.</span>
+<span class="sd">                    </span>
+<span class="sd">                    This value must be positive.</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repeat_count_m1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

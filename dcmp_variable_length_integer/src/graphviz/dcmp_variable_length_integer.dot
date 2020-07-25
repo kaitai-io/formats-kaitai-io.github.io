@@ -1,0 +1,29 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dcmp_variable_length_integer {
+		label="DcmpVariableLengthInteger";
+		graph[style=dotted];
+
+		dcmp_variable_length_integer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="first_pos">0</TD><TD PORT="first_size">1</TD><TD>u1</TD><TD PORT="first_type">first</TD></TR>
+			<TR><TD PORT="more_pos">1</TD><TD PORT="more_size">...</TD><TD>switch (first)</TD><TD PORT="more_type">more</TD></TR>
+		</TABLE>>];
+		dcmp_variable_length_integer__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>value</TD><TD>(first == 255 ? more : (first &gt;= 128 ? (((first &lt;&lt; 8) | more) - 49152) : first))</TD></TR>
+		</TABLE>>];
+dcmp_variable_length_integer__seq_more_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+	}
+	dcmp_variable_length_integer__seq:more_type -> dcmp_variable_length_integer__seq_more_switch [style=bold];
+	dcmp_variable_length_integer__seq:first_type -> dcmp_variable_length_integer__seq:more_type [color="#404040"];
+	dcmp_variable_length_integer__seq:first_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+	dcmp_variable_length_integer__seq:more_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+	dcmp_variable_length_integer__seq:first_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+	dcmp_variable_length_integer__seq:first_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+	dcmp_variable_length_integer__seq:more_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+	dcmp_variable_length_integer__seq:first_type -> dcmp_variable_length_integer__inst__value [color="#404040"];
+}

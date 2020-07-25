@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Macintosh resource fork data format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Macintosh resource fork data</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Macintosh resource fork data:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The data format of Macintosh resource forks,
+used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file's main data (the data fork).
+The kinds of data stored in resource forks include:</p>
+<ul>
+<li>Document resources:
+images, sounds, etc. used by a document</li>
+<li>Application resources:
+graphics, GUI layouts, localizable strings,
+and even code used by an application, a library, or system files</li>
+<li>Common metadata:
+custom icons and version metadata that could be displayed by the Finder</li>
+<li>Application-specific metadata:
+because resource forks follow a common format,
+other applications can store new metadata in them,
+even if the original application does not recognize or understand it</li>
+</ul>
+<p>Macintosh file systems (MFS, HFS, HFS+, APFS) support resource forks natively,
+which allows storing resources along with any file.
+Non-Macintosh file systems and protocols have little or no support for resource forks,
+so the resource fork data must be stored in some other way when using such file systems or protocols.
+Various file formats and tools exist for this purpose,
+such as BinHex, MacBinary, AppleSingle, AppleDouble, or QuickTime RezWack.
+In some cases,
+resource forks are stored as plain data in separate files with a .rsrc extension,
+even on Mac systems that natively support resource forks.</p>
+<p>On modern Mac OS X/macOS systems,
+resource forks are used far less commonly than on classic Mac OS systems,
+because of compatibility issues with other systems and historical limitations in the format.
+Modern macOS APIs and libraries do not use resource forks,
+and the legacy Carbon API that still used them has been deprecated since OS X 10.8.
+Despite this,
+even current macOS systems still use resource forks for certain purposes,
+such as custom file icons.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["rsrc", "dfont"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q3933446">Wikidata Q3933446</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Resource_Fork">Resource Fork in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Macintosh resource fork data
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Macintosh resource fork data parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Macintosh resource fork data parsing Lua library">Lua</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="resource_fork.svg">
+            <img class="diagram-img" src="resource_fork.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resource_fork</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Macintosh resource fork data</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mac OS</span>
+  <span class="nt">file-extension</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">rsrc</span> <span class="c1"># Resource fork data stored in a separate file (as a data fork)</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dfont</span> <span class="c1"># Datafork font suitcase (a special case of the above, used by certain Mac fonts)</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Resource_Fork</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q3933446</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="s">&quot;0.9&quot;</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/common/bytes_with_io</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">The data format of Macintosh resource forks,</span>
+  <span class="no">used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file&#39;s main data (the data fork).</span>
+  <span class="no">The kinds of data stored in resource forks include:</span>
+
+  <span class="no">* Document resources:</span>
+    <span class="no">images, sounds, etc. used by a document</span>
+  <span class="no">* Application resources:</span>
+    <span class="no">graphics, GUI layouts, localizable strings,</span>
+    <span class="no">and even code used by an application, a library, or system files</span>
+  <span class="no">* Common metadata:</span>
+    <span class="no">custom icons and version metadata that could be displayed by the Finder</span>
+  <span class="no">* Application-specific metadata:</span>
+    <span class="no">because resource forks follow a common format,</span>
+    <span class="no">other applications can store new metadata in them,</span>
+    <span class="no">even if the original application does not recognize or understand it</span>
+
+  <span class="no">Macintosh file systems (MFS, HFS, HFS+, APFS) support resource forks natively,</span>
+  <span class="no">which allows storing resources along with any file.</span>
+  <span class="no">Non-Macintosh file systems and protocols have little or no support for resource forks,</span>
+  <span class="no">so the resource fork data must be stored in some other way when using such file systems or protocols.</span>
+  <span class="no">Various file formats and tools exist for this purpose,</span>
+  <span class="no">such as BinHex, MacBinary, AppleSingle, AppleDouble, or QuickTime RezWack.</span>
+  <span class="no">In some cases,</span>
+  <span class="no">resource forks are stored as plain data in separate files with a .rsrc extension,</span>
+  <span class="no">even on Mac systems that natively support resource forks.</span>
+
+  <span class="no">On modern Mac OS X/macOS systems,</span>
+  <span class="no">resource forks are used far less commonly than on classic Mac OS systems,</span>
+  <span class="no">because of compatibility issues with other systems and historical limitations in the format.</span>
+  <span class="no">Modern macOS APIs and libraries do not use resource forks,</span>
+  <span class="no">and the legacy Carbon API that still used them has been deprecated since OS X 10.8.</span>
+  <span class="no">Despite this,</span>
+  <span class="no">even current macOS systems still use resource forks for certain purposes,</span>
+  <span class="no">such as custom file icons.</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151</span><span class="nv"> </span><span class="s">Inside</span><span class="nv"> </span><span class="s">Macintosh,</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">Macintosh</span><span class="nv"> </span><span class="s">Toolbox,</span><span class="nv"> </span><span class="s">Resource</span><span class="nv"> </span><span class="s">Manager,</span><span class="nv"> </span><span class="s">Resource</span><span class="nv"> </span><span class="s">Manager</span><span class="nv"> </span><span class="s">Reference,</span><span class="nv"> </span><span class="s">Resource</span><span class="nv"> </span><span class="s">File</span><span class="nv"> </span><span class="s">Format&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;http://www.pagetable.com/?p=50</span><span class="nv"> </span><span class="s">Inside</span><span class="nv"> </span><span class="s">Macintosh,</span><span class="nv"> </span><span class="s">Volume</span><span class="nv"> </span><span class="s">I,</span><span class="nv"> </span><span class="s">The</span><span class="nv"> </span><span class="s">Resource</span><span class="nv"> </span><span class="s">Manager,</span><span class="nv"> </span><span class="s">Format</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">Resource</span><span class="nv"> </span><span class="s">File&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks&#39;</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource file&#39;s header information.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">system_data</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">112</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">System-reserved data area.</span>
+      <span class="no">This field can generally be ignored when reading and writing.</span>
+
+      <span class="no">This field is used by the Classic Mac OS Finder as temporary storage space.</span>
+      <span class="no">It usually contains parts of the file metadata (name, type/creator code, etc.).</span>
+      <span class="no">Any existing data in this field is ignored and overwritten.</span>
+
+      <span class="no">In resource files written by Mac OS X,</span>
+      <span class="no">this field is set to all zero bytes.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application_data</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">128</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Application-specific data area.</span>
+      <span class="no">This field can generally be ignored when reading and writing.</span>
+
+      <span class="no">According to early revisions of Inside Macintosh,</span>
+      <span class="no">this field is &quot;available for application data&quot;.</span>
+      <span class="no">In practice, it is almost never used for this purpose,</span>
+      <span class="no">and usually contains only junk data.</span>
+
+      <span class="no">In resource files written by Mac OS X,</span>
+      <span class="no">this field is set to all zero bytes.</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">data_blocks_with_io</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_data_blocks</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_with_io</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_data_blocks</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Use `data_blocks` instead,</span>
+      <span class="no">unless you need access to this instance&#39;s `_io`.</span>
+  <span class="nt">data_blocks</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_blocks_with_io.data</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Storage area for the data blocks of all resources.</span>
+
+      <span class="no">These data blocks are not required to appear in any particular order,</span>
+      <span class="no">and there may be unused space between and around them.</span>
+
+      <span class="no">In practice,</span>
+      <span class="no">the data blocks in newly created resource files are usually contiguous.</span>
+      <span class="no">When existing resources are shortened,</span>
+      <span class="no">the Mac OS resource manager leaves unused space where the now removed resource data was,</span>
+      <span class="no">as this is quicker than moving the following resource data into the newly freed space.</span>
+      <span class="no">Such unused space may be cleaned up later when the resource manager &quot;compacts&quot; the resource file,</span>
+      <span class="no">which happens when resources are removed entirely,</span>
+      <span class="no">or when resources are added or grown so that more space is needed in the data area.</span>
+  <span class="nt">resource_map</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_resource_map</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resource_map</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_resource_map</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource file&#39;s resource map.</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">file_header</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Resource file header,</span>
+      <span class="no">containing the offsets and lengths of the resource data area and resource map.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data_blocks</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Offset of the resource data area,</span>
+          <span class="no">from the start of the resource file.</span>
+
+          <span class="no">In practice,</span>
+          <span class="no">this should always be `256`,</span>
+          <span class="no">i. e. the resource data area should directly follow the application-specific data area.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_resource_map</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Offset of the resource map,</span>
+          <span class="no">from the start of the resource file.</span>
+
+          <span class="no">In practice,</span>
+          <span class="no">this should always be `ofs_data_blocks + len_data_blocks`,</span>
+          <span class="no">i. e. the resource map should directly follow the resource data area.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_blocks</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Length of the resource data area.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_resource_map</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Length of the resource map.</span>
+
+          <span class="no">In practice,</span>
+          <span class="no">this should always be `_root._io.size - ofs_resource_map`,</span>
+          <span class="no">i. e. the resource map should extend to the end of the resource file.</span>
+  <span class="nt">data_block</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">A resource data block,</span>
+      <span class="no">as stored in the resource data area.</span>
+
+      <span class="no">Each data block stores the data contained in a resource,</span>
+      <span class="no">along with its length.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The length of the resource data stored in this block.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The data stored in this block.</span>
+  <span class="nt">resource_map</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Resource map,</span>
+      <span class="no">containing information about the resources in the file and where they are located in the data area.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_file_header_copy</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved space for a copy of the resource file header.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_next_resource_map_handle</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved space for a handle to the next loaded resource map in memory.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_file_reference_number</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved space for the resource file&#39;s file reference number.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_attributes</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_attributes</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource file&#39;s attributes.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_type_list</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Offset of the resource type list,</span>
+          <span class="no">from the start of the resource map.</span>
+
+          <span class="no">In practice,</span>
+          <span class="no">this should always be `sizeof&lt;resource_map&gt;`,</span>
+          <span class="no">i. e. the resource type list should directly follow the resource map.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_names</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Offset of the resource name area,</span>
+          <span class="no">from the start of the resource map.</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">type_list_and_reference_lists</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_type_list</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_list_and_reference_lists</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_names - ofs_type_list</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+      <span class="nt">names_with_io</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_names</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_with_io</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Use `names` instead,</span>
+          <span class="no">unless you need access to this instance&#39;s `_io`.</span>
+      <span class="nt">names</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">names_with_io.data</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Storage area for the names of all resources.</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">file_attributes</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">A resource file&#39;s attributes,</span>
+          <span class="no">as stored in the resource map.</span>
+
+          <span class="no">These attributes are sometimes also referred to as resource map attributes,</span>
+          <span class="no">because of where they are stored in the file.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resources_locked</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">TODO What does this attribute actually do,</span>
+              <span class="no">and how is it different from `read_only`?</span>
+
+              <span class="no">This attribute is undocumented and not defined in &lt;CarbonCore/Resources.h&gt;,</span>
+              <span class="no">but ResEdit has a checkbox called &quot;Resources Locked&quot; for this attribute.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">These attributes have no known usage or meaning and should always be zero.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">printer_driver_multifinder_compatible</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Indicates that this printer driver is compatible with MultiFinder,</span>
+              <span class="no">i. e. can be used simultaneously by multiple applications.</span>
+              <span class="no">This attribute is only meant to be set on printer driver resource forks.</span>
+
+              <span class="no">This attribute is not documented in Inside Macintosh and is not defined in &lt;CarbonCore/Resources.h&gt;.</span>
+              <span class="no">It is documented in technote PR510,</span>
+              <span class="no">and ResEdit has a checkbox called &quot;Printer Driver MultiFinder Compatible&quot; for this attribute.</span>
+            <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.fenestrated.net/mirrors/Apple%20Technotes%20(As%20of%202002)/pr/pr_510.html Apple Technical Note PR510 - Printer Driver Q&amp;As, section &#39;&quot;Printer driver is MultiFinder compatible&quot; bit&#39;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_write_changes</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mapReadOnly</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Indicates that the Resource Manager should not write any changes from memory into the resource file.</span>
+              <span class="no">Any modification operations requested by the application will return successfully,</span>
+              <span class="no">but will not actually update the resource file.</span>
+
+              <span class="no">TODO Is this attribute supposed to be set on disk or only in memory?</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">needs_compact</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mapCompact</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Indicates that the resource file should be compacted the next time it is written by the Resource Manager.</span>
+              <span class="no">This attribute is only meant to be set in memory;</span>
+              <span class="no">it is cleared when the resource file is written to disk.</span>
+
+              <span class="no">This attribute is mainly used internally by the Resource Manager,</span>
+              <span class="no">but may also be set manually by the application.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">map_needs_write</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mapChanged</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Indicates that the resource map has been changed in memory and should be written to the resource file on the next update.</span>
+              <span class="no">This attribute is only meant to be set in memory;</span>
+              <span class="no">it is cleared when the resource file is written to disk.</span>
+
+              <span class="no">This attribute is mainly used internally by the Resource Manager,</span>
+              <span class="no">but may also be set manually by the application.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">These attributes have no known usage or meaning and should always be zero.</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">as_int</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The attributes as a packed integer,</span>
+              <span class="no">as they are stored in the file.</span>
+      <span class="nt">type_list_and_reference_lists</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Resource type list and storage area for resource reference lists in the resource map.</span>
+
+          <span class="no">The two parts are combined into a single type here for technical reasons:</span>
+          <span class="no">the start of the resource reference list area is not stored explicitly in the file,</span>
+          <span class="no">instead it always starts directly after the resource type list.</span>
+          <span class="no">The simplest way to implement this is by placing both types into a single `seq`.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_list</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_list</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource map&#39;s resource type list.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reference_lists</span>
+            <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Storage area for the resource map&#39;s resource reference lists.</span>
+
+              <span class="no">According to Inside Macintosh,</span>
+              <span class="no">the reference lists are stored contiguously,</span>
+              <span class="no">in the same order as their corresponding resource type list entries.</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">type_list</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Resource type list in the resource map.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_types_m1</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of resource types in this list,</span>
+                  <span class="no">minus one.</span>
+
+                  <span class="no">If the resource list is empty,</span>
+                  <span class="no">the value of this field is `0xffff`,</span>
+                  <span class="no">i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_list_entry</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_types</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Entries in the resource type list.</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">num_types</span><span class="p">:</span>
+                <span class="c1"># The modulo 0x10000 simulates 16-bit unsigned integer wraparound,</span>
+                <span class="c1"># so that empty lists are handled correctly (see doc for num_types_m1).</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(num_types_m1 + 1) % 0x10000</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The number of resource types in this list.</span>
+            <span class="nt">types</span><span class="p">:</span>
+              <span class="nt">type_list_entry</span><span class="p">:</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">A single entry in the resource type list.</span>
+
+                  <span class="no">Each entry corresponds to exactly one resource reference list.</span>
+                <span class="nt">seq</span><span class="p">:</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+                    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The four-character type code of the resources in the reference list.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_references_m1</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">The number of resources in the reference list for this type,</span>
+                      <span class="no">minus one.</span>
+
+                      <span class="no">Empty reference lists should never exist.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_reference_list</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">Offset of the resource reference list for this resource type,</span>
+                      <span class="no">from the start of the resource type list.</span>
+
+                      <span class="no">Although the offset is relative to the start of the type list,</span>
+                      <span class="no">it should never point into the type list itself,</span>
+                      <span class="no">but into the reference list storage area that directly follows it.</span>
+                      <span class="no">That is,</span>
+                      <span class="no">it should always be at least `_parent._sizeof`.</span>
+                <span class="nt">instances</span><span class="p">:</span>
+                  <span class="nt">num_references</span><span class="p">:</span>
+                    <span class="c1"># Reference lists should never be empty,</span>
+                    <span class="c1"># but just in case simulate the wraparound behavior here as well.</span>
+                    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(num_references_m1 + 1) % 0x10000</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The number of resources in the reference list for this type.</span>
+                  <span class="nt">reference_list</span><span class="p">:</span>
+                    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent._io</span>
+                    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_reference_list</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reference_list(num_references)</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">The resource reference list for this resource type.</span>
+          <span class="nt">reference_list</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">A resource reference list,</span>
+              <span class="no">as stored in the reference list area.</span>
+
+              <span class="no">Each reference list has exactly one matching entry in the resource type list,</span>
+              <span class="no">and describes all resources of a single type in the file.</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_references</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                  <span class="no">The number of references in this resource reference list.</span>
+
+                  <span class="no">This information needs to be passed in as a parameter,</span>
+                  <span class="no">because it is stored in the reference list&#39;s type list entry,</span>
+                  <span class="no">and not in the reference list itself.</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">references</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reference</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_references</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The resource references in this reference list.</span>
+            <span class="nt">types</span><span class="p">:</span>
+              <span class="nt">reference</span><span class="p">:</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A single resource reference in a resource reference list.</span>
+                <span class="nt">seq</span><span class="p">:</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ID of the resource described by this reference.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">Offset of the name for the resource described by this reference,</span>
+                      <span class="no">from the start of the resource name area.</span>
+
+                      <span class="no">If the resource has no name,</span>
+                      <span class="no">the value of this field is `0xffff`</span>
+                      <span class="no">i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attributes</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attributes</span>
+                    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Attributes of the resource described by this reference.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data_block</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b24</span> <span class="c1"># 3-byte unsigned integer, packed together with the previous 1-byte field.</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">Offset of the data block for the resource described by this reference,</span>
+                      <span class="no">from the start of the resource data area.</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_handle</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved space for the resource&#39;s handle in memory.</span>
+                <span class="nt">instances</span><span class="p">:</span>
+                  <span class="nt">name</span><span class="p">:</span>
+                    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.resource_map.names_with_io._io</span>
+                    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+                    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name != 0xffff</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">The name (if any) of the resource described by this reference.</span>
+                  <span class="nt">data_block</span><span class="p">:</span>
+                    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.data_blocks_with_io._io</span>
+                    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data_block</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_block</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">The data block containing the data for the resource described by this reference.</span>
+                <span class="nt">types</span><span class="p">:</span>
+                  <span class="nt">attributes</span><span class="p">:</span>
+                    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                      <span class="no">A resource&#39;s attributes,</span>
+                      <span class="no">as stored in a resource reference.</span>
+                    <span class="nt">seq</span><span class="p">:</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">system_reference</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resSysRef</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource reference is a system reference rather than a regular local reference.</span>
+                          <span class="no">This attribute is nearly undocumented.</span>
+                          <span class="no">For all practical purposes,</span>
+                          <span class="no">it should be considered reserved and should always be zero.</span>
+
+                          <span class="no">This attribute was last documented in the Promotional Edition of Inside Macintosh,</span>
+                          <span class="no">in the Resource Manager chapter,</span>
+                          <span class="no">on pages 37-41,</span>
+                          <span class="no">in a &quot;System References&quot; section that calls itself &quot;of historical interest only&quot;.</span>
+                          <span class="no">The final versions of Inside Macintosh only mention this attribute as &quot;reserved for use by the Resource Manager&quot;.</span>
+                          <span class="no">&lt;CarbonCore/Resources.h&gt; contains a `resSysRefBit` constant,</span>
+                          <span class="no">but no corresponding `resSysRef` constant like for all other resource attributes.</span>
+
+                          <span class="no">According to the Inside Macintosh Promotional Edition,</span>
+                          <span class="no">a system reference was effectively an alias pointing to a resource stored in the system file,</span>
+                          <span class="no">possibly with a different ID and name (but not type) than the system reference.</span>
+                          <span class="no">If this attribute is set,</span>
+                          <span class="no">`ofs_data_block` is ignored and should be zero,</span>
+                          <span class="no">and `reserved_handle` contains</span>
+                          <span class="no">(in its high and low two bytes, respectively)</span>
+                          <span class="no">the ID and name offset of the real system resource that this system reference points to.</span>
+
+                          <span class="no">TODO Do any publicly available Mac OS versions support system references,</span>
+                          <span class="no">and do any real files/applications use them?</span>
+                          <span class="no">So far the answer seems to be no,</span>
+                          <span class="no">but I would like to be proven wrong!</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_into_system_heap</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resSysHeap</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource should be loaded into the system heap if possible,</span>
+                          <span class="no">rather than the application heap.</span>
+
+                          <span class="no">This attribute is only meant to be used by Mac OS itself,</span>
+                          <span class="no">for System and Finder resources,</span>
+                          <span class="no">and not by normal applications.</span>
+
+                          <span class="no">This attribute may be set both in memory and on disk,</span>
+                          <span class="no">but it only has any meaning while the resource file is loaded into memory.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">purgeable</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resPurgeable</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource&#39;s data should be purgeable by the Mac OS Memory Manager.</span>
+                          <span class="no">This allows the resource data to be purged from memory if space is needed on the heap.</span>
+                          <span class="no">Purged resources can later be reloaded from disk if their data is needed again.</span>
+
+                          <span class="no">If the `locked` attribute is set,</span>
+                          <span class="no">this attribute has no effect</span>
+                          <span class="no">(i. e. locked resources are never purgeable).</span>
+
+                          <span class="no">This attribute may be set both in memory and on disk,</span>
+                          <span class="no">but it only has any meaning while the resource file is loaded into memory.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">locked</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resLocked</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource&#39;s data should be locked to the Mac OS Memory Manager.</span>
+                          <span class="no">This prevents the resource data from being moved when the heap is compacted.</span>
+
+                          <span class="no">This attribute may be set both in memory and on disk,</span>
+                          <span class="no">but it only has any meaning while the resource file is loaded into memory.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">protected</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resProtected</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource should be protected (i. e. unmodifiable) in memory.</span>
+                          <span class="no">This prevents the application from using the Resource Manager to change the resource&#39;s data or metadata,</span>
+                          <span class="no">or delete it.</span>
+                          <span class="no">The only exception are the resource&#39;s attributes,</span>
+                          <span class="no">which can always be changed,</span>
+                          <span class="no">even for protected resources.</span>
+                          <span class="no">This allows protected resources to be unprotected again by the application.</span>
+
+                          <span class="no">This attribute may be set both in memory and on disk,</span>
+                          <span class="no">but it only has any meaning while the resource file is loaded into memory.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preload</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resPreload</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource&#39;s data should be immediately loaded into memory when the resource file is opened.</span>
+
+                          <span class="no">This attribute may be set both in memory and on disk,</span>
+                          <span class="no">but it only has any meaning when the resource file is first opened.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">needs_write</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resChanged</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource&#39;s data has been changed in memory and should be written to the resource file on the next update.</span>
+                          <span class="no">This attribute is only meant to be set in memory;</span>
+                          <span class="no">it is cleared when the resource file is written to disk.</span>
+
+                          <span class="no">This attribute is used internally by the Resource Manager and should not be set manually by the application.</span>
+                      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compressed</span>
+                        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resCompressed</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">Indicates that this resource&#39;s data is compressed.</span>
+                          <span class="no">Compressed resource data is decompressed transparently by the Resource Manager when reading.</span>
+
+                          <span class="no">For a detailed description of the structure of compressed resources as they are stored in the file,</span>
+                          <span class="no">see the compressed_resource.ksy spec.</span>
+                    <span class="nt">instances</span><span class="p">:</span>
+                      <span class="nt">as_int</span><span class="p">:</span>
+                        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+                        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+                          <span class="no">The attributes as a packed integer,</span>
+                          <span class="no">as they are stored in the file.</span>
+      <span class="nt">name</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">A resource name,</span>
+          <span class="no">as stored in the resource name storage area in the resource map.</span>
+
+          <span class="no">The resource names are not required to appear in any particular order.</span>
+          <span class="no">There may be unused space between and around resource names,</span>
+          <span class="no">but in practice they are often contiguous.</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_value</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The length of the resource name, in bytes.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_value</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">The resource name.</span>
+
+              <span class="no">This field is exposed as a byte array,</span>
+              <span class="no">because there is no universal encoding for resource names.</span>
+              <span class="no">Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+              <span class="no">including resource names,</span>
+              <span class="no">use the system encoding,</span>
+              <span class="no">which varies depending on the system language.</span>
+              <span class="no">This means that resource names can use different encodings depending on what system language they were created with.</span>
+
+              <span class="no">Many resource names are plain ASCII,</span>
+              <span class="no">meaning that the encoding often does not matter</span>
+              <span class="no">(because all Mac OS encodings are ASCII-compatible).</span>
+              <span class="no">For non-ASCII resource names,</span>
+              <span class="no">the most common encoding is perhaps MacRoman</span>
+              <span class="no">(used for English and other Western languages),</span>
+              <span class="no">but other encodings are also sometimes used,</span>
+              <span class="no">especially for software in non-Western languages.</span>
+
+              <span class="no">There is no requirement that all names in a single resource file use the same encoding.</span>
+              <span class="no">For example,</span>
+              <span class="no">localized software may have some (but not all) of its resource names translated.</span>
+              <span class="no">For non-Western languages,</span>
+              <span class="no">this can lead to some resource names using MacRoman,</span>
+              <span class="no">and others using a different encoding.</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
