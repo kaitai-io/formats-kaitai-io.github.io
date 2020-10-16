@@ -159,7 +159,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="cramfs parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="cramfs parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="cramfs parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="cramfs parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -180,6 +195,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="cramfs parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="cramfs parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -216,6 +236,349 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>cramfs.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/cramfs.lua" download="cramfs.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="n">Cramfs</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">super_block</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">page_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">page_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_page_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_page_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_page_size</span> <span class="o">=</span> <span class="mi">4096</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_page_size</span>
+<span class="kr">end</span>
+
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\069\061\205\040</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\069\061\205\040</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">future</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">signature</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\067\111\109\112\114\101\115\115\101\100\032\082\079\077\070\083</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\067\111\109\112\114\101\115\115\101\100\032\082\079\077\070\083</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">signature</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">fsid</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">Info</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_fsid_v2</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_fsid_v2</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_fsid_v2</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_fsid_v2</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_fsid_v2</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_fsid_v2</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_holes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_holes</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_holes</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_holes</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_holes</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_holes</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_wrong_signature</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_wrong_signature</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_wrong_signature</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_wrong_signature</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_wrong_signature</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_wrong_signature</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_sorted_dirs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_sorted_dirs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_sorted_dirs</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_sorted_dirs</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_sorted_dirs</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_sorted_dirs</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">SuperBlockStruct</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_shifted_root_offset</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">SuperBlockStruct</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_shifted_root_offset</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_shifted_root_offset</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_shifted_root_offset</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_shifted_root_offset</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_shifted_root_offset</span>
+<span class="kr">end</span>
+
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">ChunkedDataInode</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">ChunkedDataInode</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">ChunkedDataInode</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">block_end_index</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">math.floor</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">page_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">page_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">block_end_index</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">raw_blocks</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">FileType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">fifo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">chrdev</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">dir</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">blkdev</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">reg_file</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">symlink</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">socket</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">uid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_gid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">namelen_offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">namelen</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">attr</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">attr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_attr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_attr</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_attr</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_attr</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">as_reg_file</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">as_reg_file</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_reg_file</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_reg_file</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">offset</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_as_reg_file</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">ChunkedDataInode</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_reg_file</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">perm_u</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">perm_u</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_u</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_u</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_u</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_u</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">as_symlink</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">as_symlink</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_symlink</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_symlink</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">offset</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_as_symlink</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">ChunkedDataInode</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_symlink</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">perm_o</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">perm_o</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_o</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_o</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_o</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_o</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size_gid</span> <span class="o">&amp;</span> <span class="mi">16777215</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">gid</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">gid</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_gid</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_gid</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_gid</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size_gid</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_gid</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">perm_g</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">perm_g</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_g</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_g</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_g</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_perm_g</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">namelen</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">namelen</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_namelen</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_namelen</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_namelen</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">namelen_offset</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_namelen</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">as_dir</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">as_dir</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_dir</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_dir</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">offset</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_as_dir</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_as_dir</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_as_dir</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">DirInode</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_as_dir</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_type</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_type</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_type</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">FileType</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_type</span>
+<span class="kr">end</span>
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Inode</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">offset</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_offset</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_offset</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_offset</span> <span class="o">=</span> <span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">namelen_offset</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">67108863</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_offset</span>
+<span class="kr">end</span>
+
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">DirInode</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">DirInode</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">DirInode</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">children</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">.</span><span class="n">Inode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Cramfs</span><span class="p">.</span><span class="n">Info</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Info</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Cramfs</span><span class="p">.</span><span class="nc">Info</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">crc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">edition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

@@ -142,6 +142,16 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Windows MiniDump parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Windows MiniDump parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
                 
                 
@@ -163,6 +173,11 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Windows MiniDump parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Windows MiniDump parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -199,6 +214,454 @@ used for that purpose in Windows and Google Chrome projects.</p>
             
         </h2>
 
+        
+
+        <h3>windows_minidump.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/windows_minidump.lua" download="windows_minidump.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Windows MiniDump (MDMP) file provides a concise way to store process</span>
+<span class="c1">-- core dumps, which is useful for debugging. Given its small size,</span>
+<span class="c1">-- modularity, some cross-platform features and native support in some</span>
+<span class="c1">-- debuggers, it is particularly useful for crash reporting, and is</span>
+<span class="c1">-- used for that purpose in Windows and Google Chrome projects.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The file itself is a container, which contains a number of typed</span>
+<span class="c1">-- &quot;streams&quot;, which contain some data according to its type attribute.</span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx)</span>
+<span class="n">WindowsMinidump</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unused</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">reserved_0</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">reserved_1</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">thread_list</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">module_list</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">memory_list</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">exception</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">system_info</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">thread_ex_list</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">memory_64_list</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">comment_a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">comment_w</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">handle_data</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">function_table</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">unloaded_module_list</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">misc_info</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+  <span class="n">memory_info_list</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="n">thread_info_list</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+  <span class="n">handle_operation_list</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="n">token</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+  <span class="n">java_script_data</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="n">system_memory_info</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+  <span class="n">process_vm_vounters</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+  <span class="n">ipt_trace</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+  <span class="n">thread_names</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+  <span class="n">ce_null</span> <span class="o">=</span> <span class="mi">32768</span><span class="p">,</span>
+  <span class="n">ce_system_info</span> <span class="o">=</span> <span class="mi">32769</span><span class="p">,</span>
+  <span class="n">ce_exception</span> <span class="o">=</span> <span class="mi">32770</span><span class="p">,</span>
+  <span class="n">ce_module_list</span> <span class="o">=</span> <span class="mi">32771</span><span class="p">,</span>
+  <span class="n">ce_process_list</span> <span class="o">=</span> <span class="mi">32772</span><span class="p">,</span>
+  <span class="n">ce_thread_list</span> <span class="o">=</span> <span class="mi">32773</span><span class="p">,</span>
+  <span class="n">ce_thread_context_list</span> <span class="o">=</span> <span class="mi">32774</span><span class="p">,</span>
+  <span class="n">ce_thread_call_stack_list</span> <span class="o">=</span> <span class="mi">32775</span><span class="p">,</span>
+  <span class="n">ce_memory_virtual_list</span> <span class="o">=</span> <span class="mi">32776</span><span class="p">,</span>
+  <span class="n">ce_memory_physical_list</span> <span class="o">=</span> <span class="mi">32777</span><span class="p">,</span>
+  <span class="n">ce_bucket_parameters</span> <span class="o">=</span> <span class="mi">32778</span><span class="p">,</span>
+  <span class="n">ce_process_module_map</span> <span class="o">=</span> <span class="mi">32779</span><span class="p">,</span>
+  <span class="n">ce_diagnosis_list</span> <span class="o">=</span> <span class="mi">32780</span><span class="p">,</span>
+  <span class="n">md_crashpad_info_stream</span> <span class="o">=</span> <span class="mi">1129316353</span><span class="p">,</span>
+  <span class="n">md_raw_breakpad_info</span> <span class="o">=</span> <span class="mi">1197932545</span><span class="p">,</span>
+  <span class="n">md_raw_assertion_info</span> <span class="o">=</span> <span class="mi">1197932546</span><span class="p">,</span>
+  <span class="n">md_linux_cpu_info</span> <span class="o">=</span> <span class="mi">1197932547</span><span class="p">,</span>
+  <span class="n">md_linux_proc_status</span> <span class="o">=</span> <span class="mi">1197932548</span><span class="p">,</span>
+  <span class="n">md_linux_lsb_release</span> <span class="o">=</span> <span class="mi">1197932549</span><span class="p">,</span>
+  <span class="n">md_linux_cmd_line</span> <span class="o">=</span> <span class="mi">1197932550</span><span class="p">,</span>
+  <span class="n">md_linux_environ</span> <span class="o">=</span> <span class="mi">1197932551</span><span class="p">,</span>
+  <span class="n">md_linux_auxv</span> <span class="o">=</span> <span class="mi">1197932552</span><span class="p">,</span>
+  <span class="n">md_linux_maps</span> <span class="o">=</span> <span class="mi">1197932553</span><span class="p">,</span>
+  <span class="n">md_linux_dso_debug</span> <span class="o">=</span> <span class="mi">1197932554</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic1</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\077\068\077\080</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\077\068\077\080</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic1</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic2</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\147\167</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\147\167</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic2</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_streams</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_streams</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">checksum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">streams</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">streams</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_streams</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_streams</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_streams</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_streams</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_streams</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_streams</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">Dir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_streams</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ThreadList</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ThreadList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ThreadList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">threads</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_threads</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">threads</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">LocationDescriptor</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">LocationDescriptor</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">LocationDescriptor</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">LocationDescriptor</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">LocationDescriptor</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Specific string serialization scheme used in MiniDump format is</span>
+<span class="c1">-- actually a simple 32-bit length-prefixed UTF-16 string.</span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MinidumpString</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MinidumpString</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MinidumpString</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_str</span><span class="p">),</span> <span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- &quot;System info&quot; stream provides basic information about the</span>
+<span class="c1">-- hardware and operating system which produces this dump.</span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">SystemInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">SystemInfo</span><span class="p">.</span><span class="n">CpuArchs</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">intel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">arm</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">ia64</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">amd64</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">65535</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">SystemInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">SystemInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_arch</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">SystemInfo</span><span class="p">.</span><span class="n">CpuArchs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_revision</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_cpus</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_ver_major</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_ver_minor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_build</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_platform</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_service_pack</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_suite_mask</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">SystemInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">service_pack</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">SystemInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">service_pack</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_service_pack</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_service_pack</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">ofs_service_pack</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_service_pack</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_service_pack</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MinidumpString</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_service_pack</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ExceptionRecord</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ExceptionRecord</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ExceptionRecord</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">inner_exception</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_params</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">15</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Memory address where exception has occurred.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Additional parameters passed along with exception raise</span>
+<span class="c1">-- function (for WinAPI, that is `RaiseException`). Meaning is</span>
+<span class="c1">-- exception-specific. Given that this type is originally</span>
+<span class="c1">-- defined by a C structure, it is described there as array of</span>
+<span class="c1">-- fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
+<span class="c1">-- 15), but in reality only first `num_params` would be used.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MiscInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MiscInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MiscInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">process_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">process_create_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">process_user_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">process_kernel_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_max_mhz</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_cur_mhz</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_limit_mhz</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_max_idle_state</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cpu_cur_idle_state</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">Dir</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">Dir</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">Dir</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">stream_type</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">Dir</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">Dir</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">stream_type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">memory_list</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MemoryList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">misc_info</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MiscInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">thread_list</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ThreadList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">exception</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ExceptionStream</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">system_info</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_data</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">SystemInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">Thread</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">Thread</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">Thread</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thread_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">suspend_count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">priority_class</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">teb</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">stack</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MemoryDescriptor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thread_context</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">LocationDescriptor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Thread Environment Block.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MemoryList</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MemoryList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MemoryList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_mem_ranges</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mem_ranges</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_mem_ranges</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">mem_ranges</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MemoryDescriptor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">MemoryDescriptor</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MemoryDescriptor</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">MemoryDescriptor</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">addr_memory_range</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">LocationDescriptor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx)</span>
+<span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ExceptionStream</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ExceptionStream</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsMinidump</span><span class="p">.</span><span class="nc">ExceptionStream</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thread_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">exception_rec</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">ExceptionRecord</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thread_context</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">LocationDescriptor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

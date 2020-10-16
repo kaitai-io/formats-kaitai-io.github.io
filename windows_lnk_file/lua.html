@@ -170,6 +170,16 @@ with certain preconfigured arguments and some other options.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Windows shell link file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Windows shell link file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows shell link file parsing C# library">C#</a></li>
                 
                 
@@ -191,6 +201,11 @@ with certain preconfigured arguments and some other options.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Windows shell link file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Windows shell link file parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -227,6 +242,378 @@ with certain preconfigured arguments and some other options.</p>
             
         </h2>
 
+        
+
+        <h3>windows_lnk_file.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/windows_lnk_file.lua" download="windows_lnk_file.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;windows_shell_items&quot;</span><span class="p">)</span>
+<span class="c1">-- </span>
+<span class="c1">-- Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used</span>
+<span class="c1">-- in Windows shell to create &quot;shortcuts&quot; to another files, usually for</span>
+<span class="c1">-- purposes of running a program from some other directory, sometimes</span>
+<span class="c1">-- with certain preconfigured arguments and some other options.</span>
+<span class="c1">-- See also: Source (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">WindowState</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">normal</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">maximized</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">min_no_active</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">DriveTypes</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">no_root_dir</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">removable</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">fixed</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">remote</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">cdrom</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">ramdisk</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">FileHeader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_link_target_id_list</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">target_id_list</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkTargetIdList</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_link_info</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_name</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_rel_path</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">rel_path</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_work_dir</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_arguments</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_icon_location</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">icon_location</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.2 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkTargetIdList</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkTargetIdList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkTargetIdList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_id_list</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_id_list</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_id_list</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_id_list</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">id_list</span> <span class="o">=</span> <span class="n">WindowsShellItems</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">StringData</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">StringData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">StringData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">chars_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">chars_str</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)),</span> <span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_all</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_all</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_all</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_all</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">all</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">All</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3.1 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">drive_type</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">DriveTypes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">drive_serial_number</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_volume_label</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_unicode</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">ofs_volume_label_unicode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdBody</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_unicode</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_unicode</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unicode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unicode</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unicode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">ofs_volume_label</span> <span class="o">==</span> <span class="mi">20</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unicode</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdBody</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">volume_label_ansi</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">volume_label_ansi</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_label_ansi</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_label_ansi</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_unicode</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_volume_label</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_label_ansi</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;cp437&quot;</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_label_ansi</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">All</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">All</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">All</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_header</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">Header</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">volume_id</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">All</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">volume_id</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_id</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_id</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_volume_id_and_local_base_path</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofs_volume_id</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_id</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdSpec</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_id</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">local_base_path</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">All</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">local_base_path</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_local_base_path</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_local_base_path</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_volume_id_and_local_base_path</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofs_local_base_path</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_local_base_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_local_base_path</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3.1 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdSpec</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdSpec</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">VolumeIdSpec</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_all</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_all</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">VolumeIdBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">LinkInfoFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">LinkInfoFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">LinkInfoFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_common_net_rel_link</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_volume_id_and_local_base_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.3 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">Header</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkInfo</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkInfo</span><span class="p">.</span><span class="n">LinkInfoFlags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_volume_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_local_base_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_common_net_rel_link</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_common_path_suffix</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">())</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">ofs_local_base_path_unicode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">())</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">ofs_common_path_suffix_unicode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.1.1 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">LinkFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">is_unicode</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_icon_location</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_arguments</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_work_dir</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_rel_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_link_info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_link_target_id_list</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed8</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">keep_local_id_list_for_unc_target</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed11</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Section 2.1 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)</span>
+<span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">FileHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsLnkFile</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\076\000\000\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\076\000\000\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">len_header</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">link_clsid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">link_clsid</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\001\020\002\000\000\000\000\000\192\000\000\000\000\000\000\070</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\001\020\002\000\000\000\000\000\192\000\000\000\000\000\000\070</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">link_clsid</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_flags</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">LinkFlags</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_attrs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_creation</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_access</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_write</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">target_file_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">icon_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">show_command</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="n">WindowState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">hotkey</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000\000\000\000\000\000\000\000\000\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000\000\000\000\000\000\000\000\000\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">reserved</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Technically, a size of the header, but in reality, it&#39;s</span>
+<span class="c1">-- fixed by standard.</span>
+<span class="c1">-- </span>
+<span class="c1">-- 16-byte class identified (CLSID), reserved for Windows shell</span>
+<span class="c1">-- link files.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Lower 32 bits of the size of the file that this link targets.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Index of an icon to use from target file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Window state to set after the launch of target executable.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

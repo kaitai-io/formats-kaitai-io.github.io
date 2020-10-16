@@ -135,7 +135,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="APM (Apple Partition Map) partition table parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="APM (Apple Partition Map) partition table parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="APM (Apple Partition Map) partition table parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="APM (Apple Partition Map) partition table parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -156,6 +171,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="APM (Apple Partition Map) partition table parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="APM (Apple Partition Map) partition table parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -192,6 +212,194 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>apm_partition_table.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/apm_partition_table.lua" download="apm_partition_table.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map</span>
+<span class="n">ApmPartitionTable</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM</span>
+<span class="c1">-- 0x800 (2048) bytes for CDROM</span>
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">sector_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sector_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sector_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sector_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_sector_size</span> <span class="o">=</span> <span class="mi">512</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sector_size</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Every partition entry contains the number of partition entries.</span>
+<span class="c1">-- We parse the first entry, to know how many to parse, including the first one.</span>
+<span class="c1">-- No logic is given what to do if other entries have a different number.</span>
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">partition_lookup</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">partition_lookup</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_lookup</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_lookup</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_partition_lookup</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sector_size</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_partition_lookup</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_lookup</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_lookup</span>
+<span class="kr">end</span>
+
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">partition_entries</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">partition_entries</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_entries</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_entries</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_partition_entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">partition_lookup</span><span class="p">.</span><span class="n">number_of_partitions</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_partition_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sector_size</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_partition_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition_entries</span>
+<span class="kr">end</span>
+
+
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">PartitionEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">PartitionEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\080\077</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\080\077</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved_1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_partitions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">partition_start</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">partition_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">partition_name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">partition_type</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_start</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">partition_status</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">boot_code_start</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">boot_code_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">boot_loader_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved_2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">boot_code_entry</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved_3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">boot_code_cksum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">processor_type</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">partition</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">PartitionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">partition</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">partition_status</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">partition_start</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_partition</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">partition_size</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">))</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_partition</span>
+<span class="kr">end</span>
+
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">PartitionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">data_start</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">data_size</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">))</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+<span class="kr">end</span>
+
+<span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">PartitionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">boot_code</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">ApmPartitionTable</span><span class="p">.</span><span class="nc">PartitionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">boot_code</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_boot_code</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_boot_code</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">boot_code_start</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">sector_size</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_boot_code</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">boot_code_size</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_boot_code</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- First sector.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Number of sectors.</span>
+<span class="c1">-- </span>
+<span class="c1">-- First sector.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Number of sectors.</span>
+<span class="c1">-- </span>
+<span class="c1">-- First sector.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Number of bytes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Address of bootloader code.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Boot code entry point.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Boot code checksum.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

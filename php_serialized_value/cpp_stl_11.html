@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Serialized PHP value: C++11/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Serialized PHP value</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Serialized PHP value:
+            
+            C++11/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A serialized PHP value, in the format used by PHP's built-in <code>serialize</code> and
+<code>unserialize</code> functions. This format closely mirrors PHP's data model:
+it supports all of PHP's scalar types (<code>NULL</code>, booleans, numbers, strings),
+associative arrays, objects, and recursive data structures using references.
+The only PHP values not supported by this format are <em>resources</em>,
+which usually correspond to native file or connection handles and cannot be
+meaningfully serialized.</p>
+<p>There is no official documentation for this data format;
+this spec was created based on the PHP source code and the behavior of
+<code>serialize</code>/<code>unserialize</code>. PHP makes no guarantees about compatibility of
+serialized data between PHP versions, but in practice, the format has
+remained fully backwards-compatible - values serialized by an older
+PHP version can be unserialized on any newer PHP version.
+This spec supports serialized values from PHP 7.3 or any earlier version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Serialized PHP value
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Serialized PHP value parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_11.html" title="Serialized PHP value parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Serialized PHP value parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Serialized PHP value parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Serialized PHP value parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Serialized PHP value parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Serialized PHP value parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Serialized PHP value parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Serialized PHP value parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Serialized PHP value parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Serialized PHP value parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Serialized PHP value parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.php_serialized_value&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">php_serialized_value_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="c1">// =&gt; A single-character code indicating the type of the serialized value.</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++11/STL source code to parse Serialized PHP value
+            
+        </h2>
+
+        
+
+        <h3>php_serialized_value.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/php_serialized_value.h" download="php_serialized_value.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and</span>
+<span class="cm"> * `unserialize` functions. This format closely mirrors PHP&#39;s data model:</span>
+<span class="cm"> * it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),</span>
+<span class="cm"> * associative arrays, objects, and recursive data structures using references.</span>
+<span class="cm"> * The only PHP values not supported by this format are *resources*,</span>
+<span class="cm"> * which usually correspond to native file or connection handles and cannot be</span>
+<span class="cm"> * meaningfully serialized.</span>
+<span class="cm"> * </span>
+<span class="cm"> * There is no official documentation for this data format;</span>
+<span class="cm"> * this spec was created based on the PHP source code and the behavior of</span>
+<span class="cm"> * `serialize`/`unserialize`. PHP makes no guarantees about compatibility of</span>
+<span class="cm"> * serialized data between PHP versions, but in practice, the format has</span>
+<span class="cm"> * remained fully backwards-compatible - values serialized by an older</span>
+<span class="cm"> * PHP version can be unserialized on any newer PHP version.</span>
+<span class="cm"> * This spec supports serialized values from PHP 7.3 or any earlier version.</span>
+<span class="cm"> * \sa https://www.php.net/manual/en/function.serialize.php Source</span>
+<span class="cm"> * \sa https://www.php.net/manual/en/function.serialize.php#66147 Source</span>
+<span class="cm"> * \sa https://www.php.net/manual/en/function.unserialize.php Source</span>
+<span class="cm"> * \sa https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re Source</span>
+<span class="cm"> * \sa https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822 Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">php_serialized_value_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">count_prefixed_mapping_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">float_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">length_prefixed_quoted_string_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">object_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">array_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">custom_serialized_object_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">null_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">php_3_object_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">bool_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">string_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">int_contents_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">mapping_entry_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">value_type_t</span> <span class="p">{</span>
+        <span class="n">VALUE_TYPE_CUSTOM_SERIALIZED_OBJECT</span> <span class="o">=</span> <span class="mi">67</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_NULL</span> <span class="o">=</span> <span class="mi">78</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_OBJECT</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_VARIABLE_REFERENCE</span> <span class="o">=</span> <span class="mi">82</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_PHP_6_STRING</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_ARRAY</span> <span class="o">=</span> <span class="mi">97</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_BOOL</span> <span class="o">=</span> <span class="mi">98</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_FLOAT</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_INT</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_PHP_3_OBJECT</span> <span class="o">=</span> <span class="mi">111</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_OBJECT_REFERENCE</span> <span class="o">=</span> <span class="mi">114</span><span class="p">,</span>
+        <span class="n">VALUE_TYPE_STRING</span> <span class="o">=</span> <span class="mi">115</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="n">bool_value_t</span> <span class="p">{</span>
+        <span class="n">BOOL_VALUE_FALSE</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="n">BOOL_VALUE_TRUE</span> <span class="o">=</span> <span class="mi">49</span>
+    <span class="p">};</span>
+
+    <span class="n">php_serialized_value_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">php_serialized_value_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * A mapping (a sequence of key-value pairs) prefixed with its size.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">count_prefixed_mapping_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">count_prefixed_mapping_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">count_prefixed_mapping_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_num_entries</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_num_entries</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of key-value pairs in the mapping, parsed as an integer.</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">num_entries</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_num_entries_dec</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_opening_brace</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mapping_entry_t</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_closing_brace</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of key-value pairs in the mapping, in ASCII decimal.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">num_entries_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_entries_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">opening_brace</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_opening_brace</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The key-value pairs contained in the mapping.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mapping_entry_t</span><span class="o">&gt;&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">closing_brace</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_closing_brace</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of a floating-point value.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">float_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">float_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">float_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_value_dec</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the `float`, in ASCII decimal, as generated by PHP&#39;s</span>
+<span class="cm">         * usual double-to-string conversion. In particular, this means that:</span>
+<span class="cm">         * </span>
+<span class="cm">         * * A decimal point may not be included (for integral numbers)</span>
+<span class="cm">         * * The number may use exponent notation (e. g. `1.0E+16`)</span>
+<span class="cm">         * * Positive and negative infinity are represented as `INF`</span>
+<span class="cm">         *   and `-INF`, respectively</span>
+<span class="cm">         * * Not-a-number is represented as `NAN`</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * A quoted string prefixed with its length.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Despite the quotes surrounding the string data, it can contain</span>
+<span class="cm">     * arbitrary bytes, which are never escaped in any way.</span>
+<span class="cm">     * This does not cause any ambiguities when parsing - the bounds of</span>
+<span class="cm">     * the string are determined only by the length field, not by the quotes.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">length_prefixed_quoted_string_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">length_prefixed_quoted_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">length_prefixed_quoted_string_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_len_data</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_len_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length of the string&#39;s contents in bytes, parsed as an integer.</span>
+<span class="cm">         * The quotes are not counted in this size number.</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">len_data</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_len_data_dec</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_opening_quote</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_closing_quote</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length of the string&#39;s data in bytes, in ASCII decimal.</span>
+<span class="cm">         * The quotes are not counted in this length number.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">len_data_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_data_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">opening_quote</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_opening_quote</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The data contained in the string. The quotes are not included.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">closing_quote</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_closing_quote</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of an object value serialized in the default format.</span>
+<span class="cm">     * Unlike its PHP 3 counterpart, it contains a class name.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">object_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">object_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span> <span class="n">m_class_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon2</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span> <span class="n">m_properties</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The name of the object&#39;s class.</span>
+<span class="cm">         */</span>
+        <span class="n">length_prefixed_quoted_string_t</span><span class="o">*</span> <span class="n">class_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_class_name</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The object&#39;s properties. Keys ust be of type `string`,</span>
+<span class="cm">         * values may have any type.</span>
+<span class="cm">         */</span>
+        <span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">properties</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_properties</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of an array value.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">array_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">array_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">array_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span> <span class="n">m_elements</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The array&#39;s elements. Keys must be of type `int` or `string`,</span>
+<span class="cm">         * values may have any type.</span>
+<span class="cm">         */</span>
+        <span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">elements</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_elements</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of an object value that implements a custom</span>
+<span class="cm">     * serialized format using `Serializable`.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">custom_serialized_object_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">custom_serialized_object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">custom_serialized_object_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_len_data</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_len_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length of the serialized data in bytes, parsed as an integer.</span>
+<span class="cm">         * The braces are not counted in this length number.</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">len_data</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span> <span class="n">m_class_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon2</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_len_data_dec</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_opening_brace</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_closing_quote</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The name of the object&#39;s class.</span>
+<span class="cm">         */</span>
+        <span class="n">length_prefixed_quoted_string_t</span><span class="o">*</span> <span class="n">class_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_class_name</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length of the serialized data in bytes, in ASCII decimal.</span>
+<span class="cm">         * The braces are not counted in this size number.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">len_data_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_data_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">opening_brace</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_opening_brace</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The custom serialized data. The braces are not included.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although the surrounding braces make it look like a regular</span>
+<span class="cm">         * serialized object, this field is actually more similar to a string:</span>
+<span class="cm">         * it can contain arbitrary data that is not required to follow</span>
+<span class="cm">         * any common structure.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">closing_quote</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_closing_quote</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of a null value (`value_type::null`). This structure</span>
+<span class="cm">     * contains no actual data, since there is only a single `NULL` value.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">null_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">null_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">null_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_semicolon</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">semicolon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_semicolon</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of a PHP 3 object value. Unlike its counterpart in PHP 4</span>
+<span class="cm">     * and above, it does not contain a class name.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">php_3_object_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">php_3_object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">php_3_object_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span> <span class="n">m_properties</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The object&#39;s properties. Keys must be of type `string`,</span>
+<span class="cm">         * values may have any type.</span>
+<span class="cm">         */</span>
+        <span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">properties</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_properties</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of a boolean value (`value_type::bool`).</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">bool_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">bool_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">bool_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_value</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the `bool`, parsed as a boolean.</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">value</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">bool_value_t</span> <span class="n">m_value_dec</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_semicolon</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the `bool`: `0` for `false` or `1` for `true`.</span>
+<span class="cm">         */</span>
+        <span class="n">bool_value_t</span> <span class="n">value_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">semicolon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_semicolon</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of a string value.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Note: PHP strings can contain arbitrary byte sequences.</span>
+<span class="cm">     * They are not necessarily valid text in any specific encoding.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">string_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">string_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">string_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_value</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the string, as a byte array.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span> <span class="n">m_string</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_semicolon</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">length_prefixed_quoted_string_t</span><span class="o">*</span> <span class="n">string</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_string</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">semicolon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_semicolon</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of an integer-like value:</span>
+<span class="cm">     * either an actual integer (`value_type::int`) or a reference</span>
+<span class="cm">     * (`value_type::variable_reference`, `value_type::object_reference`).</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">int_contents_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">int_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">int_contents_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_value</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the `int`, parsed as an integer.</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">value</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_colon</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_value_dec</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">colon</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_colon</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the `int`, in ASCII decimal.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value_dec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value_dec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * A mapping entry consisting of a key and a value.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">mapping_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">mapping_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">mapping_entry_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">&gt;</span> <span class="n">m_key</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">&gt;</span> <span class="n">m_value</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The key of the entry.</span>
+<span class="cm">         */</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">key</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_key</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The value of the entry.</span>
+<span class="cm">         */</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">value_type_t</span> <span class="n">m_type</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span> <span class="n">m_contents</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_contents</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_contents</span><span class="p">()</span> <span class="p">{</span> <span class="n">contents</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_contents</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * A single-character code indicating the type of the serialized value.</span>
+<span class="cm">     */</span>
+    <span class="n">value_type_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The contents of the serialized value, which vary depending on the type.</span>
+<span class="cm">     */</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">contents</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_contents</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+    <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>php_serialized_value.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/php_serialized_value.cpp" download="php_serialized_value.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;php_serialized_value.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">php_serialized_value_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">value_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_CUSTOM_SERIALIZED_OBJECT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">custom_serialized_object_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">custom_serialized_object_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_PHP_3_OBJECT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">php_3_object_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">php_3_object_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_OBJECT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">object_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">object_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_VARIABLE_REFERENCE</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">int_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">int_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_PHP_6_STRING</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">string_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_FLOAT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">float_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">float_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_OBJECT_REFERENCE</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">int_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">int_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_NULL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">null_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">null_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_BOOL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">bool_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">bool_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_INT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">int_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">int_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_ARRAY</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">array_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">array_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="nl">VALUE_TYPE_STRING</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_contents</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string_contents_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">string_contents_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::~</span><span class="n">php_serialized_value_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_contents</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">f_num_entries</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_num_entries_dec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_opening_brace</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">opening_brace</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">opening_brace</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/count_prefixed_mapping/seq/1&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">l_entries</span> <span class="o">=</span> <span class="n">num_entries</span><span class="p">();</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mapping_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mapping_entry_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+    <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_entries</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_entries</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mapping_entry_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">mapping_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">))));</span>
+    <span class="p">}</span>
+    <span class="n">m_closing_brace</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">closing_brace</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7D</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7D</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">closing_brace</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/count_prefixed_mapping/seq/3&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">::~</span><span class="n">count_prefixed_mapping_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">::</span><span class="n">num_entries</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_num_entries</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_num_entries</span><span class="p">;</span>
+    <span class="n">m_num_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">num_entries_dec</span><span class="p">());</span>
+    <span class="n">f_num_entries</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_num_entries</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">float_contents_t</span><span class="o">::</span><span class="n">float_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">float_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/float_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_value_dec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">float_contents_t</span><span class="o">::~</span><span class="n">float_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">float_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_len_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_data_dec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_opening_quote</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">opening_quote</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x22</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x22</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">opening_quote</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/length_prefixed_quoted_string/seq/1&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">());</span>
+    <span class="n">m_closing_quote</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">closing_quote</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x22</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x22</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">closing_quote</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/length_prefixed_quoted_string/seq/3&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">::~</span><span class="n">length_prefixed_quoted_string_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">::</span><span class="n">len_data</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span>
+    <span class="n">m_len_data</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">len_data_dec</span><span class="p">());</span>
+    <span class="n">f_len_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">object_contents_t</span><span class="o">::</span><span class="n">object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_class_name</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">m_properties</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">object_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon1</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon1</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/object_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_class_name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">length_prefixed_quoted_string_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="n">m_colon2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon2</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon2</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/object_contents/seq/2&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_properties</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">count_prefixed_mapping_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">object_contents_t</span><span class="o">::~</span><span class="n">object_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">object_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">array_contents_t</span><span class="o">::</span><span class="n">array_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_elements</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">array_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/array_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_elements</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">count_prefixed_mapping_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">array_contents_t</span><span class="o">::~</span><span class="n">array_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">array_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_class_name</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">f_len_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon1</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon1</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/custom_serialized_object_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_class_name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">length_prefixed_quoted_string_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="n">m_colon2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon2</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon2</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/custom_serialized_object_contents/seq/2&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_len_data_dec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_opening_brace</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">opening_brace</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">opening_brace</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/custom_serialized_object_contents/seq/4&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">());</span>
+    <span class="n">m_closing_quote</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">closing_quote</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7D</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x7D</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">closing_quote</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/custom_serialized_object_contents/seq/6&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="o">::~</span><span class="n">custom_serialized_object_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">custom_serialized_object_contents_t</span><span class="o">::</span><span class="n">len_data</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span>
+    <span class="n">m_len_data</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">len_data_dec</span><span class="p">());</span>
+    <span class="n">f_len_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">null_contents_t</span><span class="o">::</span><span class="n">null_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">null_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_semicolon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">semicolon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">semicolon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/null_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">null_contents_t</span><span class="o">::~</span><span class="n">null_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">null_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">php_3_object_contents_t</span><span class="o">::</span><span class="n">php_3_object_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_properties</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">php_3_object_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/php_3_object_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_properties</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">count_prefixed_mapping_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">count_prefixed_mapping_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">php_3_object_contents_t</span><span class="o">::~</span><span class="n">php_3_object_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">php_3_object_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/bool_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_value_dec</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_value_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_semicolon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">semicolon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">semicolon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/bool_contents/seq/2&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="o">::~</span><span class="n">bool_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">bool_contents_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">value_dec</span><span class="p">()</span> <span class="o">==</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">BOOL_VALUE_TRUE</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_string</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/string_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_string</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">length_prefixed_quoted_string_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">length_prefixed_quoted_string_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="n">m_semicolon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">semicolon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">semicolon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/string_contents/seq/2&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="o">::~</span><span class="n">string_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">string_contents_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">string</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">();</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_colon</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">colon</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x3A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colon</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/int_contents/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_value_dec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="o">::~</span><span class="n">int_contents_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">int_contents_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">value_dec</span><span class="p">());</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">mapping_entry_t</span><span class="o">::</span><span class="n">mapping_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">count_prefixed_mapping_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">php_serialized_value_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_key</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">mapping_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_key</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">php_serialized_value_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">));</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">php_serialized_value_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">php_serialized_value_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">mapping_entry_t</span><span class="o">::~</span><span class="n">mapping_entry_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">php_serialized_value_t</span><span class="o">::</span><span class="n">mapping_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -151,7 +151,22 @@ Blaster sound cards).</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="GENMIDI.OP2 OPL2 sound bank parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="GENMIDI.OP2 OPL2 sound bank parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="GENMIDI.OP2 OPL2 sound bank parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="GENMIDI.OP2 OPL2 sound bank parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -172,6 +187,11 @@ Blaster sound cards).</p>
                 <li class="active">
                 
                 <a href="lua.html" title="GENMIDI.OP2 OPL2 sound bank parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="GENMIDI.OP2 OPL2 sound bank parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -208,6 +228,142 @@ Blaster sound cards).</p>
             
         </h2>
 
+        
+
+        <h3>genmidi_op2.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/genmidi_op2.lua" download="genmidi_op2.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- GENMIDI.OP2 is a sound bank file used by players based on DMX sound</span>
+<span class="c1">-- library to play MIDI files with General MIDI instruments using OPL2</span>
+<span class="c1">-- sound chip (which was commonly installed on popular AdLib and Sound</span>
+<span class="c1">-- Blaster sound cards).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Major users of DMX sound library include:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)</span>
+<span class="c1">-- * Raptor: Call of the Shadows </span>
+<span class="c1">-- See also: http://doom.wikia.com/wiki/GENMIDI (http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip)</span>
+<span class="n">GenmidiOp2</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\035\079\080\076\095\073\073\035</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\035\079\080\076\095\073\073\035</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">instruments</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">175</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">instruments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">InstrumentEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">instrument_names</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">175</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">instrument_names</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">InstrumentEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">InstrumentEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">InstrumentEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">finetune</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">note</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">instruments</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">instruments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">Instrument</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- MIDI note for fixed instruments, 0 otherwise.</span>
+
+<span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">Instrument</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">Instrument</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">Instrument</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">op1</span> <span class="o">=</span> <span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">OpSettings</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">op2</span> <span class="o">=</span> <span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">OpSettings</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">unused</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">base_note</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Feedback/AM-FM (both operators).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Base note offset.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- OPL2 settings for one operator (carrier or modulator)</span>
+<span class="n">GenmidiOp2</span><span class="p">.</span><span class="n">OpSettings</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">OpSettings</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GenmidiOp2</span><span class="p">.</span><span class="nc">OpSettings</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">trem_vibr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">att_dec</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sust_rel</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Tremolo/vibrato/sustain/KSR/multi.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Attack rate/decay rate.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Sustain level/release rate.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Waveform select.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Key scale level.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Output level.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

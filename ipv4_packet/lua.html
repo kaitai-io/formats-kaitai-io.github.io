@@ -163,7 +163,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="IPv4 network packet parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="IPv4 network packet parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="IPv4 network packet parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="IPv4 network packet parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -184,6 +199,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="IPv4 network packet parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="IPv4 network packet parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -220,6 +240,154 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>ipv4_packet.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/ipv4_packet.lua" download="ipv4_packet.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;protocol_body&quot;</span><span class="p">)</span>
+<span class="n">Ipv4Packet</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">total_length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">identification</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b67</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header_checksum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">src_ip_addr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dst_ip_addr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_options</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ihl_bytes</span> <span class="o">-</span> <span class="mi">20</span><span class="p">))</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_options</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Options</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">total_length</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">ihl_bytes</span><span class="p">))</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">ProtocolBody</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">protocol</span><span class="p">,</span> <span class="n">_io</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">version</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_version</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_version</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_version</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_version</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ihl</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ihl</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ihl_bytes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ihl_bytes</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl_bytes</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl_bytes</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl_bytes</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ihl</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ihl_bytes</span>
+<span class="kr">end</span>
+
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Options</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Options</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Options</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Option</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Option</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Option</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Option</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Option</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">copy</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Option</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">copy</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_copy</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_copy</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_copy</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_copy</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Option</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">opt_class</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Option</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">opt_class</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opt_class</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opt_class</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_opt_class</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">&amp;</span> <span class="mi">96</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opt_class</span>
+<span class="kr">end</span>
+
+<span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Option</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">number</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ipv4Packet</span><span class="p">.</span><span class="nc">Ipv4Option</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">number</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_number</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_number</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_number</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_number</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

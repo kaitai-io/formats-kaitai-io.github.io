@@ -164,7 +164,22 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Resource Interchange File Format (RIFF) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Resource Interchange File Format (RIFF) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Resource Interchange File Format (RIFF) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Resource Interchange File Format (RIFF) parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -185,6 +200,11 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Resource Interchange File Format (RIFF) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Resource Interchange File Format (RIFF) parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -221,6 +241,405 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
             
         </h2>
 
+        
+
+        <h3>riff.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/riff.lua" download="riff.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The Resource Interchange File Format (RIFF) is a generic file container format</span>
+<span class="c1">-- for storing data in tagged chunks. It is primarily used to store multimedia</span>
+<span class="c1">-- such as sound and video, though it may also be used to store any arbitrary data.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Microsoft implementation is mostly known through container formats</span>
+<span class="c1">-- like AVI, ANI and WAV, which use RIFF as their basis.</span>
+<span class="c1">-- See also: Source (https://www.johnloomis.org/cpe102/asgn/asgn1/riff.html)</span>
+<span class="n">Riff</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">riff</span> <span class="o">=</span> <span class="mi">1179011410</span><span class="p">,</span>
+  <span class="n">info</span> <span class="o">=</span> <span class="mi">1330007625</span><span class="p">,</span>
+  <span class="n">list</span> <span class="o">=</span> <span class="mi">1414744396</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">chunk</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_id</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_id</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chunk</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_riff_chunk</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_riff_chunk</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_riff_chunk</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_riff_chunk</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_riff_chunk</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk_id</span> <span class="o">==</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">.</span><span class="n">riff</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_riff_chunk</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">parent_chunk_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">parent_chunk_data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_riff_chunk</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk</span><span class="p">.</span><span class="n">data_slot</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ParentChunkData</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">subchunks</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">subchunks</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_riff_chunk</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data</span><span class="p">.</span><span class="n">subchunks_slot</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="ow">not</span> <span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data_ofs</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">save_parent_chunk_data_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ParentChunkData</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">parent_chunk_data_ofs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">parent_chunk_data_ofs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data_ofs</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data_ofs</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_parent_chunk_data_ofs</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">form_type</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">form_type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data</span><span class="p">.</span><span class="n">form_type</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">form_type_readable</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">form_type_readable</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type_readable</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type_readable</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data_ofs</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type_readable</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_form_type_readable</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">subchunks</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ListChunkData</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">subchunks</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">parent_chunk_data</span><span class="p">.</span><span class="n">subchunks_slot</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">form_type</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">.</span><span class="n">info</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">else</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">end</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_subchunks</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_data_slot</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data_slot</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_slot</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span><span class="p">.</span><span class="n">Slot</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pad_byte</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span><span class="p">.</span><span class="n">Slot</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">Slot</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">Slot</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ParentChunkData</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ParentChunkData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ParentChunkData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">form_type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_subchunks_slot</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_subchunks_slot</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">subchunks_slot</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ParentChunkData</span><span class="p">.</span><span class="n">Slot</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ParentChunkData</span><span class="p">.</span><span class="n">Slot</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ParentChunkData</span><span class="p">.</span><span class="nc">Slot</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ParentChunkData</span><span class="p">.</span><span class="nc">Slot</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- All registered subchunks in the INFO chunk are NULL-terminated strings,</span>
+<span class="c1">-- but the unregistered might not be. By convention, the registered</span>
+<span class="c1">-- chunk IDs are in uppercase and the unregistered IDs are in lowercase.</span>
+<span class="c1">-- </span>
+<span class="c1">-- If the chunk ID of an INFO subchunk contains a lowercase</span>
+<span class="c1">-- letter, this chunk is considered as unregistered and thus we can make</span>
+<span class="c1">-- no assumptions about the type of data.</span>
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk_ofs</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">save_chunk_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">chunk</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk</span><span class="p">.</span><span class="n">data_slot</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">is_unregistered_tag</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">false</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).</span>
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_unregistered_tag</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_unregistered_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unregistered_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unregistered_tag</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unregistered_tag</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span> <span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span> <span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span> <span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_unregistered_tag</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">id_chars</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">id_chars</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_id_chars</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_id_chars</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chunk_ofs</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_id_chars</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_id_chars</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_id_readable</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_id_readable</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">id_chars</span><span class="p">,</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">InfoSubchunk</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_ofs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">InfoSubchunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_ofs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span>
+<span class="kr">end</span>
+
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk_ofs</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">save_chunk_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">chunk</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Chunk</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_ofs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_ofs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_ofs</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_id</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_id</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chunk</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_id_readable</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_id_readable</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chunk_ofs</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_id_readable</span>
+<span class="kr">end</span>
+
+<span class="n">Riff</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">chunk_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Riff</span><span class="p">.</span><span class="nc">ChunkType</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">chunk_data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk</span><span class="p">.</span><span class="n">data_slot</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk_id</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Riff</span><span class="p">.</span><span class="n">Fourcc</span><span class="p">.</span><span class="n">list</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span> <span class="o">=</span> <span class="n">Riff</span><span class="p">.</span><span class="n">ListChunkData</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_chunk_data</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

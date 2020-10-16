@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PHP phar archive (without stub): Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">PHP phar archive (without stub)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>PHP phar archive (without stub):
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A phar (PHP archive) file. The phar format is a custom archive format
+from the PHP ecosystem that is used to package a complete PHP library
+or application into a single self-contained archive.
+All phar archives start with an executable PHP stub, which can be used to
+allow executing or including phar files as if they were regular PHP scripts.
+PHP 5.3 and later include the phar extension, which adds native support for
+reading and manipulating phar files.</p>
+<p>The phar format was originally developed as part of the PEAR library
+PHP_Archive, first released in 2005. Later, a native PHP extension
+named &quot;phar&quot; was developed, which was first released on PECL in 2007,
+and is included with PHP 5.3 and later. The phar extension has effectively
+superseded the PHP_Archive library, which has not been updated since 2010.
+The phar extension is also no longer released independently on PECL;
+it is now developed and released as part of PHP itself.</p>
+<p>Because of current limitations in Kaitai Struct
+(seekaitai-io/kaitai_struct#158 and kaitai-io/kaitai_struct#538),
+the executable PHP stub that precedes the rest of the archive is not handled
+by this spec. Before parsing a phar using this spec, the stub must be
+removed manually.</p>
+<p>A phar's stub is terminated by the special token <code>__HALT_COMPILER();</code>
+(which may be followed by at most one space, the PHP tag end <code>?&gt;</code>,
+and an optional line terminator). The stub termination sequence is
+immediately followed by the remaining parts of the phar format,
+as described in this spec.</p>
+<p>The phar stub usually contains code that loads the phar and runs
+a contained PHP file, but this is not required. A minimal valid phar stub
+is <code>&lt;?php __HALT_COMPILER();</code> - such a stub makes it impossible to execute
+the phar directly, but still allows loading or manipulating it using the
+phar extension.</p>
+<p>Note: The phar format does not specify any encoding for text fields
+(stub, alias name, and all file names), so these fields may contain arbitrary
+binary data. The actual text encoding used in a specific phar file usually
+depends on the application that created the phar, and on the
+standard encoding of the system on which the phar was created.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        phar
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1269709">Wikidata Q1269709</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of PHP phar archive (without stub)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="PHP phar archive (without stub) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="PHP phar archive (without stub) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="PHP phar archive (without stub) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="PHP phar archive (without stub) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="PHP phar archive (without stub) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="PHP phar archive (without stub) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="PHP phar archive (without stub) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="PHP phar archive (without stub) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="PHP phar archive (without stub) parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="PHP phar archive (without stub) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="PHP phar archive (without stub) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="PHP phar archive (without stub) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="PHP phar archive (without stub) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="PHP phar archive (without stub) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse PHP phar archive (without stub)
+            
+        </h2>
+
+        
+
+        <h3>phar_without_stub.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/phar_without_stub.nim" download="phar_without_stub.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">serialization</span><span class="o">/</span><span class="n">php_serialized_value</span>
+
+<span class="kn">import</span> <span class="s">&quot;php_serialized_value&quot;</span>
+<span class="k">type</span>
+  <span class="n">PharWithoutStub</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">manifest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Manifest</span>
+    <span class="p">`</span><span class="n">files</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+    <span class="p">`</span><span class="n">signature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Signature</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawSignature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">PharWithoutStub_SignatureType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">md5</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">sha1</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">sha256</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">sha512</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">openssl</span> <span class="o">=</span> <span class="mi">16</span>
+  <span class="n">PharWithoutStub_SerializedValue</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parsedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PharWithoutStub_Signature</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_SignatureType</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub</span>
+  <span class="n">PharWithoutStub_FileFlags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_FileEntry</span>
+    <span class="p">`</span><span class="n">permissionsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">zlibCompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bzip2CompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">PharWithoutStub_ApiVersion</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">release</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">major</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">minor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">unused</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Manifest</span>
+  <span class="n">PharWithoutStub_GlobalFlags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Manifest</span>
+    <span class="p">`</span><span class="n">anyZlibCompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">anyBzip2CompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasSignatureInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">PharWithoutStub_Manifest</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenManifest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">numFiles</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">apiVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_ApiVersion</span>
+    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span>
+    <span class="p">`</span><span class="n">lenAlias</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">alias</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">metadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_SerializedValue</span>
+    <span class="p">`</span><span class="n">fileEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PharWithoutStub_FileEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub</span>
+    <span class="p">`</span><span class="n">rawMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">PharWithoutStub_FileEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenFilename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">filename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenDataUncompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenDataCompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span>
+    <span class="p">`</span><span class="n">lenMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">metadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_SerializedValue</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Manifest</span>
+    <span class="p">`</span><span class="n">rawMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_ApiVersion], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_ApiVersion</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_GlobalFlags</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Manifest], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Manifest</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry</span>
+
+<span class="k">proc </span><span class="nf">parsed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span> <span class="n">PhpSerializedValue</span>
+<span class="k">proc </span><span class="nf">permissions</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">zlibCompressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">bzip2Compressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">anyZlibCompressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">anyBzip2Compressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">hasSignature</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">phar</span> <span class="p">(</span><span class="n">PHP</span> <span class="n">archive</span><span class="p">)</span> <span class="n">file</span><span class="p">.</span> <span class="n">The</span> <span class="n">phar</span> <span class="n">format</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">custom</span> <span class="n">archive</span> <span class="n">format</span>
+<span class="kn">from</span> <span class="n">the</span> <span class="n">PHP</span> <span class="n">ecosystem</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">package</span> <span class="n">a</span> <span class="n">complete</span> <span class="n">PHP</span> <span class="n">library</span>
+<span class="ow">or</span> <span class="n">application</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">self</span><span class="o">-</span><span class="n">contained</span> <span class="n">archive</span><span class="p">.</span>
+<span class="n">All</span> <span class="n">phar</span> <span class="n">archives</span> <span class="n">start</span> <span class="k">with</span> <span class="n">an</span> <span class="n">executable</span> <span class="n">PHP</span> <span class="n">stub</span><span class="p">,</span> <span class="n">which</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span>
+<span class="n">allow</span> <span class="n">executing</span> <span class="ow">or</span> <span class="n">including</span> <span class="n">phar</span> <span class="n">files</span> <span class="k">as</span> <span class="k">if</span> <span class="n">they</span> <span class="n">were</span> <span class="n">regular</span> <span class="n">PHP</span> <span class="n">scripts</span><span class="p">.</span>
+<span class="n">PHP</span> <span class="mf">5.3</span> <span class="ow">and</span> <span class="n">later</span> <span class="kn">include</span> <span class="n">the</span> <span class="n">phar</span> <span class="n">extension</span><span class="p">,</span> <span class="n">which</span> <span class="n">adds</span> <span class="n">native</span> <span class="n">support</span> <span class="k">for</span>
+<span class="n">reading</span> <span class="ow">and</span> <span class="n">manipulating</span> <span class="n">phar</span> <span class="n">files</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">phar</span> <span class="n">format</span> <span class="n">was</span> <span class="n">originally</span> <span class="n">developed</span> <span class="k">as</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">PEAR</span> <span class="n">library</span>
+<span class="n">PHP_Archive</span><span class="p">,</span> <span class="n">first</span> <span class="n">released</span> <span class="ow">in</span> <span class="mf">2005.</span> <span class="n">Later</span><span class="p">,</span> <span class="n">a</span> <span class="n">native</span> <span class="n">PHP</span> <span class="n">extension</span>
+<span class="n">named</span> <span class="s">&quot;phar&quot;</span> <span class="n">was</span> <span class="n">developed</span><span class="p">,</span> <span class="n">which</span> <span class="n">was</span> <span class="n">first</span> <span class="n">released</span> <span class="n">on</span> <span class="n">PECL</span> <span class="ow">in</span> <span class="mi">2007</span><span class="p">,</span>
+<span class="ow">and</span> <span class="ow">is</span> <span class="n">included</span> <span class="k">with</span> <span class="n">PHP</span> <span class="mf">5.3</span> <span class="ow">and</span> <span class="n">later</span><span class="p">.</span> <span class="n">The</span> <span class="n">phar</span> <span class="n">extension</span> <span class="n">has</span> <span class="n">effectively</span>
+<span class="n">superseded</span> <span class="n">the</span> <span class="n">PHP_Archive</span> <span class="n">library</span><span class="p">,</span> <span class="n">which</span> <span class="n">has</span> <span class="ow">not</span> <span class="n">been</span> <span class="n">updated</span> <span class="n">since</span> <span class="mf">2010.</span>
+<span class="n">The</span> <span class="n">phar</span> <span class="n">extension</span> <span class="ow">is</span> <span class="n">also</span> <span class="n">no</span> <span class="n">longer</span> <span class="n">released</span> <span class="n">independently</span> <span class="n">on</span> <span class="n">PECL</span><span class="p">;</span>
+<span class="n">it</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">developed</span> <span class="ow">and</span> <span class="n">released</span> <span class="k">as</span> <span class="n">part</span> <span class="k">of</span> <span class="n">PHP</span> <span class="n">itself</span><span class="p">.</span>
+
+<span class="n">Because</span> <span class="k">of</span> <span class="n">current</span> <span class="n">limitations</span> <span class="ow">in</span> <span class="n">Kaitai</span> <span class="n">Struct</span>
+<span class="p">(</span><span class="n">seekaitai</span><span class="o">-</span><span class="n">io</span><span class="o">/</span><span class="n">kaitai_struct</span><span class="c">#158 and kaitai-io/kaitai_struct#538),</span>
+<span class="n">the</span> <span class="n">executable</span> <span class="n">PHP</span> <span class="n">stub</span> <span class="n">that</span> <span class="n">precedes</span> <span class="n">the</span> <span class="n">rest</span> <span class="k">of</span> <span class="n">the</span> <span class="n">archive</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">handled</span>
+<span class="n">by</span> <span class="n">this</span> <span class="n">spec</span><span class="p">.</span> <span class="n">Before</span> <span class="n">parsing</span> <span class="n">a</span> <span class="n">phar</span> <span class="n">using</span> <span class="n">this</span> <span class="n">spec</span><span class="p">,</span> <span class="n">the</span> <span class="n">stub</span> <span class="n">must</span> <span class="n">be</span>
+<span class="n">removed</span> <span class="n">manually</span><span class="p">.</span>
+
+<span class="n">A</span> <span class="n">phar</span><span class="sc">&#39;s stub is terminated by the special token `__HALT_COMPILER();`</span>
+<span class="p">(</span><span class="n">which</span> <span class="n">may</span> <span class="n">be</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">at</span> <span class="n">most</span> <span class="n">one</span> <span class="n">space</span><span class="p">,</span> <span class="n">the</span> <span class="n">PHP</span> <span class="n">tag</span> <span class="k">end</span> <span class="p">`</span><span class="o">?&gt;</span><span class="p">`,</span>
+<span class="ow">and</span> <span class="n">an</span> <span class="n">optional</span> <span class="n">line</span> <span class="n">terminator</span><span class="p">).</span> <span class="n">The</span> <span class="n">stub</span> <span class="n">termination</span> <span class="n">sequence</span> <span class="ow">is</span>
+<span class="n">immediately</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">remaining</span> <span class="n">parts</span> <span class="k">of</span> <span class="n">the</span> <span class="n">phar</span> <span class="n">format</span><span class="p">,</span>
+<span class="k">as</span> <span class="n">described</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">spec</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">phar</span> <span class="n">stub</span> <span class="n">usually</span> <span class="n">contains</span> <span class="n">code</span> <span class="n">that</span> <span class="n">loads</span> <span class="n">the</span> <span class="n">phar</span> <span class="ow">and</span> <span class="n">runs</span>
+<span class="n">a</span> <span class="n">contained</span> <span class="n">PHP</span> <span class="n">file</span><span class="p">,</span> <span class="n">but</span> <span class="n">this</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">required</span><span class="p">.</span> <span class="n">A</span> <span class="n">minimal</span> <span class="n">valid</span> <span class="n">phar</span> <span class="n">stub</span>
+<span class="ow">is</span> <span class="p">`</span><span class="o">&lt;?</span><span class="n">php</span> <span class="err">__HALT_COMPILER();` - such a stub makes it impossible to execute</span>
+<span class="n">the</span> <span class="n">phar</span> <span class="n">directly</span><span class="p">,</span> <span class="n">but</span> <span class="n">still</span> <span class="n">allows</span> <span class="n">loading</span> <span class="ow">or</span> <span class="n">manipulating</span> <span class="n">it</span> <span class="n">using</span> <span class="n">the</span>
+<span class="n">phar</span> <span class="n">extension</span><span class="p">.</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">The</span> <span class="n">phar</span> <span class="n">format</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">specify</span> <span class="n">any</span> <span class="n">encoding</span> <span class="k">for</span> <span class="n">text</span> <span class="n">fields</span>
+<span class="p">(</span><span class="n">stub</span><span class="p">,</span> <span class="n">alias</span> <span class="n">name</span><span class="p">,</span> <span class="ow">and</span> <span class="n">all</span> <span class="n">file</span> <span class="n">names</span><span class="p">),</span> <span class="n">so</span> <span class="n">these</span> <span class="n">fields</span> <span class="n">may</span> <span class="n">contain</span> <span class="n">arbitrary</span>
+<span class="n">binary</span> <span class="n">data</span><span class="p">.</span> <span class="n">The</span> <span class="n">actual</span> <span class="n">text</span> <span class="n">encoding</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">phar</span> <span class="n">file</span> <span class="n">usually</span>
+<span class="n">depends</span> <span class="n">on</span> <span class="n">the</span> <span class="n">application</span> <span class="n">that</span> <span class="n">created</span> <span class="n">the</span> <span class="n">phar</span><span class="p">,</span> <span class="ow">and</span> <span class="n">on</span> <span class="n">the</span>
+<span class="n">standard</span> <span class="n">encoding</span> <span class="k">of</span> <span class="n">the</span> <span class="n">system</span> <span class="n">on</span> <span class="n">which</span> <span class="n">the</span> <span class="n">phar</span> <span class="n">was</span> <span class="n">created</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.php.net/manual/en/phar.fileformat.php&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/php/php-src/tree/master/ext/phar&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://svn.php.net/viewvc/pecl/phar/&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://svn.php.net/viewvc/pear/packages/PHP_Archive/&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">archive</span><span class="sc">&#39;s manifest, containing general metadata about the archive</span>
+<span class="ow">and</span> <span class="n">its</span> <span class="n">files</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">manifestExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_Manifest</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">manifest</span> <span class="o">=</span> <span class="n">manifestExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">each</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">archive</span> <span class="p">(</span><span class="n">possibly</span> <span class="n">compressed</span><span class="p">,</span>
+<span class="k">as</span> <span class="n">indicated</span> <span class="n">by</span> <span class="n">the</span> <span class="n">file</span><span class="sc">&#39;s flags in the manifest). The files are stored</span>
+<span class="ow">in</span> <span class="n">the</span> <span class="n">same</span> <span class="n">order</span> <span class="k">as</span> <span class="n">they</span> <span class="n">appear</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">manifest</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">manifest</span><span class="p">.</span><span class="n">numFiles</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">manifest</span><span class="p">.</span><span class="n">fileEntries</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="n">lenDataCompressed</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">archive</span><span class="sc">&#39;s signature - a digest of all archive data before</span>
+<span class="n">the</span> <span class="n">signature</span> <span class="n">itself</span><span class="p">.</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">Almost</span> <span class="n">all</span> <span class="k">of</span> <span class="n">the</span> <span class="n">available</span> <span class="s">&quot;signature&quot;</span> <span class="n">types</span> <span class="n">are</span> <span class="n">actually</span> <span class="n">hashes</span><span class="p">,</span>
+<span class="ow">not</span> <span class="n">signatures</span><span class="p">,</span> <span class="ow">and</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">verify</span> <span class="n">that</span> <span class="n">the</span> <span class="n">archive</span> <span class="n">has</span> <span class="ow">not</span>
+<span class="n">been</span> <span class="n">tampered</span> <span class="k">with</span><span class="p">.</span> <span class="n">Only</span> <span class="n">the</span> <span class="n">OpenSSL</span> <span class="n">signature</span> <span class="k">type</span> <span class="ow">is</span> <span class="n">a</span> <span class="kp">true</span>
+<span class="n">cryptographic</span> <span class="n">signature</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">manifest</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasSignature</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">rawSignatureExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rawSignature</span> <span class="o">=</span> <span class="n">rawSignatureExpr</span>
+    <span class="k">let</span> <span class="n">rawSignatureIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawSignatureExpr</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">signatureExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_Signature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSignatureIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">signatureExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub], filename: string): PharWithoutStub =</span>
+  <span class="n">PharWithoutStub</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">serialized</span> <span class="n">value</span><span class="p">,</span> <span class="k">as</span> <span class="n">a</span> <span class="n">raw</span> <span class="n">byte</span> <span class="kt">array</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">rawExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">rawExpr</span>
+
+<span class="k">proc </span><span class="nf">parsed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span> <span class="n">PhpSerializedValue</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">serialized</span> <span class="n">value</span><span class="p">,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">a</span> <span class="n">structure</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">parsedInstExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">=</span> <span class="n">parsedInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], filename: string): PharWithoutStub_SerializedValue =</span>
+  <span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_Signature</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">signature</span> <span class="n">data</span><span class="p">.</span> <span class="n">The</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">contents</span> <span class="n">depend</span> <span class="n">on</span> <span class="n">the</span>
+<span class="n">signature</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">signature</span> <span class="k">type</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_SignatureType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], filename: string): PharWithoutStub_Signature =</span>
+  <span class="n">PharWithoutStub_Signature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileFlags</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">unparsed</span> <span class="n">flag</span> <span class="n">bits</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">permissions</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">file</span><span class="sc">&#39;s permission bits.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
+  <span class="k">let</span> <span class="n">permissionsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">511</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">=</span> <span class="n">permissionsInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
+
+<span class="k">proc </span><span class="nf">zlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Whether</span> <span class="n">this</span> <span class="n">file</span><span class="sc">&#39;s data is stored using zlib compression.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
+  <span class="k">let</span> <span class="n">zlibCompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">=</span> <span class="n">zlibCompressedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
+
+<span class="k">proc </span><span class="nf">bzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Whether</span> <span class="n">this</span> <span class="n">file</span><span class="sc">&#39;s data is stored using bzip2 compression.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
+  <span class="k">let</span> <span class="n">bzip2CompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">=</span> <span class="n">bzip2CompressedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], filename: string): PharWithoutStub_FileFlags =</span>
+  <span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">phar</span> <span class="n">API</span> <span class="n">version</span> <span class="n">number</span><span class="p">.</span> <span class="n">This</span> <span class="n">version</span> <span class="n">number</span> <span class="ow">is</span> <span class="n">meant</span> <span class="n">to</span> <span class="n">indicate</span>
+<span class="n">which</span> <span class="n">features</span> <span class="n">are</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">phar</span><span class="p">,</span> <span class="n">so</span> <span class="n">that</span> <span class="n">tools</span> <span class="n">reading</span>
+<span class="n">the</span> <span class="n">phar</span> <span class="n">can</span> <span class="n">easily</span> <span class="n">check</span> <span class="n">that</span> <span class="n">they</span> <span class="n">support</span> <span class="n">all</span> <span class="n">necessary</span> <span class="n">features</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">following</span> <span class="n">API</span> <span class="n">versions</span> <span class="n">exist</span> <span class="n">so</span> <span class="n">far</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7.1</span><span class="p">:</span> <span class="n">The</span> <span class="n">first</span> <span class="n">official</span> <span class="n">API</span> <span class="n">versions</span><span class="p">.</span> <span class="n">At</span> <span class="n">this</span> <span class="n">point</span><span class="p">,</span>
+  <span class="n">the</span> <span class="n">phar</span> <span class="n">format</span> <span class="n">was</span> <span class="n">only</span> <span class="n">used</span> <span class="n">by</span> <span class="n">the</span> <span class="n">PHP_Archive</span> <span class="n">library</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span>
+  <span class="n">API</span> <span class="n">version</span> <span class="n">numbers</span> <span class="n">were</span> <span class="n">identical</span> <span class="n">to</span> <span class="n">the</span> <span class="n">PHP_Archive</span> <span class="n">versions</span> <span class="n">that</span>
+  <span class="n">supported</span> <span class="n">them</span><span class="p">.</span> <span class="n">Development</span> <span class="k">of</span> <span class="n">the</span> <span class="n">native</span> <span class="n">phar</span> <span class="n">extension</span> <span class="n">started</span> <span class="n">around</span>
+  <span class="n">API</span> <span class="n">version</span> <span class="mf">0.7.</span> <span class="n">These</span> <span class="n">API</span> <span class="n">versions</span> <span class="n">could</span> <span class="n">only</span> <span class="n">be</span> <span class="n">queried</span> <span class="n">using</span> <span class="n">the</span>
+  <span class="p">`</span><span class="n">PHP_Archive</span><span class="p">::</span><span class="n">APIversion</span><span class="p">()`</span> <span class="k">method</span><span class="p">,</span> <span class="n">but</span> <span class="n">were</span> <span class="ow">not</span> <span class="n">stored</span> <span class="n">physically</span>
+  <span class="ow">in</span> <span class="n">archives</span><span class="p">.</span> <span class="n">These</span> <span class="n">API</span> <span class="n">versions</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">by</span> <span class="n">this</span> <span class="n">spec</span><span class="p">.</span>
+<span class="o">*</span> <span class="mf">0.8.0</span><span class="p">:</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">PHP_Archive</span> <span class="mf">0.8.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">18</span><span class="p">)</span> <span class="ow">and</span>
+  <span class="n">later</span> <span class="n">development</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">the</span> <span class="n">phar</span> <span class="n">extension</span><span class="p">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">first</span>
+  <span class="n">version</span> <span class="n">number</span> <span class="n">to</span> <span class="n">be</span> <span class="n">physically</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">.</span> <span class="n">This</span> <span class="n">API</span> <span class="n">version</span>
+  <span class="ow">is</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">by</span> <span class="n">this</span> <span class="n">spec</span><span class="p">.</span>
+<span class="o">*</span> <span class="mf">0.9.0</span><span class="p">:</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">later</span> <span class="n">development</span><span class="o">/</span><span class="n">early</span> <span class="n">beta</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">the</span>
+  <span class="n">phar</span> <span class="n">extension</span><span class="p">.</span> <span class="n">Also</span> <span class="n">temporarily</span> <span class="n">used</span> <span class="n">by</span> <span class="n">PHP_Archive</span> <span class="mf">0.9.0</span>
+  <span class="p">(</span><span class="n">released</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">15</span><span class="p">),</span> <span class="n">but</span> <span class="n">reverted</span> <span class="n">back</span> <span class="n">to</span> <span class="n">API</span> <span class="n">version</span> <span class="mf">0.8.0</span> <span class="ow">in</span>
+  <span class="n">PHP_Archive</span> <span class="mf">0.9.1</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">05</span><span class="p">).</span>
+<span class="o">*</span> <span class="mf">1.0.0</span><span class="p">:</span> <span class="n">Supported</span> <span class="n">since</span> <span class="n">PHP_Archive</span> <span class="mf">0.10.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">29</span><span class="p">)</span>
+  <span class="ow">and</span> <span class="n">phar</span> <span class="n">extension</span> <span class="mf">1.0.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">28</span><span class="p">).</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">first</span>
+  <span class="n">stable</span><span class="p">,</span> <span class="n">forwards</span><span class="o">-</span><span class="n">compatible</span> <span class="ow">and</span> <span class="n">documented</span> <span class="n">version</span> <span class="k">of</span> <span class="n">the</span> <span class="n">format</span><span class="p">.</span>
+<span class="o">*</span> <span class="mf">1.1.0</span><span class="p">:</span> <span class="n">Supported</span> <span class="n">since</span> <span class="n">PHP_Archive</span> <span class="mf">0.12.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">06</span><span class="p">)</span>
+  <span class="ow">and</span> <span class="n">phar</span> <span class="n">extension</span> <span class="mf">1.1.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">12</span><span class="p">).</span> <span class="n">Adds</span> <span class="n">SHA</span><span class="o">-</span><span class="mi">256</span> <span class="ow">and</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">512</span> <span class="n">signature</span> <span class="n">types</span><span class="p">.</span>
+<span class="o">*</span> <span class="mf">1.1.1</span><span class="p">:</span> <span class="n">Supported</span> <span class="n">since</span> <span class="n">phar</span> <span class="n">extension</span> <span class="mf">2.0.0</span> <span class="p">(</span><span class="n">released</span> <span class="mi">2009</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">29</span> <span class="ow">and</span>
+  <span class="n">included</span> <span class="k">with</span> <span class="n">PHP</span> <span class="mf">5.3</span> <span class="ow">and</span> <span class="n">later</span><span class="p">).</span> <span class="p">(</span><span class="n">PHP_Archive</span> <span class="mf">0.12.0</span> <span class="n">also</span> <span class="n">supports</span>
+  <span class="n">all</span> <span class="n">features</span> <span class="kn">from</span> <span class="n">API</span> <span class="n">verison</span> <span class="mf">1.1.1</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">reports</span> <span class="n">API</span> <span class="n">version</span> <span class="mf">1.1.0.</span><span class="p">)</span>
+  <span class="n">Adds</span> <span class="n">the</span> <span class="n">OpenSSL</span> <span class="n">signature</span> <span class="k">type</span> <span class="ow">and</span> <span class="n">support</span> <span class="k">for</span> <span class="n">storing</span>
+  <span class="n">empty</span> <span class="n">directories</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_ApiVersion], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_ApiVersion =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_ApiVersion</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">releaseExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">release</span> <span class="o">=</span> <span class="n">releaseExpr</span>
+  <span class="k">let</span> <span class="n">majorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="n">majorExpr</span>
+  <span class="k">let</span> <span class="n">minorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">minor</span> <span class="o">=</span> <span class="n">minorExpr</span>
+  <span class="k">let</span> <span class="n">unusedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">unused</span> <span class="o">=</span> <span class="n">unusedExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_ApiVersion], filename: string): PharWithoutStub_ApiVersion =</span>
+  <span class="n">PharWithoutStub_ApiVersion</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_GlobalFlags =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">unparsed</span> <span class="n">flag</span> <span class="n">bits</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">anyZlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Whether</span> <span class="n">any</span> <span class="k">of</span> <span class="n">the</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">phar</span> <span class="n">are</span> <span class="n">stored</span> <span class="n">using</span>
+<span class="n">zlib</span> <span class="n">compression</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
+  <span class="k">let</span> <span class="n">anyZlibCompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">=</span> <span class="n">anyZlibCompressedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
+
+<span class="k">proc </span><span class="nf">anyBzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Whether</span> <span class="n">any</span> <span class="k">of</span> <span class="n">the</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">phar</span> <span class="n">are</span> <span class="n">stored</span> <span class="n">using</span>
+<span class="n">bzip2</span> <span class="n">compression</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
+  <span class="k">let</span> <span class="n">anyBzip2CompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">=</span> <span class="n">anyBzip2CompressedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
+
+<span class="k">proc </span><span class="nf">hasSignature</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Whether</span> <span class="n">this</span> <span class="n">phar</span> <span class="n">contains</span> <span class="n">a</span> <span class="n">signature</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span>
+  <span class="k">let</span> <span class="n">hasSignatureInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">=</span> <span class="n">hasSignatureInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], filename: string): PharWithoutStub_GlobalFlags =</span>
+  <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Manifest], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Manifest =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_Manifest</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">manifest</span><span class="p">,</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">.</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">The</span> <span class="n">phar</span> <span class="n">extension</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">allow</span> <span class="n">reading</span> <span class="n">manifests</span>
+<span class="n">larger</span> <span class="n">than</span> <span class="mi">100</span> <span class="n">MiB</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenManifestExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenManifest</span> <span class="o">=</span> <span class="n">lenManifestExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">number</span> <span class="k">of</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">phar</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">numFilesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numFiles</span> <span class="o">=</span> <span class="n">numFilesExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">API</span> <span class="n">version</span> <span class="n">used</span> <span class="n">by</span> <span class="n">this</span> <span class="n">phar</span> <span class="n">manifest</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">apiVersionExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_ApiVersion</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">apiVersion</span> <span class="o">=</span> <span class="n">apiVersionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Global</span> <span class="n">flags</span> <span class="k">for</span> <span class="n">this</span> <span class="n">phar</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">alias</span><span class="p">,</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenAliasExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenAlias</span> <span class="o">=</span> <span class="n">lenAliasExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">phar</span><span class="sc">&#39;s alias, i. e. the name under which it is loaded into PHP.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">aliasExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenAlias</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">aliasExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">metadata</span><span class="p">,</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">,</span> <span class="ow">or</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">none</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenMetadataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span> <span class="o">=</span> <span class="n">lenMetadataExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Metadata</span> <span class="k">for</span> <span class="n">this</span> <span class="n">phar</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">format</span> <span class="n">used</span> <span class="n">by</span> <span class="n">PHP</span><span class="sc">&#39;s</span>
+<span class="p">`</span><span class="n">serialize</span><span class="p">`</span> <span class="n">function</span><span class="p">.</span> <span class="n">The</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="n">specified</span> <span class="n">further</span><span class="p">,</span> <span class="n">it</span> <span class="n">may</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">arbitrary</span> <span class="n">custom</span> <span class="n">data</span>
+<span class="n">about</span> <span class="n">the</span> <span class="n">archive</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">rawMetadataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rawMetadata</span> <span class="o">=</span> <span class="n">rawMetadataExpr</span>
+    <span class="k">let</span> <span class="n">rawMetadataIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMetadataExpr</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">metadataExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMetadataIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadataExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Manifest</span> <span class="n">entries</span> <span class="k">for</span> <span class="n">the</span> <span class="n">files</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">phar</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numFiles</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PharWithoutStub_FileEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">fileEntries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Manifest], filename: string): PharWithoutStub_Manifest =</span>
+  <span class="n">PharWithoutStub_Manifest</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">name</span><span class="p">,</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenFilenameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span> <span class="o">=</span> <span class="n">lenFilenameExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">name</span> <span class="k">of</span> <span class="n">this</span> <span class="n">file</span><span class="p">.</span> <span class="k">If</span> <span class="n">the</span> <span class="n">name</span> <span class="n">ends</span> <span class="k">with</span> <span class="n">a</span> <span class="n">slash</span><span class="p">,</span> <span class="n">this</span> <span class="n">entry</span>
+<span class="n">represents</span> <span class="n">a</span> <span class="n">directory</span><span class="p">,</span> <span class="n">otherwise</span> <span class="n">a</span> <span class="n">regular</span> <span class="n">file</span><span class="p">.</span> <span class="n">Directory</span> <span class="n">entries</span>
+<span class="n">are</span> <span class="n">supported</span> <span class="n">since</span> <span class="n">phar</span> <span class="n">API</span> <span class="n">version</span> <span class="mf">1.1.1.</span>
+<span class="p">(</span><span class="n">Explicit</span> <span class="n">directory</span> <span class="n">entries</span> <span class="n">are</span> <span class="n">only</span> <span class="n">needed</span> <span class="k">for</span> <span class="n">empty</span> <span class="n">directories</span><span class="p">.</span>
+<span class="n">Non</span><span class="o">-</span><span class="n">empty</span> <span class="n">directories</span> <span class="n">are</span> <span class="n">implied</span> <span class="n">by</span> <span class="n">the</span> <span class="n">files</span> <span class="n">located</span> <span class="n">inside</span> <span class="n">them</span><span class="p">.)</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">filenameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filenameExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span><span class="sc">&#39;s data when uncompressed, in bytes.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenDataUncompressedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataUncompressed</span> <span class="o">=</span> <span class="n">lenDataUncompressedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">time</span> <span class="n">at</span> <span class="n">which</span> <span class="n">the</span> <span class="n">file</span> <span class="n">was</span> <span class="n">added</span> <span class="ow">or</span> <span class="n">last</span> <span class="n">updated</span><span class="p">,</span> <span class="k">as</span> <span class="n">a</span>
+<span class="n">Unix</span> <span class="n">timestamp</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">timestampExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestampExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span><span class="sc">&#39;s data when compressed, in bytes.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenDataCompressedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataCompressed</span> <span class="o">=</span> <span class="n">lenDataCompressedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">CRC32</span> <span class="n">checksum</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span><span class="sc">&#39;s uncompressed data.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">crc32Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">crc32Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Flags</span> <span class="k">for</span> <span class="n">this</span> <span class="n">file</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">metadata</span><span class="p">,</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">,</span> <span class="ow">or</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">none</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenMetadataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span> <span class="o">=</span> <span class="n">lenMetadataExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Metadata</span> <span class="k">for</span> <span class="n">this</span> <span class="n">file</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">format</span> <span class="n">used</span> <span class="n">by</span> <span class="n">PHP</span><span class="sc">&#39;s</span>
+<span class="p">`</span><span class="n">serialize</span><span class="p">`</span> <span class="n">function</span><span class="p">.</span> <span class="n">The</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="n">specified</span> <span class="n">further</span><span class="p">,</span> <span class="n">it</span> <span class="n">may</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">arbitrary</span> <span class="n">custom</span> <span class="n">data</span>
+<span class="n">about</span> <span class="n">the</span> <span class="n">file</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">rawMetadataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rawMetadata</span> <span class="o">=</span> <span class="n">rawMetadataExpr</span>
+    <span class="k">let</span> <span class="n">rawMetadataIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMetadataExpr</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">metadataExpr</span> <span class="o">=</span> <span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMetadataIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadataExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], filename: string): PharWithoutStub_FileEntry =</span>
+  <span class="n">PharWithoutStub_FileEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

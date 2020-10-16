@@ -160,7 +160,22 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Serialized PHP value parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Serialized PHP value parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Serialized PHP value parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -181,6 +196,11 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Serialized PHP value parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -217,6 +237,528 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
             
         </h2>
 
+        
+
+        <h3>php_serialized_value.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/php_serialized_value.lua" download="php_serialized_value.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and</span>
+<span class="c1">-- `unserialize` functions. This format closely mirrors PHP&#39;s data model:</span>
+<span class="c1">-- it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),</span>
+<span class="c1">-- associative arrays, objects, and recursive data structures using references.</span>
+<span class="c1">-- The only PHP values not supported by this format are *resources*,</span>
+<span class="c1">-- which usually correspond to native file or connection handles and cannot be</span>
+<span class="c1">-- meaningfully serialized.</span>
+<span class="c1">-- </span>
+<span class="c1">-- There is no official documentation for this data format;</span>
+<span class="c1">-- this spec was created based on the PHP source code and the behavior of</span>
+<span class="c1">-- `serialize`/`unserialize`. PHP makes no guarantees about compatibility of</span>
+<span class="c1">-- serialized data between PHP versions, but in practice, the format has</span>
+<span class="c1">-- remained fully backwards-compatible - values serialized by an older</span>
+<span class="c1">-- PHP version can be unserialized on any newer PHP version.</span>
+<span class="c1">-- This spec supports serialized values from PHP 7.3 or any earlier version.</span>
+<span class="c1">-- See also: Source (https://www.php.net/manual/en/function.serialize.php)</span>
+<span class="c1">-- See also: Source (https://www.php.net/manual/en/function.serialize.php#66147)</span>
+<span class="c1">-- See also: Source (https://www.php.net/manual/en/function.unserialize.php)</span>
+<span class="c1">-- See also: Source (https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re)</span>
+<span class="c1">-- See also: Source (https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822)</span>
+<span class="n">PhpSerializedValue</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">custom_serialized_object</span> <span class="o">=</span> <span class="mi">67</span><span class="p">,</span>
+  <span class="n">null</span> <span class="o">=</span> <span class="mi">78</span><span class="p">,</span>
+  <span class="n">object</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span>
+  <span class="n">variable_reference</span> <span class="o">=</span> <span class="mi">82</span><span class="p">,</span>
+  <span class="n">php_6_string</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
+  <span class="n">array</span> <span class="o">=</span> <span class="mi">97</span><span class="p">,</span>
+  <span class="n">bool</span> <span class="o">=</span> <span class="mi">98</span><span class="p">,</span>
+  <span class="n">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="n">int</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+  <span class="n">php_3_object</span> <span class="o">=</span> <span class="mi">111</span><span class="p">,</span>
+  <span class="n">object_reference</span> <span class="o">=</span> <span class="mi">114</span><span class="p">,</span>
+  <span class="n">string</span> <span class="o">=</span> <span class="mi">115</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolValue</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="kc">false</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+  <span class="kc">true</span> <span class="o">=</span> <span class="mi">49</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">custom_serialized_object</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CustomSerializedObjectContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">php_3_object</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">Php3ObjectContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">object</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ObjectContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">variable_reference</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">IntContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">php_6_string</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">StringContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">float</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">FloatContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">object_reference</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">IntContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">null</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">NullContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">bool</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">int</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">IntContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">array</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ArrayContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ValueType</span><span class="p">.</span><span class="n">string</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">StringContents</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- A single-character code indicating the type of the serialized value.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The contents of the serialized value, which vary depending on the type.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- A mapping (a sequence of key-value pairs) prefixed with its size.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CountPrefixedMapping</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CountPrefixedMapping</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CountPrefixedMapping</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_entries_dec</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\123</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\123</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">MappingEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">closing_brace</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">closing_brace</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\125</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\125</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">closing_brace</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The number of key-value pairs in the mapping, parsed as an integer.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CountPrefixedMapping</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CountPrefixedMapping</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_entries</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_entries</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_entries</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_num_entries</span> <span class="o">=</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_entries_dec</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_entries</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The number of key-value pairs in the mapping, in ASCII decimal.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The key-value pairs contained in the mapping.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of a floating-point value.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">FloatContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">FloatContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">FloatContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value_dec</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the `float`, in ASCII decimal, as generated by PHP&#39;s</span>
+<span class="c1">-- usual double-to-string conversion. In particular, this means that:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * A decimal point may not be included (for integral numbers)</span>
+<span class="c1">-- * The number may use exponent notation (e. g. `1.0E+16`)</span>
+<span class="c1">-- * Positive and negative infinity are represented as `INF`</span>
+<span class="c1">--   and `-INF`, respectively</span>
+<span class="c1">-- * Not-a-number is represented as `NAN`</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- A quoted string prefixed with its length.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Despite the quotes surrounding the string data, it can contain</span>
+<span class="c1">-- arbitrary bytes, which are never escaped in any way.</span>
+<span class="c1">-- This does not cause any ambiguities when parsing - the bounds of</span>
+<span class="c1">-- the string are determined only by the length field, not by the quotes.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">LengthPrefixedQuotedString</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">LengthPrefixedQuotedString</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">LengthPrefixedQuotedString</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data_dec</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">opening_quote</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opening_quote</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\034</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\034</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">opening_quote</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\034</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\034</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the string&#39;s contents in bytes, parsed as an integer.</span>
+<span class="c1">-- The quotes are not counted in this size number.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">LengthPrefixedQuotedString</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">LengthPrefixedQuotedString</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span> <span class="o">=</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data_dec</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the string&#39;s data in bytes, in ASCII decimal.</span>
+<span class="c1">-- The quotes are not counted in this length number.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The data contained in the string. The quotes are not included.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of an object value serialized in the default format.</span>
+<span class="c1">-- Unlike its PHP 3 counterpart, it contains a class name.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ObjectContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">ObjectContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">ObjectContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon1</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon1</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">class_name</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">LengthPrefixedQuotedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon2</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon2</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CountPrefixedMapping</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The name of the object&#39;s class.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The object&#39;s properties. Keys ust be of type `string`,</span>
+<span class="c1">-- values may have any type.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of an array value.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">ArrayContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">ArrayContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">ArrayContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CountPrefixedMapping</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The array&#39;s elements. Keys must be of type `int` or `string`,</span>
+<span class="c1">-- values may have any type.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of an object value that implements a custom</span>
+<span class="c1">-- serialized format using `Serializable`.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CustomSerializedObjectContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CustomSerializedObjectContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CustomSerializedObjectContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon1</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon1</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">class_name</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">LengthPrefixedQuotedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon2</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon2</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data_dec</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\123</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\123</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">opening_brace</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\125</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\125</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">closing_quote</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the serialized data in bytes, parsed as an integer.</span>
+<span class="c1">-- The braces are not counted in this length number.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CustomSerializedObjectContents</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">CustomSerializedObjectContents</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span> <span class="o">=</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data_dec</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_data</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The name of the object&#39;s class.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The length of the serialized data in bytes, in ASCII decimal.</span>
+<span class="c1">-- The braces are not counted in this size number.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The custom serialized data. The braces are not included.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although the surrounding braces make it look like a regular</span>
+<span class="c1">-- serialized object, this field is actually more similar to a string:</span>
+<span class="c1">-- it can contain arbitrary data that is not required to follow</span>
+<span class="c1">-- any common structure.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of a null value (`value_type::null`). This structure</span>
+<span class="c1">-- contains no actual data, since there is only a single `NULL` value.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">NullContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">NullContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">NullContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of a PHP 3 object value. Unlike its counterpart in PHP 4</span>
+<span class="c1">-- and above, it does not contain a class name.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">Php3ObjectContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">Php3ObjectContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">Php3ObjectContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">CountPrefixedMapping</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The object&#39;s properties. Keys must be of type `string`,</span>
+<span class="c1">-- values may have any type.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of a boolean value (`value_type::bool`).</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">BoolContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">BoolContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value_dec</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolValue</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the `bool`, parsed as a boolean.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolContents</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">BoolContents</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">value_dec</span> <span class="o">==</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">BoolValue</span><span class="p">.</span><span class="kc">true</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the `bool`: `0` for `false` or `1` for `true`.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of a string value.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Note: PHP strings can contain arbitrary byte sequences.</span>
+<span class="c1">-- They are not necessarily valid text in any specific encoding.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">StringContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">StringContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">StringContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">string</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">LengthPrefixedQuotedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\059</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">semicolon</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the string, as a byte array.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">StringContents</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">StringContents</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">data</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- The contents of an integer-like value:</span>
+<span class="c1">-- either an actual integer (`value_type::int`) or a reference</span>
+<span class="c1">-- (`value_type::variable_reference`, `value_type::object_reference`).</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">IntContents</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">IntContents</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">IntContents</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colon</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\058</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">colon</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value_dec</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the `int`, parsed as an integer.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">IntContents</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">IntContents</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_dec</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value of the `int`, in ASCII decimal.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- A mapping entry consisting of a key and a value.</span>
+<span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">MappingEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">MappingEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">PhpSerializedValue</span><span class="p">.</span><span class="nc">MappingEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The key of the entry.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The value of the entry.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

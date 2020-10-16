@@ -142,7 +142,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Gran Turismo File System (GTFS) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Gran Turismo File System (GTFS) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Gran Turismo File System (GTFS) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Gran Turismo File System (GTFS) parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -163,6 +178,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="Gran Turismo File System (GTFS) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Gran Turismo File System (GTFS) parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -199,6 +219,143 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>gran_turismo_vol.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/gran_turismo_vol.lua" download="gran_turismo_vol.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="n">GranTurismoVol</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\071\084\070\083\000\000\000\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\071\084\070\083\000\000\000\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000\000\000\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000\000\000\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">reserved</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_files</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">offsets</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ofs_dir</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ofs_dir</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_dir</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_dir</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_dir</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">offsets</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_dir</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">files</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_dir</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span>
+<span class="kr">end</span>
+
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">offset_idx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">offsets</span><span class="p">[(</span><span class="n">self</span><span class="p">.</span><span class="n">offset_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">)</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">offsets</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">offset_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_size</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_dir</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">offsets</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">offset_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_dir</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_dir</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_dir</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_dir</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_dir</span>
+<span class="kr">end</span>
+
+<span class="n">GranTurismoVol</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_last_entry</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GranTurismoVol</span><span class="p">.</span><span class="nc">FileInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_last_entry</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_last_entry</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_last_entry</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_last_entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_last_entry</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

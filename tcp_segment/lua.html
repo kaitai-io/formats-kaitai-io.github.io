@@ -164,7 +164,22 @@ delivery.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="TCP (Transmission Control Protocol) segment parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="TCP (Transmission Control Protocol) segment parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="TCP (Transmission Control Protocol) segment parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="TCP (Transmission Control Protocol) segment parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -185,6 +200,11 @@ delivery.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="TCP (Transmission Control Protocol) segment parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="TCP (Transmission Control Protocol) segment parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -221,6 +241,55 @@ delivery.</p>
             
         </h2>
 
+        
+
+        <h3>tcp_segment.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/tcp_segment.lua" download="tcp_segment.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- TCP is one of the core Internet protocols on transport layer (AKA</span>
+<span class="c1">-- OSI layer 4), providing stateful connections with error checking,</span>
+<span class="c1">-- guarantees of delivery, order of segments and avoidance of duplicate</span>
+<span class="c1">-- delivery.</span>
+<span class="n">TcpSegment</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TcpSegment</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TcpSegment</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">src_port</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dst_port</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">seq_num</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ack_num</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b12</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b13</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">checksum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">urgent_pointer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

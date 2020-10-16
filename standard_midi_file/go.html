@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Standard MIDI file: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">Standard MIDI file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Standard MIDI file:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
+to serialize series of MIDI events, which is a protocol used in many
+music synthesizers to transfer music data: notes being played,
+effects being applied, etc.</p>
+<p>Internally, file consists of a header and series of tracks, every
+track listing MIDI events with certain header designating time these
+events are happening.</p>
+<p>NOTE: Rarely, MIDI files employ certain stateful compression scheme
+to avoid storing certain elements of further elements, instead
+reusing them from events which happened earlier in the
+stream. Kaitai Struct (as of v0.9) is currently unable to parse
+these, but files employing this mechanism are relatively rare.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["mid", "midi", "smf"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000102.shtml">LOC fdd000102</a></li>
+<li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000119.shtml">LOC fdd000119</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/230">PRONOM x-fmt/230</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q10610388">Wikidata Q10610388</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/MIDI">MIDI in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Standard MIDI file
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Standard MIDI file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Standard MIDI file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Standard MIDI file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Standard MIDI file parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="Standard MIDI file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Standard MIDI file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Standard MIDI file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Standard MIDI file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Standard MIDI file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Standard MIDI file parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Standard MIDI file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Standard MIDI file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Standard MIDI file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Standard MIDI file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse Standard MIDI file
+            
+        </h2>
+
+        
+
+        <h3>standard_midi_file.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/standard_midi_file.go" download="standard_midi_file.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way</span>
+<span class="cm"> * to serialize series of MIDI events, which is a protocol used in many</span>
+<span class="cm"> * music synthesizers to transfer music data: notes being played,</span>
+<span class="cm"> * effects being applied, etc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, file consists of a header and series of tracks, every</span>
+<span class="cm"> * track listing MIDI events with certain header designating time these</span>
+<span class="cm"> * events are happening.</span>
+<span class="cm"> * </span>
+<span class="cm"> * NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+<span class="cm"> * to avoid storing certain elements of further elements, instead</span>
+<span class="cm"> * reusing them from events which happened earlier in the</span>
+<span class="cm"> * stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+<span class="cm"> * these, but files employing this mechanism are relatively rare.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Hdr</span> <span class="o">*</span><span class="nx">StandardMidiFile_Header</span>
+	<span class="nx">Tracks</span> <span class="p">[]</span><span class="o">*</span><span class="nx">StandardMidiFile_Track</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_Header</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Hdr</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Tracks</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">StandardMidiFile_Track</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">NumTracks</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Tracks</span> <span class="p">{</span>
+		<span class="nx">tmp2</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_Track</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp2</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Tracks</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_TrackEvents</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Event</span> <span class="p">[]</span><span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_Track</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_TrackEvents</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvents</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_TrackEvents</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvents</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_Track</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp3</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp3</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nx">tmp4</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_TrackEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp4</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Event</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Event</span><span class="p">,</span> <span class="nx">tmp4</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_TrackEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">VTime</span> <span class="o">*</span><span class="nx">VlqBase128Be</span>
+	<span class="nx">EventHeader</span> <span class="kt">uint8</span>
+	<span class="nx">MetaEventBody</span> <span class="o">*</span><span class="nx">StandardMidiFile_MetaEventBody</span>
+	<span class="nx">SysexBody</span> <span class="o">*</span><span class="nx">StandardMidiFile_SysexEventBody</span>
+	<span class="nx">EventBody</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvents</span>
+	<span class="nx">_f_eventType</span> <span class="kt">bool</span>
+	<span class="nx">eventType</span> <span class="kt">int</span>
+	<span class="nx">_f_channel</span> <span class="kt">bool</span>
+	<span class="nx">channel</span> <span class="kt">int</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_TrackEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvents</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp5</span> <span class="o">:=</span> <span class="nx">NewVlqBase128Be</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp5</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VTime</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">EventHeader</span> <span class="p">=</span> <span class="nx">tmp6</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EventHeader</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp7</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_MetaEventBody</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp7</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">MetaEventBody</span> <span class="p">=</span> <span class="nx">tmp7</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EventHeader</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp8</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_SysexEventBody</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp8</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">SysexBody</span> <span class="p">=</span> <span class="nx">tmp8</span>
+	<span class="p">}</span>
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">EventType</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="mi">224</span><span class="p">:</span>
+		<span class="nx">tmp10</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_PitchBendEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp10</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="k">case</span> <span class="mi">144</span><span class="p">:</span>
+		<span class="nx">tmp11</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_NoteOnEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp11</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp11</span>
+	<span class="k">case</span> <span class="mi">208</span><span class="p">:</span>
+		<span class="nx">tmp12</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_ChannelPressureEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp12</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="k">case</span> <span class="mi">192</span><span class="p">:</span>
+		<span class="nx">tmp13</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_ProgramChangeEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp13</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="k">case</span> <span class="mi">160</span><span class="p">:</span>
+		<span class="nx">tmp14</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_PolyphonicPressureEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp14</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="k">case</span> <span class="mi">176</span><span class="p">:</span>
+		<span class="nx">tmp15</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_ControllerEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp15</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp15</span>
+	<span class="k">case</span> <span class="mi">128</span><span class="p">:</span>
+		<span class="nx">tmp16</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_NoteOffEvent</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">EventBody</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">)</span> <span class="nx">EventType</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_eventType</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">eventType</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">eventType</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">EventHeader</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_eventType</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">eventType</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">)</span> <span class="nx">Channel</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_channel</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">channel</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">EventType</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp17</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">channel</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">EventHeader</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_channel</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">channel</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_PitchBendEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">B1</span> <span class="kt">uint8</span>
+	<span class="nx">B2</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+	<span class="nx">_f_bendValue</span> <span class="kt">bool</span>
+	<span class="nx">bendValue</span> <span class="kt">int</span>
+	<span class="nx">_f_adjBendValue</span> <span class="kt">bool</span>
+	<span class="nx">adjBendValue</span> <span class="kt">int</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_PitchBendEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_PitchBendEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_PitchBendEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_PitchBendEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">B1</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">B2</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_PitchBendEvent</span><span class="p">)</span> <span class="nx">BendValue</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_bendValue</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bendValue</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">bendValue</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((((</span><span class="nx">this</span><span class="p">.</span><span class="nx">B2</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="nx">this</span><span class="p">.</span><span class="nx">B1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_bendValue</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bendValue</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_PitchBendEvent</span><span class="p">)</span> <span class="nx">AdjBendValue</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_adjBendValue</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">adjBendValue</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BendValue</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">adjBendValue</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">tmp20</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_adjBendValue</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">adjBendValue</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_ProgramChangeEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Program</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_ProgramChangeEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_ProgramChangeEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_ProgramChangeEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_ProgramChangeEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Program</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_NoteOnEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Note</span> <span class="kt">uint8</span>
+	<span class="nx">Velocity</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_NoteOnEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_NoteOnEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_NoteOnEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_NoteOnEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Note</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Velocity</span> <span class="p">=</span> <span class="nx">tmp23</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_PolyphonicPressureEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Note</span> <span class="kt">uint8</span>
+	<span class="nx">Pressure</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_PolyphonicPressureEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_PolyphonicPressureEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_PolyphonicPressureEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_PolyphonicPressureEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Note</span> <span class="p">=</span> <span class="nx">tmp24</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Pressure</span> <span class="p">=</span> <span class="nx">tmp25</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_Track</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">LenEvents</span> <span class="kt">uint32</span>
+	<span class="nx">Events</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvents</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_raw_Events</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_Track</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_Track</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_Track</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_Track</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp26</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">107</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">107</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/track/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenEvents</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenEvents</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp28</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Events</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">_io__raw_Events</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Events</span><span class="p">))</span>
+	<span class="nx">tmp29</span> <span class="o">:=</span> <span class="nx">NewStandardMidiFile_TrackEvents</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp29</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Events</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Events</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__SequenceNumber</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__TextEvent</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__Copyright</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__SequenceTrackName</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__InstrumentName</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__LyricText</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__MarkerText</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">6</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__CuePoint</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">7</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__MidiChannelPrefixAssignment</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">32</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__EndOfTrack</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">47</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__Tempo</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">81</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__SmpteOffset</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">84</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__TimeSignature</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">88</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__KeySignature</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">89</span>
+	<span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum__SequencerSpecificEvent</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span> <span class="p">=</span> <span class="mi">127</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_MetaEventBody</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">MetaType</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span>
+	<span class="nx">Len</span> <span class="o">*</span><span class="nx">VlqBase128Be</span>
+	<span class="nx">Body</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_MetaEventBody</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_MetaEventBody</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_MetaEventBody</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_MetaEventBody</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MetaType</span> <span class="p">=</span> <span class="nx">StandardMidiFile_MetaEventBody_MetaTypeEnum</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+	<span class="nx">tmp31</span> <span class="o">:=</span> <span class="nx">NewVlqBase128Be</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp31</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Len</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Len</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp33</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_ControllerEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Controller</span> <span class="kt">uint8</span>
+	<span class="nx">Value</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_ControllerEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_ControllerEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_ControllerEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_ControllerEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Controller</span> <span class="p">=</span> <span class="nx">tmp34</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp35</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_Header</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">LenHeader</span> <span class="kt">uint32</span>
+	<span class="nx">Format</span> <span class="kt">uint16</span>
+	<span class="nx">NumTracks</span> <span class="kt">uint16</span>
+	<span class="nx">Division</span> <span class="kt">int16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_Header</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_Header</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_Header</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_Header</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp36</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">)</span>
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Format</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumTracks</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Division</span> <span class="p">=</span> <span class="nb">int16</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_SysexEventBody</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Len</span> <span class="o">*</span><span class="nx">VlqBase128Be</span>
+	<span class="nx">Data</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_SysexEventBody</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_SysexEventBody</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_SysexEventBody</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_SysexEventBody</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp41</span> <span class="o">:=</span> <span class="nx">NewVlqBase128Be</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp41</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Len</span> <span class="p">=</span> <span class="nx">tmp41</span>
+	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Len</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp43</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_NoteOffEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Note</span> <span class="kt">uint8</span>
+	<span class="nx">Velocity</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_NoteOffEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_NoteOffEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_NoteOffEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_NoteOffEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Note</span> <span class="p">=</span> <span class="nx">tmp44</span>
+	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Velocity</span> <span class="p">=</span> <span class="nx">tmp45</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">StandardMidiFile_ChannelPressureEvent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Pressure</span> <span class="kt">uint8</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewStandardMidiFile_ChannelPressureEvent</span><span class="p">()</span> <span class="o">*</span><span class="nx">StandardMidiFile_ChannelPressureEvent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">StandardMidiFile_ChannelPressureEvent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">StandardMidiFile_ChannelPressureEvent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">StandardMidiFile_TrackEvent</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">StandardMidiFile</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Pressure</span> <span class="p">=</span> <span class="nx">tmp46</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

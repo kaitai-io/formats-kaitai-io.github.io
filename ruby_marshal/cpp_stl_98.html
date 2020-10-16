@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ruby_marshal: C++98/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">ruby_marshal</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ruby_marshal:
+            
+            C++98/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Ruby's Marshal module allows serialization and deserialization of
+many standard and arbitrary Ruby objects in a compact binary
+format. It is relatively fast, available in stdlibs standard and
+allows conservation of language-specific properties (such as symbols
+or encoding-aware strings).</p>
+<p>Feature-wise, it is comparable to other language-specific
+implementations, such as:</p>
+<ul>
+<li>Java's
+<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html">Serializable</a></li>
+<li>.NET
+<a href="https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter">BinaryFormatter</a></li>
+<li>Python's
+<a href="https://docs.python.org/3/library/marshal.html">marshal</a>,
+<a href="https://docs.python.org/3/library/pickle.html">pickle</a> and
+<a href="https://docs.python.org/3/library/shelve.html">shelve</a></li>
+</ul>
+<p>From internal perspective, serialized stream consists of a simple
+magic header and a record.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ruby_marshal
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ruby_marshal parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="ruby_marshal parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_98.html" title="ruby_marshal parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ruby_marshal parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="ruby_marshal parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ruby_marshal parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ruby_marshal parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ruby_marshal parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ruby_marshal parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="ruby_marshal parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ruby_marshal parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ruby_marshal parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ruby_marshal parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ruby_marshal parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.ruby_marshal&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">ruby_marshal_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">version</span><span class="p">()</span> <span class="c1">// =&gt; get version</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++98/STL source code to parse ruby_marshal
+            
+        </h2>
+
+        
+
+        <h3>ruby_marshal.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_98/ruby_marshal.h" download="ruby_marshal.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef RUBY_MARSHAL_H_</span>
+<span class="cp">#define RUBY_MARSHAL_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Ruby&#39;s Marshal module allows serialization and deserialization of</span>
+<span class="cm"> * many standard and arbitrary Ruby objects in a compact binary</span>
+<span class="cm"> * format. It is relatively fast, available in stdlibs standard and</span>
+<span class="cm"> * allows conservation of language-specific properties (such as symbols</span>
+<span class="cm"> * or encoding-aware strings).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Feature-wise, it is comparable to other language-specific</span>
+<span class="cm"> * implementations, such as:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Java&#39;s</span>
+<span class="cm"> *   [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)</span>
+<span class="cm"> * * .NET</span>
+<span class="cm"> *   [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)</span>
+<span class="cm"> * * Python&#39;s</span>
+<span class="cm"> *   [marshal](https://docs.python.org/3/library/marshal.html),</span>
+<span class="cm"> *   [pickle](https://docs.python.org/3/library/pickle.html) and</span>
+<span class="cm"> *   [shelve](https://docs.python.org/3/library/shelve.html)</span>
+<span class="cm"> * </span>
+<span class="cm"> * From internal perspective, serialized stream consists of a simple</span>
+<span class="cm"> * magic header and a record.</span>
+<span class="cm"> * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">ruby_marshal_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">ruby_array_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">bignum_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ruby_struct_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ruby_symbol_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">packed_int_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">pair_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">instance_var_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">record_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ruby_hash_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ruby_string_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">codes_t</span> <span class="p">{</span>
+        <span class="n">CODES_RUBY_STRING</span> <span class="o">=</span> <span class="mi">34</span><span class="p">,</span>
+        <span class="n">CODES_CONST_NIL</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_SYMBOL</span> <span class="o">=</span> <span class="mi">58</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_SYMBOL_LINK</span> <span class="o">=</span> <span class="mi">59</span><span class="p">,</span>
+        <span class="n">CODES_CONST_FALSE</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
+        <span class="n">CODES_INSTANCE_VAR</span> <span class="o">=</span> <span class="mi">73</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_STRUCT</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
+        <span class="n">CODES_CONST_TRUE</span> <span class="o">=</span> <span class="mi">84</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_ARRAY</span> <span class="o">=</span> <span class="mi">91</span><span class="p">,</span>
+        <span class="n">CODES_PACKED_INT</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+        <span class="n">CODES_BIGNUM</span> <span class="o">=</span> <span class="mi">108</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_HASH</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="p">};</span>
+
+    <span class="n">ruby_marshal_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">ruby_marshal_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">ruby_array_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ruby_array_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ruby_array_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_num_elements</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;*</span> <span class="n">m_elements</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">num_elements</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_elements</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;*</span> <span class="n">elements</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_elements</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">bignum_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">bignum_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">bignum_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_sign</span><span class="p">;</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_len_div_2</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A single byte containing `+` for a positive value or `-` for a negative value.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">sign</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sign</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Length of bignum body, divided by 2.</span>
+<span class="cm">         */</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">len_div_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_div_2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ruby_struct_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ruby_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ruby_struct_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_num_members</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">m_members</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Symbol containing the name of the struct.</span>
+<span class="cm">         */</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of members in a struct</span>
+<span class="cm">         */</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">num_members</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_members</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">members</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_members</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ruby_symbol_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ruby_symbol_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ruby_symbol_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_len</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Ruby uses sophisticated system to pack integers: first `code`</span>
+<span class="cm">     * byte either determines packing scheme or carries encoded</span>
+<span class="cm">     * immediate value (thus allowing smaller values from -123 to 122</span>
+<span class="cm">     * (inclusive) to take only one byte. There are 11 encoding schemes</span>
+<span class="cm">     * in total:</span>
+<span class="cm">     * </span>
+<span class="cm">     * * 0 is encoded specially (as 0)</span>
+<span class="cm">     * * 1..122 are encoded as immediate value with a shift</span>
+<span class="cm">     * * 123..255 are encoded with code of 0x01 and 1 extra byte</span>
+<span class="cm">     * * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes</span>
+<span class="cm">     * * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra</span>
+<span class="cm">     *   bytes</span>
+<span class="cm">     * * 0x1000000..0xffffffff are encoded with code of 0x04 and 4</span>
+<span class="cm">     *   extra bytes</span>
+<span class="cm">     * * -123..-1 are encoded as immediate value with another shift</span>
+<span class="cm">     * * -256..-124 are encoded with code of 0xff and 1 extra byte</span>
+<span class="cm">     * * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes</span>
+<span class="cm">     * * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra</span>
+<span class="cm">     *    bytes</span>
+<span class="cm">     * * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4</span>
+<span class="cm">     *    extra bytes</span>
+<span class="cm">     * </span>
+<span class="cm">     * Values beyond that are serialized as bignum (even if they</span>
+<span class="cm">     * technically might be not Bignum class in Ruby implementation,</span>
+<span class="cm">     * i.e. if they fit into 64 bits on a 64-bit platform).</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">packed_int_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">packed_int_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">packed_int_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_immediate</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_immediate</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_immediate</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_value</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">value</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_code</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_encoded</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_encoded</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_encoded</span><span class="p">()</span> <span class="p">{</span> <span class="n">encoded</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_encoded</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_encoded2</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_encoded2</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_encoded2</span><span class="p">()</span> <span class="p">{</span> <span class="n">encoded2</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_encoded2</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">code</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">encoded</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_encoded</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * One extra byte for 3-byte integers (0x03 and 0xfd), as</span>
+<span class="cm">         * there is no standard `u3` type in KS.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">encoded2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_encoded2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">pair_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">pair_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">pair_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">m_key</span><span class="p">;</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">m_value</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">key</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_key</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">instance_var_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">instance_var_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">instance_var_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">m_obj</span><span class="p">;</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_num_vars</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">m_vars</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">record_t</span><span class="o">*</span> <span class="n">obj</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_obj</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">num_vars</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_vars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">vars</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Each record starts with a single byte that determines its type</span>
+<span class="cm">     * (`code`) and contents. If necessary, additional info as parsed</span>
+<span class="cm">     * as `body`, to be determined by `code`.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">record_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">record_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">codes_t</span> <span class="n">m_code</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">codes_t</span> <span class="n">code</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ruby_hash_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ruby_hash_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ruby_hash_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_num_pairs</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">m_pairs</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">num_pairs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_pairs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;*</span> <span class="n">pairs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pairs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ruby_string_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ruby_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ruby_string_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">m_len</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">packed_int_t</span><span class="o">*</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_version</span><span class="p">;</span>
+    <span class="n">record_t</span><span class="o">*</span> <span class="n">m_records</span><span class="p">;</span>
+    <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">record_t</span><span class="o">*</span> <span class="n">records</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_records</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// RUBY_MARSHAL_H_</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>ruby_marshal.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_98/ruby_marshal.cpp" download="ruby_marshal.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;ruby_marshal.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_marshal_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">m_records</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">version</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x04\x08</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x04\x08</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">version</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::~</span><span class="n">ruby_marshal_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_records</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_records</span><span class="p">;</span> <span class="n">m_records</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_array_t</span><span class="o">::</span><span class="n">ruby_array_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_num_elements</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_elements</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_array_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_num_elements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_elements</span> <span class="o">=</span> <span class="n">num_elements</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
+    <span class="n">m_elements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_elements</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_elements</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_elements</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_elements</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_array_t</span><span class="o">::~</span><span class="n">ruby_array_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_array_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_num_elements</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_num_elements</span><span class="p">;</span> <span class="n">m_num_elements</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_elements</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_elements</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_elements</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_elements</span><span class="p">;</span> <span class="n">m_elements</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">bignum_t</span><span class="o">::</span><span class="n">bignum_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_len_div_2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">bignum_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_sign</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_len_div_2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_div_2</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">bignum_t</span><span class="o">::~</span><span class="n">bignum_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">bignum_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_len_div_2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_len_div_2</span><span class="p">;</span> <span class="n">m_len_div_2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_struct_t</span><span class="o">::</span><span class="n">ruby_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_num_members</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_members</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_struct_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_num_members</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_members</span> <span class="o">=</span> <span class="n">num_members</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
+    <span class="n">m_members</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_members</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_members</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_members</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_members</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">pair_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_struct_t</span><span class="o">::~</span><span class="n">ruby_struct_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_struct_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_name</span><span class="p">;</span> <span class="n">m_name</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_num_members</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_num_members</span><span class="p">;</span> <span class="n">m_num_members</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_members</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_members</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_members</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_members</span><span class="p">;</span> <span class="n">m_members</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_symbol_t</span><span class="o">::</span><span class="n">ruby_symbol_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_symbol_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_symbol_t</span><span class="o">::~</span><span class="n">ruby_symbol_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_symbol_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_len</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_len</span><span class="p">;</span> <span class="n">m_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_immediate</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_code</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">252</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">253</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">255</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">254</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">n_encoded2</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">253</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_encoded2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_encoded2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::~</span><span class="n">packed_int_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_encoded</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_encoded2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::</span><span class="n">is_immediate</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_immediate</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_immediate</span><span class="p">;</span>
+    <span class="n">m_is_immediate</span> <span class="o">=</span>  <span class="p">((</span><span class="n">code</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">252</span><span class="p">))</span> <span class="p">;</span>
+    <span class="n">f_is_immediate</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_immediate</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">packed_int_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="p">((</span><span class="n">is_immediate</span><span class="p">())</span> <span class="o">?</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">code</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">))</span> <span class="o">:</span> <span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="o">~</span><span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)))))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">encoded</span><span class="p">()</span> <span class="o">-</span> <span class="mi">256</span><span class="p">))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">254</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">encoded</span><span class="p">()</span> <span class="o">-</span> <span class="mi">65536</span><span class="p">))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">253</span><span class="p">)</span> <span class="o">?</span> <span class="p">((((</span><span class="n">encoded2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">encoded</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16777216</span><span class="p">))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="p">(((</span><span class="n">encoded2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">encoded</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(</span><span class="n">encoded</span><span class="p">()))))))))))));</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">pair_t</span><span class="o">::</span><span class="n">pair_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">pair_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">pair_t</span><span class="o">::~</span><span class="n">pair_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">pair_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_key</span><span class="p">;</span> <span class="n">m_key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_value</span><span class="p">;</span> <span class="n">m_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">instance_var_t</span><span class="o">::</span><span class="n">instance_var_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_obj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_num_vars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_vars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">instance_var_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_num_vars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_vars</span> <span class="o">=</span> <span class="n">num_vars</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
+    <span class="n">m_vars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_vars</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_vars</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_vars</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_vars</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">pair_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">instance_var_t</span><span class="o">::~</span><span class="n">instance_var_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">instance_var_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_obj</span><span class="p">;</span> <span class="n">m_obj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_num_vars</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_num_vars</span><span class="p">;</span> <span class="n">m_num_vars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_vars</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_vars</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_vars</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_vars</span><span class="p">;</span> <span class="n">m_vars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_code</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">codes_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_PACKED_INT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_BIGNUM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">bignum_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_ARRAY</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ruby_array_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_SYMBOL_LINK</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_STRUCT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ruby_struct_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_STRING</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ruby_string_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_INSTANCE_VAR</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">instance_var_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_HASH</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ruby_hash_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_SYMBOL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ruby_symbol_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::~</span><span class="n">record_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_body</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span> <span class="n">m_body</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_hash_t</span><span class="o">::</span><span class="n">ruby_hash_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_num_pairs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_pairs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_hash_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_num_pairs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_pairs</span> <span class="o">=</span> <span class="n">num_pairs</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
+    <span class="n">m_pairs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_pairs</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_pairs</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_pairs</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_pairs</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">pair_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_hash_t</span><span class="o">::~</span><span class="n">ruby_hash_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_hash_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_num_pairs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_num_pairs</span><span class="p">;</span> <span class="n">m_num_pairs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_pairs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_pairs</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_pairs</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_pairs</span><span class="p">;</span> <span class="n">m_pairs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_string_t</span><span class="o">::</span><span class="n">ruby_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ruby_marshal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_string_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_string_t</span><span class="o">::~</span><span class="n">ruby_string_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="n">ruby_string_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_len</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_len</span><span class="p">;</span> <span class="n">m_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

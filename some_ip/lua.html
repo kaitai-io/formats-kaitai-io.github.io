@@ -142,7 +142,22 @@ and the underlying serialization/wire format.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="AUTOSAR SOME/IP parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="AUTOSAR SOME/IP parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="AUTOSAR SOME/IP parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="AUTOSAR SOME/IP parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -163,6 +178,11 @@ and the underlying serialization/wire format.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="AUTOSAR SOME/IP parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="AUTOSAR SOME/IP parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -199,6 +219,232 @@ and the underlying serialization/wire format.</p>
             
         </h2>
 
+        
+
+        <h3>some_ip.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/some_ip.lua" download="some_ip.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;some_ip_sd&quot;</span><span class="p">)</span>
+<span class="c1">-- </span>
+<span class="c1">-- SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded </span>
+<span class="c1">-- communication protocol which supports remoteprocedure calls, event notifications </span>
+<span class="c1">-- and the underlying serialization/wire format.</span>
+<span class="c1">-- See also: Source (https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf)</span>
+<span class="n">SomeIp</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">message_id</span><span class="p">.</span><span class="n">value</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">4294934784</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">SomeIpSd</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageTypeEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">request</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">request_no_return</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">notification</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">request_ack</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">request_no_return_ack</span> <span class="o">=</span> <span class="mi">65</span><span class="p">,</span>
+  <span class="n">notification_ack</span> <span class="o">=</span> <span class="mi">66</span><span class="p">,</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
+  <span class="nb">error</span> <span class="o">=</span> <span class="mi">129</span><span class="p">,</span>
+  <span class="n">response_ack</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
+  <span class="n">error_ack</span> <span class="o">=</span> <span class="mi">193</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">ReturnCodeEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">not_ok</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">unknown_service</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">unknown_method</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">not_ready</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">not_reachable</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">time_out</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">wrong_protocol_version</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">wrong_interface_version</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">malformed_message</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">wrong_message_type</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_message_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_message_id</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">message_id</span> <span class="o">=</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageId</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_request_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_request_id</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">request_id</span> <span class="o">=</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">RequestId</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">interface_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">message_type</span> <span class="o">=</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageTypeEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">ReturnCodeEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- auxillary value.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements</span>
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_valid_service_discovery</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_valid_service_discovery</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_valid_service_discovery</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_valid_service_discovery</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_valid_service_discovery</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">message_id</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">4294934784</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">protocol_version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">interface_version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">message_type</span> <span class="o">==</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageTypeEnum</span><span class="p">.</span><span class="n">notification</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">return_code</span> <span class="o">==</span> <span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">ReturnCodeEnum</span><span class="p">.</span><span class="n">ok</span><span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_valid_service_discovery</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The Message ID shall be a 32 Bit identifier that is used to identify</span>
+<span class="c1">-- the RPC call to a method of an application or to identify an event.</span>
+<span class="c1">-- </span>
+<span class="c1">-- [PRS_SOMEIP_00042] Length field shall contain the length in Byte </span>
+<span class="c1">-- starting from Request ID/Client ID until the end of the SOME/IP message.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Request ID allows a provider and subscriber to differentiate </span>
+<span class="c1">-- multiple parallel uses of the same method, event, getter or setter.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Protocol Version identifies the used SOME/IP Header format </span>
+<span class="c1">-- (not including the Payload format).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Interface Version shall be an 8 Bit field that contains the </span>
+<span class="c1">-- MajorVersion of the Service Interface.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Message Type field is used to differentiate different types of </span>
+<span class="c1">-- messages.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Return Code shall be used to signal whether a request was </span>
+<span class="c1">-- successfully processed.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to </span>
+<span class="c1">-- the user. However, the Message ID shall be unique for the whole </span>
+<span class="c1">-- system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and</span>
+<span class="c1">-- should be handled via a comparable process.</span>
+<span class="c1">-- [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in</span>
+<span class="c1">-- the ID with 2^16 services with 2^15 methods.        </span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID</span>
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageId</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">MessageId</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">MessageId</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">service_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">method_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">event_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value provides the undissected Message ID.</span>
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">MessageId</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">MessageId</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Service ID.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Single bit to flag, if there is a Method or a Event ID.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Method ID.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.1.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Event ID.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.6</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The Request ID allows a provider and subscriber to differentiate </span>
+<span class="c1">-- multiple parallel usesof the same method, event, getter or setter.</span>
+<span class="c1">-- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID</span>
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">RequestId</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">RequestId</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">RequestId</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">client_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value provides the undissected Request ID.</span>
+<span class="n">SomeIp</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">RequestId</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">RequestId</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

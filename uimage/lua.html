@@ -138,7 +138,22 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="U-Boot Image wrapper parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="U-Boot Image wrapper parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="U-Boot Image wrapper parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="U-Boot Image wrapper parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -159,6 +174,11 @@ with sha1 and md5 checksums.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="U-Boot Image wrapper parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -195,6 +215,146 @@ with sha1 and md5 checksums.</p>
             
         </h2>
 
+        
+
+        <h3>uimage.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/uimage.lua" download="uimage.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The new uImage format allows more flexibility in handling images of various</span>
+<span class="c1">-- types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
+<span class="c1">-- with sha1 and md5 checksums.</span>
+<span class="c1">-- See also: Source (https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h)</span>
+<span class="n">Uimage</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Uimage</span><span class="p">.</span><span class="n">UimageOs</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">openbsd</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">netbsd</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">freebsd</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">bsd4_4</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">linux</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">svr4</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">esix</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">solaris</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">irix</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">sco</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">dell</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">ncr</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">lynxos</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">vxworks</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">psos</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+  <span class="n">qnx</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="n">u_boot</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+  <span class="n">rtems</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="n">artos</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+  <span class="n">unity</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="n">integrity</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Uimage</span><span class="p">.</span><span class="n">UimageArch</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">arm</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">i386</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">ia64</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">mips</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">mips64</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">ppc</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">s390</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">sh</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">sparc</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">sparc64</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">m68k</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">nios</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">microblaze</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">nios2</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+  <span class="n">blackfin</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="n">avr32</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+  <span class="n">st200</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Uimage</span><span class="p">.</span><span class="n">UimageComp</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">gzip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">bzip2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">lzma</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">lzo</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Uimage</span><span class="p">.</span><span class="n">UimageType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">standalone</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">kernel</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">ramdisk</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">multi</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">firmware</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">script</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">filesystem</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">flatdt</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">kwbimage</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">imximage</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Uimage</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Uimage</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Uimage</span><span class="p">.</span><span class="n">Uheader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">len_image</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">Uimage</span><span class="p">.</span><span class="n">Uheader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Uimage</span><span class="p">.</span><span class="nc">Uheader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Uimage</span><span class="p">.</span><span class="nc">Uheader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\039\005\025\086</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\039\005\025\086</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header_crc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">load_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entry_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_crc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os_type</span> <span class="o">=</span> <span class="n">Uimage</span><span class="p">.</span><span class="n">UimageOs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">architecture</span> <span class="o">=</span> <span class="n">Uimage</span><span class="p">.</span><span class="n">UimageArch</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">=</span> <span class="n">Uimage</span><span class="p">.</span><span class="n">UimageType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">compression_type</span> <span class="o">=</span> <span class="n">Uimage</span><span class="p">.</span><span class="n">UimageComp</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

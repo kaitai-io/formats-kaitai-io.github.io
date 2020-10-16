@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Google Protocol Buffers (protobuf): Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Google Protocol Buffers (protobuf)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Google Protocol Buffers (protobuf):
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Google Protocol Buffers (AKA protobuf) is a popular data
+serialization scheme used for communication protocols, data storage,
+etc. There are implementations are available for almost every
+popular language. The focus points of this scheme are brevity (data
+is encoded in a very size-efficient manner) and extensibility (one
+can add keys to the structure, while keeping it readable in previous
+version of software).</p>
+<p>Protobuf uses semi-self-describing encoding scheme for its
+messages. It means that it is possible to parse overall structure of
+the message (skipping over fields one can't understand), but to
+fully understand the message, one needs a protocol definition file
+(<code>.proto</code>). To be specific:</p>
+<ul>
+<li>&quot;Keys&quot; in key-value pairs provided in the message are identified
+only with an integer &quot;field tag&quot;. <code>.proto</code> file provides info on
+which symbolic field names these field tags map to.</li>
+<li>&quot;Keys&quot; also provide something called &quot;wire type&quot;. It's not a data
+type in its common sense (i.e. you can't, for example, distinguish
+<code>sint32</code> vs <code>uint32</code> vs some enum, or <code>string</code> from <code>bytes</code>), but
+it's enough information to determine how many bytes to
+parse. Interpretation of the value should be done according to the
+type specified in <code>.proto</code> file.</li>
+<li>There's no direct information on which fields are optional /
+required, which fields may be repeated or constitute a map, what
+restrictions are placed on fields usage in a single message, what
+are the fields' default values, etc, etc.</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Google Protocol Buffers (protobuf)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Google Protocol Buffers (protobuf) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Google Protocol Buffers (protobuf) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Google Protocol Buffers (protobuf) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Google Protocol Buffers (protobuf) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Google Protocol Buffers (protobuf) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Google Protocol Buffers (protobuf) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Google Protocol Buffers (protobuf) parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Google Protocol Buffers (protobuf) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Google Protocol Buffers (protobuf) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Google Protocol Buffers (protobuf) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Google Protocol Buffers (protobuf) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Google Protocol Buffers (protobuf) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Google Protocol Buffers (protobuf)
+            
+        </h2>
+
+        
+
+        <h3>google_protobuf.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/google_protobuf.nim" download="google_protobuf.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">vlq_base128_le</span>
+
+<span class="kn">import</span> <span class="s">&quot;vlq_base128_le&quot;</span>
+<span class="k">type</span>
+  <span class="n">GoogleProtobuf</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">pairs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">GoogleProtobuf_Pair</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">GoogleProtobuf_Pair</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">key</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Le</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GoogleProtobuf</span>
+    <span class="p">`</span><span class="n">wireTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span>
+    <span class="p">`</span><span class="n">fieldTagInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">varint</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bit_64</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">len_delimited</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">group_start</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">group_end</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">bit_32</span> <span class="o">=</span> <span class="mi">5</span>
+  <span class="n">GoogleProtobuf_DelimitedBytes</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Le</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GoogleProtobuf</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes</span>
+
+<span class="k">proc </span><span class="nf">wireType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">):</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span>
+<span class="k">proc </span><span class="nf">fieldTag</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">):</span> <span class="kt">int</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Google</span> <span class="n">Protocol</span> <span class="n">Buffers</span> <span class="p">(</span><span class="n">AKA</span> <span class="n">protobuf</span><span class="p">)</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">popular</span> <span class="n">data</span>
+<span class="n">serialization</span> <span class="n">scheme</span> <span class="n">used</span> <span class="k">for</span> <span class="n">communication</span> <span class="n">protocols</span><span class="p">,</span> <span class="n">data</span> <span class="n">storage</span><span class="p">,</span>
+<span class="n">etc</span><span class="p">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">implementations</span> <span class="n">are</span> <span class="n">available</span> <span class="k">for</span> <span class="n">almost</span> <span class="n">every</span>
+<span class="n">popular</span> <span class="n">language</span><span class="p">.</span> <span class="n">The</span> <span class="n">focus</span> <span class="n">points</span> <span class="k">of</span> <span class="n">this</span> <span class="n">scheme</span> <span class="n">are</span> <span class="n">brevity</span> <span class="p">(</span><span class="n">data</span>
+<span class="ow">is</span> <span class="n">encoded</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">very</span> <span class="n">size</span><span class="o">-</span><span class="n">efficient</span> <span class="n">manner</span><span class="p">)</span> <span class="ow">and</span> <span class="n">extensibility</span> <span class="p">(</span><span class="n">one</span>
+<span class="n">can</span> <span class="n">add</span> <span class="n">keys</span> <span class="n">to</span> <span class="n">the</span> <span class="n">structure</span><span class="p">,</span> <span class="k">while</span> <span class="n">keeping</span> <span class="n">it</span> <span class="n">readable</span> <span class="ow">in</span> <span class="n">previous</span>
+<span class="n">version</span> <span class="k">of</span> <span class="n">software</span><span class="p">).</span>
+
+<span class="n">Protobuf</span> <span class="n">uses</span> <span class="n">semi</span><span class="o">-</span><span class="n">self</span><span class="o">-</span><span class="n">describing</span> <span class="n">encoding</span> <span class="n">scheme</span> <span class="k">for</span> <span class="n">its</span>
+<span class="n">messages</span><span class="p">.</span> <span class="n">It</span> <span class="n">means</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">possible</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">overall</span> <span class="n">structure</span> <span class="k">of</span>
+<span class="n">the</span> <span class="n">message</span> <span class="p">(</span><span class="n">skipping</span> <span class="n">over</span> <span class="n">fields</span> <span class="n">one</span> <span class="n">can</span><span class="sc">&#39;t understand), but to</span>
+<span class="n">fully</span> <span class="n">understand</span> <span class="n">the</span> <span class="n">message</span><span class="p">,</span> <span class="n">one</span> <span class="n">needs</span> <span class="n">a</span> <span class="n">protocol</span> <span class="n">definition</span> <span class="n">file</span>
+<span class="p">(`.</span><span class="n">proto</span><span class="p">`).</span> <span class="n">To</span> <span class="n">be</span> <span class="n">specific</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="s">&quot;Keys&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="n">provided</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">message</span> <span class="n">are</span> <span class="n">identified</span>
+  <span class="n">only</span> <span class="k">with</span> <span class="n">an</span> <span class="n">integer</span> <span class="s">&quot;field tag&quot;</span><span class="p">.</span> <span class="p">`.</span><span class="n">proto</span><span class="p">`</span> <span class="n">file</span> <span class="n">provides</span> <span class="n">info</span> <span class="n">on</span>
+  <span class="n">which</span> <span class="n">symbolic</span> <span class="n">field</span> <span class="n">names</span> <span class="n">these</span> <span class="n">field</span> <span class="n">tags</span> <span class="n">map</span> <span class="n">to</span><span class="p">.</span>
+<span class="o">*</span> <span class="s">&quot;Keys&quot;</span> <span class="n">also</span> <span class="n">provide</span> <span class="n">something</span> <span class="n">called</span> <span class="s">&quot;wire type&quot;</span><span class="p">.</span> <span class="n">It</span><span class="sc">&#39;s not a data</span>
+  <span class="k">type</span> <span class="ow">in</span> <span class="n">its</span> <span class="n">common</span> <span class="n">sense</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">you</span> <span class="n">can</span><span class="sc">&#39;t, for example, distinguish</span>
+  <span class="p">`</span><span class="n">sint32</span><span class="p">`</span> <span class="n">vs</span> <span class="p">`</span><span class="n">uint32</span><span class="p">`</span> <span class="n">vs</span> <span class="n">some</span> <span class="k">enum</span><span class="p">,</span> <span class="ow">or</span> <span class="p">`</span><span class="kt">string</span><span class="p">`</span> <span class="kn">from</span> <span class="p">`</span><span class="n">bytes</span><span class="p">`),</span> <span class="n">but</span>
+  <span class="n">it</span><span class="sc">&#39;s enough information to determine how many bytes to</span>
+  <span class="n">parse</span><span class="p">.</span> <span class="n">Interpretation</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span> <span class="n">should</span> <span class="n">be</span> <span class="n">done</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span>
+  <span class="k">type</span> <span class="n">specified</span> <span class="ow">in</span> <span class="p">`.</span><span class="n">proto</span><span class="p">`</span> <span class="n">file</span><span class="p">.</span>
+<span class="o">*</span> <span class="n">There</span><span class="sc">&#39;s no direct information on which fields are optional /</span>
+  <span class="n">required</span><span class="p">,</span> <span class="n">which</span> <span class="n">fields</span> <span class="n">may</span> <span class="n">be</span> <span class="n">repeated</span> <span class="ow">or</span> <span class="n">constitute</span> <span class="n">a</span> <span class="n">map</span><span class="p">,</span> <span class="n">what</span>
+  <span class="n">restrictions</span> <span class="n">are</span> <span class="n">placed</span> <span class="n">on</span> <span class="n">fields</span> <span class="n">usage</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">single</span> <span class="n">message</span><span class="p">,</span> <span class="n">what</span>
+  <span class="n">are</span> <span class="n">the</span> <span class="n">fields</span><span class="sc">&#39; default values, etc, etc.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://developers.google.com/protocol-buffers/docs/encoding&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GoogleProtobuf =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="n">which</span> <span class="n">constitute</span> <span class="n">a</span> <span class="n">message</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">pairs</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf], filename: string): GoogleProtobuf =</span>
+  <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Key</span><span class="o">-</span><span class="n">value</span> <span class="n">pair</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">GoogleProtobuf_Pair</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Key</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">bit</span><span class="o">-</span><span class="n">mapped</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">:</span> <span class="n">lower</span> <span class="mi">3</span> <span class="n">bits</span>
+<span class="n">are</span> <span class="n">used</span> <span class="k">for</span> <span class="s">&quot;wire type&quot;</span><span class="p">,</span> <span class="ow">and</span> <span class="n">everything</span> <span class="n">higher</span> <span class="n">designates</span>
+<span class="n">an</span> <span class="n">integer</span> <span class="s">&quot;field tag&quot;</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">keyExpr</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">keyExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Value</span> <span class="n">that</span> <span class="n">corresponds</span> <span class="n">to</span> <span class="n">field</span> <span class="n">identified</span> <span class="n">by</span>
+<span class="p">`</span><span class="n">field_tag</span><span class="p">`.</span> <span class="k">Type</span> <span class="ow">is</span> <span class="n">determined</span> <span class="n">approximately</span><span class="p">:</span> <span class="n">there</span> <span class="ow">is</span>
+<span class="n">enough</span> <span class="n">information</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">it</span> <span class="n">unambiguously</span> <span class="kn">from</span> <span class="n">a</span> <span class="n">stream</span><span class="p">,</span>
+<span class="n">but</span> <span class="n">further</span> <span class="n">infromation</span> <span class="kn">from</span> <span class="p">`.</span><span class="n">proto</span><span class="p">`</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">to</span>
+<span class="n">interprete</span> <span class="n">it</span> <span class="n">properly</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">wireType</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">google_protobuf</span><span class="p">.</span><span class="n">varint</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">google_protobuf</span><span class="p">.</span><span class="n">len_delimited</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">google_protobuf</span><span class="p">.</span><span class="n">bit_64</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">google_protobuf</span><span class="p">.</span><span class="n">bit_32</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">wireType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">):</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="s">&quot;Wire type&quot;</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="s">&quot;key&quot;</span> <span class="n">that</span> <span class="n">carries</span> <span class="n">enough</span>
+<span class="n">information</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">value</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">wire</span><span class="p">,</span> <span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">read</span> <span class="n">correct</span>
+<span class="n">amount</span> <span class="k">of</span> <span class="n">bytes</span><span class="p">,</span> <span class="n">but</span> <span class="n">there</span><span class="sc">&#39;s not enough informaton to</span>
+<span class="n">interprete</span> <span class="ow">in</span> <span class="n">unambiguously</span><span class="p">.</span> <span class="k">For</span> <span class="n">example</span><span class="p">,</span> <span class="n">one</span> <span class="n">can</span><span class="sc">&#39;t clearly</span>
+<span class="n">distinguish</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">fixed</span><span class="o">-</span><span class="n">sized</span> <span class="n">integers</span> <span class="kn">from</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">floats</span><span class="p">,</span>
+<span class="n">signed</span> <span class="n">zigzag</span><span class="o">-</span><span class="n">encoded</span> <span class="n">varints</span> <span class="kn">from</span> <span class="n">regular</span> <span class="n">unsigned</span> <span class="n">varints</span><span class="p">,</span>
+<span class="n">arbitrary</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">encoded</span> <span class="n">strings</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
+  <span class="k">let</span> <span class="n">wireTypeInstExpr</span> <span class="o">=</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">(</span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">=</span> <span class="n">wireTypeInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
+
+<span class="k">proc </span><span class="nf">fieldTag</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Identifies</span> <span class="n">a</span> <span class="n">field</span> <span class="k">of</span> <span class="n">protocol</span><span class="p">.</span> <span class="n">One</span> <span class="n">can</span> <span class="n">look</span> <span class="n">up</span> <span class="n">symbolic</span>
+<span class="n">field</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">a</span> <span class="p">`.</span><span class="n">proto</span><span class="p">`</span> <span class="n">file</span> <span class="n">by</span> <span class="n">this</span> <span class="n">field</span> <span class="n">tag</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
+  <span class="k">let</span> <span class="n">fieldTagInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="ow">shr</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">=</span> <span class="n">fieldTagInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], filename: string): GoogleProtobuf_Pair =</span>
+  <span class="n">GoogleProtobuf_Pair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">lenExpr</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">lenExpr</span>
+  <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], filename: string): GoogleProtobuf_DelimitedBytes =</span>
+  <span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

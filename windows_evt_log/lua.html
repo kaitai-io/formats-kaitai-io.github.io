@@ -161,7 +161,22 @@ records.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Windows Event Log (EVT) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Windows Event Log (EVT) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows Event Log (EVT) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Windows Event Log (EVT) parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -182,6 +197,11 @@ records.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Windows Event Log (EVT) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Windows Event Log (EVT) parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -218,6 +238,289 @@ records.</p>
             
         </h2>
 
+        
+
+        <h3>windows_evt_log.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/windows_evt_log.lua" download="windows_evt_log.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- EVT files are Windows Event Log files written by older Windows</span>
+<span class="c1">-- operating systems (2000, XP, 2003). They are used as binary log</span>
+<span class="c1">-- files by several major Windows subsystems and</span>
+<span class="c1">-- applications. Typically, several of them can be found in</span>
+<span class="c1">-- `%WINDIR%\system32\config` directory:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * Application = `AppEvent.evt`</span>
+<span class="c1">-- * System = `SysEvent.evt`</span>
+<span class="c1">-- * Security = `SecEvent.evt`</span>
+<span class="c1">-- </span>
+<span class="c1">-- Alternatively, one can export any system event log as distinct .evt</span>
+<span class="c1">-- file using relevant option in Event Viewer application.</span>
+<span class="c1">-- </span>
+<span class="c1">-- A Windows application can submit an entry into these logs using</span>
+<span class="c1">-- [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)</span>
+<span class="c1">-- function of Windows API.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Internally, EVT files consist of a fixed-size header and event</span>
+<span class="c1">-- records. There are several usage scenarios (non-wrapping vs wrapping</span>
+<span class="c1">-- log files) which result in slightly different organization of</span>
+<span class="c1">-- records.</span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx)</span>
+<span class="n">WindowsEvtLog</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Header</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">records</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">records</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Record</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx)</span>
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Header</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\076\102\076\101</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\076\102\076\101</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_start</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_end</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">cur_rec_idx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">oldest_rec_idx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_file_max</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Flags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">retention</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_header_2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Size of the header structure, must be 0x30.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Offset of oldest record kept in this log file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Offset of EOF log record, which is a placeholder for new record.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Index of current record, where a new submission would be</span>
+<span class="c1">-- written to (normally there should to EOF log record there).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Index of oldest record in the log file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Total maximum size of the log file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Size of the header structure repeated again, and again it must be 0x30.</span>
+
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">Flags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">Flags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">archive</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">log_full</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wrap</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- True if archive attribute has been set for this log file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- True if last write operation failed due to log being full.</span>
+<span class="c1">-- </span>
+<span class="c1">-- True if wrapping of record has occured.</span>
+<span class="c1">-- </span>
+<span class="c1">-- True if write operation was in progress, but log file</span>
+<span class="c1">-- wasn&#39;t properly closed.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx)</span>
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">Record</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Record</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">Record</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_record</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">1699505740</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">286331153</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">CursorRecordBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_record2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Size of whole record, including all headers, footers and data.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Type of record. Normal log records specify &quot;LfLe&quot;</span>
+<span class="c1">-- (0x654c664c) in this field, cursor records use 0x11111111.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Record body interpretation depends on type of record. Body</span>
+<span class="c1">-- size is specified in a way that it won&#39;t include a 8-byte</span>
+<span class="c1">-- &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;</span>
+<span class="c1">-- (`len_record2`).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Size of whole record again.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx)</span>
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span><span class="p">.</span><span class="n">EventTypes</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="nb">error</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">audit_failure</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">audit_success</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">info</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">warning</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">RecordBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">RecordBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_generated</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_written</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">event_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">event_type</span> <span class="o">=</span> <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span><span class="p">.</span><span class="n">EventTypes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_strings</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">event_category</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_strings</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_user_sid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_user_sid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">user_sid</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">RecordBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">user_sid</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_user_sid</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_user_sid</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_user_sid</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_user_sid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_user_sid</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_user_sid</span>
+<span class="kr">end</span>
+
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">RecordBody</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">RecordBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_data</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Index of record in the file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Time when this record was generated, POSIX timestamp format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Time when thsi record was written into the log file, POSIX timestamp format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Identifier of an event, meaning is specific to particular</span>
+<span class="c1">-- source of events / event type.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Type of event.</span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx)</span>
+<span class="c1">-- </span>
+<span class="c1">-- Number of strings present in the log.</span>
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx)</span>
+<span class="c1">-- </span>
+<span class="c1">-- Offset of strings present in the log.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record)</span>
+<span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">CursorRecordBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">CursorRecordBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">WindowsEvtLog</span><span class="p">.</span><span class="nc">CursorRecordBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\034\034\034\034\051\051\051\051\068\068\068\068</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\034\034\034\034\051\051\051\051\068\068\068\068</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_first_record</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_next_record</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">idx_next_record</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">idx_first_record</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

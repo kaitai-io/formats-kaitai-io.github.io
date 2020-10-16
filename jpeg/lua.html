@@ -132,7 +132,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -153,6 +168,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -189,6 +209,324 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>jpeg.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/jpeg.lua" download="jpeg.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;exif&quot;</span><span class="p">)</span>
+<span class="n">Jpeg</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">ComponentId</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">cb</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">cr</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">q</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">segments</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">tem</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">sof0</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
+  <span class="n">sof1</span> <span class="o">=</span> <span class="mi">193</span><span class="p">,</span>
+  <span class="n">sof2</span> <span class="o">=</span> <span class="mi">194</span><span class="p">,</span>
+  <span class="n">sof3</span> <span class="o">=</span> <span class="mi">195</span><span class="p">,</span>
+  <span class="n">dht</span> <span class="o">=</span> <span class="mi">196</span><span class="p">,</span>
+  <span class="n">sof5</span> <span class="o">=</span> <span class="mi">197</span><span class="p">,</span>
+  <span class="n">sof6</span> <span class="o">=</span> <span class="mi">198</span><span class="p">,</span>
+  <span class="n">sof7</span> <span class="o">=</span> <span class="mi">199</span><span class="p">,</span>
+  <span class="n">soi</span> <span class="o">=</span> <span class="mi">216</span><span class="p">,</span>
+  <span class="n">eoi</span> <span class="o">=</span> <span class="mi">217</span><span class="p">,</span>
+  <span class="n">sos</span> <span class="o">=</span> <span class="mi">218</span><span class="p">,</span>
+  <span class="n">dqt</span> <span class="o">=</span> <span class="mi">219</span><span class="p">,</span>
+  <span class="n">dnl</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+  <span class="n">dri</span> <span class="o">=</span> <span class="mi">221</span><span class="p">,</span>
+  <span class="n">dhp</span> <span class="o">=</span> <span class="mi">222</span><span class="p">,</span>
+  <span class="n">app0</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+  <span class="n">app1</span> <span class="o">=</span> <span class="mi">225</span><span class="p">,</span>
+  <span class="n">app2</span> <span class="o">=</span> <span class="mi">226</span><span class="p">,</span>
+  <span class="n">app3</span> <span class="o">=</span> <span class="mi">227</span><span class="p">,</span>
+  <span class="n">app4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span>
+  <span class="n">app5</span> <span class="o">=</span> <span class="mi">229</span><span class="p">,</span>
+  <span class="n">app6</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span>
+  <span class="n">app7</span> <span class="o">=</span> <span class="mi">231</span><span class="p">,</span>
+  <span class="n">app8</span> <span class="o">=</span> <span class="mi">232</span><span class="p">,</span>
+  <span class="n">app9</span> <span class="o">=</span> <span class="mi">233</span><span class="p">,</span>
+  <span class="n">app10</span> <span class="o">=</span> <span class="mi">234</span><span class="p">,</span>
+  <span class="n">app11</span> <span class="o">=</span> <span class="mi">235</span><span class="p">,</span>
+  <span class="n">app12</span> <span class="o">=</span> <span class="mi">236</span><span class="p">,</span>
+  <span class="n">app13</span> <span class="o">=</span> <span class="mi">237</span><span class="p">,</span>
+  <span class="n">app14</span> <span class="o">=</span> <span class="mi">238</span><span class="p">,</span>
+  <span class="n">app15</span> <span class="o">=</span> <span class="mi">239</span><span class="p">,</span>
+  <span class="n">com</span> <span class="o">=</span> <span class="mi">254</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">Segment</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">Segment</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\255</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\255</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">~=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">soi</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">~=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">eoi</span><span class="p">))</span>  <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">~=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">soi</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">~=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">eoi</span><span class="p">))</span>  <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">marker</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">app1</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp1</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">app0</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp0</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">sof0</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">sos</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">else</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">==</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span><span class="p">.</span><span class="n">MarkerEnum</span><span class="p">.</span><span class="n">sos</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">image_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSos</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSos</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_components</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_components</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">components</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span><span class="p">.</span><span class="n">Component</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">start_spectral_selection</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">end_spectral</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">appr_bit_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Number of components in scan.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Scan components specification.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Start of spectral selection or predictor selection.</span>
+<span class="c1">-- </span>
+<span class="c1">-- End of spectral selection.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Successive approximation bit position high + Successive approximation bit position low or point transform.</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span><span class="p">.</span><span class="n">Component</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSos</span><span class="p">.</span><span class="nc">Component</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSos</span><span class="p">.</span><span class="nc">Component</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">ComponentId</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">huffman_table</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Scan component selector.</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp1</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentApp1</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentApp1</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;Exif&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">ExifInJpeg</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">bits_per_sample</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_components</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_components</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">components</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span><span class="p">.</span><span class="n">Component</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span><span class="p">.</span><span class="n">Component</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">.</span><span class="nc">Component</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">.</span><span class="nc">Component</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">ComponentId</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sampling_factors</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">quantization_table_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span><span class="p">.</span><span class="n">Component</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">sampling_x</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">.</span><span class="nc">Component</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sampling_x</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_x</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_x</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_x</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">sampling_factors</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_x</span>
+<span class="kr">end</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span><span class="p">.</span><span class="n">Component</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">sampling_y</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentSof0</span><span class="p">.</span><span class="nc">Component</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sampling_y</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_y</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_y</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sampling_factors</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_sampling_y</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Component selector.</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">ExifInJpeg</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">ExifInJpeg</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">ExifInJpeg</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">extra_zero</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">extra_zero</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">extra_zero</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_data</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Exif</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp0</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp0</span><span class="p">.</span><span class="n">DensityUnit</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">no_units</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">pixels_per_inch</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">pixels_per_cm</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentApp0</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Jpeg</span><span class="p">.</span><span class="nc">SegmentApp0</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">density_units</span> <span class="o">=</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp0</span><span class="p">.</span><span class="n">DensityUnit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">density_x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">density_y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thumbnail_x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thumbnail_y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">thumbnail</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">thumbnail_x</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">thumbnail_y</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Horizontal pixel density. Must not be zero.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Vertical pixel density. Must not be zero.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Horizontal pixel count of the following embedded RGB thumbnail. May be zero.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Vertical pixel count of the following embedded RGB thumbnail. May be zero.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

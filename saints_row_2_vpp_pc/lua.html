@@ -142,7 +142,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Saints Rows 2 game packages parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Saints Rows 2 game packages parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Saints Rows 2 game packages parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Saints Rows 2 game packages parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -163,6 +178,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="Saints Rows 2 game packages parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Saints Rows 2 game packages parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -199,6 +219,232 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>saints_row_2_vpp_pc.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/saints_row_2_vpp_pc.lua" download="saints_row_2_vpp_pc.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="n">SaintsRow2VppPc</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\206\010\137\081\004</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\206\010\137\081\004</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pad1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">335</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">container_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_offsets</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_filenames</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_extensions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth5</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth6</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth7</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth8</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth9</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">filenames</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filenames</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filenames</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_filenames</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_filenames</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_filenames</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_filenames</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_filenames</span> <span class="o">=</span> <span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Strings</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filenames</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ofs_extensions</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ofs_extensions</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_extensions</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_extensions</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_extensions</span> <span class="o">=</span> <span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_filenames</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">len_filenames</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2048</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_extensions</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">files</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_offsets</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_files</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span> <span class="o">=</span> <span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_files</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data_start</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data_start</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data_start</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data_start</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_data_start</span> <span class="o">=</span> <span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_extensions</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">len_extensions</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2048</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data_start</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">extensions</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_extensions</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_extensions</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_extensions</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_extensions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_extensions</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_extensions</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_extensions</span> <span class="o">=</span> <span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Strings</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_extensions</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ofs_filenames</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ofs_filenames</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_filenames</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_filenames</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_filenames</span> <span class="o">=</span> <span class="p">(((</span><span class="mi">2048</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">len_offsets</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">4294965248</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2048</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ofs_filenames</span>
+<span class="kr">end</span>
+
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">.</span><span class="n">Offset</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">.</span><span class="n">Offset</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">.</span><span class="nc">Offset</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">.</span><span class="nc">Offset</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ext_ofs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">smth2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">always_minus_1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">always_zero</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">.</span><span class="n">Offset</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">filename</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">.</span><span class="nc">Offset</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">filename</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filename</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filename</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">filenames</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">name_ofs</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_filename</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_filename</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">.</span><span class="n">Offset</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ext</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">.</span><span class="nc">Offset</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ext</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ext</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ext</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">extensions</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ext_ofs</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ext</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ext</span>
+<span class="kr">end</span>
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Offsets</span><span class="p">.</span><span class="n">Offset</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Offsets</span><span class="p">.</span><span class="nc">Offset</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">data_start</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="kr">end</span>
+
+
+<span class="n">SaintsRow2VppPc</span><span class="p">.</span><span class="n">Strings</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Strings</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SaintsRow2VppPc</span><span class="p">.</span><span class="nc">Strings</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

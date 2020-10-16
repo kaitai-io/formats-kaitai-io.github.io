@@ -160,7 +160,22 @@ for educational / research purposes.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="UTF-8-encoded string parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UTF-8-encoded string parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="UTF-8-encoded string parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="UTF-8-encoded string parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -181,6 +196,11 @@ for educational / research purposes.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="UTF-8-encoded string parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="UTF-8-encoded string parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -217,6 +237,155 @@ for educational / research purposes.</p>
             
         </h2>
 
+        
+
+        <h3>utf8_string.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/utf8_string.lua" download="utf8_string.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- UTF-8 is a popular character encoding scheme that allows to</span>
+<span class="c1">-- represent strings as sequence of code points defined in Unicode</span>
+<span class="c1">-- standard. Its features are:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * variable width (i.e. one code point might be represented by 1 to 4</span>
+<span class="c1">--   bytes)</span>
+<span class="c1">-- * backward compatiblity with ASCII</span>
+<span class="c1">-- * basic validity checking (and thus distinguishing from other legacy</span>
+<span class="c1">--   8-bit encodings)</span>
+<span class="c1">-- * maintaining sort order of codepoints if sorted as a byte array</span>
+<span class="c1">-- </span>
+<span class="c1">-- WARNING: For the vast majority of practical purposes of format</span>
+<span class="c1">-- definitions in Kaitai Struct, you&#39;d likely NOT want to use this and</span>
+<span class="c1">-- rather just use `type: str` with `encoding: utf8`. That will use</span>
+<span class="c1">-- native string implementations, which are most likely more efficient</span>
+<span class="c1">-- and will give you native language strings, rather than an array of</span>
+<span class="c1">-- individual codepoints.  This format definition is provided mostly</span>
+<span class="c1">-- for educational / research purposes.</span>
+<span class="n">Utf8String</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">codepoints</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">codepoints</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">byte2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">byte3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">byte4</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">raw1</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">raw1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw1</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw1</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">127</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))))))))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw1</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">raw4</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">raw4</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw4</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw4</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_raw4</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">byte4</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw4</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">raw3</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">raw3</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw3</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw3</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">byte3</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw3</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">value_as_int</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value_as_int</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value_as_int</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value_as_int</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_value_as_int</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">raw1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">raw2</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">((((</span><span class="n">self</span><span class="p">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">raw3</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(((((</span><span class="n">self</span><span class="p">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">raw3</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">raw4</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))))))))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value_as_int</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">raw2</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">raw2</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw2</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw2</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">byte2</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_raw2</span>
+<span class="kr">end</span>
+
+<span class="n">Utf8String</span><span class="p">.</span><span class="n">Utf8Codepoint</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Utf8String</span><span class="p">.</span><span class="nc">Utf8Codepoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))))))))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

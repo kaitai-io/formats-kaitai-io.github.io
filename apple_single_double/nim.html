@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>AppleSingle / AppleDouble: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">AppleSingle / AppleDouble</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>AppleSingle / AppleDouble:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>AppleSingle and AppleDouble files are used by certain Mac
+applications (e.g. Finder) to store Mac-specific file attributes on
+filesystems that do not support that.</p>
+<p>Syntactically, both formats are the same, the only difference is how
+they are being used:</p>
+<ul>
+<li>AppleSingle means that only one file will be created on external
+filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple
+terminology), and the attributes (AKA &quot;resource fork&quot;).</li>
+<li>AppleDouble means that two files will be created: a normal file
+that keeps the data (&quot;data fork&quot;) is kept separately from an
+auxiliary file that contains attributes (&quot;resource fork&quot;), which
+is kept with the same name, but starting with an extra dot and
+underscore <code>._</code> to keep it hidden.</li>
+</ul>
+<p>In modern practice (Mac OS X), Finder only uses AppleDouble to keep
+compatibility with other OSes, as virtually nobody outside of Mac
+understands how to access data in AppleSingle container.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            <li><a href="https://tools.ietf.org/html/rfc1740">RFC 1740</a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q4781113">Wikidata Q4781113</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/AppleDouble_header_file">AppleDouble header file in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/AppleDouble">AppleDouble in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of AppleSingle / AppleDouble
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="AppleSingle / AppleDouble parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="AppleSingle / AppleDouble parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="AppleSingle / AppleDouble parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="AppleSingle / AppleDouble parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="AppleSingle / AppleDouble parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="AppleSingle / AppleDouble parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="AppleSingle / AppleDouble parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="AppleSingle / AppleDouble parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="AppleSingle / AppleDouble parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="AppleSingle / AppleDouble parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="AppleSingle / AppleDouble parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="AppleSingle / AppleDouble parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="AppleSingle / AppleDouble parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="AppleSingle / AppleDouble parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse AppleSingle / AppleDouble
+            
+        </h2>
+
+        
+
+        <h3>apple_single_double.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/apple_single_double.nim" download="apple_single_double.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">AppleSingleDouble</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble_FileType</span>
+    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">numEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AppleSingleDouble_Entry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">AppleSingleDouble_FileType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">apple_single</span> <span class="o">=</span> <span class="mi">333312</span>
+    <span class="n">apple_double</span> <span class="o">=</span> <span class="mi">333319</span>
+  <span class="n">AppleSingleDouble_Entry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble_Entry_Types</span>
+    <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble</span>
+    <span class="p">`</span><span class="n">rawBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">AppleSingleDouble_Entry_Types</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">data_fork</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">resource_fork</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">real_name</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">comment</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">icon_bw</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">icon_color</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">file_dates_info</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">finder_info</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">macintosh_file_info</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">prodos_file_info</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">msdos_file_info</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">afp_short_name</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">afp_file_info</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">afp_directory_id</span> <span class="o">=</span> <span class="mi">15</span>
+  <span class="n">AppleSingleDouble_FinderInfo</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">fileType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">fileCreator</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">location</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble_Point</span>
+    <span class="p">`</span><span class="n">folderId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble_Entry</span>
+  <span class="n">AppleSingleDouble_Point</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AppleSingleDouble_FinderInfo</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AppleSingleDouble</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Entry], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble): AppleSingleDouble_Entry</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_FinderInfo], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble_Entry): AppleSingleDouble_FinderInfo</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Point], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble_FinderInfo): AppleSingleDouble_Point</span>
+
+<span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AppleSingleDouble_Entry</span><span class="p">):</span> <span class="n">KaitaiStruct</span>
+
+
+<span class="sd">##[</span>
+<span class="n">AppleSingle</span> <span class="ow">and</span> <span class="n">AppleDouble</span> <span class="n">files</span> <span class="n">are</span> <span class="n">used</span> <span class="n">by</span> <span class="n">certain</span> <span class="n">Mac</span>
+<span class="n">applications</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span> <span class="n">Finder</span><span class="p">)</span> <span class="n">to</span> <span class="n">store</span> <span class="n">Mac</span><span class="o">-</span><span class="n">specific</span> <span class="n">file</span> <span class="n">attributes</span> <span class="n">on</span>
+<span class="n">filesystems</span> <span class="n">that</span> <span class="k">do</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">that</span><span class="p">.</span>
+
+<span class="n">Syntactically</span><span class="p">,</span> <span class="n">both</span> <span class="n">formats</span> <span class="n">are</span> <span class="n">the</span> <span class="n">same</span><span class="p">,</span> <span class="n">the</span> <span class="n">only</span> <span class="n">difference</span> <span class="ow">is</span> <span class="n">how</span>
+<span class="n">they</span> <span class="n">are</span> <span class="n">being</span> <span class="n">used</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="n">AppleSingle</span> <span class="n">means</span> <span class="n">that</span> <span class="n">only</span> <span class="n">one</span> <span class="n">file</span> <span class="n">will</span> <span class="n">be</span> <span class="n">created</span> <span class="n">on</span> <span class="n">external</span>
+  <span class="n">filesystem</span> <span class="n">that</span> <span class="n">will</span> <span class="n">hold</span> <span class="n">both</span> <span class="n">the</span> <span class="n">data</span> <span class="p">(</span><span class="n">AKA</span> <span class="s">&quot;data fork&quot;</span> <span class="ow">in</span> <span class="n">Apple</span>
+  <span class="n">terminology</span><span class="p">),</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">attributes</span> <span class="p">(</span><span class="n">AKA</span> <span class="s">&quot;resource fork&quot;</span><span class="p">).</span>
+<span class="o">*</span> <span class="n">AppleDouble</span> <span class="n">means</span> <span class="n">that</span> <span class="n">two</span> <span class="n">files</span> <span class="n">will</span> <span class="n">be</span> <span class="n">created</span><span class="p">:</span> <span class="n">a</span> <span class="n">normal</span> <span class="n">file</span>
+  <span class="n">that</span> <span class="n">keeps</span> <span class="n">the</span> <span class="n">data</span> <span class="p">(</span><span class="s">&quot;data fork&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="n">kept</span> <span class="n">separately</span> <span class="kn">from</span> <span class="n">an</span>
+  <span class="n">auxiliary</span> <span class="n">file</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">attributes</span> <span class="p">(</span><span class="s">&quot;resource fork&quot;</span><span class="p">),</span> <span class="n">which</span>
+  <span class="ow">is</span> <span class="n">kept</span> <span class="k">with</span> <span class="n">the</span> <span class="n">same</span> <span class="n">name</span><span class="p">,</span> <span class="n">but</span> <span class="n">starting</span> <span class="k">with</span> <span class="n">an</span> <span class="n">extra</span> <span class="n">dot</span> <span class="ow">and</span>
+  <span class="n">underscore</span> <span class="p">`.</span><span class="err">_` to keep it hidden.</span>
+
+<span class="ow">In</span> <span class="n">modern</span> <span class="n">practice</span> <span class="p">(</span><span class="n">Mac</span> <span class="n">OS</span> <span class="n">X</span><span class="p">),</span> <span class="n">Finder</span> <span class="n">only</span> <span class="n">uses</span> <span class="n">AppleDouble</span> <span class="n">to</span> <span class="n">keep</span>
+<span class="n">compatibility</span> <span class="k">with</span> <span class="n">other</span> <span class="n">OSes</span><span class="p">,</span> <span class="k">as</span> <span class="n">virtually</span> <span class="n">nobody</span> <span class="n">outside</span> <span class="k">of</span> <span class="n">Mac</span>
+<span class="n">understands</span> <span class="n">how</span> <span class="n">to</span> <span class="n">access</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">AppleSingle</span> <span class="n">container</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AppleSingleDouble =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AppleSingleDouble</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">AppleSingleDouble_FileType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Must</span> <span class="n">be</span> <span class="n">all</span> <span class="mf">0.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+  <span class="k">let</span> <span class="n">numEntriesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numEntries</span> <span class="o">=</span> <span class="n">numEntriesExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numEntries</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">AppleSingleDouble_Entry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble], filename: string): AppleSingleDouble =</span>
+  <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Entry], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble): AppleSingleDouble_Entry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AppleSingleDouble_Entry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">AppleSingleDouble_Entry_Types</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+  <span class="k">let</span> <span class="n">ofsBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
+  <span class="k">let</span> <span class="n">lenBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBody</span> <span class="o">=</span> <span class="n">lenBodyExpr</span>
+
+<span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AppleSingleDouble_Entry</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">apple_single_double</span><span class="p">.</span><span class="n">finder_info</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">AppleSingleDouble_FinderInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Entry], filename: string): AppleSingleDouble_Entry =</span>
+  <span class="n">AppleSingleDouble_Entry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Information</span> <span class="n">specific</span> <span class="n">to</span> <span class="n">Finder</span>
+<span class="o">@</span><span class="n">see</span> <span class="s">&quot;older Inside Macintosh, Volume II page 84 or Volume IV page 104.&quot;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_FinderInfo], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble_Entry): AppleSingleDouble_FinderInfo =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AppleSingleDouble_FinderInfo</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">fileTypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fileType</span> <span class="o">=</span> <span class="n">fileTypeExpr</span>
+  <span class="k">let</span> <span class="n">fileCreatorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fileCreator</span> <span class="o">=</span> <span class="n">fileCreatorExpr</span>
+  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">File</span> <span class="n">icon</span><span class="sc">&#39;s coordinates when displaying this folder.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">locationExpr</span> <span class="o">=</span> <span class="n">AppleSingleDouble_Point</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">locationExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">File</span> <span class="n">folder</span> <span class="n">ID</span> <span class="p">(</span><span class="o">=</span><span class="n">window</span><span class="p">).</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">folderIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">folderId</span> <span class="o">=</span> <span class="n">folderIdExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_FinderInfo], filename: string): AppleSingleDouble_FinderInfo =</span>
+  <span class="n">AppleSingleDouble_FinderInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Specifies</span> <span class="mi">2</span><span class="err">D coordinate in QuickDraw grid.</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Point], io: KaitaiStream, root: KaitaiStruct, parent: AppleSingleDouble_FinderInfo): AppleSingleDouble_Point =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AppleSingleDouble_Point</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AppleSingleDouble</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">xExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">xExpr</span>
+  <span class="k">let</span> <span class="n">yExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">yExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AppleSingleDouble_Point], filename: string): AppleSingleDouble_Point =</span>
+  <span class="n">AppleSingleDouble_Point</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

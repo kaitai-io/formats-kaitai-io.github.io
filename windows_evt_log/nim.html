@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows Event Log (EVT): Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Logs</li>
+        <li class="active">Windows Event Log (EVT)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows Event Log (EVT):
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>EVT files are Windows Event Log files written by older Windows
+operating systems (2000, XP, 2003). They are used as binary log
+files by several major Windows subsystems and
+applications. Typically, several of them can be found in
+<code>%WINDIR%\system32\config</code> directory:</p>
+<ul>
+<li>Application = <code>AppEvent.evt</code></li>
+<li>System = <code>SysEvent.evt</code></li>
+<li>Security = <code>SecEvent.evt</code></li>
+</ul>
+<p>Alternatively, one can export any system event log as distinct .evt
+file using relevant option in Event Viewer application.</p>
+<p>A Windows application can submit an entry into these logs using
+<a href="https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx">ReportEvent</a>
+function of Windows API.</p>
+<p>Internally, EVT files consist of a fixed-size header and event
+records. There are several usage scenarios (non-wrapping vs wrapping
+log files) which result in slightly different organization of
+records.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        evt
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows Event Log (EVT)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows Event Log (EVT) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Windows Event Log (EVT) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Windows Event Log (EVT) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows Event Log (EVT) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Windows Event Log (EVT) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows Event Log (EVT) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows Event Log (EVT) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Windows Event Log (EVT) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Windows Event Log (EVT) parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Windows Event Log (EVT) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Windows Event Log (EVT) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows Event Log (EVT) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows Event Log (EVT) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows Event Log (EVT) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Windows Event Log (EVT)
+            
+        </h2>
+
+        
+
+        <h3>windows_evt_log.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/windows_evt_log.nim" download="windows_evt_log.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">WindowsEvtLog</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_Header</span>
+    <span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">WindowsEvtLog_Record</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">WindowsEvtLog_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">versionMajor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">versionMinor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsStart</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsEnd</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">curRecIdx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">oldestRecIdx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenFileMax</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_Header_Flags</span>
+    <span class="p">`</span><span class="n">retention</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenHeader2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog</span>
+  <span class="n">WindowsEvtLog_Header_Flags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">archive</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">logFull</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">wrap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">dirty</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_Header</span>
+  <span class="n">WindowsEvtLog_Record</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenRecord2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog</span>
+    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">WindowsEvtLog_RecordBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">idx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">timeGenerated</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">timeWritten</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">eventId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">eventType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_RecordBody_EventTypes</span>
+    <span class="p">`</span><span class="n">numStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">eventCategory</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">ofsStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenUserSid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsUserSid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_Record</span>
+    <span class="p">`</span><span class="n">userSidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">WindowsEvtLog_RecordBody_EventTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">audit_failure</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">audit_success</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">warning</span> <span class="o">=</span> <span class="mi">5</span>
+  <span class="n">WindowsEvtLog_CursorRecordBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">ofsFirstRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsNextRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">idxNextRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">idxFirstRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsEvtLog_Record</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsEvtLog</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Header</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header_Flags], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Header): WindowsEvtLog_Header_Flags</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Record], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Record</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_RecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_RecordBody</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody</span>
+
+<span class="k">proc </span><span class="nf">userSid</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsEvtLog_RecordBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc </span><span class="nf">data</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsEvtLog_RecordBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+
+
+<span class="sd">##[</span>
+<span class="n">EVT</span> <span class="n">files</span> <span class="n">are</span> <span class="n">Windows</span> <span class="n">Event</span> <span class="n">Log</span> <span class="n">files</span> <span class="n">written</span> <span class="n">by</span> <span class="n">older</span> <span class="n">Windows</span>
+<span class="n">operating</span> <span class="n">systems</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">XP</span><span class="p">,</span> <span class="mi">2003</span><span class="p">).</span> <span class="n">They</span> <span class="n">are</span> <span class="n">used</span> <span class="k">as</span> <span class="n">binary</span> <span class="n">log</span>
+<span class="n">files</span> <span class="n">by</span> <span class="n">several</span> <span class="n">major</span> <span class="n">Windows</span> <span class="n">subsystems</span> <span class="ow">and</span>
+<span class="n">applications</span><span class="p">.</span> <span class="n">Typically</span><span class="p">,</span> <span class="n">several</span> <span class="k">of</span> <span class="n">them</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="ow">in</span>
+<span class="p">`</span><span class="o">%</span><span class="n">WINDIR</span><span class="o">%\</span><span class="n">system32</span><span class="o">\</span><span class="n">config</span><span class="p">`</span> <span class="n">directory</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="n">Application</span> <span class="o">=</span> <span class="p">`</span><span class="n">AppEvent</span><span class="p">.</span><span class="n">evt</span><span class="p">`</span>
+<span class="o">*</span> <span class="n">System</span> <span class="o">=</span> <span class="p">`</span><span class="n">SysEvent</span><span class="p">.</span><span class="n">evt</span><span class="p">`</span>
+<span class="o">*</span> <span class="n">Security</span> <span class="o">=</span> <span class="p">`</span><span class="n">SecEvent</span><span class="p">.</span><span class="n">evt</span><span class="p">`</span>
+
+<span class="n">Alternatively</span><span class="p">,</span> <span class="n">one</span> <span class="n">can</span> <span class="k">export</span> <span class="n">any</span> <span class="n">system</span> <span class="n">event</span> <span class="n">log</span> <span class="k">as</span> <span class="k">distinct</span> <span class="p">.</span><span class="n">evt</span>
+<span class="n">file</span> <span class="n">using</span> <span class="n">relevant</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">Event</span> <span class="n">Viewer</span> <span class="n">application</span><span class="p">.</span>
+
+<span class="n">A</span> <span class="n">Windows</span> <span class="n">application</span> <span class="n">can</span> <span class="n">submit</span> <span class="n">an</span> <span class="n">entry</span> <span class="n">into</span> <span class="n">these</span> <span class="n">logs</span> <span class="n">using</span>
+<span class="o">[</span><span class="n">ReportEvent</span><span class="o">]</span><span class="p">(</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">msdn</span><span class="p">.</span><span class="n">microsoft</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">en</span><span class="o">-</span><span class="n">us</span><span class="o">/</span><span class="n">library</span><span class="o">/</span><span class="n">aa363679</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="n">vs</span><span class="p">.</span><span class="mi">85</span><span class="p">).</span><span class="n">aspx</span><span class="p">)</span>
+<span class="n">function</span> <span class="k">of</span> <span class="n">Windows</span> <span class="n">API</span><span class="p">.</span>
+
+<span class="n">Internally</span><span class="p">,</span> <span class="n">EVT</span> <span class="n">files</span> <span class="n">consist</span> <span class="k">of</span> <span class="n">a</span> <span class="n">fixed</span><span class="o">-</span><span class="n">size</span> <span class="n">header</span> <span class="ow">and</span> <span class="n">event</span>
+<span class="n">records</span><span class="p">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">several</span> <span class="n">usage</span> <span class="n">scenarios</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">wrapping</span> <span class="n">vs</span> <span class="n">wrapping</span>
+<span class="n">log</span> <span class="n">files</span><span class="p">)</span> <span class="n">which</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">slightly</span> <span class="n">different</span> <span class="n">organization</span> <span class="k">of</span>
+<span class="n">records</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsEvtLog =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">WindowsEvtLog_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">WindowsEvtLog_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog], filename: string): WindowsEvtLog =</span>
+  <span class="n">WindowsEvtLog</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Header =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog_Header</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span> <span class="n">structure</span><span class="p">,</span> <span class="n">must</span> <span class="n">be</span> <span class="mh">0x30</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">=</span> <span class="n">lenHeaderExpr</span>
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">versionMajorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionMajor</span> <span class="o">=</span> <span class="n">versionMajorExpr</span>
+  <span class="k">let</span> <span class="n">versionMinorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionMinor</span> <span class="o">=</span> <span class="n">versionMinorExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Offset</span> <span class="k">of</span> <span class="n">oldest</span> <span class="n">record</span> <span class="n">kept</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">log</span> <span class="n">file</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ofsStartExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsStart</span> <span class="o">=</span> <span class="n">ofsStartExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Offset</span> <span class="k">of</span> <span class="n">EOF</span> <span class="n">log</span> <span class="n">record</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">placeholder</span> <span class="k">for</span> <span class="n">new</span> <span class="n">record</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ofsEndExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsEnd</span> <span class="o">=</span> <span class="n">ofsEndExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Index</span> <span class="k">of</span> <span class="n">current</span> <span class="n">record</span><span class="p">,</span> <span class="n">where</span> <span class="n">a</span> <span class="n">new</span> <span class="n">submission</span> <span class="n">would</span> <span class="n">be</span>
+<span class="n">written</span> <span class="n">to</span> <span class="p">(</span><span class="n">normally</span> <span class="n">there</span> <span class="n">should</span> <span class="n">to</span> <span class="n">EOF</span> <span class="n">log</span> <span class="n">record</span> <span class="n">there</span><span class="p">).</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">curRecIdxExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">curRecIdx</span> <span class="o">=</span> <span class="n">curRecIdxExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Index</span> <span class="k">of</span> <span class="n">oldest</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">log</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">oldestRecIdxExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">oldestRecIdx</span> <span class="o">=</span> <span class="n">oldestRecIdxExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Total</span> <span class="n">maximum</span> <span class="n">size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">log</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenFileMaxExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenFileMax</span> <span class="o">=</span> <span class="n">lenFileMaxExpr</span>
+  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">WindowsEvtLog_Header_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
+  <span class="k">let</span> <span class="n">retentionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">retention</span> <span class="o">=</span> <span class="n">retentionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span> <span class="n">structure</span> <span class="n">repeated</span> <span class="n">again</span><span class="p">,</span> <span class="ow">and</span> <span class="n">again</span> <span class="n">it</span> <span class="n">must</span> <span class="n">be</span> <span class="mh">0x30</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenHeader2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeader2</span> <span class="o">=</span> <span class="n">lenHeader2Expr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header], filename: string): WindowsEvtLog_Header =</span>
+  <span class="n">WindowsEvtLog_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header_Flags], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Header): WindowsEvtLog_Header_Flags =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog_Header_Flags</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="kp">True</span> <span class="k">if</span> <span class="n">archive</span> <span class="n">attribute</span> <span class="n">has</span> <span class="n">been</span> <span class="kt">set</span> <span class="k">for</span> <span class="n">this</span> <span class="n">log</span> <span class="n">file</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">archiveExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">archive</span> <span class="o">=</span> <span class="n">archiveExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="kp">True</span> <span class="k">if</span> <span class="n">last</span> <span class="n">write</span> <span class="n">operation</span> <span class="n">failed</span> <span class="n">due</span> <span class="n">to</span> <span class="n">log</span> <span class="n">being</span> <span class="n">full</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">logFullExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">logFull</span> <span class="o">=</span> <span class="n">logFullExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="kp">True</span> <span class="k">if</span> <span class="n">wrapping</span> <span class="k">of</span> <span class="n">record</span> <span class="n">has</span> <span class="n">occured</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">wrapExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wrap</span> <span class="o">=</span> <span class="n">wrapExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="kp">True</span> <span class="k">if</span> <span class="n">write</span> <span class="n">operation</span> <span class="n">was</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">,</span> <span class="n">but</span> <span class="n">log</span> <span class="n">file</span>
+<span class="n">wasn</span><span class="sc">&#39;t properly closed.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">dirtyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="n">dirtyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Header_Flags], filename: string): WindowsEvtLog_Header_Flags =</span>
+  <span class="n">WindowsEvtLog_Header_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Record], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Record =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog_Record</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">whole</span> <span class="n">record</span><span class="p">,</span> <span class="n">including</span> <span class="n">all</span> <span class="n">headers</span><span class="p">,</span> <span class="n">footers</span> <span class="ow">and</span> <span class="n">data</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenRecord</span> <span class="o">=</span> <span class="n">lenRecordExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">Type</span> <span class="k">of</span> <span class="n">record</span><span class="p">.</span> <span class="n">Normal</span> <span class="n">log</span> <span class="n">records</span> <span class="n">specify</span> <span class="s">&quot;LfLe&quot;</span>
+<span class="p">(</span><span class="mh">0x654c664c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">field</span><span class="p">,</span> <span class="n">cursor</span> <span class="n">records</span> <span class="n">use</span> <span class="mh">0x11111111</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Record</span> <span class="n">body</span> <span class="n">interpretation</span> <span class="n">depends</span> <span class="n">on</span> <span class="k">type</span> <span class="k">of</span> <span class="n">record</span><span class="p">.</span> <span class="n">Body</span>
+<span class="n">size</span> <span class="ow">is</span> <span class="n">specified</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">way</span> <span class="n">that</span> <span class="n">it</span> <span class="n">won</span><span class="sc">&#39;t include a 8-byte</span>
+<span class="s">&quot;header&quot;</span> <span class="p">(`</span><span class="n">len_record</span><span class="p">`</span> <span class="o">+</span> <span class="p">`</span><span class="k">type</span><span class="p">`)</span> <span class="ow">and</span> <span class="n">a</span> <span class="s">&quot;footer&quot;</span>
+<span class="p">(`</span><span class="n">len_record2</span><span class="p">`).</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">1699505740</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lenRecord</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">WindowsEvtLog_RecordBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">286331153</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lenRecord</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">WindowsEvtLog_CursorRecordBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lenRecord</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">whole</span> <span class="n">record</span> <span class="n">again</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenRecord2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenRecord2</span> <span class="o">=</span> <span class="n">lenRecord2Expr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_Record], filename: string): WindowsEvtLog_Record =</span>
+  <span class="n">WindowsEvtLog_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_RecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_RecordBody =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog_RecordBody</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Index</span> <span class="k">of</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">idxExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idxExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Time</span> <span class="k">when</span> <span class="n">this</span> <span class="n">record</span> <span class="n">was</span> <span class="n">generated</span><span class="p">,</span> <span class="n">POSIX</span> <span class="n">timestamp</span> <span class="n">format</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">timeGeneratedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">timeGenerated</span> <span class="o">=</span> <span class="n">timeGeneratedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Time</span> <span class="k">when</span> <span class="n">thsi</span> <span class="n">record</span> <span class="n">was</span> <span class="n">written</span> <span class="n">into</span> <span class="n">the</span> <span class="n">log</span> <span class="n">file</span><span class="p">,</span> <span class="n">POSIX</span> <span class="n">timestamp</span> <span class="n">format</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">timeWrittenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">timeWritten</span> <span class="o">=</span> <span class="n">timeWrittenExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Identifier</span> <span class="k">of</span> <span class="n">an</span> <span class="n">event</span><span class="p">,</span> <span class="n">meaning</span> <span class="ow">is</span> <span class="n">specific</span> <span class="n">to</span> <span class="n">particular</span>
+<span class="n">source</span> <span class="k">of</span> <span class="n">events</span> <span class="o">/</span> <span class="n">event</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">eventIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventId</span> <span class="o">=</span> <span class="n">eventIdExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">Type</span> <span class="k">of</span> <span class="n">event</span><span class="p">.</span>
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">eventTypeExpr</span> <span class="o">=</span> <span class="n">WindowsEvtLog_RecordBody_EventTypes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventType</span> <span class="o">=</span> <span class="n">eventTypeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">strings</span> <span class="n">present</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">log</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">numStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numStrings</span> <span class="o">=</span> <span class="n">numStringsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">eventCategoryExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventCategory</span> <span class="o">=</span> <span class="n">eventCategoryExpr</span>
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Offset</span> <span class="k">of</span> <span class="n">strings</span> <span class="n">present</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">log</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ofsStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsStrings</span> <span class="o">=</span> <span class="n">ofsStringsExpr</span>
+  <span class="k">let</span> <span class="n">lenUserSidExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenUserSid</span> <span class="o">=</span> <span class="n">lenUserSidExpr</span>
+  <span class="k">let</span> <span class="n">ofsUserSidExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsUserSid</span> <span class="o">=</span> <span class="n">ofsUserSidExpr</span>
+  <span class="k">let</span> <span class="n">lenDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenData</span> <span class="o">=</span> <span class="n">lenDataExpr</span>
+  <span class="k">let</span> <span class="n">ofsDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">=</span> <span class="n">ofsDataExpr</span>
+
+<span class="k">proc </span><span class="nf">userSid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsEvtLog_RecordBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">userSidInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">userSidInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsUserSid</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
+  <span class="k">let</span> <span class="n">userSidInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenUserSid</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">userSidInst</span> <span class="o">=</span> <span class="n">userSidInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">userSidInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">userSidInst</span>
+
+<span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsEvtLog_RecordBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
+  <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_RecordBody], filename: string): WindowsEvtLog_RecordBody =</span>
+  <span class="n">WindowsEvtLog_RecordBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">WindowsEvtLog_CursorRecordBody</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">WindowsEvtLog</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">ofsFirstRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsFirstRecord</span> <span class="o">=</span> <span class="n">ofsFirstRecordExpr</span>
+  <span class="k">let</span> <span class="n">ofsNextRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsNextRecord</span> <span class="o">=</span> <span class="n">ofsNextRecordExpr</span>
+  <span class="k">let</span> <span class="n">idxNextRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">idxNextRecord</span> <span class="o">=</span> <span class="n">idxNextRecordExpr</span>
+  <span class="k">let</span> <span class="n">idxFirstRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">idxFirstRecord</span> <span class="o">=</span> <span class="n">idxFirstRecordExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsEvtLog_CursorRecordBody], filename: string): WindowsEvtLog_CursorRecordBody =</span>
+  <span class="n">WindowsEvtLog_CursorRecordBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

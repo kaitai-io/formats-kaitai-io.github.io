@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.roh file format: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Scientific Applications</li>
+        <li class="active">.roh file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.roh file format:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Avantes USB spectrometers are supplied with a Windows binary which
+generates one ROH and one RCM file when the user clicks &quot;Save
+experiment&quot;. In the version of 6.0, the ROH file contains a header
+of 22 four-byte floats, then the spectrum as a float array and a
+footer of 3 floats. The first and last pixel numbers are specified in the
+header and determine the (length+1) of the spectral data. In the tested
+files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this
+automatically anyway.</p>
+<p>The wavelength calibration is stored as a polynomial with coefficients
+of 'wlintercept', 'wlx1', ... 'wlx4', the argument of which is the
+(pixel number + 1), as found out by comparing with the original
+Avantes converted data files. There is no intensity calibration saved,
+but it is recommended to do it in your program - the CCD in the spectrometer
+is so uneven that one should prepare exact pixel-to-pixel calibration curves
+to get reasonable spectral results.</p>
+<p>The rest of the header floats is not known to the author. Note that the
+newer version of Avantes software has a different format, see also
+https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</p>
+<p>The RCM file contains the user-specified comment, so it may be useful
+for automatic conversion of data. You may wish to divide the spectra by
+the integration time before comparing them.</p>
+<p>Written and tested by Filip Dominec, 2017-2018</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        roh
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .roh file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".roh file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".roh file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".roh file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".roh file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".roh file format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".roh file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".roh file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".roh file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".roh file format parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title=".roh file format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".roh file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".roh file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".roh file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".roh file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse .roh file format
+            
+        </h2>
+
+        
+
+        <h3>avantes_roh60.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/avantes_roh60.nim" download="avantes_roh60.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">AvantesRoh60</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">unknown1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">wlintercept</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">wlx1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">wlx2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">wlx3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">wlx4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">unknown2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">float32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">ipixfirst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">ipixlast</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">unknown3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">float32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">spectrum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">float32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">integrationMs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">averaging</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">pixelSmoothing</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AvantesRoh60], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AvantesRoh60</span>
+
+
+
+<span class="sd">##[</span>
+<span class="n">Avantes</span> <span class="n">USB</span> <span class="n">spectrometers</span> <span class="n">are</span> <span class="n">supplied</span> <span class="k">with</span> <span class="n">a</span> <span class="n">Windows</span> <span class="n">binary</span> <span class="n">which</span> 
+<span class="n">generates</span> <span class="n">one</span> <span class="n">ROH</span> <span class="ow">and</span> <span class="n">one</span> <span class="n">RCM</span> <span class="n">file</span> <span class="k">when</span> <span class="n">the</span> <span class="n">user</span> <span class="n">clicks</span> <span class="s">&quot;Save</span>
+<span class="s">experiment&quot;. In the version of 6.0, the ROH file contains a header </span>
+<span class="k">of</span> <span class="mi">22</span> <span class="n">four</span><span class="o">-</span><span class="n">byte</span> <span class="n">floats</span><span class="p">,</span> <span class="n">then</span> <span class="n">the</span> <span class="n">spectrum</span> <span class="k">as</span> <span class="n">a</span> <span class="kt">float</span> <span class="kt">array</span> <span class="ow">and</span> <span class="n">a</span> 
+<span class="n">footer</span> <span class="k">of</span> <span class="mi">3</span> <span class="n">floats</span><span class="p">.</span> <span class="n">The</span> <span class="n">first</span> <span class="ow">and</span> <span class="n">last</span> <span class="n">pixel</span> <span class="n">numbers</span> <span class="n">are</span> <span class="n">specified</span> <span class="ow">in</span> <span class="n">the</span> 
+<span class="n">header</span> <span class="ow">and</span> <span class="n">determine</span> <span class="n">the</span> <span class="p">(</span><span class="n">length</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">of</span> <span class="n">the</span> <span class="n">spectral</span> <span class="n">data</span><span class="p">.</span> <span class="ow">In</span> <span class="n">the</span> <span class="n">tested</span> 
+<span class="n">files</span><span class="p">,</span> <span class="n">the</span> <span class="n">length</span> <span class="ow">is</span> <span class="p">(</span><span class="mi">2032</span><span class="o">-</span><span class="mi">211</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mi">1820</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">but</span> <span class="n">Kaitai</span> <span class="n">determines</span> <span class="n">this</span> 
+<span class="n">automatically</span> <span class="n">anyway</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">wavelength</span> <span class="n">calibration</span> <span class="ow">is</span> <span class="n">stored</span> <span class="k">as</span> <span class="n">a</span> <span class="n">polynomial</span> <span class="k">with</span> <span class="n">coefficients</span>
+<span class="k">of</span> <span class="sc">&#39;wlintercept&#39;</span><span class="p">,</span> <span class="sc">&#39;wlx1&#39;</span><span class="p">,</span> <span class="p">...</span> <span class="sc">&#39;wlx4&#39;</span><span class="p">,</span> <span class="n">the</span> <span class="n">argument</span> <span class="k">of</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">the</span>
+<span class="p">(</span><span class="n">pixel</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="k">as</span> <span class="n">found</span> <span class="k">out</span> <span class="n">by</span> <span class="n">comparing</span> <span class="k">with</span> <span class="n">the</span> <span class="n">original</span> 
+<span class="n">Avantes</span> <span class="n">converted</span> <span class="n">data</span> <span class="n">files</span><span class="p">.</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">intensity</span> <span class="n">calibration</span> <span class="n">saved</span><span class="p">,</span>
+<span class="n">but</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">recommended</span> <span class="n">to</span> <span class="k">do</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">your</span> <span class="n">program</span> <span class="o">-</span> <span class="n">the</span> <span class="n">CCD</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">spectrometer</span> 
+<span class="ow">is</span> <span class="n">so</span> <span class="n">uneven</span> <span class="n">that</span> <span class="n">one</span> <span class="n">should</span> <span class="n">prepare</span> <span class="n">exact</span> <span class="n">pixel</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">pixel</span> <span class="n">calibration</span> <span class="n">curves</span> 
+<span class="n">to</span> <span class="n">get</span> <span class="n">reasonable</span> <span class="n">spectral</span> <span class="n">results</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">rest</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span> <span class="n">floats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">known</span> <span class="n">to</span> <span class="n">the</span> <span class="n">author</span><span class="p">.</span> <span class="n">Note</span> <span class="n">that</span> <span class="n">the</span> 
+<span class="n">newer</span> <span class="n">version</span> <span class="k">of</span> <span class="n">Avantes</span> <span class="n">software</span> <span class="n">has</span> <span class="n">a</span> <span class="n">different</span> <span class="n">format</span><span class="p">,</span> <span class="n">see</span> <span class="n">also</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">kr</span><span class="p">.</span><span class="n">mathworks</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">matlab</span><span class="o">/</span><span class="n">community</span><span class="o">/</span><span class="mi">20341</span><span class="o">-</span><span class="n">reading</span><span class="o">-</span><span class="n">spectra</span><span class="o">-</span><span class="kn">from</span><span class="o">-</span><span class="n">avantes</span><span class="o">-</span><span class="n">binary</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="n">demonstration</span>
+
+<span class="n">The</span> <span class="n">RCM</span> <span class="n">file</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">user</span><span class="o">-</span><span class="n">specified</span> <span class="n">comment</span><span class="p">,</span> <span class="n">so</span> <span class="n">it</span> <span class="n">may</span> <span class="n">be</span> <span class="n">useful</span>
+<span class="k">for</span> <span class="n">automatic</span> <span class="n">conversion</span> <span class="k">of</span> <span class="n">data</span><span class="p">.</span> <span class="n">You</span> <span class="n">may</span> <span class="n">wish</span> <span class="n">to</span> <span class="n">divide</span> <span class="n">the</span> <span class="n">spectra</span> <span class="n">by</span> 
+<span class="n">the</span> <span class="n">integration</span> <span class="n">time</span> <span class="n">before</span> <span class="n">comparing</span> <span class="n">them</span><span class="p">.</span>
+
+<span class="n">Written</span> <span class="ow">and</span> <span class="n">tested</span> <span class="n">by</span> <span class="n">Filip</span> <span class="n">Dominec</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">2018</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AvantesRoh60], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AvantesRoh60 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AvantesRoh60</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AvantesRoh60</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AvantesRoh60</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">unknown1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">unknown1</span> <span class="o">=</span> <span class="n">unknown1Expr</span>
+  <span class="k">let</span> <span class="n">wlinterceptExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wlintercept</span> <span class="o">=</span> <span class="n">wlinterceptExpr</span>
+  <span class="k">let</span> <span class="n">wlx1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wlx1</span> <span class="o">=</span> <span class="n">wlx1Expr</span>
+  <span class="k">let</span> <span class="n">wlx2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wlx2</span> <span class="o">=</span> <span class="n">wlx2Expr</span>
+  <span class="k">let</span> <span class="n">wlx3Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wlx3</span> <span class="o">=</span> <span class="n">wlx3Expr</span>
+  <span class="k">let</span> <span class="n">wlx4Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wlx4</span> <span class="o">=</span> <span class="n">wlx4Expr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">unknown2</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">ipixfirstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ipixfirst</span> <span class="o">=</span> <span class="n">ipixfirstExpr</span>
+  <span class="k">let</span> <span class="n">ipixlastExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ipixlast</span> <span class="o">=</span> <span class="n">ipixlastExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">unknown3</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(((</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ipixlast</span><span class="p">)</span> <span class="o">-</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ipixfirst</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">spectrum</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">integrationMsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">integrationMs</span> <span class="o">=</span> <span class="n">integrationMsExpr</span>
+  <span class="k">let</span> <span class="n">averagingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">averaging</span> <span class="o">=</span> <span class="n">averagingExpr</span>
+  <span class="k">let</span> <span class="n">pixelSmoothingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pixelSmoothing</span> <span class="o">=</span> <span class="n">pixelSmoothingExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AvantesRoh60], filename: string): AvantesRoh60 =</span>
+  <span class="n">AvantesRoh60</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

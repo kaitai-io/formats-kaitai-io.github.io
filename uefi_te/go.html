@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TE (Terse Executable) file: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">TE (Terse Executable) file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>TE (Terse Executable) file:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This type of executables could be found inside the UEFI firmware. The UEFI
+firmware is stored in SPI flash memory, which is a chip soldered on a
+system’s motherboard. UEFI firmware is very modular: it usually contains
+dozens, if not hundreds, of executables. To store all these separates files,
+the firmware is laid out in volumes using the Firmware File System (FFS), a
+file system specifically designed to store firmware images. The volumes
+contain files that are identified by GUIDs and each of these files contain
+one or more sections holding the data. One of these sections contains the
+actual executable image. Most of the executable images follow the PE format.
+However, some of them follow the TE format.</p>
+<p>The Terse Executable (TE) image format was created as a mechanism to reduce
+the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a
+corresponding reduction of image sizes for executables running in the PI
+(Platform Initialization) Architecture environment. Reducing image size
+provides an opportunity for use of a smaller system flash part.</p>
+<p>So the TE format is basically a stripped version of PE.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        UEFI
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["efi", "te"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of TE (Terse Executable) file
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="TE (Terse Executable) file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="TE (Terse Executable) file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="TE (Terse Executable) file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="TE (Terse Executable) file parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="TE (Terse Executable) file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="TE (Terse Executable) file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="TE (Terse Executable) file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="TE (Terse Executable) file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="TE (Terse Executable) file parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="TE (Terse Executable) file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="TE (Terse Executable) file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="TE (Terse Executable) file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="TE (Terse Executable) file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse TE (Terse Executable) file
+            
+        </h2>
+
+        
+
+        <h3>uefi_te.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/uefi_te.go" download="uefi_te.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+	<span class="s">&quot;io&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * This type of executables could be found inside the UEFI firmware. The UEFI </span>
+<span class="cm"> * firmware is stored in SPI flash memory, which is a chip soldered on a </span>
+<span class="cm"> * system’s motherboard. UEFI firmware is very modular: it usually contains </span>
+<span class="cm"> * dozens, if not hundreds, of executables. To store all these separates files, </span>
+<span class="cm"> * the firmware is laid out in volumes using the Firmware File System (FFS), a </span>
+<span class="cm"> * file system specifically designed to store firmware images. The volumes </span>
+<span class="cm"> * contain files that are identified by GUIDs and each of these files contain </span>
+<span class="cm"> * one or more sections holding the data. One of these sections contains the </span>
+<span class="cm"> * actual executable image. Most of the executable images follow the PE format. </span>
+<span class="cm"> * However, some of them follow the TE format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The Terse Executable (TE) image format was created as a mechanism to reduce</span>
+<span class="cm"> * the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a </span>
+<span class="cm"> * corresponding reduction of image sizes for executables running in the PI </span>
+<span class="cm"> * (Platform Initialization) Architecture environment. Reducing image size </span>
+<span class="cm"> * provides an opportunity for use of a smaller system flash part.</span>
+<span class="cm"> * </span>
+<span class="cm"> * So the TE format is basically a stripped version of PE.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">UefiTe</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">TeHdr</span> <span class="o">*</span><span class="nx">UefiTe_TeHeader</span>
+	<span class="nx">Sections</span> <span class="p">[]</span><span class="o">*</span><span class="nx">UefiTe_Section</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_raw_TeHdr</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewUefiTe</span><span class="p">()</span> <span class="o">*</span><span class="nx">UefiTe</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">UefiTe</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp1</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_TeHdr</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">_io__raw_TeHdr</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_TeHdr</span><span class="p">))</span>
+	<span class="nx">tmp2</span> <span class="o">:=</span> <span class="nx">NewUefiTe_TeHeader</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp2</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_TeHdr</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TeHdr</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Sections</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">UefiTe_Section</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">TeHdr</span><span class="p">.</span><span class="nx">NumSections</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Sections</span> <span class="p">{</span>
+		<span class="nx">tmp3</span> <span class="o">:=</span> <span class="nx">NewUefiTe_Section</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Sections</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Unknown</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__I386</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">332</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__R4000</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">358</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Wcemipsv2</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">361</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Alpha</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">388</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Sh3</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">418</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Sh3dsp</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">419</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Sh4</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">422</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Sh5</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">424</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Arm</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">448</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Thumb</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">450</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Armnt</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">452</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Am33</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">467</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Powerpc</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">496</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Powerpcfp</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">497</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Ia64</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">512</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Mips16</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">614</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Mipsfpu</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">870</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Mipsfpu16</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">1126</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Ebc</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">3772</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Riscv32</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">20530</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Riscv64</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">20580</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Riscv128</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">20776</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Amd64</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">34404</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__M32r</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">36929</span>
+	<span class="nx">UefiTe_TeHeader_MachineType__Arm64</span> <span class="nx">UefiTe_TeHeader_MachineType</span> <span class="p">=</span> <span class="mi">43620</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__Unknown</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__Native</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__WindowsGui</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__WindowsCui</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__PosixCui</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">7</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__WindowsCeGui</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__EfiApplication</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">10</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__EfiBootServiceDriver</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__EfiRuntimeDriver</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">12</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__EfiRom</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">13</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__Xbox</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">14</span>
+	<span class="nx">UefiTe_TeHeader_SubsystemEnum__WindowsBootApplication</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span> <span class="p">=</span> <span class="mi">16</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">UefiTe_TeHeader</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Machine</span> <span class="nx">UefiTe_TeHeader_MachineType</span>
+	<span class="nx">NumSections</span> <span class="kt">uint8</span>
+	<span class="nx">Subsystem</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span>
+	<span class="nx">StrippedSize</span> <span class="kt">uint16</span>
+	<span class="nx">EntryPointAddr</span> <span class="kt">uint32</span>
+	<span class="nx">BaseOfCode</span> <span class="kt">uint32</span>
+	<span class="nx">ImageBase</span> <span class="kt">uint64</span>
+	<span class="nx">DataDirs</span> <span class="o">*</span><span class="nx">UefiTe_HeaderDataDirs</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">UefiTe</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewUefiTe_TeHeader</span><span class="p">()</span> <span class="o">*</span><span class="nx">UefiTe_TeHeader</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">UefiTe_TeHeader</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe_TeHeader</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp4</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">86</span><span class="p">,</span> <span class="mi">90</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">86</span><span class="p">,</span> <span class="mi">90</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/te_header/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Machine</span> <span class="p">=</span> <span class="nx">UefiTe_TeHeader_MachineType</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumSections</span> <span class="p">=</span> <span class="nx">tmp6</span>
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Subsystem</span> <span class="p">=</span> <span class="nx">UefiTe_TeHeader_SubsystemEnum</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StrippedSize</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">EntryPointAddr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BaseOfCode</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ImageBase</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+	<span class="nx">tmp12</span> <span class="o">:=</span> <span class="nx">NewUefiTe_HeaderDataDirs</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp12</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DataDirs</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">UefiTe_HeaderDataDirs</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">BaseRelocationTable</span> <span class="o">*</span><span class="nx">UefiTe_DataDir</span>
+	<span class="nx">Debug</span> <span class="o">*</span><span class="nx">UefiTe_DataDir</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">UefiTe_TeHeader</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewUefiTe_HeaderDataDirs</span><span class="p">()</span> <span class="o">*</span><span class="nx">UefiTe_HeaderDataDirs</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">UefiTe_HeaderDataDirs</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe_HeaderDataDirs</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">UefiTe_TeHeader</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp13</span> <span class="o">:=</span> <span class="nx">NewUefiTe_DataDir</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp13</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BaseRelocationTable</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="nx">tmp14</span> <span class="o">:=</span> <span class="nx">NewUefiTe_DataDir</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp14</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Debug</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">UefiTe_DataDir</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">VirtualAddress</span> <span class="kt">uint32</span>
+	<span class="nx">Size</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">UefiTe_HeaderDataDirs</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewUefiTe_DataDir</span><span class="p">()</span> <span class="o">*</span><span class="nx">UefiTe_DataDir</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">UefiTe_DataDir</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe_DataDir</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">UefiTe_HeaderDataDirs</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp15</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VirtualAddress</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Size</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">UefiTe_Section</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">VirtualSize</span> <span class="kt">uint32</span>
+	<span class="nx">VirtualAddress</span> <span class="kt">uint32</span>
+	<span class="nx">SizeOfRawData</span> <span class="kt">uint32</span>
+	<span class="nx">PointerToRawData</span> <span class="kt">uint32</span>
+	<span class="nx">PointerToRelocations</span> <span class="kt">uint32</span>
+	<span class="nx">PointerToLinenumbers</span> <span class="kt">uint32</span>
+	<span class="nx">NumRelocations</span> <span class="kt">uint16</span>
+	<span class="nx">NumLinenumbers</span> <span class="kt">uint16</span>
+	<span class="nx">Characteristics</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">UefiTe</span>
+	<span class="nx">_f_body</span> <span class="kt">bool</span>
+	<span class="nx">body</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewUefiTe_Section</span><span class="p">()</span> <span class="o">*</span><span class="nx">UefiTe_Section</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">UefiTe_Section</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe_Section</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">UefiTe</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp17</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesStripRight</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VirtualSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VirtualAddress</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SizeOfRawData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span>
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PointerToRawData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">)</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PointerToRelocations</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp22</span><span class="p">)</span>
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PointerToLinenumbers</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span>
+	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumRelocations</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumLinenumbers</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Characteristics</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">UefiTe_Section</span><span class="p">)</span> <span class="nx">Body</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">TeHdr</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Size</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">PointerToRawData</span> <span class="o">-</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">TeHdr</span><span class="p">.</span><span class="nx">StrippedSize</span><span class="p">)</span> <span class="o">+</span> <span class="nx">tmp27</span><span class="p">)),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">SizeOfRawData</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp28</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">body</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>btrfs_stream: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">btrfs_stream</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>btrfs_stream:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
+administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and
+integral multi-device spanning in Linux file systems.
+Given any pair of subvolumes (or snapshots), Btrfs can generate a binary diff between them by
+using the <code>btrfs send</code> command that can be replayed later by using <code>btrfs receive</code>, possibly on a
+different Btrfs file system. The <code>btrfs send</code> command creates a set of data modifications required
+for converting one subvolume into another.
+This spec can be used to disassemble the binary diff created by the <code>btrfs send</code> command.
+If you want a text representation you may want to checkout <code>btrfs receive --dump</code> instead.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Btrfs
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of btrfs_stream
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="btrfs_stream parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="btrfs_stream parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="btrfs_stream parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="btrfs_stream parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="btrfs_stream parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="btrfs_stream parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="btrfs_stream parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="btrfs_stream parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="btrfs_stream parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="btrfs_stream parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="btrfs_stream parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="btrfs_stream parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse btrfs_stream
+            
+        </h2>
+
+        
+
+        <h3>btrfs_stream.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/btrfs_stream.nim" download="btrfs_stream.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">BtrfsStream</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendStreamHeader</span>
+    <span class="p">`</span><span class="n">commands</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BtrfsStream_SendCommand</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">BtrfsStream_Command</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">unspec</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">subvol</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">snapshot</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">mkfile</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">mkdir</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">mknod</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">mkfifo</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">mksock</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">symlink</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">rename</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">unlink</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">rmdir</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">set_xattr</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">remove_xattr</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">write</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">clone</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">truncate</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">chmod</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">chown</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">utimes</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="k">end</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">update_extent</span> <span class="o">=</span> <span class="mi">22</span>
+  <span class="n">BtrfsStream_Attribute</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">unspec</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">uuid</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ctransid</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">ino</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">rdev</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ctime</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">mtime</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">atime</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">otime</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">xattr_name</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">xattr_data</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">path_to</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">path_link</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">file_offset</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">clone_uuid</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">clone_ctransid</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">clone_path</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">clone_offset</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">clone_len</span> <span class="o">=</span> <span class="mi">24</span>
+  <span class="n">BtrfsStream_SendStreamHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream</span>
+  <span class="n">BtrfsStream_SendCommand</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_Command</span>
+    <span class="p">`</span><span class="n">checksum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand_Tlvs</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream</span>
+    <span class="p">`</span><span class="n">rawData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">BtrfsStream_SendCommand_Tlv</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_Attribute</span>
+    <span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand_Tlvs</span>
+    <span class="p">`</span><span class="n">rawValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">BtrfsStream_SendCommand_Uuid</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">uuid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand_Tlv</span>
+  <span class="n">BtrfsStream_SendCommand_Tlvs</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">tlv</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BtrfsStream_SendCommand_Tlv</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand</span>
+  <span class="n">BtrfsStream_SendCommand_String</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="kt">string</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand_Tlv</span>
+  <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">tsSec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int64</span>
+    <span class="p">`</span><span class="n">tsNsec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BtrfsStream_SendCommand_Tlv</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BtrfsStream</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendStreamHeader], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream): BtrfsStream_SendStreamHeader</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream): BtrfsStream_SendCommand</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlv], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlvs): BtrfsStream_SendCommand_Tlv</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_Uuid</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlvs], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand): BtrfsStream_SendCommand_Tlvs</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_String], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_String</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Timespec], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_Timespec</span>
+
+
+
+<span class="sd">##[</span>
+<span class="n">Btrfs</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">on</span> <span class="n">write</span> <span class="n">file</span> <span class="n">system</span> <span class="n">based</span> <span class="n">on</span> <span class="n">B</span><span class="o">-</span><span class="n">trees</span> <span class="n">focusing</span> <span class="n">on</span> <span class="n">fault</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">repair</span> <span class="ow">and</span> <span class="n">easy</span>
+<span class="n">administration</span><span class="p">.</span> <span class="n">Btrfs</span> <span class="ow">is</span> <span class="n">intended</span> <span class="n">to</span> <span class="n">address</span> <span class="n">the</span> <span class="n">lack</span> <span class="k">of</span> <span class="n">pooling</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">,</span> <span class="n">checksums</span><span class="p">,</span> <span class="ow">and</span>
+<span class="n">integral</span> <span class="n">multi</span><span class="o">-</span><span class="n">device</span> <span class="n">spanning</span> <span class="ow">in</span> <span class="n">Linux</span> <span class="n">file</span> <span class="n">systems</span><span class="p">.</span>
+<span class="n">Given</span> <span class="n">any</span> <span class="n">pair</span> <span class="k">of</span> <span class="n">subvolumes</span> <span class="p">(</span><span class="ow">or</span> <span class="n">snapshots</span><span class="p">),</span> <span class="n">Btrfs</span> <span class="n">can</span> <span class="n">generate</span> <span class="n">a</span> <span class="n">binary</span> <span class="n">diff</span> <span class="n">between</span> <span class="n">them</span> <span class="n">by</span>
+<span class="n">using</span> <span class="n">the</span> <span class="p">`</span><span class="n">btrfs</span> <span class="n">send</span><span class="p">`</span> <span class="n">command</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">replayed</span> <span class="n">later</span> <span class="n">by</span> <span class="n">using</span> <span class="p">`</span><span class="n">btrfs</span> <span class="n">receive</span><span class="p">`,</span> <span class="n">possibly</span> <span class="n">on</span> <span class="n">a</span>
+<span class="n">different</span> <span class="n">Btrfs</span> <span class="n">file</span> <span class="n">system</span><span class="p">.</span> <span class="n">The</span> <span class="p">`</span><span class="n">btrfs</span> <span class="n">send</span><span class="p">`</span> <span class="n">command</span> <span class="n">creates</span> <span class="n">a</span> <span class="kt">set</span> <span class="k">of</span> <span class="n">data</span> <span class="n">modifications</span> <span class="n">required</span>
+<span class="k">for</span> <span class="n">converting</span> <span class="n">one</span> <span class="n">subvolume</span> <span class="n">into</span> <span class="n">another</span><span class="p">.</span>
+<span class="n">This</span> <span class="n">spec</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">disassemble</span> <span class="n">the</span> <span class="n">binary</span> <span class="n">diff</span> <span class="n">created</span> <span class="n">by</span> <span class="n">the</span> <span class="p">`</span><span class="n">btrfs</span> <span class="n">send</span><span class="p">`</span> <span class="n">command</span><span class="p">.</span>
+<span class="k">If</span> <span class="n">you</span> <span class="n">want</span> <span class="n">a</span> <span class="n">text</span> <span class="n">representation</span> <span class="n">you</span> <span class="n">may</span> <span class="n">want</span> <span class="n">to</span> <span class="n">checkout</span> <span class="p">`</span><span class="n">btrfs</span> <span class="n">receive</span> <span class="o">--</span><span class="n">dump</span><span class="p">`</span> <span class="n">instead</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BtrfsStream =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendStreamHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">commands</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream], filename: string): BtrfsStream =</span>
+  <span class="n">BtrfsStream</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendStreamHeader], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream): BtrfsStream_SendStreamHeader =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendStreamHeader</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">13</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendStreamHeader], filename: string): BtrfsStream_SendStreamHeader =</span>
+  <span class="n">BtrfsStream_SendStreamHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream): BtrfsStream_SendCommand =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">lenDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenData</span> <span class="o">=</span> <span class="n">lenDataExpr</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_Command</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">CRC32</span> <span class="n">checksum</span> <span class="k">of</span> <span class="n">a</span> <span class="n">whole</span> <span class="n">send</span> <span class="n">command</span><span class="p">,</span> <span class="n">including</span> <span class="n">the</span> <span class="n">header</span><span class="p">,</span> <span class="k">with</span> <span class="n">this</span> <span class="n">attribute</span> <span class="kt">set</span> <span class="n">to</span> <span class="mf">0.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">checksumExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">checksum</span> <span class="o">=</span> <span class="n">checksumExpr</span>
+  <span class="k">let</span> <span class="n">rawDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawData</span> <span class="o">=</span> <span class="n">rawDataExpr</span>
+  <span class="k">let</span> <span class="n">rawDataIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawDataExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Tlvs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDataIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand], filename: string): BtrfsStream_SendCommand =</span>
+  <span class="n">BtrfsStream_SendCommand</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlv], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlvs): BtrfsStream_SendCommand_Tlv =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand_Tlv</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_Attribute</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+  <span class="k">let</span> <span class="n">lengthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">lengthExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">ctransid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">size</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">clone_uuid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Uuid</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">file_offset</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">otime</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">uid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">atime</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">ctime</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">uuid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Uuid</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">clone_len</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">xattr_name</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">clone_ctransid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">mode</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">mtime</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">path_link</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">rdev</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">path_to</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">path</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">clone_offset</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">gid</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">btrfs_stream</span><span class="p">.</span><span class="n">clone_path</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValueExpr</span>
+      <span class="k">let</span> <span class="n">rawValueIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawValueExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawValueIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlv], filename: string): BtrfsStream_SendCommand_Tlv =</span>
+  <span class="n">BtrfsStream_SendCommand_Tlv</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_Uuid =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand_Uuid</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">uuidExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuidExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Uuid], filename: string): BtrfsStream_SendCommand_Uuid =</span>
+  <span class="n">BtrfsStream_SendCommand_Uuid</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlvs], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand): BtrfsStream_SendCommand_Tlvs =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand_Tlvs</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">BtrfsStream_SendCommand_Tlv</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">tlv</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Tlvs], filename: string): BtrfsStream_SendCommand_Tlvs =</span>
+  <span class="n">BtrfsStream_SendCommand_Tlvs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_String], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_String =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand_String</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">stringExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="kt">string</span> <span class="o">=</span> <span class="n">stringExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_String], filename: string): BtrfsStream_SendCommand_String =</span>
+  <span class="n">BtrfsStream_SendCommand_String</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Timespec], io: KaitaiStream, root: KaitaiStruct, parent: BtrfsStream_SendCommand_Tlv): BtrfsStream_SendCommand_Timespec =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BtrfsStream</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">tsSecExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS8le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tsSec</span> <span class="o">=</span> <span class="n">tsSecExpr</span>
+  <span class="k">let</span> <span class="n">tsNsecExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tsNsec</span> <span class="o">=</span> <span class="n">tsNsecExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BtrfsStream_SendCommand_Timespec], filename: string): BtrfsStream_SendCommand_Timespec =</span>
+  <span class="n">BtrfsStream_SendCommand_Timespec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

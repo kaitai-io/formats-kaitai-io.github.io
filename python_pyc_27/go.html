@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.pyc file format of Python: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">.pyc file format of Python</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.pyc file format of Python:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Python interpreter runs .py files in 2 step process: first, it
+produces bytecode, which it then executes. Translation of .py source
+into bytecode is time-consuming, so Python dumps compiled bytecode
+into .pyc files, to be reused from cache at later time if possible.</p>
+<p>.pyc file is essentially a raw dump of <code>py_object</code> (see <code>body</code>) with
+a simple header prepended.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Python
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pyc
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .pyc file format of Python
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".pyc file format of Python parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".pyc file format of Python parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title=".pyc file format of Python parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".pyc file format of Python parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".pyc file format of Python parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".pyc file format of Python parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".pyc file format of Python parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".pyc file format of Python parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".pyc file format of Python parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".pyc file format of Python parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".pyc file format of Python parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".pyc file format of Python parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse .pyc file format of Python
+            
+        </h2>
+
+        
+
+        <h3>python_pyc_27.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/python_pyc_27.go" download="python_pyc_27.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Python interpreter runs .py files in 2 step process: first, it</span>
+<span class="cm"> * produces bytecode, which it then executes. Translation of .py source</span>
+<span class="cm"> * into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+<span class="cm"> * into .pyc files, to be reused from cache at later time if possible.</span>
+<span class="cm"> * </span>
+<span class="cm"> * .pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+<span class="cm"> * a simple header prepended.</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">PythonPyc27_Version</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">PythonPyc27_Version__V15</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">20121</span>
+	<span class="nx">PythonPyc27_Version__V16</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">50428</span>
+	<span class="nx">PythonPyc27_Version__V20</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">50823</span>
+	<span class="nx">PythonPyc27_Version__V21</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">60202</span>
+	<span class="nx">PythonPyc27_Version__V22</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">60717</span>
+	<span class="nx">PythonPyc27_Version__V23A0</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62011</span>
+	<span class="nx">PythonPyc27_Version__V23A0b</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62021</span>
+	<span class="nx">PythonPyc27_Version__V24A0</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62041</span>
+	<span class="nx">PythonPyc27_Version__V24A3</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62051</span>
+	<span class="nx">PythonPyc27_Version__V24B1</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62061</span>
+	<span class="nx">PythonPyc27_Version__V25A0</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62071</span>
+	<span class="nx">PythonPyc27_Version__V25A0b</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62081</span>
+	<span class="nx">PythonPyc27_Version__V25A0c</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62091</span>
+	<span class="nx">PythonPyc27_Version__V25A0d</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62092</span>
+	<span class="nx">PythonPyc27_Version__V25B3</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62101</span>
+	<span class="nx">PythonPyc27_Version__V25B3b</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62111</span>
+	<span class="nx">PythonPyc27_Version__V25C1</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62121</span>
+	<span class="nx">PythonPyc27_Version__V25C2</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62131</span>
+	<span class="nx">PythonPyc27_Version__V26A0</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62151</span>
+	<span class="nx">PythonPyc27_Version__V26A1</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62161</span>
+	<span class="nx">PythonPyc27_Version__V27A0</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62171</span>
+	<span class="nx">PythonPyc27_Version__V27A0b</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62181</span>
+	<span class="nx">PythonPyc27_Version__V27A0c</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62191</span>
+	<span class="nx">PythonPyc27_Version__V27A0d</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62201</span>
+	<span class="nx">PythonPyc27_Version__V27A0e</span> <span class="nx">PythonPyc27_Version</span> <span class="p">=</span> <span class="mi">62211</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">VersionMagic</span> <span class="nx">PythonPyc27_Version</span>
+	<span class="nx">Crlf</span> <span class="kt">uint16</span>
+	<span class="nx">ModificationTimestamp</span> <span class="kt">uint32</span>
+	<span class="nx">Body</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionMagic</span> <span class="p">=</span> <span class="nx">PythonPyc27_Version</span><span class="p">(</span><span class="nx">tmp1</span><span class="p">)</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Crlf</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp2</span><span class="p">)</span>
+	<span class="nx">tmp3</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ModificationTimestamp</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp3</span><span class="p">)</span>
+	<span class="nx">tmp4</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp4</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">PythonPyc27_CodeObject_FlagsEnum__HasArgs</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">PythonPyc27_CodeObject_FlagsEnum__HasKwargs</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span> <span class="p">=</span> <span class="mi">8</span>
+	<span class="nx">PythonPyc27_CodeObject_FlagsEnum__Generator</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span> <span class="p">=</span> <span class="mi">32</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_CodeObject</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ArgCount</span> <span class="kt">uint32</span>
+	<span class="nx">LocalCount</span> <span class="kt">uint32</span>
+	<span class="nx">StackSize</span> <span class="kt">uint32</span>
+	<span class="nx">Flags</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span>
+	<span class="nx">Code</span> <span class="o">*</span><span class="nx">PythonPyc27_Assembly</span>
+	<span class="nx">Consts</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">Names</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">VarNames</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">FreeVars</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">CellVars</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">Filename</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">Name</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">FirstLineNo</span> <span class="kt">uint32</span>
+	<span class="nx">Lnotab</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_CodeObject</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_CodeObject</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_CodeObject</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_CodeObject</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ArgCount</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LocalCount</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">)</span>
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StackSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nx">PythonPyc27_CodeObject_FlagsEnum</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="nx">tmp9</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_Assembly</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp9</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Code</span> <span class="p">=</span> <span class="nx">tmp9</span>
+	<span class="nx">tmp10</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp10</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Consts</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="nx">tmp11</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp11</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Names</span> <span class="p">=</span> <span class="nx">tmp11</span>
+	<span class="nx">tmp12</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp12</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VarNames</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="nx">tmp13</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp13</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FreeVars</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="nx">tmp14</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp14</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CellVars</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="nx">tmp15</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp15</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Filename</span> <span class="p">=</span> <span class="nx">tmp15</span>
+	<span class="nx">tmp16</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FirstLineNo</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+	<span class="nx">tmp18</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp18</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Lnotab</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_Assembly</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">StringMagic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Length</span> <span class="kt">uint32</span>
+	<span class="nx">Items</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArgs</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_CodeObject</span>
+	<span class="nx">_raw_Items</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_Assembly</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_Assembly</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_Assembly</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_Assembly</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_CodeObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp19</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StringMagic</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">StringMagic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">115</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">115</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">StringMagic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/assembly/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span>
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Length</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp21</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Items</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">_io__raw_Items</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Items</span><span class="p">))</span>
+	<span class="nx">tmp22</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_OpArgs</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp22</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Items</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Items</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StopCode</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PopTop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__RotTwo</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__RotThree</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DupTop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__RotFour</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__Nop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnaryPositive</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">10</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnaryNegative</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnaryNot</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">12</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnaryConvert</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">13</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnaryInvert</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">15</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryPower</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">19</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryMultiply</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">20</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">21</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryModulo</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">22</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryAdd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">23</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinarySubtract</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">24</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinarySubscr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">25</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryFloorDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">26</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryTrueDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">27</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceFloorDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">28</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceTrueDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">29</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__Slice0</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">30</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__Slice1</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">31</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__Slice2</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">32</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__Slice3</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">33</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreSlice0</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">40</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreSlice1</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">41</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreSlice2</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">42</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreSlice3</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">43</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteSlice0</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">50</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteSlice1</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">51</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteSlice2</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">52</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteSlice3</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">53</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreMap</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">54</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceAdd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">55</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceSubtract</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">56</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceMultiply</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">57</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceDivide</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">58</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceModulo</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">59</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreSubscr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">60</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteSubscr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">61</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryLshift</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">62</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryRshift</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">63</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryAnd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">64</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryXor</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">65</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BinaryOr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">66</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplacePower</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">67</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__GetIter</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">68</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PrintExpr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">70</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PrintItem</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">71</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PrintNewline</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">72</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PrintItemTo</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">73</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PrintNewlineTo</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">74</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceLshift</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">75</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceRshift</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">76</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceAnd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">77</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceXor</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">78</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__InplaceOr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">79</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BreakLoop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">80</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__WithCleanup</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">81</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadLocals</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">82</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ReturnValue</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">83</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ImportStar</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">84</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ExecStmt</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">85</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__YieldValue</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">86</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PopBlock</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">87</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__EndFinally</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">88</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildClass</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">89</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreName</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteName</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">91</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__UnpackSequence</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">92</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ForIter</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">93</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ListAppend</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">94</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreAttr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">95</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteAttr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">96</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreGlobal</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">97</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteGlobal</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">98</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DupTopx</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">99</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadConst</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadName</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">101</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildTuple</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">102</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildList</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">103</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildSet</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">104</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildMap</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">105</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadAttr</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">106</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__CompareOp</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">107</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ImportName</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">108</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ImportFrom</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">109</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__JumpForward</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">110</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__JumpIfFalseOrPop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">111</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__JumpIfTrueOrPop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">112</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__JumpAbsolute</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">113</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PopJumpIfFalse</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">114</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__PopJumpIfTrue</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">115</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadGlobal</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">116</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ContinueLoop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">119</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__SetupLoop</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">120</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__SetupExcept</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">121</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__SetupFinally</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">122</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadFast</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">124</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreFast</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">125</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__DeleteFast</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">126</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__RaiseVarargs</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">130</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__CallFunction</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">131</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__MakeFunction</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">132</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__BuildSlice</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">133</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__MakeClosure</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">134</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadClosure</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">135</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__LoadDeref</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">136</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreDeref</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">137</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__CallFunctionVar</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">140</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__CallFunctionKw</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">141</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__CallFunctionVarKw</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">142</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__SetupWith</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">143</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__ExtendedArg</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">145</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__SetAdd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">146</span>
+	<span class="nx">PythonPyc27_OpArg_OpCodeEnum__MapAdd</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span> <span class="p">=</span> <span class="mi">147</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_OpArg</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">OpCode</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span>
+	<span class="nx">Arg</span> <span class="kt">uint16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArgs</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_OpArg</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArg</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_OpArg</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArg</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArgs</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OpCode</span> <span class="p">=</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OpCode</span> <span class="o">&gt;=</span> <span class="nx">PythonPyc27_OpArg_OpCodeEnum__StoreName</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__Tuple</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">40</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__PyFalse</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">70</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__None</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">78</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__StringRef</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">82</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__PyTrue</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">84</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__CodeObject</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">99</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__Int</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">105</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__String</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">115</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__Interned</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">116</span>
+	<span class="nx">PythonPyc27_PyObject_ObjectType__UnicodeString</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span> <span class="p">=</span> <span class="mi">117</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Type</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span>
+	<span class="nx">Value</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Type</span> <span class="p">=</span> <span class="nx">PythonPyc27_PyObject_ObjectType</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__String</span><span class="p">:</span>
+		<span class="nx">tmp26</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_PyString</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp26</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__Tuple</span><span class="p">:</span>
+		<span class="nx">tmp27</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_Tuple</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp27</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp27</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__Int</span><span class="p">:</span>
+		<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__PyTrue</span><span class="p">:</span>
+		<span class="nx">tmp29</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_PyTrue</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp29</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__PyFalse</span><span class="p">:</span>
+		<span class="nx">tmp30</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_PyFalse</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp30</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp30</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__None</span><span class="p">:</span>
+		<span class="nx">tmp31</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_PyNone</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp31</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__StringRef</span><span class="p">:</span>
+		<span class="nx">tmp32</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_StringRef</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp32</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp32</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__CodeObject</span><span class="p">:</span>
+		<span class="nx">tmp33</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_CodeObject</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp33</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="k">case</span> <span class="nx">PythonPyc27_PyObject_ObjectType__Interned</span><span class="p">:</span>
+		<span class="nx">tmp34</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject_InternedString</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp34</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Value</span> <span class="p">=</span> <span class="nx">tmp34</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_PyNone</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_PyNone</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyNone</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_PyNone</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyNone</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_PyFalse</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_PyFalse</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyFalse</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_PyFalse</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyFalse</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_StringRef</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">InternedListIndex</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_StringRef</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_StringRef</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_StringRef</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_StringRef</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">InternedListIndex</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_PyTrue</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_PyTrue</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyTrue</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_PyTrue</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyTrue</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_Tuple</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Count</span> <span class="kt">uint32</span>
+	<span class="nx">Items</span> <span class="p">[]</span><span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_Tuple</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_Tuple</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_Tuple</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_Tuple</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Count</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Items</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Count</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Items</span> <span class="p">{</span>
+		<span class="nx">tmp37</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_PyObject</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp37</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Items</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp37</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_UnicodeString</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Length</span> <span class="kt">uint32</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_UnicodeString</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_UnicodeString</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_UnicodeString</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_UnicodeString</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Length</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp39</span> <span class="p">=</span> <span class="nx">tmp39</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_InternedString</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Length</span> <span class="kt">uint32</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_InternedString</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_InternedString</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_InternedString</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_InternedString</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Length</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp41</span> <span class="p">=</span> <span class="nx">tmp41</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp41</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_PyObject_PyString</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Length</span> <span class="kt">uint32</span>
+	<span class="nx">Data</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_PyObject_PyString</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyString</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_PyObject_PyString</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject_PyString</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_PyObject</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Length</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp43</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PythonPyc27_OpArgs</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Items</span> <span class="p">[]</span><span class="o">*</span><span class="nx">PythonPyc27_OpArg</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">PythonPyc27</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">PythonPyc27_Assembly</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewPythonPyc27_OpArgs</span><span class="p">()</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArgs</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">PythonPyc27_OpArgs</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">PythonPyc27_OpArgs</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">PythonPyc27_Assembly</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">PythonPyc27</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp44</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nx">tmp45</span> <span class="o">:=</span> <span class="nx">NewPythonPyc27_OpArg</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp45</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Items</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Items</span><span class="p">,</span> <span class="nx">tmp45</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

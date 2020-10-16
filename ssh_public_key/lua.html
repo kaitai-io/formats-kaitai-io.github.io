@@ -143,7 +143,22 @@ Implementation closely follows code in OpenSSH.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="SSH public key parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="SSH public key parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="SSH public key parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="SSH public key parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -164,6 +179,11 @@ Implementation closely follows code in OpenSSH.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="SSH public key parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="SSH public key parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -200,6 +220,233 @@ Implementation closely follows code in OpenSSH.</p>
             
         </h2>
 
+        
+
+        <h3>ssh_public_key.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/ssh_public_key.lua" download="ssh_public_key.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SSH public keys are encoded in a special binary format, typically represented</span>
+<span class="c1">-- to end users as either one-liner OpenSSH format or multi-line PEM format</span>
+<span class="c1">-- (commerical SSH). Text wrapper carries extra information about user who</span>
+<span class="c1">-- created the key, comment, etc, but the inner binary is always base64-encoded</span>
+<span class="c1">-- and follows the same internal format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This format spec deals with this internal binary format (called &quot;blob&quot; in</span>
+<span class="c1">-- openssh sources) only. Buffer is expected to be raw binary and not base64-d.</span>
+<span class="c1">-- Implementation closely follows code in OpenSSH.</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970)</span>
+<span class="n">SshPublicKey</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">key_name</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Cstring</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">key_name</span><span class="p">.</span><span class="n">value</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;ssh-rsa&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyRsa</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;ssh-ed25519&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEd25519</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;ssh-dss&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyDsa</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028)</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyRsa</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyRsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyRsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">rsa_e</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">rsa_n</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Key length in bits.</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyRsa</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">key_length</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyRsa</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">key_length</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_key_length</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_key_length</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_key_length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">rsa_n</span><span class="p">.</span><span class="n">length_in_bits</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_key_length</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Public key exponent, designated `e` in RSA documentation.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Modulus of both public and private keys, designated `n` in RSA</span>
+<span class="c1">-- documentation. Its length in bits is designated as &quot;key length&quot;.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124)</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEd25519</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_pk</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_pk</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103)</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">curve_name</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Cstring</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ec</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">EllipticCurve</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
+<span class="c1">-- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
+<span class="c1">-- obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181)</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Cstring</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051)</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyDsa</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dsa_p</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dsa_q</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dsa_g</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dsa_pub_key</span> <span class="o">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
+<span class="c1">-- routines are used to read/write it:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * sshbuf_get_ec</span>
+<span class="c1">-- * get_ec</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90</span>
+<span class="c1">-- https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76</span>
+<span class="c1">-- )</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">EllipticCurve</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Big integers serialization format used by ssh, v2. In the code, the following</span>
+<span class="c1">-- routines are used to read/write it:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * sshbuf_get_bignum2</span>
+<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
+<span class="c1">-- * sshbuf_put_bignum2</span>
+<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35</span>
+<span class="c1">-- https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431</span>
+<span class="c1">-- )</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
+<span class="c1">-- `BN_num_bits` function.</span>
+<span class="n">SshPublicKey</span><span class="p">.</span><span class="n">Bignum2</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">length_in_bits</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">length_in_bits</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_length_in_bits</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_length_in_bits</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_length_in_bits</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_length_in_bits</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules): C++11/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules):
+            
+            C++11/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+Rules) is a standard-backed serialization scheme used in many
+different use-cases. Particularly popular usage scenarios are X.509
+certificates and some telecommunication / networking protocols.</p>
+<p>DER is self-describing encoding scheme which allows representation
+of simple, atomic data elements, such as strings and numbers, and
+complex objects, such as sequences of other elements.</p>
+<p>DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+being non-ambiguous: there's always exactly one canonical way to
+encode a data structure defined in terms of ASN.1 using DER.</p>
+<p>This spec allows full parsing of format syntax, but to understand
+the semantics, one would typically require a dictionary of Object
+Identifiers (OIDs), to match OID bodies against some human-readable
+list of constants. OIDs are covered by many different standards,
+so typically it's simpler to use a pre-compiled list of them, such
+as:</p>
+<ul>
+<li>https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg</li>
+<li>http://oid-info.com/</li>
+<li>https://www.alvestrand.no/objectid/top.html</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_11.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.asn1_der&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">asn1_der_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">type_tag</span><span class="p">()</span> <span class="c1">// =&gt; get type tag</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++11/STL source code to parse ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)
+            
+        </h2>
+
+        
+
+        <h3>asn1_der.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/asn1_der.h" download="asn1_der.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding</span>
+<span class="cm"> * Rules) is a standard-backed serialization scheme used in many</span>
+<span class="cm"> * different use-cases. Particularly popular usage scenarios are X.509</span>
+<span class="cm"> * certificates and some telecommunication / networking protocols.</span>
+<span class="cm"> * </span>
+<span class="cm"> * DER is self-describing encoding scheme which allows representation</span>
+<span class="cm"> * of simple, atomic data elements, such as strings and numbers, and</span>
+<span class="cm"> * complex objects, such as sequences of other elements.</span>
+<span class="cm"> * </span>
+<span class="cm"> * DER is a subset of BER (Basic Encoding Rules), with an emphasis on</span>
+<span class="cm"> * being non-ambiguous: there&#39;s always exactly one canonical way to</span>
+<span class="cm"> * encode a data structure defined in terms of ASN.1 using DER.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This spec allows full parsing of format syntax, but to understand</span>
+<span class="cm"> * the semantics, one would typically require a dictionary of Object</span>
+<span class="cm"> * Identifiers (OIDs), to match OID bodies against some human-readable</span>
+<span class="cm"> * list of constants. OIDs are covered by many different standards,</span>
+<span class="cm"> * so typically it&#39;s simpler to use a pre-compiled list of them, such</span>
+<span class="cm"> * as:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg</span>
+<span class="cm"> * * http://oid-info.com/</span>
+<span class="cm"> * * https://www.alvestrand.no/objectid/top.html</span>
+<span class="cm"> * \sa https://www.itu.int/rec/T-REC-X.690-201508-I/en Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">asn1_der_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">body_sequence_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">body_utf8string_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">body_object_id_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">len_encoded_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">body_printable_string_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">type_tag_t</span> <span class="p">{</span>
+        <span class="n">TYPE_TAG_END_OF_CONTENT</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_BOOLEAN</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_INTEGER</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_BIT_STRING</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_OCTET_STRING</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_NULL_VALUE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_OBJECT_ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_OBJECT_DESCRIPTOR</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_EXTERNAL</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_REAL</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_ENUMERATED</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_EMBEDDED_PDV</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_UTF8STRING</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_RELATIVE_OID</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_SEQUENCE_10</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_PRINTABLE_STRING</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_IA5STRING</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_SEQUENCE_30</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="n">TYPE_TAG_SET</span> <span class="o">=</span> <span class="mi">49</span>
+    <span class="p">};</span>
+
+    <span class="n">asn1_der_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">asn1_der_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">body_sequence_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">body_sequence_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">body_sequence_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">&gt;&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">body_utf8string_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">body_utf8string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">body_utf8string_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_str</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">body_object_id_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">body_object_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">body_object_id_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_first</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_first</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">first</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_second</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_second</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">second</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_first_and_second</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_rest</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">first_and_second</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_first_and_second</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rest</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_rest</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">len_encoded_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">len_encoded_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">len_encoded_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_result</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_result</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">result</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_b1</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_int2</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_int2</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_int2</span><span class="p">()</span> <span class="p">{</span> <span class="n">int2</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_int2</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_int1</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_int1</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_int1</span><span class="p">()</span> <span class="p">{</span> <span class="n">int1</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_int1</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">b1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_b1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">int2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_int2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">int1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_int1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">body_printable_string_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">body_printable_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">body_printable_string_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_str</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">type_tag_t</span> <span class="n">m_type_tag</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">len_encoded_t</span><span class="o">&gt;</span> <span class="n">m_len</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">type_tag_t</span> <span class="n">type_tag</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type_tag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">len_encoded_t</span><span class="o">*</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+    <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>asn1_der.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/asn1_der.cpp" download="asn1_der.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;asn1_der.h&quot;</span><span class="cp"></span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">asn1_der_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_type_tag</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">::</span><span class="n">type_tag_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">len_encoded_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">len_encoded_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">type_tag</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_PRINTABLE_STRING</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_printable_string_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_printable_string_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_SEQUENCE_10</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_sequence_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_sequence_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_SET</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_sequence_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_sequence_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_SEQUENCE_30</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_sequence_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_sequence_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_UTF8STRING</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_utf8string_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_utf8string_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="nl">TYPE_TAG_OBJECT_ID</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">body_object_id_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">body_object_id_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">());</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::~</span><span class="n">asn1_der_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_sequence_t</span><span class="o">::</span><span class="n">body_sequence_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_sequence_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">asn1_der_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">asn1_der_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">))));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_sequence_t</span><span class="o">::~</span><span class="n">body_sequence_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_sequence_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_utf8string_t</span><span class="o">::</span><span class="n">body_utf8string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_utf8string_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_str</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_utf8string_t</span><span class="o">::~</span><span class="n">body_utf8string_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_utf8string_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_first</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_second</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_first_and_second</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_rest</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::~</span><span class="n">body_object_id_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::</span><span class="n">first</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_first</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_first</span><span class="p">;</span>
+    <span class="n">m_first</span> <span class="o">=</span> <span class="p">(</span><span class="n">first_and_second</span><span class="p">()</span> <span class="o">/</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="n">f_first</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_first</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_object_id_t</span><span class="o">::</span><span class="n">second</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_second</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_second</span><span class="p">;</span>
+    <span class="n">m_second</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="n">first_and_second</span><span class="p">(),</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="n">f_second</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_result</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_b1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_int2</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b1</span><span class="p">()</span> <span class="o">==</span> <span class="mi">130</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_int2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_int2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_int1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b1</span><span class="p">()</span> <span class="o">==</span> <span class="mi">129</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_int1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_int1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="o">::~</span><span class="n">len_encoded_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_int2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_int1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">uint16_t</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">len_encoded_t</span><span class="o">::</span><span class="n">result</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_result</span><span class="p">;</span>
+    <span class="n">m_result</span> <span class="o">=</span> <span class="p">((</span><span class="n">b1</span><span class="p">()</span> <span class="o">==</span> <span class="mi">129</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">int1</span><span class="p">())</span> <span class="o">:</span> <span class="p">(((</span><span class="n">b1</span><span class="p">()</span> <span class="o">==</span> <span class="mi">130</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">int2</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="n">b1</span><span class="p">()))));</span>
+    <span class="n">f_result</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_printable_string_t</span><span class="o">::</span><span class="n">body_printable_string_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">asn1_der_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_printable_string_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_str</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_printable_string_t</span><span class="o">::~</span><span class="n">body_printable_string_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">asn1_der_t</span><span class="o">::</span><span class="n">body_printable_string_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

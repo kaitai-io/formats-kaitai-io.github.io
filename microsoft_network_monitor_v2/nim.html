@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.cap file format of Microsoft Network Monitor, v2.x: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Networking Protocols</li>
+        <li class="active">.cap file format of Microsoft Network Monitor, v2.x</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.cap file format of Microsoft Network Monitor, v2.x:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
+network packet sniffing and analysis tool. It can save captured
+traffic as .cap files, which usually contain the packets and may
+contain some additional info - enhanced network info, calculated
+statistics, etc.</p>
+<p>There are at least 2 different versions of the format: v1 and
+v2. Netmon v3 seems to use the same file format as v1.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Microsoft Network Monitor, v2.x
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        cap
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .cap file format of Microsoft Network Monitor, v2.x
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse .cap file format of Microsoft Network Monitor, v2.x
+            
+        </h2>
+
+        
+
+        <h3>microsoft_network_monitor_v2.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/microsoft_network_monitor_v2.nim" download="microsoft_network_monitor_v2.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ethernet_frame</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">windows</span><span class="o">/</span><span class="n">windows_systemtime</span>
+
+<span class="kn">import</span> <span class="s">&quot;windows_systemtime&quot;</span>
+<span class="kn">import</span> <span class="s">&quot;ethernet_frame&quot;</span>
+<span class="k">type</span>
+  <span class="n">MicrosoftNetworkMonitorV2</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">signature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">versionMinor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">versionMajor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">macType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_Linktype</span>
+    <span class="p">`</span><span class="n">timeCaptureStart</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsSystemtime</span>
+    <span class="p">`</span><span class="n">frameTableOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">frameTableLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">userDataOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">userDataLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">commentOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">commentLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">statisticsOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">statisticsLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">networkInfoOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">networkInfoLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">conversationStatsOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">conversationStatsLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawFrameTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">frameTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
+  <span class="n">MicrosoftNetworkMonitorV2_Linktype</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">null_linktype</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ethernet</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ax25</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">ieee802_5</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">arcnet_bsd</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">slip</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ppp</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">fddi</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">ppp_hdlc</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">ppp_ether</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">atm_rfc1483</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">c_hdlc</span> <span class="o">=</span> <span class="mi">104</span>
+    <span class="n">ieee802_11</span> <span class="o">=</span> <span class="mi">105</span>
+    <span class="n">frelay</span> <span class="o">=</span> <span class="mi">107</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">108</span>
+    <span class="n">linux_sll</span> <span class="o">=</span> <span class="mi">113</span>
+    <span class="n">ltalk</span> <span class="o">=</span> <span class="mi">114</span>
+    <span class="n">pflog</span> <span class="o">=</span> <span class="mi">117</span>
+    <span class="n">ieee802_11_prism</span> <span class="o">=</span> <span class="mi">119</span>
+    <span class="n">ip_over_fc</span> <span class="o">=</span> <span class="mi">122</span>
+    <span class="n">sunatm</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="n">ieee802_11_radiotap</span> <span class="o">=</span> <span class="mi">127</span>
+    <span class="n">arcnet_linux</span> <span class="o">=</span> <span class="mi">129</span>
+    <span class="n">apple_ip_over_ieee1394</span> <span class="o">=</span> <span class="mi">138</span>
+    <span class="n">mtp2_with_phdr</span> <span class="o">=</span> <span class="mi">139</span>
+    <span class="n">mtp2</span> <span class="o">=</span> <span class="mi">140</span>
+    <span class="n">mtp3</span> <span class="o">=</span> <span class="mi">141</span>
+    <span class="n">sccp</span> <span class="o">=</span> <span class="mi">142</span>
+    <span class="n">docsis</span> <span class="o">=</span> <span class="mi">143</span>
+    <span class="n">linux_irda</span> <span class="o">=</span> <span class="mi">144</span>
+    <span class="n">user0</span> <span class="o">=</span> <span class="mi">147</span>
+    <span class="n">user1</span> <span class="o">=</span> <span class="mi">148</span>
+    <span class="n">user2</span> <span class="o">=</span> <span class="mi">149</span>
+    <span class="n">user3</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">user4</span> <span class="o">=</span> <span class="mi">151</span>
+    <span class="n">user5</span> <span class="o">=</span> <span class="mi">152</span>
+    <span class="n">user6</span> <span class="o">=</span> <span class="mi">153</span>
+    <span class="n">user7</span> <span class="o">=</span> <span class="mi">154</span>
+    <span class="n">user8</span> <span class="o">=</span> <span class="mi">155</span>
+    <span class="n">user9</span> <span class="o">=</span> <span class="mi">156</span>
+    <span class="n">user10</span> <span class="o">=</span> <span class="mi">157</span>
+    <span class="n">user11</span> <span class="o">=</span> <span class="mi">158</span>
+    <span class="n">user12</span> <span class="o">=</span> <span class="mi">159</span>
+    <span class="n">user13</span> <span class="o">=</span> <span class="mi">160</span>
+    <span class="n">user14</span> <span class="o">=</span> <span class="mi">161</span>
+    <span class="n">user15</span> <span class="o">=</span> <span class="mi">162</span>
+    <span class="n">ieee802_11_avs</span> <span class="o">=</span> <span class="mi">163</span>
+    <span class="n">bacnet_ms_tp</span> <span class="o">=</span> <span class="mi">165</span>
+    <span class="n">ppp_pppd</span> <span class="o">=</span> <span class="mi">166</span>
+    <span class="n">gprs_llc</span> <span class="o">=</span> <span class="mi">169</span>
+    <span class="n">gpf_t</span> <span class="o">=</span> <span class="mi">170</span>
+    <span class="n">gpf_f</span> <span class="o">=</span> <span class="mi">171</span>
+    <span class="n">linux_lapd</span> <span class="o">=</span> <span class="mi">177</span>
+    <span class="n">bluetooth_hci_h4</span> <span class="o">=</span> <span class="mi">187</span>
+    <span class="n">usb_linux</span> <span class="o">=</span> <span class="mi">189</span>
+    <span class="n">ppi</span> <span class="o">=</span> <span class="mi">192</span>
+    <span class="n">ieee802_15_4</span> <span class="o">=</span> <span class="mi">195</span>
+    <span class="n">sita</span> <span class="o">=</span> <span class="mi">196</span>
+    <span class="n">erf</span> <span class="o">=</span> <span class="mi">197</span>
+    <span class="n">bluetooth_hci_h4_with_phdr</span> <span class="o">=</span> <span class="mi">201</span>
+    <span class="n">ax25_kiss</span> <span class="o">=</span> <span class="mi">202</span>
+    <span class="n">lapd</span> <span class="o">=</span> <span class="mi">203</span>
+    <span class="n">ppp_with_dir</span> <span class="o">=</span> <span class="mi">204</span>
+    <span class="n">c_hdlc_with_dir</span> <span class="o">=</span> <span class="mi">205</span>
+    <span class="n">frelay_with_dir</span> <span class="o">=</span> <span class="mi">206</span>
+    <span class="n">ipmb_linux</span> <span class="o">=</span> <span class="mi">209</span>
+    <span class="n">ieee802_15_4_nonask_phy</span> <span class="o">=</span> <span class="mi">215</span>
+    <span class="n">usb_linux_mmapped</span> <span class="o">=</span> <span class="mi">220</span>
+    <span class="n">fc_2</span> <span class="o">=</span> <span class="mi">224</span>
+    <span class="n">fc_2_with_frame_delims</span> <span class="o">=</span> <span class="mi">225</span>
+    <span class="n">ipnet</span> <span class="o">=</span> <span class="mi">226</span>
+    <span class="n">can_socketcan</span> <span class="o">=</span> <span class="mi">227</span>
+    <span class="n">ipv4</span> <span class="o">=</span> <span class="mi">228</span>
+    <span class="n">ipv6</span> <span class="o">=</span> <span class="mi">229</span>
+    <span class="n">ieee802_15_4_nofcs</span> <span class="o">=</span> <span class="mi">230</span>
+    <span class="n">dbus</span> <span class="o">=</span> <span class="mi">231</span>
+    <span class="n">dvb_ci</span> <span class="o">=</span> <span class="mi">235</span>
+    <span class="n">mux27010</span> <span class="o">=</span> <span class="mi">236</span>
+    <span class="n">stanag_5066_d_pdu</span> <span class="o">=</span> <span class="mi">237</span>
+    <span class="n">nflog</span> <span class="o">=</span> <span class="mi">239</span>
+    <span class="n">netanalyzer</span> <span class="o">=</span> <span class="mi">240</span>
+    <span class="n">netanalyzer_transparent</span> <span class="o">=</span> <span class="mi">241</span>
+    <span class="n">ipoib</span> <span class="o">=</span> <span class="mi">242</span>
+    <span class="n">mpeg_2_ts</span> <span class="o">=</span> <span class="mi">243</span>
+    <span class="n">ng40</span> <span class="o">=</span> <span class="mi">244</span>
+    <span class="n">nfc_llcp</span> <span class="o">=</span> <span class="mi">245</span>
+    <span class="n">infiniband</span> <span class="o">=</span> <span class="mi">247</span>
+    <span class="n">sctp</span> <span class="o">=</span> <span class="mi">248</span>
+    <span class="n">usbpcap</span> <span class="o">=</span> <span class="mi">249</span>
+    <span class="n">rtac_serial</span> <span class="o">=</span> <span class="mi">250</span>
+    <span class="n">bluetooth_le_ll</span> <span class="o">=</span> <span class="mi">251</span>
+    <span class="n">netlink</span> <span class="o">=</span> <span class="mi">253</span>
+    <span class="n">bluetooth_linux_monitor</span> <span class="o">=</span> <span class="mi">254</span>
+    <span class="n">bluetooth_bredr_bb</span> <span class="o">=</span> <span class="mi">255</span>
+    <span class="n">bluetooth_le_ll_with_phdr</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">profibus_dl</span> <span class="o">=</span> <span class="mi">257</span>
+    <span class="n">pktap</span> <span class="o">=</span> <span class="mi">258</span>
+    <span class="n">epon</span> <span class="o">=</span> <span class="mi">259</span>
+    <span class="n">ipmi_hpm_2</span> <span class="o">=</span> <span class="mi">260</span>
+    <span class="n">zwave_r1_r2</span> <span class="o">=</span> <span class="mi">261</span>
+    <span class="n">zwave_r3</span> <span class="o">=</span> <span class="mi">262</span>
+    <span class="n">wattstopper_dlm</span> <span class="o">=</span> <span class="mi">263</span>
+    <span class="n">iso_14443</span> <span class="o">=</span> <span class="mi">264</span>
+  <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2</span>
+  <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">ofs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span>
+  <span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">tsDelta</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">origLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">incLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span>
+    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftNetworkMonitorV2</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndex): MicrosoftNetworkMonitorV2_FrameIndexEntry</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame</span>
+
+<span class="k">proc </span><span class="nf">frameTable</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">):</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
+<span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">):</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Microsoft</span> <span class="n">Network</span> <span class="n">Monitor</span> <span class="p">(</span><span class="n">AKA</span> <span class="n">Netmon</span><span class="p">)</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">proprietary</span> <span class="n">Microsoft</span><span class="sc">&#39;s</span>
+<span class="n">network</span> <span class="n">packet</span> <span class="n">sniffing</span> <span class="ow">and</span> <span class="n">analysis</span> <span class="n">tool</span><span class="p">.</span> <span class="n">It</span> <span class="n">can</span> <span class="n">save</span> <span class="n">captured</span>
+<span class="n">traffic</span> <span class="k">as</span> <span class="p">.</span><span class="n">cap</span> <span class="n">files</span><span class="p">,</span> <span class="n">which</span> <span class="n">usually</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">packets</span> <span class="ow">and</span> <span class="n">may</span>
+<span class="n">contain</span> <span class="n">some</span> <span class="n">additional</span> <span class="n">info</span> <span class="o">-</span> <span class="n">enhanced</span> <span class="n">network</span> <span class="n">info</span><span class="p">,</span> <span class="n">calculated</span>
+<span class="n">statistics</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
+
+<span class="n">There</span> <span class="n">are</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">2</span> <span class="n">different</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">the</span> <span class="n">format</span><span class="p">:</span> <span class="n">v1</span> <span class="ow">and</span>
+<span class="n">v2</span><span class="p">.</span> <span class="n">Netmon</span> <span class="n">v3</span> <span class="n">seems</span> <span class="n">to</span> <span class="n">use</span> <span class="n">the</span> <span class="n">same</span> <span class="n">file</span> <span class="n">format</span> <span class="k">as</span> <span class="n">v1</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftNetworkMonitorV2 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">signatureExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">signatureExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Format</span> <span class="n">version</span> <span class="p">(</span><span class="n">minor</span><span class="p">),</span> <span class="n">BCD</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">versionMinorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionMinor</span> <span class="o">=</span> <span class="n">versionMinorExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Format</span> <span class="n">version</span> <span class="p">(</span><span class="n">major</span><span class="p">),</span> <span class="n">BCD</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">versionMajorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionMajor</span> <span class="o">=</span> <span class="n">versionMajorExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Network</span> <span class="n">topology</span> <span class="k">type</span> <span class="k">of</span> <span class="n">captured</span> <span class="n">data</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">macTypeExpr</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_Linktype</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">macType</span> <span class="o">=</span> <span class="n">macTypeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Timestamp</span> <span class="k">of</span> <span class="n">capture</span> <span class="n">start</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">timeCaptureStartExpr</span> <span class="o">=</span> <span class="n">WindowsSystemtime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">timeCaptureStart</span> <span class="o">=</span> <span class="n">timeCaptureStartExpr</span>
+  <span class="k">let</span> <span class="n">frameTableOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">frameTableOfs</span> <span class="o">=</span> <span class="n">frameTableOfsExpr</span>
+  <span class="k">let</span> <span class="n">frameTableLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">frameTableLen</span> <span class="o">=</span> <span class="n">frameTableLenExpr</span>
+  <span class="k">let</span> <span class="n">userDataOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">userDataOfs</span> <span class="o">=</span> <span class="n">userDataOfsExpr</span>
+  <span class="k">let</span> <span class="n">userDataLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">userDataLen</span> <span class="o">=</span> <span class="n">userDataLenExpr</span>
+  <span class="k">let</span> <span class="n">commentOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">commentOfs</span> <span class="o">=</span> <span class="n">commentOfsExpr</span>
+  <span class="k">let</span> <span class="n">commentLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">commentLen</span> <span class="o">=</span> <span class="n">commentLenExpr</span>
+  <span class="k">let</span> <span class="n">statisticsOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">statisticsOfs</span> <span class="o">=</span> <span class="n">statisticsOfsExpr</span>
+  <span class="k">let</span> <span class="n">statisticsLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">statisticsLen</span> <span class="o">=</span> <span class="n">statisticsLenExpr</span>
+  <span class="k">let</span> <span class="n">networkInfoOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">networkInfoOfs</span> <span class="o">=</span> <span class="n">networkInfoOfsExpr</span>
+  <span class="k">let</span> <span class="n">networkInfoLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">networkInfoLen</span> <span class="o">=</span> <span class="n">networkInfoLenExpr</span>
+  <span class="k">let</span> <span class="n">conversationStatsOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">conversationStatsOfs</span> <span class="o">=</span> <span class="n">conversationStatsOfsExpr</span>
+  <span class="k">let</span> <span class="n">conversationStatsLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">conversationStatsLen</span> <span class="o">=</span> <span class="n">conversationStatsLenExpr</span>
+
+<span class="k">proc </span><span class="nf">frameTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">):</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Index</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">access</span> <span class="n">individual</span> <span class="n">captured</span> <span class="n">frames</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">frameTableOfs</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">rawFrameTableInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">frameTableLen</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawFrameTableInst</span> <span class="o">=</span> <span class="n">rawFrameTableInstExpr</span>
+  <span class="k">let</span> <span class="n">rawFrameTableInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawFrameTableInstExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">frameTableInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFrameTableInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">=</span> <span class="n">frameTableInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], filename: string): MicrosoftNetworkMonitorV2 =</span>
+  <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], filename: string): MicrosoftNetworkMonitorV2_FrameIndex =</span>
+  <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Each</span> <span class="n">index</span> <span class="n">entry</span> <span class="ow">is</span> <span class="n">just</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">where</span> <span class="n">the</span> <span class="n">frame</span> <span class="n">data</span> <span class="ow">is</span>
+<span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndex): MicrosoftNetworkMonitorV2_FrameIndexEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Absolute</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">frame</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ofsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofs</span> <span class="o">=</span> <span class="n">ofsExpr</span>
+
+<span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">):</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Frame</span> <span class="n">body</span> <span class="n">itself</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofs</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], filename: string): MicrosoftNetworkMonitorV2_FrameIndexEntry =</span>
+  <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">container</span> <span class="k">for</span> <span class="n">actually</span> <span class="n">captured</span> <span class="n">network</span> <span class="n">data</span><span class="p">.</span> <span class="n">Allow</span> <span class="n">to</span>
+<span class="n">timestamp</span> <span class="n">individual</span> <span class="n">frames</span> <span class="ow">and</span> <span class="n">designates</span> <span class="n">how</span> <span class="n">much</span> <span class="n">data</span> <span class="kn">from</span>
+<span class="n">the</span> <span class="n">original</span> <span class="n">packet</span> <span class="n">was</span> <span class="n">actually</span> <span class="n">written</span> <span class="n">into</span> <span class="n">the</span> <span class="n">file</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Time</span> <span class="n">stamp</span> <span class="o">-</span> <span class="n">usecs</span> <span class="n">since</span> <span class="n">start</span> <span class="k">of</span> <span class="n">capture</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">tsDeltaExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tsDelta</span> <span class="o">=</span> <span class="n">tsDeltaExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Actual</span> <span class="n">length</span> <span class="k">of</span> <span class="n">packet</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">origLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">origLen</span> <span class="o">=</span> <span class="n">origLenExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">octets</span> <span class="n">captured</span> <span class="ow">in</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">incLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">incLen</span> <span class="o">=</span> <span class="n">incLenExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Actual</span> <span class="n">packet</span> <span class="n">captured</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">network</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">macType</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">microsoft_network_monitor_v2</span><span class="p">.</span><span class="n">ethernet</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], filename: string): MicrosoftNetworkMonitorV2_Frame =</span>
+  <span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

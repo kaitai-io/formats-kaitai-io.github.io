@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>code_6502: C++11/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>CPU / Machine Code Disassembly</li>
+        <li class="active">code_6502</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>code_6502:
+            
+            C++11/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This spec can be used to disassemble raw stream of 6502 CPU machine
+code into individual operations. Each operation includes an opcode
+and, optionally, an argument. Register arguments are part of the
+<code>opcode</code> enum.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of code_6502
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="code_6502 parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_11.html" title="code_6502 parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="code_6502 parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="code_6502 parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="code_6502 parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="code_6502 parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="code_6502 parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="code_6502 parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="code_6502 parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="code_6502 parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="code_6502 parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="code_6502 parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="code_6502 parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="code_6502 parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.code_6502&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">code_6502_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">operations</span><span class="p">()</span> <span class="c1">// =&gt; get operations</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++11/STL source code to parse code_6502
+            
+        </h2>
+
+        
+
+        <h3>code_6502.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/code_6502.h" download="code_6502.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * This spec can be used to disassemble raw stream of 6502 CPU machine</span>
+<span class="cm"> * code into individual operations. Each operation includes an opcode</span>
+<span class="cm"> * and, optionally, an argument. Register arguments are part of the</span>
+<span class="cm"> * `opcode` enum.</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">code_6502_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">operation_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">opcode_t</span> <span class="p">{</span>
+        <span class="n">OPCODE_BRK_IMPL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_X_IND</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_ZPG</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">OPCODE_ASL_ZPG</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">OPCODE_PHP_IMPL</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_IMM</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">OPCODE_ASL_A</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_ABS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">OPCODE_ASL_ABS</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="n">OPCODE_BPL_REL</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_IND_Y</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_ZPG_X</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="n">OPCODE_ASL_ZPG_X</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">OPCODE_CLC_IMPL</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_ABS_Y</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">OPCODE_ORA_ABS_X</span> <span class="o">=</span> <span class="mi">29</span><span class="p">,</span>
+        <span class="n">OPCODE_ASL_ABS_X</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">OPCODE_JSR_ABS</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_X_IND</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
+        <span class="n">OPCODE_BIT_ZPG</span> <span class="o">=</span> <span class="mi">36</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_ZPG</span> <span class="o">=</span> <span class="mi">37</span><span class="p">,</span>
+        <span class="n">OPCODE_ROL_ZPG</span> <span class="o">=</span> <span class="mi">38</span><span class="p">,</span>
+        <span class="n">OPCODE_PLP_IMPL</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_IMM</span> <span class="o">=</span> <span class="mi">41</span><span class="p">,</span>
+        <span class="n">OPCODE_ROL_A</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">OPCODE_BIT_ABS</span> <span class="o">=</span> <span class="mi">44</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_ABS</span> <span class="o">=</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="n">OPCODE_ROL_ABS</span> <span class="o">=</span> <span class="mi">46</span><span class="p">,</span>
+        <span class="n">OPCODE_BMI_REL</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_IND_Y</span> <span class="o">=</span> <span class="mi">49</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_ZPG_X</span> <span class="o">=</span> <span class="mi">53</span><span class="p">,</span>
+        <span class="n">OPCODE_ROL_ZPG_X</span> <span class="o">=</span> <span class="mi">54</span><span class="p">,</span>
+        <span class="n">OPCODE_SEC_IMPL</span> <span class="o">=</span> <span class="mi">56</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_ABS_Y</span> <span class="o">=</span> <span class="mi">57</span><span class="p">,</span>
+        <span class="n">OPCODE_AND_ABS_X</span> <span class="o">=</span> <span class="mi">61</span><span class="p">,</span>
+        <span class="n">OPCODE_ROL_ABS_X</span> <span class="o">=</span> <span class="mi">62</span><span class="p">,</span>
+        <span class="n">OPCODE_RTI_IMPL</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_X_IND</span> <span class="o">=</span> <span class="mi">65</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_ZPG</span> <span class="o">=</span> <span class="mi">69</span><span class="p">,</span>
+        <span class="n">OPCODE_LSR_ZPG</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
+        <span class="n">OPCODE_PHA_IMPL</span> <span class="o">=</span> <span class="mi">72</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_IMM</span> <span class="o">=</span> <span class="mi">73</span><span class="p">,</span>
+        <span class="n">OPCODE_LSR_A</span> <span class="o">=</span> <span class="mi">74</span><span class="p">,</span>
+        <span class="n">OPCODE_JMP_ABS</span> <span class="o">=</span> <span class="mi">76</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_ABS</span> <span class="o">=</span> <span class="mi">77</span><span class="p">,</span>
+        <span class="n">OPCODE_LSR_ABS</span> <span class="o">=</span> <span class="mi">78</span><span class="p">,</span>
+        <span class="n">OPCODE_BVC_REL</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_IND_Y</span> <span class="o">=</span> <span class="mi">81</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_ZPG_X</span> <span class="o">=</span> <span class="mi">85</span><span class="p">,</span>
+        <span class="n">OPCODE_LSR_ZPG_X</span> <span class="o">=</span> <span class="mi">86</span><span class="p">,</span>
+        <span class="n">OPCODE_CLI_IMPL</span> <span class="o">=</span> <span class="mi">88</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_ABS_Y</span> <span class="o">=</span> <span class="mi">89</span><span class="p">,</span>
+        <span class="n">OPCODE_EOR_ABS_X</span> <span class="o">=</span> <span class="mi">93</span><span class="p">,</span>
+        <span class="n">OPCODE_LSR_ABS_X</span> <span class="o">=</span> <span class="mi">94</span><span class="p">,</span>
+        <span class="n">OPCODE_RTS_IMPL</span> <span class="o">=</span> <span class="mi">96</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_X_IND</span> <span class="o">=</span> <span class="mi">97</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_ZPG</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span>
+        <span class="n">OPCODE_ROR_ZPG</span> <span class="o">=</span> <span class="mi">102</span><span class="p">,</span>
+        <span class="n">OPCODE_PLA_IMPL</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_IMM</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+        <span class="n">OPCODE_ROR_A</span> <span class="o">=</span> <span class="mi">106</span><span class="p">,</span>
+        <span class="n">OPCODE_JMP_IND</span> <span class="o">=</span> <span class="mi">108</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_ABS</span> <span class="o">=</span> <span class="mi">109</span><span class="p">,</span>
+        <span class="n">OPCODE_ROR_ABS</span> <span class="o">=</span> <span class="mi">110</span><span class="p">,</span>
+        <span class="n">OPCODE_BVS_REL</span> <span class="o">=</span> <span class="mi">112</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_IND_Y</span> <span class="o">=</span> <span class="mi">113</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_ZPG_X</span> <span class="o">=</span> <span class="mi">117</span><span class="p">,</span>
+        <span class="n">OPCODE_ROR_ZPG_X</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
+        <span class="n">OPCODE_SEI_IMPL</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_ABS_Y</span> <span class="o">=</span> <span class="mi">121</span><span class="p">,</span>
+        <span class="n">OPCODE_ADC_ABS_X</span> <span class="o">=</span> <span class="mi">125</span><span class="p">,</span>
+        <span class="n">OPCODE_ROR_ABS_X</span> <span class="o">=</span> <span class="mi">126</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_X_IND</span> <span class="o">=</span> <span class="mi">129</span><span class="p">,</span>
+        <span class="n">OPCODE_STY_ZPG</span> <span class="o">=</span> <span class="mi">132</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_ZPG</span> <span class="o">=</span> <span class="mi">133</span><span class="p">,</span>
+        <span class="n">OPCODE_STX_ZPG</span> <span class="o">=</span> <span class="mi">134</span><span class="p">,</span>
+        <span class="n">OPCODE_DEY_IMPL</span> <span class="o">=</span> <span class="mi">136</span><span class="p">,</span>
+        <span class="n">OPCODE_TXA_IMPL</span> <span class="o">=</span> <span class="mi">138</span><span class="p">,</span>
+        <span class="n">OPCODE_STY_ABS</span> <span class="o">=</span> <span class="mi">140</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_ABS</span> <span class="o">=</span> <span class="mi">141</span><span class="p">,</span>
+        <span class="n">OPCODE_STX_ABS</span> <span class="o">=</span> <span class="mi">142</span><span class="p">,</span>
+        <span class="n">OPCODE_BCC_REL</span> <span class="o">=</span> <span class="mi">144</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_IND_Y</span> <span class="o">=</span> <span class="mi">145</span><span class="p">,</span>
+        <span class="n">OPCODE_STY_ZPG_X</span> <span class="o">=</span> <span class="mi">148</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_ZPG_X</span> <span class="o">=</span> <span class="mi">149</span><span class="p">,</span>
+        <span class="n">OPCODE_STX_ZPG_Y</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
+        <span class="n">OPCODE_TYA_IMPL</span> <span class="o">=</span> <span class="mi">152</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_ABS_Y</span> <span class="o">=</span> <span class="mi">153</span><span class="p">,</span>
+        <span class="n">OPCODE_TXS_IMPL</span> <span class="o">=</span> <span class="mi">154</span><span class="p">,</span>
+        <span class="n">OPCODE_STA_ABS_X</span> <span class="o">=</span> <span class="mi">157</span><span class="p">,</span>
+        <span class="n">OPCODE_LDY_IMM</span> <span class="o">=</span> <span class="mi">160</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_X_IND</span> <span class="o">=</span> <span class="mi">161</span><span class="p">,</span>
+        <span class="n">OPCODE_LDX_IMM</span> <span class="o">=</span> <span class="mi">162</span><span class="p">,</span>
+        <span class="n">OPCODE_LDY_ZPG</span> <span class="o">=</span> <span class="mi">164</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_ZPG</span> <span class="o">=</span> <span class="mi">165</span><span class="p">,</span>
+        <span class="n">OPCODE_LDX_ZPG</span> <span class="o">=</span> <span class="mi">166</span><span class="p">,</span>
+        <span class="n">OPCODE_TAY_IMPL</span> <span class="o">=</span> <span class="mi">168</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_IMM</span> <span class="o">=</span> <span class="mi">169</span><span class="p">,</span>
+        <span class="n">OPCODE_TAX_IMPL</span> <span class="o">=</span> <span class="mi">170</span><span class="p">,</span>
+        <span class="n">OPCODE_LDY_ABS</span> <span class="o">=</span> <span class="mi">172</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_ABS</span> <span class="o">=</span> <span class="mi">173</span><span class="p">,</span>
+        <span class="n">OPCODE_LDX_ABS</span> <span class="o">=</span> <span class="mi">174</span><span class="p">,</span>
+        <span class="n">OPCODE_BCS_REL</span> <span class="o">=</span> <span class="mi">176</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_IND_Y</span> <span class="o">=</span> <span class="mi">177</span><span class="p">,</span>
+        <span class="n">OPCODE_LDY_ZPG_X</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_ZPG_X</span> <span class="o">=</span> <span class="mi">181</span><span class="p">,</span>
+        <span class="n">OPCODE_LDX_ZPG_Y</span> <span class="o">=</span> <span class="mi">182</span><span class="p">,</span>
+        <span class="n">OPCODE_CLV_IMPL</span> <span class="o">=</span> <span class="mi">184</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_ABS_Y</span> <span class="o">=</span> <span class="mi">185</span><span class="p">,</span>
+        <span class="n">OPCODE_TSX_IMPL</span> <span class="o">=</span> <span class="mi">186</span><span class="p">,</span>
+        <span class="n">OPCODE_LDY_ABS_X</span> <span class="o">=</span> <span class="mi">188</span><span class="p">,</span>
+        <span class="n">OPCODE_LDA_ABS_X</span> <span class="o">=</span> <span class="mi">189</span><span class="p">,</span>
+        <span class="n">OPCODE_LDX_ABS_Y</span> <span class="o">=</span> <span class="mi">190</span><span class="p">,</span>
+        <span class="n">OPCODE_CPY_IMM</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_X_IND</span> <span class="o">=</span> <span class="mi">193</span><span class="p">,</span>
+        <span class="n">OPCODE_CPY_ZPG</span> <span class="o">=</span> <span class="mi">196</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_ZPG</span> <span class="o">=</span> <span class="mi">197</span><span class="p">,</span>
+        <span class="n">OPCODE_DEC_ZPG</span> <span class="o">=</span> <span class="mi">198</span><span class="p">,</span>
+        <span class="n">OPCODE_INY_IMPL</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_IMM</span> <span class="o">=</span> <span class="mi">201</span><span class="p">,</span>
+        <span class="n">OPCODE_DEX_IMPL</span> <span class="o">=</span> <span class="mi">202</span><span class="p">,</span>
+        <span class="n">OPCODE_CPY_ABS</span> <span class="o">=</span> <span class="mi">204</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_ABS</span> <span class="o">=</span> <span class="mi">205</span><span class="p">,</span>
+        <span class="n">OPCODE_DEC_ABS</span> <span class="o">=</span> <span class="mi">206</span><span class="p">,</span>
+        <span class="n">OPCODE_BNE_REL</span> <span class="o">=</span> <span class="mi">208</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_IND_Y</span> <span class="o">=</span> <span class="mi">209</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_ZPG_X</span> <span class="o">=</span> <span class="mi">213</span><span class="p">,</span>
+        <span class="n">OPCODE_DEC_ZPG_X</span> <span class="o">=</span> <span class="mi">214</span><span class="p">,</span>
+        <span class="n">OPCODE_CLD_IMPL</span> <span class="o">=</span> <span class="mi">216</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_ABS_Y</span> <span class="o">=</span> <span class="mi">217</span><span class="p">,</span>
+        <span class="n">OPCODE_CMP_ABS_X</span> <span class="o">=</span> <span class="mi">221</span><span class="p">,</span>
+        <span class="n">OPCODE_DEC_ABS_X</span> <span class="o">=</span> <span class="mi">222</span><span class="p">,</span>
+        <span class="n">OPCODE_CPX_IMM</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_X_IND</span> <span class="o">=</span> <span class="mi">225</span><span class="p">,</span>
+        <span class="n">OPCODE_CPX_ZPG</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_ZPG</span> <span class="o">=</span> <span class="mi">229</span><span class="p">,</span>
+        <span class="n">OPCODE_INC_ZPG</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span>
+        <span class="n">OPCODE_INX_IMPL</span> <span class="o">=</span> <span class="mi">232</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_IMM</span> <span class="o">=</span> <span class="mi">233</span><span class="p">,</span>
+        <span class="n">OPCODE_NOP_IMPL</span> <span class="o">=</span> <span class="mi">234</span><span class="p">,</span>
+        <span class="n">OPCODE_CPX_ABS</span> <span class="o">=</span> <span class="mi">236</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_ABS</span> <span class="o">=</span> <span class="mi">237</span><span class="p">,</span>
+        <span class="n">OPCODE_INC_ABS</span> <span class="o">=</span> <span class="mi">238</span><span class="p">,</span>
+        <span class="n">OPCODE_BEQ_REL</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_IND_Y</span> <span class="o">=</span> <span class="mi">241</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_ZPG_X</span> <span class="o">=</span> <span class="mi">245</span><span class="p">,</span>
+        <span class="n">OPCODE_INC_ZPG_X</span> <span class="o">=</span> <span class="mi">246</span><span class="p">,</span>
+        <span class="n">OPCODE_SED_IMPL</span> <span class="o">=</span> <span class="mi">248</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_ABS_Y</span> <span class="o">=</span> <span class="mi">249</span><span class="p">,</span>
+        <span class="n">OPCODE_SBC_ABS_X</span> <span class="o">=</span> <span class="mi">253</span><span class="p">,</span>
+        <span class="n">OPCODE_INC_ABS_X</span> <span class="o">=</span> <span class="mi">254</span>
+    <span class="p">};</span>
+
+    <span class="n">code_6502_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">code_6502_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">operation_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">operation_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">operation_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">opcode_t</span> <span class="n">m_code</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_args</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_args</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_args</span><span class="p">()</span> <span class="p">{</span> <span class="n">args</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_args</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">opcode_t</span> <span class="n">code</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">args</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_args</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">operation_t</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m_operations</span><span class="p">;</span>
+    <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">operation_t</span><span class="o">&gt;&gt;*</span> <span class="n">operations</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_operations</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+    <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>code_6502.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/code_6502.cpp" download="code_6502.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;code_6502.h&quot;</span><span class="cp"></span>
+
+<span class="n">code_6502_t</span><span class="o">::</span><span class="n">code_6502_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">m_operations</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_operations</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">operation_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">operation_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_operations</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">operation_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">operation_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">))));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">code_6502_t</span><span class="o">::~</span><span class="n">code_6502_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">code_6502_t</span><span class="o">::</span><span class="n">operation_t</span><span class="o">::</span><span class="n">operation_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">code_6502_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="n">operation_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_code</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">code_6502_t</span><span class="o">::</span><span class="n">opcode_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_args</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BCC_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPX_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BCS_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDY_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LSR_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BNE_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LSR_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPX_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_JMP_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPY_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDX_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BPL_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROR_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BIT_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROL_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STY_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_JSR_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BMI_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STY_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROL_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STX_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ASL_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LSR_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ADC_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDY_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BVS_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_INC_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ASL_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDX_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPX_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_DEC_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROR_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDX_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_DEC_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROR_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_INC_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ASL_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDY_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ASL_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROL_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LSR_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STX_ZPG_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BIT_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDX_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDY_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_JMP_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BEQ_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_DEC_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_EOR_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STX_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STY_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPY_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_DEC_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROR_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_ABS_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_INC_ABS_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDA_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CPY_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDX_ZPG_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_SBC_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ROL_ZPG_X</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_STA_IND_Y</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_ABS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_AND_IMM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_CMP_X_IND</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_LDY_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_INC_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_BVC_REL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="nl">OPCODE_ORA_ZPG</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_args</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_args</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">code_6502_t</span><span class="o">::</span><span class="n">operation_t</span><span class="o">::~</span><span class="n">operation_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">code_6502_t</span><span class="o">::</span><span class="n">operation_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules): Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules):
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+Rules) is a standard-backed serialization scheme used in many
+different use-cases. Particularly popular usage scenarios are X.509
+certificates and some telecommunication / networking protocols.</p>
+<p>DER is self-describing encoding scheme which allows representation
+of simple, atomic data elements, such as strings and numbers, and
+complex objects, such as sequences of other elements.</p>
+<p>DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+being non-ambiguous: there's always exactly one canonical way to
+encode a data structure defined in terms of ASN.1 using DER.</p>
+<p>This spec allows full parsing of format syntax, but to understand
+the semantics, one would typically require a dictionary of Object
+Identifiers (OIDs), to match OID bodies against some human-readable
+list of constants. OIDs are covered by many different standards,
+so typically it's simpler to use a pre-compiled list of them, such
+as:</p>
+<ul>
+<li>https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg</li>
+<li>http://oid-info.com/</li>
+<li>https://www.alvestrand.no/objectid/top.html</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)
+            
+        </h2>
+
+        
+
+        <h3>asn1_der.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/asn1_der.nim" download="asn1_der.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">Asn1Der</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">typeTag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der_TypeTag</span>
+    <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der_LenEncoded</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">Asn1Der_TypeTag</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">end_of_content</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">boolean</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">integer</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">bit_string</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">octet_string</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">null_value</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">object_descriptor</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">external</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">enumerated</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">embedded_pdv</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">utf8string</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">relative_oid</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">sequence_10</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">printable_string</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">ia5string</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">sequence_30</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="kt">set</span> <span class="o">=</span> <span class="mi">49</span>
+  <span class="n">Asn1Der_BodySequence</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
+  <span class="n">Asn1Der_BodyUtf8string</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">str</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
+  <span class="n">Asn1Der_BodyObjectId</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">firstAndSecond</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">rest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
+    <span class="p">`</span><span class="n">firstInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">secondInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">Asn1Der_LenEncoded</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">b1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">int2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">int1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
+    <span class="p">`</span><span class="n">resultInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+  <span class="n">Asn1Der_BodyPrintableString</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">str</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Asn1Der</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodySequence], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodySequence</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyUtf8string], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyUtf8string</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_LenEncoded], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_LenEncoded</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString</span>
+
+<span class="k">proc </span><span class="nf">first</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">second</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">result</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_LenEncoded</span><span class="p">):</span> <span class="n">uint16</span>
+
+
+<span class="sd">##[</span>
+<span class="n">ASN</span><span class="p">.</span><span class="mi">1</span> <span class="p">(</span><span class="n">Abstract</span> <span class="n">Syntax</span> <span class="n">Notation</span> <span class="n">One</span><span class="p">)</span> <span class="n">DER</span> <span class="p">(</span><span class="n">Distinguished</span> <span class="n">Encoding</span>
+<span class="n">Rules</span><span class="p">)</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">standard</span><span class="o">-</span><span class="n">backed</span> <span class="n">serialization</span> <span class="n">scheme</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">many</span>
+<span class="n">different</span> <span class="n">use</span><span class="o">-</span><span class="n">cases</span><span class="p">.</span> <span class="n">Particularly</span> <span class="n">popular</span> <span class="n">usage</span> <span class="n">scenarios</span> <span class="n">are</span> <span class="n">X</span><span class="p">.</span><span class="mi">509</span>
+<span class="n">certificates</span> <span class="ow">and</span> <span class="n">some</span> <span class="n">telecommunication</span> <span class="o">/</span> <span class="n">networking</span> <span class="n">protocols</span><span class="p">.</span>
+
+<span class="n">DER</span> <span class="ow">is</span> <span class="n">self</span><span class="o">-</span><span class="n">describing</span> <span class="n">encoding</span> <span class="n">scheme</span> <span class="n">which</span> <span class="n">allows</span> <span class="n">representation</span>
+<span class="k">of</span> <span class="n">simple</span><span class="p">,</span> <span class="k">atomic</span> <span class="n">data</span> <span class="n">elements</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">strings</span> <span class="ow">and</span> <span class="n">numbers</span><span class="p">,</span> <span class="ow">and</span>
+<span class="n">complex</span> <span class="n">objects</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">sequences</span> <span class="k">of</span> <span class="n">other</span> <span class="n">elements</span><span class="p">.</span>
+
+<span class="n">DER</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">subset</span> <span class="k">of</span> <span class="n">BER</span> <span class="p">(</span><span class="n">Basic</span> <span class="n">Encoding</span> <span class="n">Rules</span><span class="p">),</span> <span class="k">with</span> <span class="n">an</span> <span class="n">emphasis</span> <span class="n">on</span>
+<span class="n">being</span> <span class="n">non</span><span class="o">-</span><span class="n">ambiguous</span><span class="p">:</span> <span class="n">there</span><span class="sc">&#39;s always exactly one canonical way to</span>
+<span class="n">encode</span> <span class="n">a</span> <span class="n">data</span> <span class="n">structure</span> <span class="n">defined</span> <span class="ow">in</span> <span class="n">terms</span> <span class="k">of</span> <span class="n">ASN</span><span class="p">.</span><span class="mi">1</span> <span class="n">using</span> <span class="n">DER</span><span class="p">.</span>
+
+<span class="n">This</span> <span class="n">spec</span> <span class="n">allows</span> <span class="n">full</span> <span class="n">parsing</span> <span class="k">of</span> <span class="n">format</span> <span class="n">syntax</span><span class="p">,</span> <span class="n">but</span> <span class="n">to</span> <span class="n">understand</span>
+<span class="n">the</span> <span class="n">semantics</span><span class="p">,</span> <span class="n">one</span> <span class="n">would</span> <span class="n">typically</span> <span class="n">require</span> <span class="n">a</span> <span class="n">dictionary</span> <span class="k">of</span> <span class="k">Object</span>
+<span class="n">Identifiers</span> <span class="p">(</span><span class="n">OIDs</span><span class="p">),</span> <span class="n">to</span> <span class="n">match</span> <span class="n">OID</span> <span class="n">bodies</span> <span class="n">against</span> <span class="n">some</span> <span class="n">human</span><span class="o">-</span><span class="n">readable</span>
+<span class="n">list</span> <span class="k">of</span> <span class="n">constants</span><span class="p">.</span> <span class="n">OIDs</span> <span class="n">are</span> <span class="n">covered</span> <span class="n">by</span> <span class="n">many</span> <span class="n">different</span> <span class="n">standards</span><span class="p">,</span>
+<span class="n">so</span> <span class="n">typically</span> <span class="n">it</span><span class="sc">&#39;s simpler to use a pre-compiled list of them, such</span>
+<span class="k">as</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">cs</span><span class="p">.</span><span class="n">auckland</span><span class="p">.</span><span class="n">ac</span><span class="p">.</span><span class="n">nz</span><span class="o">/~</span><span class="n">pgut001</span><span class="o">/</span><span class="n">dumpasn1</span><span class="p">.</span><span class="n">cfg</span>
+<span class="o">*</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">oid</span><span class="o">-</span><span class="n">info</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>
+<span class="o">*</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">alvestrand</span><span class="p">.</span><span class="n">no</span><span class="o">/</span><span class="n">objectid</span><span class="o">/</span><span class="n">top</span><span class="p">.</span><span class="n">html</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.itu.int/rec/T-REC-X.690-201508-I/en&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Asn1Der =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">typeTagExpr</span> <span class="o">=</span> <span class="n">Asn1Der_TypeTag</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeTag</span> <span class="o">=</span> <span class="n">typeTagExpr</span>
+  <span class="k">let</span> <span class="n">lenExpr</span> <span class="o">=</span> <span class="n">Asn1Der_LenEncoded</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">lenExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">typeTag</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="n">printable_string</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodyPrintableString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="n">sequence_10</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodySequence</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="kt">set</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodySequence</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="n">sequence_30</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodySequence</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="n">utf8string</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodyUtf8string</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">asn1_der</span><span class="p">.</span><span class="n">object_id</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der], filename: string): Asn1Der =</span>
+  <span class="n">Asn1Der</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodySequence], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodySequence =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der_BodySequence</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodySequence], filename: string): Asn1Der_BodySequence =</span>
+  <span class="n">Asn1Der_BodySequence</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyUtf8string], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyUtf8string =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der_BodyUtf8string</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">strExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">strExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyUtf8string], filename: string): Asn1Der_BodyUtf8string =</span>
+  <span class="n">Asn1Der_BodyUtf8string</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der_BodyObjectId</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">firstAndSecondExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">firstAndSecond</span> <span class="o">=</span> <span class="n">firstAndSecondExpr</span>
+  <span class="k">let</span> <span class="n">restExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rest</span> <span class="o">=</span> <span class="n">restExpr</span>
+
+<span class="k">proc </span><span class="nf">first</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span>
+  <span class="k">let</span> <span class="n">firstInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">firstAndSecond</span> <span class="ow">div</span> <span class="mi">40</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">=</span> <span class="n">firstInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span>
+
+<span class="k">proc </span><span class="nf">second</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
+  <span class="k">let</span> <span class="n">secondInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">firstAndSecond</span> <span class="o">%%%</span> <span class="mi">40</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">=</span> <span class="n">secondInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyObjectId], filename: string): Asn1Der_BodyObjectId =</span>
+  <span class="n">Asn1Der_BodyObjectId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_LenEncoded], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_LenEncoded =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der_LenEncoded</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">b1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">b1Expr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">130</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">int2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">int2</span> <span class="o">=</span> <span class="n">int2Expr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">129</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">int1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">int1</span> <span class="o">=</span> <span class="n">int1Expr</span>
+
+<span class="k">proc </span><span class="nf">result</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_LenEncoded</span><span class="p">):</span> <span class="n">uint16</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span>
+  <span class="k">let</span> <span class="n">resultInstExpr</span> <span class="o">=</span> <span class="n">uint16</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">129</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">int1</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">130</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">int2</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">=</span> <span class="n">resultInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_LenEncoded], filename: string): Asn1Der_LenEncoded =</span>
+  <span class="n">Asn1Der_LenEncoded</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Asn1Der_BodyPrintableString</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Asn1Der</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">strExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">(),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">strExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyPrintableString], filename: string): Asn1Der_BodyPrintableString =</span>
+  <span class="n">Asn1Der_BodyPrintableString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

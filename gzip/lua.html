@@ -173,7 +173,22 @@ compression algorithms, so it's typically raw DEFLATE stream
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title=".gz file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".gz file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".gz file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".gz file format parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -194,6 +209,11 @@ compression algorithms, so it's typically raw DEFLATE stream
                 <li class="active">
                 
                 <a href="lua.html" title=".gz file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".gz file format parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -230,6 +250,228 @@ compression algorithms, so it's typically raw DEFLATE stream
             
         </h2>
 
+        
+
+        <h3>gzip.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/gzip.lua" download="gzip.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Gzip is a popular and standard single-file archiving format. It</span>
+<span class="c1">-- essentially provides a container that stores original file name,</span>
+<span class="c1">-- timestamp and a few other things (like optional comment), basic</span>
+<span class="c1">-- CRCs, etc, and a file compressed by a chosen compression algorithm.</span>
+<span class="c1">-- </span>
+<span class="c1">-- As of 2019, there is actually only one working solution for</span>
+<span class="c1">-- compression algorithms, so it&#39;s typically raw DEFLATE stream</span>
+<span class="c1">-- (without zlib header) in all gzipped files.</span>
+<span class="c1">-- See also: Source (https://tools.ietf.org/html/rfc1952)</span>
+<span class="n">Gzip</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">CompressionMethods</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">deflate</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">Oses</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">fat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">amiga</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">vms</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">unix</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">vm_cms</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">atari_tos</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">hpfs</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">macintosh</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">z_system</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">cp_m</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">tops_20</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">ntfs</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">qdos</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">acorn_riscos</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">255</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\031\139</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\031\139</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">compression_method</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">CompressionMethods</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">Flags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mod_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">compression_method</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">CompressionMethods</span><span class="p">.</span><span class="n">deflate</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">extra_flags</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">ExtraFlagsDeflate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">Oses</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_extra</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">extras</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">Extras</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_name</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_comment</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">has_header_crc</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">header_crc16</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">())</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body_crc32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_uncompressed</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Compression method used to compress file body. In practice, only</span>
+<span class="c1">-- one method is widely used: 8 = deflate.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Last modification time of a file archived in UNIX timestamp format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Extra flags, specific to compression method chosen.</span>
+<span class="c1">-- </span>
+<span class="c1">-- OS used to compress this file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Compressed body of a file archived. Note that we don&#39;t make an</span>
+<span class="c1">-- attempt to decompress it here.</span>
+<span class="c1">-- </span>
+<span class="c1">-- CRC32 checksum of an uncompressed file body</span>
+<span class="c1">-- </span>
+<span class="c1">-- Size of original uncompressed data in bytes (truncated to 32</span>
+<span class="c1">-- bits).</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Flags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Flags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_comment</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_extra</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_header_crc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">is_text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- If true, optional extra fields are present in the archive.</span>
+<span class="c1">-- </span>
+<span class="c1">-- If true, this archive includes a CRC16 checksum for the header.</span>
+<span class="c1">-- </span>
+<span class="c1">-- If true, file inside this archive is a text file from</span>
+<span class="c1">-- compressor&#39;s point of view.</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">ExtraFlagsDeflate</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">ExtraFlagsDeflate</span><span class="p">.</span><span class="n">CompressionStrengths</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">best</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">fast</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">ExtraFlagsDeflate</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">ExtraFlagsDeflate</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">compression_strength</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">ExtraFlagsDeflate</span><span class="p">.</span><span class="n">CompressionStrengths</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Container for many subfields, constrained by size of stream.</span>
+<span class="n">Gzip</span><span class="p">.</span><span class="n">Subfields</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Subfields</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Subfields</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">Subfield</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):</span>
+<span class="c1">-- </span>
+<span class="c1">-- * `id` serves role of &quot;T&quot;ype</span>
+<span class="c1">-- * `len_data` serves role of &quot;L&quot;ength</span>
+<span class="c1">-- * `data` serves role of &quot;V&quot;alue</span>
+<span class="c1">-- </span>
+<span class="c1">-- This way it&#39;s possible to for arbitrary parser to skip over</span>
+<span class="c1">-- subfields it does not support.</span>
+<span class="n">Gzip</span><span class="p">.</span><span class="n">Subfield</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Subfield</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Subfield</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_data</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Subfield ID, typically two ASCII letters.</span>
+
+<span class="n">Gzip</span><span class="p">.</span><span class="n">Extras</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Extras</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Gzip</span><span class="p">.</span><span class="nc">Extras</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_subfields</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_subfields</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_subfields</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_subfields</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">subfields</span> <span class="o">=</span> <span class="n">Gzip</span><span class="p">.</span><span class="n">Subfields</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

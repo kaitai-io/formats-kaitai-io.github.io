@@ -186,7 +186,22 @@ how to process a certain block type.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="RAR (Roshall ARchiver) archive files parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="RAR (Roshall ARchiver) archive files parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="RAR (Roshall ARchiver) archive files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="RAR (Roshall ARchiver) archive files parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -207,6 +222,11 @@ how to process a certain block type.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="RAR (Roshall ARchiver) archive files parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="RAR (Roshall ARchiver) archive files parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -243,6 +263,346 @@ how to process a certain block type.</p>
             
         </h2>
 
+        
+
+        <h3>rar.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/rar.lua" download="rar.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- RAR is a archive format used by popular proprietary RAR archiver,</span>
+<span class="c1">-- created by Eugene Roshal. There are two major versions of format</span>
+<span class="c1">-- (v1.5-4.0 and RAR v5+).</span>
+<span class="c1">-- </span>
+<span class="c1">-- File format essentially consists of a linear sequence of</span>
+<span class="c1">-- blocks. Each block has fixed header and custom body (that depends on</span>
+<span class="c1">-- block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
+<span class="c1">-- how to process a certain block type.</span>
+<span class="c1">-- See also:  (http://acritum.com/winrar/rar-format)</span>
+<span class="n">Rar</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">BlockTypes</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">marker</span> <span class="o">=</span> <span class="mi">114</span><span class="p">,</span>
+  <span class="n">archive_header</span> <span class="o">=</span> <span class="mi">115</span><span class="p">,</span>
+  <span class="n">file_header</span> <span class="o">=</span> <span class="mi">116</span><span class="p">,</span>
+  <span class="n">old_style_comment_header</span> <span class="o">=</span> <span class="mi">117</span><span class="p">,</span>
+  <span class="n">old_style_authenticity_info_76</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
+  <span class="n">old_style_subblock</span> <span class="o">=</span> <span class="mi">119</span><span class="p">,</span>
+  <span class="n">old_style_recovery_record</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+  <span class="n">old_style_authenticity_info_79</span> <span class="o">=</span> <span class="mi">121</span><span class="p">,</span>
+  <span class="n">subblock</span> <span class="o">=</span> <span class="mi">122</span><span class="p">,</span>
+  <span class="n">terminator</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">Oses</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">ms_dos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">os_2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">windows</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">unix</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">mac_os</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">beos</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">Methods</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">store</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+  <span class="n">fastest</span> <span class="o">=</span> <span class="mi">49</span><span class="p">,</span>
+  <span class="n">fast</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+  <span class="n">normal</span> <span class="o">=</span> <span class="mi">51</span><span class="p">,</span>
+  <span class="n">good</span> <span class="o">=</span> <span class="mi">52</span><span class="p">,</span>
+  <span class="n">best</span> <span class="o">=</span> <span class="mi">53</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">MagicSignature</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">version</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Block</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockV5</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">end</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- File format signature to validate that it is indeed a RAR archive.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Sequence of blocks that constitute the RAR file.</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">BlockV5</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">BlockV5</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">BlockV5</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Basic block that RAR files consist of. There are several block</span>
+<span class="c1">-- types (see `block_type`), which have different `body` and</span>
+<span class="c1">-- `add_body`.</span>
+<span class="n">Rar</span><span class="p">.</span><span class="n">Block</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">Block</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">Block</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">crc16</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">block_type</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockTypes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">block_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_add</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">add_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">block_type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockTypes</span><span class="p">.</span><span class="n">file_header</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">body_size</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockFileHeader</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">body_size</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_add</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">add_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">add_size</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- True if block has additional content attached to it.</span>
+<span class="n">Rar</span><span class="p">.</span><span class="n">Block</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_add</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">Block</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_add</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_add</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_add</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_add</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_add</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">Block</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">header_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">Block</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">header_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_header_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_header_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_header_size</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">has_add</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_header_size</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">Block</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">Block</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_body_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">header_size</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body_size</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- CRC16 of whole block or some part of it (depends on block type).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Size of block (header + body, but without additional content).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Size of additional content in this block.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Additional content in this block.</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">BlockFileHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">BlockFileHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">BlockFileHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">low_unp_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">host_os</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Oses</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_crc32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_time</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">rar_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Methods</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">high_pack_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">name_size</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Uncompressed file size (lower 32 bits, if 64-bit header flag is present).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Operating system used for archiving.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Date and time in standard MS DOS format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Compression method.</span>
+<span class="c1">-- </span>
+<span class="c1">-- File name size.</span>
+<span class="c1">-- </span>
+<span class="c1">-- File attributes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Compressed file size, high 32 bits, only if 64-bit header flag is present.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+<span class="c1">-- 8-byte magic (and pretty different block format) for v5+. This</span>
+<span class="c1">-- type would parse and validate both versions of signature. Note</span>
+<span class="c1">-- that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+<span class="c1">-- one can omit signature reading at all, and read this normally,</span>
+<span class="c1">-- as a block, if exact RAR version is known (and thus it&#39;s</span>
+<span class="c1">-- possible to choose correct block format).</span>
+<span class="n">Rar</span><span class="p">.</span><span class="n">MagicSignature</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">MagicSignature</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">MagicSignature</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic1</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\082\097\114\033\026\007</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\082\097\114\033\026\007</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic1</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">magic3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic3</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+      <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic3</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+<span class="c1">-- format, 1 means new (RAR 5+) format</span>
+<span class="c1">-- </span>
+<span class="c1">-- New format (RAR 5+) magic contains extra byte.</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">month</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">month</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_month</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_month</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_month</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">480</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_month</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">seconds</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">seconds</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_seconds</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_seconds</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_seconds</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_seconds</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">year</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">year</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_year</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_year</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_year</span> <span class="o">=</span> <span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">65024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_year</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">minutes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">minutes</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minutes</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minutes</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_minutes</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">2016</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minutes</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">day</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">day</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_day</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_day</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_day</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_day</span>
+<span class="kr">end</span>
+
+<span class="n">Rar</span><span class="p">.</span><span class="n">DosTime</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">hours</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Rar</span><span class="p">.</span><span class="nc">DosTime</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">hours</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hours</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hours</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_hours</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">63488</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hours</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

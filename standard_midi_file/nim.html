@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Standard MIDI file: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">Standard MIDI file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Standard MIDI file:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
+to serialize series of MIDI events, which is a protocol used in many
+music synthesizers to transfer music data: notes being played,
+effects being applied, etc.</p>
+<p>Internally, file consists of a header and series of tracks, every
+track listing MIDI events with certain header designating time these
+events are happening.</p>
+<p>NOTE: Rarely, MIDI files employ certain stateful compression scheme
+to avoid storing certain elements of further elements, instead
+reusing them from events which happened earlier in the
+stream. Kaitai Struct (as of v0.9) is currently unable to parse
+these, but files employing this mechanism are relatively rare.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["mid", "midi", "smf"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000102.shtml">LOC fdd000102</a></li>
+<li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000119.shtml">LOC fdd000119</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/230">PRONOM x-fmt/230</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q10610388">Wikidata Q10610388</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/MIDI">MIDI in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Standard MIDI file
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Standard MIDI file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Standard MIDI file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Standard MIDI file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Standard MIDI file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Standard MIDI file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Standard MIDI file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Standard MIDI file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Standard MIDI file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Standard MIDI file parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Standard MIDI file parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Standard MIDI file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Standard MIDI file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Standard MIDI file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Standard MIDI file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Standard MIDI file
+            
+        </h2>
+
+        
+
+        <h3>standard_midi_file.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/standard_midi_file.nim" download="standard_midi_file.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">vlq_base128_be</span>
+
+<span class="kn">import</span> <span class="s">&quot;vlq_base128_be&quot;</span>
+<span class="k">type</span>
+  <span class="n">StandardMidiFile</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">hdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_Header</span>
+    <span class="p">`</span><span class="n">tracks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">StandardMidiFile_Track</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">StandardMidiFile_TrackEvents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">event</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">StandardMidiFile_TrackEvent</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_Track</span>
+  <span class="n">StandardMidiFile_TrackEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">vTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Be</span>
+    <span class="p">`</span><span class="n">eventHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">metaEventBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_MetaEventBody</span>
+    <span class="p">`</span><span class="n">sysexBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_SysexEventBody</span>
+    <span class="p">`</span><span class="n">eventBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvents</span>
+    <span class="p">`</span><span class="n">eventTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">channelInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">StandardMidiFile_PitchBendEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">b1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">b2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+    <span class="p">`</span><span class="n">bendValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">adjBendValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">StandardMidiFile_ProgramChangeEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">program</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_NoteOnEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">note</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">velocity</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_PolyphonicPressureEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">note</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">pressure</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_Track</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenEvents</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">events</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvents</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile</span>
+    <span class="p">`</span><span class="n">rawEvents</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">StandardMidiFile_MetaEventBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">metaType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_MetaEventBody_MetaTypeEnum</span>
+    <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Be</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_MetaEventBody_MetaTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">sequence_number</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">text_event</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">copyright</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">sequence_track_name</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">instrument_name</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">lyric_text</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">marker_text</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">cue_point</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">midi_channel_prefix_assignment</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">end_of_track</span> <span class="o">=</span> <span class="mi">47</span>
+    <span class="n">tempo</span> <span class="o">=</span> <span class="mi">81</span>
+    <span class="n">smpte_offset</span> <span class="o">=</span> <span class="mi">84</span>
+    <span class="n">time_signature</span> <span class="o">=</span> <span class="mi">88</span>
+    <span class="n">key_signature</span> <span class="o">=</span> <span class="mi">89</span>
+    <span class="n">sequencer_specific_event</span> <span class="o">=</span> <span class="mi">127</span>
+  <span class="n">StandardMidiFile_ControllerEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">controller</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">numTracks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">division</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int16</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile</span>
+  <span class="n">StandardMidiFile_SysexEventBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Be</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_NoteOffEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">note</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">velocity</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+  <span class="n">StandardMidiFile_ChannelPressureEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">pressure</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): StandardMidiFile</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvents], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_Track): StandardMidiFile_TrackEvents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvents): StandardMidiFile_TrackEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PitchBendEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_PitchBendEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ProgramChangeEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ProgramChangeEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOnEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_NoteOnEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PolyphonicPressureEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_PolyphonicPressureEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Track], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile): StandardMidiFile_Track</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_MetaEventBody], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_MetaEventBody</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ControllerEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ControllerEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Header], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile): StandardMidiFile_Header</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_SysexEventBody], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_SysexEventBody</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOffEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_NoteOffEvent</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ChannelPressureEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ChannelPressureEvent</span>
+
+<span class="k">proc </span><span class="nf">eventType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">channel</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">bendValue</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">adjBendValue</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Standard</span> <span class="n">MIDI</span> <span class="n">file</span><span class="p">,</span> <span class="n">typically</span> <span class="n">knows</span> <span class="n">just</span> <span class="k">as</span> <span class="s">&quot;MID&quot;</span><span class="p">,</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">standard</span> <span class="n">way</span>
+<span class="n">to</span> <span class="n">serialize</span> <span class="n">series</span> <span class="k">of</span> <span class="n">MIDI</span> <span class="n">events</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">protocol</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">many</span>
+<span class="n">music</span> <span class="n">synthesizers</span> <span class="n">to</span> <span class="n">transfer</span> <span class="n">music</span> <span class="n">data</span><span class="p">:</span> <span class="n">notes</span> <span class="n">being</span> <span class="n">played</span><span class="p">,</span>
+<span class="n">effects</span> <span class="n">being</span> <span class="n">applied</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
+
+<span class="n">Internally</span><span class="p">,</span> <span class="n">file</span> <span class="n">consists</span> <span class="k">of</span> <span class="n">a</span> <span class="n">header</span> <span class="ow">and</span> <span class="n">series</span> <span class="k">of</span> <span class="n">tracks</span><span class="p">,</span> <span class="n">every</span>
+<span class="n">track</span> <span class="n">listing</span> <span class="n">MIDI</span> <span class="n">events</span> <span class="k">with</span> <span class="n">certain</span> <span class="n">header</span> <span class="n">designating</span> <span class="n">time</span> <span class="n">these</span>
+<span class="n">events</span> <span class="n">are</span> <span class="n">happening</span><span class="p">.</span>
+
+<span class="n">NOTE</span><span class="p">:</span> <span class="n">Rarely</span><span class="p">,</span> <span class="n">MIDI</span> <span class="n">files</span> <span class="n">employ</span> <span class="n">certain</span> <span class="n">stateful</span> <span class="n">compression</span> <span class="n">scheme</span>
+<span class="n">to</span> <span class="n">avoid</span> <span class="n">storing</span> <span class="n">certain</span> <span class="n">elements</span> <span class="k">of</span> <span class="n">further</span> <span class="n">elements</span><span class="p">,</span> <span class="n">instead</span>
+<span class="n">reusing</span> <span class="n">them</span> <span class="kn">from</span> <span class="n">events</span> <span class="n">which</span> <span class="n">happened</span> <span class="n">earlier</span> <span class="ow">in</span> <span class="n">the</span>
+<span class="n">stream</span><span class="p">.</span> <span class="n">Kaitai</span> <span class="n">Struct</span> <span class="p">(</span><span class="k">as</span> <span class="k">of</span> <span class="n">v0</span><span class="p">.</span><span class="mi">9</span><span class="p">)</span> <span class="ow">is</span> <span class="n">currently</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">parse</span>
+<span class="n">these</span><span class="p">,</span> <span class="n">but</span> <span class="n">files</span> <span class="n">employing</span> <span class="n">this</span> <span class="n">mechanism</span> <span class="n">are</span> <span class="n">relatively</span> <span class="n">rare</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): StandardMidiFile =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">hdrExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hdr</span> <span class="o">=</span> <span class="n">hdrExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">numTracks</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">StandardMidiFile_Track</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">tracks</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile], filename: string): StandardMidiFile =</span>
+  <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvents], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_Track): StandardMidiFile_TrackEvents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_TrackEvents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">event</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvents], filename: string): StandardMidiFile_TrackEvents =</span>
+  <span class="n">StandardMidiFile_TrackEvents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvents): StandardMidiFile_TrackEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_TrackEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">vTimeExpr</span> <span class="o">=</span> <span class="n">VlqBase128Be</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">vTime</span> <span class="o">=</span> <span class="n">vTimeExpr</span>
+  <span class="k">let</span> <span class="n">eventHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="o">=</span> <span class="n">eventHeaderExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="o">==</span> <span class="mi">255</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">metaEventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_MetaEventBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">metaEventBody</span> <span class="o">=</span> <span class="n">metaEventBodyExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="o">==</span> <span class="mi">240</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">sysexBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_SysexEventBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">sysexBody</span> <span class="o">=</span> <span class="n">sysexBodyExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">eventType</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">224</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">144</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_NoteOnEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">208</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_ChannelPressureEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">192</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_ProgramChangeEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">160</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_PolyphonicPressureEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">176</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_ControllerEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">128</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">eventBodyExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_NoteOffEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
+
+<span class="k">proc </span><span class="nf">eventType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span>
+  <span class="k">let</span> <span class="n">eventTypeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="ow">and</span> <span class="mi">240</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">=</span> <span class="n">eventTypeInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span>
+
+<span class="k">proc </span><span class="nf">channel</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventType</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">channelInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">=</span> <span class="n">channelInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvent], filename: string): StandardMidiFile_TrackEvent =</span>
+  <span class="n">StandardMidiFile_TrackEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PitchBendEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_PitchBendEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">b1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">b1Expr</span>
+  <span class="k">let</span> <span class="n">b2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">b2Expr</span>
+
+<span class="k">proc </span><span class="nf">bendValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span>
+  <span class="k">let</span> <span class="n">bendValueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="ow">shl</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">=</span> <span class="n">bendValueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span>
+
+<span class="k">proc </span><span class="nf">adjBendValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span>
+  <span class="k">let</span> <span class="n">adjBendValueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bendValue</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">=</span> <span class="n">adjBendValueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PitchBendEvent], filename: string): StandardMidiFile_PitchBendEvent =</span>
+  <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ProgramChangeEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ProgramChangeEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_ProgramChangeEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">programExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">programExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ProgramChangeEvent], filename: string): StandardMidiFile_ProgramChangeEvent =</span>
+  <span class="n">StandardMidiFile_ProgramChangeEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOnEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_NoteOnEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_NoteOnEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">noteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">note</span> <span class="o">=</span> <span class="n">noteExpr</span>
+  <span class="k">let</span> <span class="n">velocityExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">velocityExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOnEvent], filename: string): StandardMidiFile_NoteOnEvent =</span>
+  <span class="n">StandardMidiFile_NoteOnEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PolyphonicPressureEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_PolyphonicPressureEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_PolyphonicPressureEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">noteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">note</span> <span class="o">=</span> <span class="n">noteExpr</span>
+  <span class="k">let</span> <span class="n">pressureExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pressure</span> <span class="o">=</span> <span class="n">pressureExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PolyphonicPressureEvent], filename: string): StandardMidiFile_PolyphonicPressureEvent =</span>
+  <span class="n">StandardMidiFile_PolyphonicPressureEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Track], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile): StandardMidiFile_Track =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_Track</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">lenEventsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenEvents</span> <span class="o">=</span> <span class="n">lenEventsExpr</span>
+  <span class="k">let</span> <span class="n">rawEventsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenEvents</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawEvents</span> <span class="o">=</span> <span class="n">rawEventsExpr</span>
+  <span class="k">let</span> <span class="n">rawEventsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawEventsExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">eventsExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_TrackEvents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawEventsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">eventsExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Track], filename: string): StandardMidiFile_Track =</span>
+  <span class="n">StandardMidiFile_Track</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_MetaEventBody], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_MetaEventBody =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_MetaEventBody</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">metaTypeExpr</span> <span class="o">=</span> <span class="n">StandardMidiFile_MetaEventBody_MetaTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">metaType</span> <span class="o">=</span> <span class="n">metaTypeExpr</span>
+  <span class="k">let</span> <span class="n">lenExpr</span> <span class="o">=</span> <span class="n">VlqBase128Be</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">lenExpr</span>
+  <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_MetaEventBody], filename: string): StandardMidiFile_MetaEventBody =</span>
+  <span class="n">StandardMidiFile_MetaEventBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ControllerEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ControllerEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_ControllerEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">controllerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controllerExpr</span>
+  <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ControllerEvent], filename: string): StandardMidiFile_ControllerEvent =</span>
+  <span class="n">StandardMidiFile_ControllerEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Header], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile): StandardMidiFile_Header =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_Header</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">lenHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">=</span> <span class="n">lenHeaderExpr</span>
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">numTracksExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numTracks</span> <span class="o">=</span> <span class="n">numTracksExpr</span>
+  <span class="k">let</span> <span class="n">divisionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">division</span> <span class="o">=</span> <span class="n">divisionExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_Header], filename: string): StandardMidiFile_Header =</span>
+  <span class="n">StandardMidiFile_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_SysexEventBody], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_SysexEventBody =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_SysexEventBody</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">lenExpr</span> <span class="o">=</span> <span class="n">VlqBase128Be</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">lenExpr</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_SysexEventBody], filename: string): StandardMidiFile_SysexEventBody =</span>
+  <span class="n">StandardMidiFile_SysexEventBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOffEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_NoteOffEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_NoteOffEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">noteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">note</span> <span class="o">=</span> <span class="n">noteExpr</span>
+  <span class="k">let</span> <span class="n">velocityExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">velocityExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_NoteOffEvent], filename: string): StandardMidiFile_NoteOffEvent =</span>
+  <span class="n">StandardMidiFile_NoteOffEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ChannelPressureEvent], io: KaitaiStream, root: KaitaiStruct, parent: StandardMidiFile_TrackEvent): StandardMidiFile_ChannelPressureEvent =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">StandardMidiFile_ChannelPressureEvent</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">StandardMidiFile</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">pressureExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pressure</span> <span class="o">=</span> <span class="n">pressureExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_ChannelPressureEvent], filename: string): StandardMidiFile_ChannelPressureEvent =</span>
+  <span class="n">StandardMidiFile_ChannelPressureEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

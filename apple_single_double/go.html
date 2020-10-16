@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>AppleSingle / AppleDouble: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">AppleSingle / AppleDouble</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>AppleSingle / AppleDouble:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>AppleSingle and AppleDouble files are used by certain Mac
+applications (e.g. Finder) to store Mac-specific file attributes on
+filesystems that do not support that.</p>
+<p>Syntactically, both formats are the same, the only difference is how
+they are being used:</p>
+<ul>
+<li>AppleSingle means that only one file will be created on external
+filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple
+terminology), and the attributes (AKA &quot;resource fork&quot;).</li>
+<li>AppleDouble means that two files will be created: a normal file
+that keeps the data (&quot;data fork&quot;) is kept separately from an
+auxiliary file that contains attributes (&quot;resource fork&quot;), which
+is kept with the same name, but starting with an extra dot and
+underscore <code>._</code> to keep it hidden.</li>
+</ul>
+<p>In modern practice (Mac OS X), Finder only uses AppleDouble to keep
+compatibility with other OSes, as virtually nobody outside of Mac
+understands how to access data in AppleSingle container.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            <li><a href="https://tools.ietf.org/html/rfc1740">RFC 1740</a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q4781113">Wikidata Q4781113</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/AppleDouble_header_file">AppleDouble header file in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/AppleDouble">AppleDouble in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of AppleSingle / AppleDouble
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="AppleSingle / AppleDouble parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="AppleSingle / AppleDouble parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="AppleSingle / AppleDouble parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="AppleSingle / AppleDouble parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="AppleSingle / AppleDouble parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="AppleSingle / AppleDouble parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="AppleSingle / AppleDouble parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="AppleSingle / AppleDouble parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="AppleSingle / AppleDouble parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="AppleSingle / AppleDouble parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="AppleSingle / AppleDouble parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="AppleSingle / AppleDouble parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="AppleSingle / AppleDouble parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="AppleSingle / AppleDouble parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse AppleSingle / AppleDouble
+            
+        </h2>
+
+        
+
+        <h3>apple_single_double.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/apple_single_double.go" download="apple_single_double.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;io&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * AppleSingle and AppleDouble files are used by certain Mac</span>
+<span class="cm"> * applications (e.g. Finder) to store Mac-specific file attributes on</span>
+<span class="cm"> * filesystems that do not support that.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Syntactically, both formats are the same, the only difference is how</span>
+<span class="cm"> * they are being used:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * AppleSingle means that only one file will be created on external</span>
+<span class="cm"> *   filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple</span>
+<span class="cm"> *   terminology), and the attributes (AKA &quot;resource fork&quot;).</span>
+<span class="cm"> * * AppleDouble means that two files will be created: a normal file</span>
+<span class="cm"> *   that keeps the data (&quot;data fork&quot;) is kept separately from an</span>
+<span class="cm"> *   auxiliary file that contains attributes (&quot;resource fork&quot;), which</span>
+<span class="cm"> *   is kept with the same name, but starting with an extra dot and</span>
+<span class="cm"> *   underscore `._` to keep it hidden.</span>
+<span class="cm"> * </span>
+<span class="cm"> * In modern practice (Mac OS X), Finder only uses AppleDouble to keep</span>
+<span class="cm"> * compatibility with other OSes, as virtually nobody outside of Mac</span>
+<span class="cm"> * understands how to access data in AppleSingle container.</span>
+<span class="cm"> * @see &lt;a href=&quot;http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">AppleSingleDouble_FileType</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">AppleSingleDouble_FileType__AppleSingle</span> <span class="nx">AppleSingleDouble_FileType</span> <span class="p">=</span> <span class="mi">333312</span>
+	<span class="nx">AppleSingleDouble_FileType__AppleDouble</span> <span class="nx">AppleSingleDouble_FileType</span> <span class="p">=</span> <span class="mi">333319</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">AppleSingleDouble</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="nx">AppleSingleDouble_FileType</span>
+	<span class="nx">Version</span> <span class="kt">uint32</span>
+	<span class="nx">Reserved</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">NumEntries</span> <span class="kt">uint16</span>
+	<span class="nx">Entries</span> <span class="p">[]</span><span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAppleSingleDouble</span><span class="p">()</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AppleSingleDouble</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">AppleSingleDouble_FileType</span><span class="p">(</span><span class="nx">tmp1</span><span class="p">)</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp2</span><span class="p">)</span>
+	<span class="nx">tmp3</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp3</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumEntries</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp4</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumEntries</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">{</span>
+		<span class="nx">tmp5</span> <span class="o">:=</span> <span class="nx">NewAppleSingleDouble_Entry</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp5</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Must be all 0.</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__DataFork</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__ResourceFork</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__RealName</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__Comment</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__IconBw</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__IconColor</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">6</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__FileDatesInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">8</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__FinderInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__MacintoshFileInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">10</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__ProdosFileInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__MsdosFileInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">12</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__AfpShortName</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">13</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__AfpFileInfo</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">14</span>
+	<span class="nx">AppleSingleDouble_Entry_Types__AfpDirectoryId</span> <span class="nx">AppleSingleDouble_Entry_Types</span> <span class="p">=</span> <span class="mi">15</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">AppleSingleDouble_Entry</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Type</span> <span class="nx">AppleSingleDouble_Entry_Types</span>
+	<span class="nx">OfsBody</span> <span class="kt">uint32</span>
+	<span class="nx">LenBody</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span>
+	<span class="nx">_raw_body</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_f_body</span> <span class="kt">bool</span>
+	<span class="nx">body</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAppleSingleDouble_Entry</span><span class="p">()</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AppleSingleDouble_Entry</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Type</span> <span class="p">=</span> <span class="nx">AppleSingleDouble_Entry_Types</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">)</span>
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsBody</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span><span class="p">)</span> <span class="nx">Body</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsBody</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">AppleSingleDouble_Entry_Types__FinderInfo</span><span class="p">:</span>
+		<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp9</span> <span class="p">=</span> <span class="nx">tmp9</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="p">=</span> <span class="nx">tmp9</span>
+		<span class="nx">_io__raw_body</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">))</span>
+		<span class="nx">tmp10</span> <span class="o">:=</span> <span class="nx">NewAppleSingleDouble_FinderInfo</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp10</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">body</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp11</span> <span class="p">=</span> <span class="nx">tmp11</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="p">=</span> <span class="nx">tmp11</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Information specific to Finder</span>
+<span class="cm"> * @see &quot;older Inside Macintosh, Volume II page 84 or Volume IV page 104.&quot;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">AppleSingleDouble_FinderInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">FileType</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">FileCreator</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Flags</span> <span class="kt">uint16</span>
+	<span class="nx">Location</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Point</span>
+	<span class="nx">FolderId</span> <span class="kt">uint16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAppleSingleDouble_FinderInfo</span><span class="p">()</span> <span class="o">*</span><span class="nx">AppleSingleDouble_FinderInfo</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AppleSingleDouble_FinderInfo</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AppleSingleDouble_FinderInfo</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Entry</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp12</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileType</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp13</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileCreator</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+	<span class="nx">tmp15</span> <span class="o">:=</span> <span class="nx">NewAppleSingleDouble_Point</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp15</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Location</span> <span class="p">=</span> <span class="nx">tmp15</span>
+	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FolderId</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * File icon&#39;s coordinates when displaying this folder.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * File folder ID (=window).</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Specifies 2D coordinate in QuickDraw grid.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">AppleSingleDouble_Point</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">X</span> <span class="kt">uint16</span>
+	<span class="nx">Y</span> <span class="kt">uint16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble_FinderInfo</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAppleSingleDouble_Point</span><span class="p">()</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Point</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AppleSingleDouble_Point</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AppleSingleDouble_Point</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AppleSingleDouble_FinderInfo</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AppleSingleDouble</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

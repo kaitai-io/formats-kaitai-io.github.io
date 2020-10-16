@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Serialized PHP value: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Serialized PHP value</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Serialized PHP value:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A serialized PHP value, in the format used by PHP's built-in <code>serialize</code> and
+<code>unserialize</code> functions. This format closely mirrors PHP's data model:
+it supports all of PHP's scalar types (<code>NULL</code>, booleans, numbers, strings),
+associative arrays, objects, and recursive data structures using references.
+The only PHP values not supported by this format are <em>resources</em>,
+which usually correspond to native file or connection handles and cannot be
+meaningfully serialized.</p>
+<p>There is no official documentation for this data format;
+this spec was created based on the PHP source code and the behavior of
+<code>serialize</code>/<code>unserialize</code>. PHP makes no guarantees about compatibility of
+serialized data between PHP versions, but in practice, the format has
+remained fully backwards-compatible - values serialized by an older
+PHP version can be unserialized on any newer PHP version.
+This spec supports serialized values from PHP 7.3 or any earlier version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Serialized PHP value
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Serialized PHP value parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Serialized PHP value parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Serialized PHP value parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Serialized PHP value parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Serialized PHP value parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Serialized PHP value parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Serialized PHP value parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Serialized PHP value parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Serialized PHP value parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Serialized PHP value parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Serialized PHP value parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Serialized PHP value parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Serialized PHP value
+            
+        </h2>
+
+        
+
+        <h3>php_serialized_value.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/php_serialized_value.nim" download="php_serialized_value.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">PhpSerializedValue</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_ValueType</span>
+    <span class="p">`</span><span class="n">contents</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">PhpSerializedValue_ValueType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">custom_serialized_object</span> <span class="o">=</span> <span class="mi">67</span>
+    <span class="n">null</span> <span class="o">=</span> <span class="mi">78</span>
+    <span class="k">object</span> <span class="o">=</span> <span class="mi">79</span>
+    <span class="n">variable_reference</span> <span class="o">=</span> <span class="mi">82</span>
+    <span class="n">php_6_string</span> <span class="o">=</span> <span class="mi">83</span>
+    <span class="kt">array</span> <span class="o">=</span> <span class="mi">97</span>
+    <span class="kt">bool</span> <span class="o">=</span> <span class="mi">98</span>
+    <span class="kt">float</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="kt">int</span> <span class="o">=</span> <span class="mi">105</span>
+    <span class="n">php_3_object</span> <span class="o">=</span> <span class="mi">111</span>
+    <span class="n">object_reference</span> <span class="o">=</span> <span class="mi">114</span>
+    <span class="kt">string</span> <span class="o">=</span> <span class="mi">115</span>
+  <span class="n">PhpSerializedValue_BoolValue</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="kp">false</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="kp">true</span> <span class="o">=</span> <span class="mi">49</span>
+  <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">numEntriesDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">openingBrace</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PhpSerializedValue_MappingEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">closingBrace</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">numEntriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">PhpSerializedValue_FloatContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">valueDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenDataDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">openingQuote</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">closingQuote</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">PhpSerializedValue_ObjectContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">className</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span>
+    <span class="p">`</span><span class="n">colon2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">properties</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PhpSerializedValue_ArrayContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">elements</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">className</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span>
+    <span class="p">`</span><span class="n">colon2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenDataDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">openingBrace</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">closingQuote</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">lenDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">PhpSerializedValue_NullContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">semicolon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PhpSerializedValue_Php3ObjectContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">properties</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+  <span class="n">PhpSerializedValue_BoolContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">valueDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_BoolValue</span>
+    <span class="p">`</span><span class="n">semicolon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">PhpSerializedValue_StringContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="kt">string</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span>
+    <span class="p">`</span><span class="n">semicolon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">PhpSerializedValue_IntContents</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">colon</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">valueDec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">PhpSerializedValue_MappingEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">key</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CountPrefixedMapping], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue_CountPrefixedMapping</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_FloatContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_FloatContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_LengthPrefixedQuotedString], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue_LengthPrefixedQuotedString</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_ObjectContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ArrayContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_ArrayContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CustomSerializedObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_CustomSerializedObjectContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_NullContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_NullContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_Php3ObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_Php3ObjectContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_BoolContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_BoolContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_StringContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_StringContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_IntContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_IntContents</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_MappingEntry], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue_CountPrefixedMapping): PhpSerializedValue_MappingEntry</span>
+
+<span class="k">proc </span><span class="nf">numEntries</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">lenData</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">lenData</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_BoolContents</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_StringContents</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_IntContents</span><span class="p">):</span> <span class="kt">int</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">serialized</span> <span class="n">PHP</span> <span class="n">value</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">format</span> <span class="n">used</span> <span class="n">by</span> <span class="n">PHP</span><span class="sc">&#39;s built-in `serialize` and</span>
+<span class="p">`</span><span class="n">unserialize</span><span class="p">`</span> <span class="n">functions</span><span class="p">.</span> <span class="n">This</span> <span class="n">format</span> <span class="n">closely</span> <span class="n">mirrors</span> <span class="n">PHP</span><span class="sc">&#39;s data model:</span>
+<span class="n">it</span> <span class="n">supports</span> <span class="n">all</span> <span class="k">of</span> <span class="n">PHP</span><span class="sc">&#39;s scalar types (`NULL`, booleans, numbers, strings),</span>
+<span class="n">associative</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="n">data</span> <span class="n">structures</span> <span class="n">using</span> <span class="n">references</span><span class="p">.</span>
+<span class="n">The</span> <span class="n">only</span> <span class="n">PHP</span> <span class="n">values</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">by</span> <span class="n">this</span> <span class="n">format</span> <span class="n">are</span> <span class="o">*</span><span class="n">resources</span><span class="o">*</span><span class="p">,</span>
+<span class="n">which</span> <span class="n">usually</span> <span class="n">correspond</span> <span class="n">to</span> <span class="n">native</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">connection</span> <span class="n">handles</span> <span class="ow">and</span> <span class="n">cannot</span> <span class="n">be</span>
+<span class="n">meaningfully</span> <span class="n">serialized</span><span class="p">.</span>
+
+<span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">official</span> <span class="n">documentation</span> <span class="k">for</span> <span class="n">this</span> <span class="n">data</span> <span class="n">format</span><span class="p">;</span>
+<span class="n">this</span> <span class="n">spec</span> <span class="n">was</span> <span class="n">created</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">PHP</span> <span class="n">source</span> <span class="n">code</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">behavior</span> <span class="k">of</span>
+<span class="p">`</span><span class="n">serialize</span><span class="p">`</span><span class="o">/</span><span class="p">`</span><span class="n">unserialize</span><span class="p">`.</span> <span class="n">PHP</span> <span class="n">makes</span> <span class="n">no</span> <span class="n">guarantees</span> <span class="n">about</span> <span class="n">compatibility</span> <span class="k">of</span>
+<span class="n">serialized</span> <span class="n">data</span> <span class="n">between</span> <span class="n">PHP</span> <span class="n">versions</span><span class="p">,</span> <span class="n">but</span> <span class="ow">in</span> <span class="n">practice</span><span class="p">,</span> <span class="n">the</span> <span class="n">format</span> <span class="n">has</span>
+<span class="n">remained</span> <span class="n">fully</span> <span class="n">backwards</span><span class="o">-</span><span class="n">compatible</span> <span class="o">-</span> <span class="n">values</span> <span class="n">serialized</span> <span class="n">by</span> <span class="n">an</span> <span class="n">older</span>
+<span class="n">PHP</span> <span class="n">version</span> <span class="n">can</span> <span class="n">be</span> <span class="n">unserialized</span> <span class="n">on</span> <span class="n">any</span> <span class="n">newer</span> <span class="n">PHP</span> <span class="n">version</span><span class="p">.</span>
+<span class="n">This</span> <span class="n">spec</span> <span class="n">supports</span> <span class="n">serialized</span> <span class="n">values</span> <span class="kn">from</span> <span class="n">PHP</span> <span class="mf">7.3</span> <span class="ow">or</span> <span class="n">any</span> <span class="n">earlier</span> <span class="n">version</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.php.net/manual/en/function.serialize.php&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.php.net/manual/en/function.serialize.php#66147&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.php.net/manual/en/function.unserialize.php&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">A</span> <span class="n">single</span><span class="o">-</span><span class="n">character</span> <span class="n">code</span> <span class="n">indicating</span> <span class="n">the</span> <span class="k">type</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">value</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_ValueType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">value</span><span class="p">,</span> <span class="n">which</span> <span class="n">vary</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">the</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">custom_serialized_object</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">php_3_object</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_Php3ObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="k">object</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_ObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">variable_reference</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_IntContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">php_6_string</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_StringContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kt">float</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_FloatContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">object_reference</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_IntContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="n">null</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_NullContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kt">bool</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_BoolContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kt">int</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_IntContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kt">array</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_ArrayContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kt">string</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">contentsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_StringContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">contentsExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue], filename: string): PhpSerializedValue =</span>
+  <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">mapping</span> <span class="p">(</span><span class="n">a</span> <span class="n">sequence</span> <span class="k">of</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span><span class="p">)</span> <span class="n">prefixed</span> <span class="k">with</span> <span class="n">its</span> <span class="n">size</span><span class="p">.</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CountPrefixedMapping], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue_CountPrefixedMapping =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">number</span> <span class="k">of</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">mapping</span><span class="p">,</span> <span class="ow">in</span> <span class="n">ASCII</span> <span class="n">decimal</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">numEntriesDecExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numEntriesDec</span> <span class="o">=</span> <span class="n">numEntriesDecExpr</span>
+  <span class="k">let</span> <span class="n">openingBraceExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">openingBrace</span> <span class="o">=</span> <span class="n">openingBraceExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">mapping</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numEntries</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PhpSerializedValue_MappingEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">closingBraceExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">closingBrace</span> <span class="o">=</span> <span class="n">closingBraceExpr</span>
+
+<span class="k">proc </span><span class="nf">numEntries</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">number</span> <span class="k">of</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">an</span> <span class="n">integer</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numEntriesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numEntriesInst</span>
+  <span class="k">let</span> <span class="n">numEntriesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numEntriesDec</span><span class="p">.</span><span class="n">parseInt</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numEntriesInst</span> <span class="o">=</span> <span class="n">numEntriesInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numEntriesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numEntriesInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CountPrefixedMapping], filename: string): PhpSerializedValue_CountPrefixedMapping =</span>
+  <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">a</span> <span class="n">floating</span><span class="o">-</span><span class="n">point</span> <span class="n">value</span><span class="p">.</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_FloatContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_FloatContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_FloatContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="kt">float</span><span class="p">`,</span> <span class="ow">in</span> <span class="n">ASCII</span> <span class="n">decimal</span><span class="p">,</span> <span class="k">as</span> <span class="n">generated</span> <span class="n">by</span> <span class="n">PHP</span><span class="sc">&#39;s</span>
+<span class="n">usual</span> <span class="n">double</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="kt">string</span> <span class="n">conversion</span><span class="p">.</span> <span class="ow">In</span> <span class="n">particular</span><span class="p">,</span> <span class="n">this</span> <span class="n">means</span> <span class="n">that</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="n">A</span> <span class="n">decimal</span> <span class="n">point</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">included</span> <span class="p">(</span><span class="k">for</span> <span class="n">integral</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">The</span> <span class="n">number</span> <span class="n">may</span> <span class="n">use</span> <span class="n">exponent</span> <span class="n">notation</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span> <span class="n">g</span><span class="p">.</span> <span class="p">`</span><span class="mf">1.0E+16</span><span class="p">`)</span>
+<span class="o">*</span> <span class="n">Positive</span> <span class="ow">and</span> <span class="n">negative</span> <span class="n">infinity</span> <span class="n">are</span> <span class="n">represented</span> <span class="k">as</span> <span class="p">`</span><span class="n">INF</span><span class="p">`</span>
+  <span class="ow">and</span> <span class="p">`</span><span class="o">-</span><span class="n">INF</span><span class="p">`,</span> <span class="n">respectively</span>
+<span class="o">*</span> <span class="ow">Not</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">number</span> <span class="ow">is</span> <span class="n">represented</span> <span class="k">as</span> <span class="p">`</span><span class="n">NAN</span><span class="p">`</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueDecExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueDec</span> <span class="o">=</span> <span class="n">valueDecExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_FloatContents], filename: string): PhpSerializedValue_FloatContents =</span>
+  <span class="n">PhpSerializedValue_FloatContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">quoted</span> <span class="kt">string</span> <span class="n">prefixed</span> <span class="k">with</span> <span class="n">its</span> <span class="n">length</span><span class="p">.</span>
+
+<span class="n">Despite</span> <span class="n">the</span> <span class="n">quotes</span> <span class="n">surrounding</span> <span class="n">the</span> <span class="kt">string</span> <span class="n">data</span><span class="p">,</span> <span class="n">it</span> <span class="n">can</span> <span class="n">contain</span>
+<span class="n">arbitrary</span> <span class="n">bytes</span><span class="p">,</span> <span class="n">which</span> <span class="n">are</span> <span class="n">never</span> <span class="n">escaped</span> <span class="ow">in</span> <span class="n">any</span> <span class="n">way</span><span class="p">.</span>
+<span class="n">This</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">cause</span> <span class="n">any</span> <span class="n">ambiguities</span> <span class="k">when</span> <span class="n">parsing</span> <span class="o">-</span> <span class="n">the</span> <span class="n">bounds</span> <span class="k">of</span>
+<span class="n">the</span> <span class="kt">string</span> <span class="n">are</span> <span class="n">determined</span> <span class="n">only</span> <span class="n">by</span> <span class="n">the</span> <span class="n">length</span> <span class="n">field</span><span class="p">,</span> <span class="ow">not</span> <span class="n">by</span> <span class="n">the</span> <span class="n">quotes</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_LengthPrefixedQuotedString], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PhpSerializedValue_LengthPrefixedQuotedString =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="kt">string</span><span class="sc">&#39;s data in bytes, in ASCII decimal.</span>
+<span class="n">The</span> <span class="n">quotes</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">counted</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">length</span> <span class="n">number</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenDataDecExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataDec</span> <span class="o">=</span> <span class="n">lenDataDecExpr</span>
+  <span class="k">let</span> <span class="n">openingQuoteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">openingQuote</span> <span class="o">=</span> <span class="n">openingQuoteExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">data</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">the</span> <span class="kt">string</span><span class="p">.</span> <span class="n">The</span> <span class="n">quotes</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">included</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+  <span class="k">let</span> <span class="n">closingQuoteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">closingQuote</span> <span class="o">=</span> <span class="n">closingQuoteExpr</span>
+
+<span class="k">proc </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="kt">string</span><span class="sc">&#39;s contents in bytes, parsed as an integer.</span>
+<span class="n">The</span> <span class="n">quotes</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">counted</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">size</span> <span class="n">number</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+  <span class="k">let</span> <span class="n">lenDataInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDataDec</span><span class="p">.</span><span class="n">parseInt</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">=</span> <span class="n">lenDataInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_LengthPrefixedQuotedString], filename: string): PhpSerializedValue_LengthPrefixedQuotedString =</span>
+  <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">an</span> <span class="k">object</span> <span class="n">value</span> <span class="n">serialized</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">default</span> <span class="n">format</span><span class="p">.</span>
+<span class="n">Unlike</span> <span class="n">its</span> <span class="n">PHP</span> <span class="mi">3</span> <span class="n">counterpart</span><span class="p">,</span> <span class="n">it</span> <span class="n">contains</span> <span class="n">a</span> <span class="n">class</span> <span class="n">name</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_ObjectContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_ObjectContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colon1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon1</span> <span class="o">=</span> <span class="n">colon1Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">name</span> <span class="k">of</span> <span class="n">the</span> <span class="k">object</span><span class="sc">&#39;s class.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">classNameExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">className</span> <span class="o">=</span> <span class="n">classNameExpr</span>
+  <span class="k">let</span> <span class="n">colon2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon2</span> <span class="o">=</span> <span class="n">colon2Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="k">object</span><span class="sc">&#39;s properties. Keys ust be of type `string`,</span>
+<span class="n">values</span> <span class="n">may</span> <span class="n">have</span> <span class="n">any</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">propertiesExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">propertiesExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ObjectContents], filename: string): PhpSerializedValue_ObjectContents =</span>
+  <span class="n">PhpSerializedValue_ObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">an</span> <span class="kt">array</span> <span class="n">value</span><span class="p">.</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ArrayContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_ArrayContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_ArrayContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="kt">array</span><span class="sc">&#39;s elements. Keys must be of type `int` or `string`,</span>
+<span class="n">values</span> <span class="n">may</span> <span class="n">have</span> <span class="n">any</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">elementsExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elementsExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_ArrayContents], filename: string): PhpSerializedValue_ArrayContents =</span>
+  <span class="n">PhpSerializedValue_ArrayContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">an</span> <span class="k">object</span> <span class="n">value</span> <span class="n">that</span> <span class="n">implements</span> <span class="n">a</span> <span class="n">custom</span>
+<span class="n">serialized</span> <span class="n">format</span> <span class="n">using</span> <span class="p">`</span><span class="n">Serializable</span><span class="p">`.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CustomSerializedObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_CustomSerializedObjectContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colon1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon1</span> <span class="o">=</span> <span class="n">colon1Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">name</span> <span class="k">of</span> <span class="n">the</span> <span class="k">object</span><span class="sc">&#39;s class.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">classNameExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">className</span> <span class="o">=</span> <span class="n">classNameExpr</span>
+  <span class="k">let</span> <span class="n">colon2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon2</span> <span class="o">=</span> <span class="n">colon2Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">,</span> <span class="ow">in</span> <span class="n">ASCII</span> <span class="n">decimal</span><span class="p">.</span>
+<span class="n">The</span> <span class="n">braces</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">counted</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">size</span> <span class="n">number</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenDataDecExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataDec</span> <span class="o">=</span> <span class="n">lenDataDecExpr</span>
+  <span class="k">let</span> <span class="n">openingBraceExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">openingBrace</span> <span class="o">=</span> <span class="n">openingBraceExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">custom</span> <span class="n">serialized</span> <span class="n">data</span><span class="p">.</span> <span class="n">The</span> <span class="n">braces</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">included</span><span class="p">.</span>
+
+<span class="n">Although</span> <span class="n">the</span> <span class="n">surrounding</span> <span class="n">braces</span> <span class="n">make</span> <span class="n">it</span> <span class="n">look</span> <span class="n">like</span> <span class="n">a</span> <span class="n">regular</span>
+<span class="n">serialized</span> <span class="k">object</span><span class="p">,</span> <span class="n">this</span> <span class="n">field</span> <span class="ow">is</span> <span class="n">actually</span> <span class="n">more</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">a</span> <span class="kt">string</span><span class="p">:</span>
+<span class="n">it</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">arbitrary</span> <span class="n">data</span> <span class="n">that</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">required</span> <span class="n">to</span> <span class="n">follow</span>
+<span class="n">any</span> <span class="n">common</span> <span class="n">structure</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+  <span class="k">let</span> <span class="n">closingQuoteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">closingQuote</span> <span class="o">=</span> <span class="n">closingQuoteExpr</span>
+
+<span class="k">proc </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">serialized</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">bytes</span><span class="p">,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">an</span> <span class="n">integer</span><span class="p">.</span>
+<span class="n">The</span> <span class="n">braces</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">counted</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">length</span> <span class="n">number</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+  <span class="k">let</span> <span class="n">lenDataInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDataDec</span><span class="p">.</span><span class="n">parseInt</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">=</span> <span class="n">lenDataInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_CustomSerializedObjectContents], filename: string): PhpSerializedValue_CustomSerializedObjectContents =</span>
+  <span class="n">PhpSerializedValue_CustomSerializedObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">a</span> <span class="n">null</span> <span class="n">value</span> <span class="p">(`</span><span class="n">value_type</span><span class="p">::</span><span class="n">null</span><span class="p">`).</span> <span class="n">This</span> <span class="n">structure</span>
+<span class="n">contains</span> <span class="n">no</span> <span class="n">actual</span> <span class="n">data</span><span class="p">,</span> <span class="n">since</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">only</span> <span class="n">a</span> <span class="n">single</span> <span class="p">`</span><span class="n">NULL</span><span class="p">`</span> <span class="n">value</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_NullContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_NullContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_NullContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">semicolonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">semicolonExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_NullContents], filename: string): PhpSerializedValue_NullContents =</span>
+  <span class="n">PhpSerializedValue_NullContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">a</span> <span class="n">PHP</span> <span class="mi">3</span> <span class="k">object</span> <span class="n">value</span><span class="p">.</span> <span class="n">Unlike</span> <span class="n">its</span> <span class="n">counterpart</span> <span class="ow">in</span> <span class="n">PHP</span> <span class="mi">4</span>
+<span class="ow">and</span> <span class="n">above</span><span class="p">,</span> <span class="n">it</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">contain</span> <span class="n">a</span> <span class="n">class</span> <span class="n">name</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_Php3ObjectContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_Php3ObjectContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_Php3ObjectContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="k">object</span><span class="sc">&#39;s properties. Keys must be of type `string`,</span>
+<span class="n">values</span> <span class="n">may</span> <span class="n">have</span> <span class="n">any</span> <span class="k">type</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">propertiesExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_CountPrefixedMapping</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">propertiesExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_Php3ObjectContents], filename: string): PhpSerializedValue_Php3ObjectContents =</span>
+  <span class="n">PhpSerializedValue_Php3ObjectContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">a</span> <span class="n">boolean</span> <span class="n">value</span> <span class="p">(`</span><span class="n">value_type</span><span class="p">::</span><span class="kt">bool</span><span class="p">`).</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_BoolContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_BoolContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_BoolContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="kt">bool</span><span class="p">`:</span> <span class="p">`</span><span class="mi">0</span><span class="p">`</span> <span class="k">for</span> <span class="p">`</span><span class="kp">false</span><span class="p">`</span> <span class="ow">or</span> <span class="p">`</span><span class="mi">1</span><span class="p">`</span> <span class="k">for</span> <span class="p">`</span><span class="kp">true</span><span class="p">`.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueDecExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_BoolValue</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueDec</span> <span class="o">=</span> <span class="n">valueDecExpr</span>
+  <span class="k">let</span> <span class="n">semicolonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">semicolonExpr</span>
+
+<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_BoolContents</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="kt">bool</span><span class="p">`,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">a</span> <span class="n">boolean</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">valueDec</span> <span class="o">==</span> <span class="n">php_serialized_value</span><span class="p">.</span><span class="kp">true</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_BoolContents], filename: string): PhpSerializedValue_BoolContents =</span>
+  <span class="n">PhpSerializedValue_BoolContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">a</span> <span class="kt">string</span> <span class="n">value</span><span class="p">.</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">PHP</span> <span class="n">strings</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">arbitrary</span> <span class="n">byte</span> <span class="n">sequences</span><span class="p">.</span>
+<span class="n">They</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">necessarily</span> <span class="n">valid</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">any</span> <span class="n">specific</span> <span class="n">encoding</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_StringContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_StringContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_StringContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+  <span class="k">let</span> <span class="n">stringExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue_LengthPrefixedQuotedString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="kt">string</span> <span class="o">=</span> <span class="n">stringExpr</span>
+  <span class="k">let</span> <span class="n">semicolonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">semicolon</span> <span class="o">=</span> <span class="n">semicolonExpr</span>
+
+<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_StringContents</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="kt">string</span><span class="p">,</span> <span class="k">as</span> <span class="n">a</span> <span class="n">byte</span> <span class="kt">array</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="kt">string</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_StringContents], filename: string): PhpSerializedValue_StringContents =</span>
+  <span class="n">PhpSerializedValue_StringContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">The</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">an</span> <span class="n">integer</span><span class="o">-</span><span class="n">like</span> <span class="n">value</span><span class="p">:</span>
+<span class="n">either</span> <span class="n">an</span> <span class="n">actual</span> <span class="n">integer</span> <span class="p">(`</span><span class="n">value_type</span><span class="p">::</span><span class="kt">int</span><span class="p">`)</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">reference</span>
+<span class="p">(`</span><span class="n">value_type</span><span class="p">::</span><span class="n">variable_reference</span><span class="p">`,</span> <span class="p">`</span><span class="n">value_type</span><span class="p">::</span><span class="n">object_reference</span><span class="p">`).</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_IntContents], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue): PhpSerializedValue_IntContents =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_IntContents</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">colonExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colon</span> <span class="o">=</span> <span class="n">colonExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="kt">int</span><span class="p">`,</span> <span class="ow">in</span> <span class="n">ASCII</span> <span class="n">decimal</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueDecExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueDec</span> <span class="o">=</span> <span class="n">valueDecExpr</span>
+
+<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PhpSerializedValue_IntContents</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="kt">int</span><span class="p">`,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">an</span> <span class="n">integer</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">valueDec</span><span class="p">.</span><span class="n">parseInt</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_IntContents], filename: string): PhpSerializedValue_IntContents =</span>
+  <span class="n">PhpSerializedValue_IntContents</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">A</span> <span class="n">mapping</span> <span class="n">entry</span> <span class="n">consisting</span> <span class="k">of</span> <span class="n">a</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">value</span><span class="p">.</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_MappingEntry], io: KaitaiStream, root: KaitaiStruct, parent: PhpSerializedValue_CountPrefixedMapping): PhpSerializedValue_MappingEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PhpSerializedValue_MappingEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PhpSerializedValue</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">key</span> <span class="k">of</span> <span class="n">the</span> <span class="n">entry</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">keyExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">keyExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">entry</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PhpSerializedValue_MappingEntry], filename: string): PhpSerializedValue_MappingEntry =</span>
+  <span class="n">PhpSerializedValue_MappingEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

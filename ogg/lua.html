@@ -150,7 +150,22 @@ decoding the stream contents from that one.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Ogg media container file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Ogg media container file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Ogg media container file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Ogg media container file parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -171,6 +186,11 @@ decoding the stream contents from that one.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="Ogg media container file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Ogg media container file parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -207,6 +227,144 @@ decoding the stream contents from that one.</p>
             
         </h2>
 
+        
+
+        <h3>ogg.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/ogg.lua" download="ogg.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Ogg is a popular media container format, which provides basic</span>
+<span class="c1">-- streaming / buffering mechanisms and is content-agnostic. Most</span>
+<span class="c1">-- popular codecs that are used within Ogg streams are Vorbis (thus</span>
+<span class="c1">-- making Ogg/Vorbis streams) and Theora (Ogg/Theora).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Ogg stream is a sequence Ogg pages. They can be read sequentially,</span>
+<span class="c1">-- or one can jump into arbitrary stream location and scan for &quot;OggS&quot;</span>
+<span class="c1">-- sync code to find the beginning of a new Ogg page and continue</span>
+<span class="c1">-- decoding the stream contents from that one.</span>
+<span class="n">Ogg</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ogg</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ogg</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pages</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">pages</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ogg</span><span class="p">.</span><span class="n">Page</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Ogg page is a basic unit of data in an Ogg bitstream, usually</span>
+<span class="c1">-- it&#39;s around 4-8 KB, with a maximum size of 65307 bytes.</span>
+<span class="n">Ogg</span><span class="p">.</span><span class="n">Page</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ogg</span><span class="p">.</span><span class="nc">Page</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ogg</span><span class="p">.</span><span class="nc">Page</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sync_code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sync_code</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\079\103\103\083</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\079\103\103\083</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">sync_code</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">version</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">is_end_of_stream</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">is_beginning_of_stream</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">is_continuation</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">align_to_byte</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">granule_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">bitstream_serial</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">page_seq_num</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_segments</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_segments</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_segments</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">len_segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">segments</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_segments</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Version of the Ogg bitstream format. Currently must be 0.</span>
+<span class="c1">-- </span>
+<span class="c1">-- EOS (End Of Stream) mark. This page is the last page in the</span>
+<span class="c1">-- logical bitstream. The EOS flag must be set on the final page of</span>
+<span class="c1">-- every logical bitstream, and must not be set on any other page.</span>
+<span class="c1">-- </span>
+<span class="c1">-- BOS (Beginning Of Stream) mark. This page is the first page in</span>
+<span class="c1">-- the logical bitstream. The BOS flag must be set on the first</span>
+<span class="c1">-- page of every logical bitstream, and must not be set on any</span>
+<span class="c1">-- other page.    </span>
+<span class="c1">-- </span>
+<span class="c1">-- The first packet on this page is a continuation of the previous</span>
+<span class="c1">-- packet in the logical bitstream.</span>
+<span class="c1">-- </span>
+<span class="c1">-- &quot;Granule position&quot; is the time marker in Ogg files. It is an</span>
+<span class="c1">-- abstract value, whose meaning is determined by the codec. It</span>
+<span class="c1">-- may, for example, be a count of the number of samples, the</span>
+<span class="c1">-- number of frames or a more complex scheme.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Serial number that identifies a page as belonging to a</span>
+<span class="c1">-- particular logical bitstream. Each logical bitstream in a file</span>
+<span class="c1">-- has a unique value, and this field allows implementations to</span>
+<span class="c1">-- deliver the pages to the appropriate decoder. In a typical</span>
+<span class="c1">-- Vorbis and Theora file, one stream is the audio (Vorbis), and</span>
+<span class="c1">-- the other is the video (Theora).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Sequential number of page, guaranteed to be monotonically</span>
+<span class="c1">-- increasing for each logical bitstream. The first page is 0, the</span>
+<span class="c1">-- second 1, etc. This allows implementations to detect when data</span>
+<span class="c1">-- has been lost.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This field provides a CRC32 checksum of the data in the entire</span>
+<span class="c1">-- page (including the page header, calculated with the checksum</span>
+<span class="c1">-- field set to 0). This allows verification that the data has not</span>
+<span class="c1">-- been corrupted since it was created. Pages that fail the</span>
+<span class="c1">-- checksum should be discarded. The checksum is generated using a</span>
+<span class="c1">-- polynomial value of 0x04C11DB7.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The number of segments that exist in this page. There can be a</span>
+<span class="c1">-- maximum of 255 segments in any one page.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Table of lengths of segments.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Segment content bytes make up the rest of the Ogg page.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

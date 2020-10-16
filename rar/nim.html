@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RAR (Roshall ARchiver) archive files: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">RAR (Roshall ARchiver) archive files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RAR (Roshall ARchiver) archive files:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>RAR is a archive format used by popular proprietary RAR archiver,
+created by Eugene Roshal. There are two major versions of format
+(v1.5-4.0 and RAR v5+).</p>
+<p>File format essentially consists of a linear sequence of
+blocks. Each block has fixed header and custom body (that depends on
+block type), so it's possible to skip block even if one doesn't know
+how to process a certain block type.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        RAR archiver
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        rar
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000450.shtml">LOC fdd000450</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/411">PRONOM fmt/411</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/613">PRONOM fmt/613</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/264">PRONOM x-fmt/264</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q243303">Wikidata Q243303</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/RAR">RAR in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/RAR">RAR in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RAR (Roshall ARchiver) archive files
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="RAR (Roshall ARchiver) archive files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="RAR (Roshall ARchiver) archive files parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="RAR (Roshall ARchiver) archive files parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="RAR (Roshall ARchiver) archive files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="RAR (Roshall ARchiver) archive files parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RAR (Roshall ARchiver) archive files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RAR (Roshall ARchiver) archive files parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="RAR (Roshall ARchiver) archive files parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="RAR (Roshall ARchiver) archive files parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="RAR (Roshall ARchiver) archive files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RAR (Roshall ARchiver) archive files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RAR (Roshall ARchiver) archive files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse RAR (Roshall ARchiver) archive files
+            
+        </h2>
+
+        
+
+        <h3>rar.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/rar.nim" download="rar.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">Rar</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_MagicSignature</span>
+    <span class="p">`</span><span class="n">blocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">KaitaiStruct</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">Rar_BlockTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="mi">114</span>
+    <span class="n">archive_header</span> <span class="o">=</span> <span class="mi">115</span>
+    <span class="n">file_header</span> <span class="o">=</span> <span class="mi">116</span>
+    <span class="n">old_style_comment_header</span> <span class="o">=</span> <span class="mi">117</span>
+    <span class="n">old_style_authenticity_info_76</span> <span class="o">=</span> <span class="mi">118</span>
+    <span class="n">old_style_subblock</span> <span class="o">=</span> <span class="mi">119</span>
+    <span class="n">old_style_recovery_record</span> <span class="o">=</span> <span class="mi">120</span>
+    <span class="n">old_style_authenticity_info_79</span> <span class="o">=</span> <span class="mi">121</span>
+    <span class="n">subblock</span> <span class="o">=</span> <span class="mi">122</span>
+    <span class="n">terminator</span> <span class="o">=</span> <span class="mi">123</span>
+  <span class="n">Rar_Oses</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">ms_dos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">os_2</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">unix</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">mac_os</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">beos</span> <span class="o">=</span> <span class="mi">5</span>
+  <span class="n">Rar_Methods</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="n">fastest</span> <span class="o">=</span> <span class="mi">49</span>
+    <span class="n">fast</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">normal</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">good</span> <span class="o">=</span> <span class="mi">52</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="mi">53</span>
+  <span class="n">Rar_BlockV5</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar</span>
+  <span class="n">Rar_Block</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">crc16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">blockType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_BlockTypes</span>
+    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">blockSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">addSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">addBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar</span>
+    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">hasAddInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">headerSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">Rar_BlockFileHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lowUnpSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">hostOs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_Oses</span>
+    <span class="p">`</span><span class="n">fileCrc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">fileTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_DosTime</span>
+    <span class="p">`</span><span class="n">rarVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="k">method</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_Methods</span>
+    <span class="p">`</span><span class="n">nameSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">attr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">highPackSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">fileName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">salt</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_Block</span>
+  <span class="n">Rar_MagicSignature</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">magic3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar</span>
+  <span class="n">Rar_DosTime</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">time</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">date</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_BlockFileHeader</span>
+    <span class="p">`</span><span class="n">monthInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">secondsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">yearInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">minutesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dayInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">hoursInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_Block</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Rar_Block): Rar_BlockFileHeader</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_DosTime], io: KaitaiStream, root: KaitaiStruct, parent: Rar_BlockFileHeader): Rar_DosTime</span>
+
+<span class="k">proc </span><span class="nf">hasAdd</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">headerSize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int8</span>
+<span class="k">proc </span><span class="nf">bodySize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">month</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">seconds</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">year</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">minutes</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">day</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">hours</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span>
+
+
+<span class="sd">##[</span>
+<span class="n">RAR</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">archive</span> <span class="n">format</span> <span class="n">used</span> <span class="n">by</span> <span class="n">popular</span> <span class="n">proprietary</span> <span class="n">RAR</span> <span class="n">archiver</span><span class="p">,</span>
+<span class="n">created</span> <span class="n">by</span> <span class="n">Eugene</span> <span class="n">Roshal</span><span class="p">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">two</span> <span class="n">major</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">format</span>
+<span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="mi">5</span><span class="o">-</span><span class="mf">4.0</span> <span class="ow">and</span> <span class="n">RAR</span> <span class="n">v5</span><span class="o">+</span><span class="p">).</span>
+
+<span class="n">File</span> <span class="n">format</span> <span class="n">essentially</span> <span class="n">consists</span> <span class="k">of</span> <span class="n">a</span> <span class="n">linear</span> <span class="n">sequence</span> <span class="k">of</span>
+<span class="n">blocks</span><span class="p">.</span> <span class="n">Each</span> <span class="k">block</span> <span class="n">has</span> <span class="n">fixed</span> <span class="n">header</span> <span class="ow">and</span> <span class="n">custom</span> <span class="n">body</span> <span class="p">(</span><span class="n">that</span> <span class="n">depends</span> <span class="n">on</span>
+<span class="k">block</span> <span class="k">type</span><span class="p">),</span> <span class="n">so</span> <span class="n">it</span><span class="sc">&#39;s possible to skip block even if one doesn&#39;</span><span class="n">t</span> <span class="n">know</span>
+<span class="n">how</span> <span class="n">to</span> <span class="n">process</span> <span class="n">a</span> <span class="n">certain</span> <span class="k">block</span> <span class="k">type</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://acritum.com/winrar/rar-format&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">File</span> <span class="n">format</span> <span class="n">signature</span> <span class="n">to</span> <span class="n">validate</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">indeed</span> <span class="n">a</span> <span class="n">RAR</span> <span class="n">archive</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">Rar_MagicSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Sequence</span> <span class="k">of</span> <span class="n">blocks</span> <span class="n">that</span> <span class="n">constitute</span> <span class="n">the</span> <span class="n">RAR</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">block</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">version</span>
+        <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Rar_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+          <span class="n">this</span><span class="p">.</span><span class="n">blocks</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+          <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Rar_BlockV5</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+          <span class="n">this</span><span class="p">.</span><span class="n">blocks</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar], filename: string): Rar =</span>
+  <span class="n">Rar</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar_BlockV5</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockV5], filename: string): Rar_BlockV5 =</span>
+  <span class="n">Rar_BlockV5</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Basic</span> <span class="k">block</span> <span class="n">that</span> <span class="n">RAR</span> <span class="n">files</span> <span class="n">consist</span> <span class="k">of</span><span class="p">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">several</span> <span class="k">block</span>
+<span class="n">types</span> <span class="p">(</span><span class="n">see</span> <span class="p">`</span><span class="n">block_type</span><span class="p">`),</span> <span class="n">which</span> <span class="n">have</span> <span class="n">different</span> <span class="p">`</span><span class="n">body</span><span class="p">`</span> <span class="ow">and</span>
+<span class="p">`</span><span class="n">add_body</span><span class="p">`.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_Block =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar_Block</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">CRC16</span> <span class="k">of</span> <span class="n">whole</span> <span class="k">block</span> <span class="ow">or</span> <span class="n">some</span> <span class="n">part</span> <span class="k">of</span> <span class="n">it</span> <span class="p">(</span><span class="n">depends</span> <span class="n">on</span> <span class="k">block</span> <span class="k">type</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">crc16Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">crc16</span> <span class="o">=</span> <span class="n">crc16Expr</span>
+  <span class="k">let</span> <span class="n">blockTypeExpr</span> <span class="o">=</span> <span class="n">Rar_BlockTypes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockType</span> <span class="o">=</span> <span class="n">blockTypeExpr</span>
+  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="k">block</span> <span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="n">body</span><span class="p">,</span> <span class="n">but</span> <span class="k">without</span> <span class="n">additional</span> <span class="n">content</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">blockSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockSize</span> <span class="o">=</span> <span class="n">blockSizeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">additional</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">this</span> <span class="k">block</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAdd</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">addSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">addSize</span> <span class="o">=</span> <span class="n">addSizeExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">blockType</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">rar</span><span class="p">.</span><span class="n">file_header</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bodySize</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Rar_BlockFileHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bodySize</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Additional</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">this</span> <span class="k">block</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAdd</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">addBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">addSize</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">addBody</span> <span class="o">=</span> <span class="n">addBodyExpr</span>
+
+<span class="k">proc </span><span class="nf">hasAdd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="kp">True</span> <span class="k">if</span> <span class="k">block</span> <span class="n">has</span> <span class="n">additional</span> <span class="n">content</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">it</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span>
+  <span class="k">let</span> <span class="n">hasAddInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">=</span> <span class="n">hasAddInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span>
+
+<span class="k">proc </span><span class="nf">headerSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
+  <span class="k">let</span> <span class="n">headerSizeInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAdd</span><span class="p">:</span> <span class="mi">11</span> <span class="k">else</span><span class="p">:</span> <span class="mi">7</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">=</span> <span class="n">headerSizeInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
+
+<span class="k">proc </span><span class="nf">bodySize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+  <span class="k">let</span> <span class="n">bodySizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">blockSize</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">=</span> <span class="n">bodySizeInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], filename: string): Rar_Block =</span>
+  <span class="n">Rar_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Rar_Block): Rar_BlockFileHeader =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar_BlockFileHeader</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Uncompressed</span> <span class="n">file</span> <span class="n">size</span> <span class="p">(</span><span class="n">lower</span> <span class="mi">32</span> <span class="n">bits</span><span class="p">,</span> <span class="k">if</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">header</span> <span class="n">flag</span> <span class="ow">is</span> <span class="n">present</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lowUnpSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lowUnpSize</span> <span class="o">=</span> <span class="n">lowUnpSizeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Operating</span> <span class="n">system</span> <span class="n">used</span> <span class="k">for</span> <span class="n">archiving</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">hostOsExpr</span> <span class="o">=</span> <span class="n">Rar_Oses</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hostOs</span> <span class="o">=</span> <span class="n">hostOsExpr</span>
+  <span class="k">let</span> <span class="n">fileCrc32Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fileCrc32</span> <span class="o">=</span> <span class="n">fileCrc32Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Date</span> <span class="ow">and</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">standard</span> <span class="n">MS</span> <span class="n">DOS</span> <span class="n">format</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">fileTimeExpr</span> <span class="o">=</span> <span class="n">Rar_DosTime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fileTime</span> <span class="o">=</span> <span class="n">fileTimeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">RAR</span> <span class="n">version</span> <span class="n">needed</span> <span class="n">to</span> <span class="n">extract</span> <span class="n">file</span> <span class="p">(</span><span class="n">Version</span> <span class="n">number</span> <span class="ow">is</span> <span class="n">encoded</span> <span class="k">as</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">Major</span> <span class="n">version</span> <span class="o">+</span> <span class="n">minor</span> <span class="n">version</span><span class="p">.)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">rarVersionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rarVersion</span> <span class="o">=</span> <span class="n">rarVersionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Compression</span> <span class="k">method</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">methodExpr</span> <span class="o">=</span> <span class="n">Rar_Methods</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">method</span> <span class="o">=</span> <span class="n">methodExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">File</span> <span class="n">name</span> <span class="n">size</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">nameSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameSize</span> <span class="o">=</span> <span class="n">nameSizeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">File</span> <span class="n">attributes</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">attrExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">attrExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Compressed</span> <span class="n">file</span> <span class="n">size</span><span class="p">,</span> <span class="n">high</span> <span class="mi">32</span> <span class="n">bits</span><span class="p">,</span> <span class="n">only</span> <span class="k">if</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">header</span> <span class="n">flag</span> <span class="ow">is</span> <span class="n">present</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">highPackSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">highPackSize</span> <span class="o">=</span> <span class="n">highPackSizeExpr</span>
+  <span class="k">let</span> <span class="n">fileNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">nameSize</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileNameExpr</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">saltExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">saltExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockFileHeader], filename: string): Rar_BlockFileHeader =</span>
+  <span class="n">Rar_BlockFileHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">RAR</span> <span class="n">uses</span> <span class="n">either</span> <span class="mi">7</span><span class="o">-</span><span class="n">byte</span> <span class="n">magic</span> <span class="k">for</span> <span class="n">RAR</span> <span class="n">versions</span> <span class="mf">1.5</span> <span class="n">to</span> <span class="mf">4.0</span><span class="p">,</span> <span class="ow">and</span>
+<span class="mi">8</span><span class="o">-</span><span class="n">byte</span> <span class="n">magic</span> <span class="p">(</span><span class="ow">and</span> <span class="n">pretty</span> <span class="n">different</span> <span class="k">block</span> <span class="n">format</span><span class="p">)</span> <span class="k">for</span> <span class="n">v5</span><span class="o">+</span><span class="p">.</span> <span class="n">This</span>
+<span class="k">type</span> <span class="n">would</span> <span class="n">parse</span> <span class="ow">and</span> <span class="n">validate</span> <span class="n">both</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">signature</span><span class="p">.</span> <span class="n">Note</span>
+<span class="n">that</span> <span class="n">actually</span> <span class="n">this</span> <span class="n">signature</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">valid</span> <span class="n">RAR</span> <span class="s">&quot;block&quot;</span><span class="p">:</span> <span class="ow">in</span> <span class="n">theory</span><span class="p">,</span>
+<span class="n">one</span> <span class="n">can</span> <span class="n">omit</span> <span class="n">signature</span> <span class="n">reading</span> <span class="n">at</span> <span class="n">all</span><span class="p">,</span> <span class="ow">and</span> <span class="n">read</span> <span class="n">this</span> <span class="n">normally</span><span class="p">,</span>
+<span class="k">as</span> <span class="n">a</span> <span class="k">block</span><span class="p">,</span> <span class="k">if</span> <span class="n">exact</span> <span class="n">RAR</span> <span class="n">version</span> <span class="ow">is</span> <span class="n">known</span> <span class="p">(</span><span class="ow">and</span> <span class="n">thus</span> <span class="n">it</span><span class="sc">&#39;s</span>
+<span class="n">possible</span> <span class="n">to</span> <span class="n">choose</span> <span class="n">correct</span> <span class="k">block</span> <span class="n">format</span><span class="p">).</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar_MagicSignature</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Fixed</span> <span class="n">part</span> <span class="k">of</span> <span class="n">file</span><span class="sc">&#39;s magic signature that doesn&#39;</span><span class="n">t</span> <span class="n">change</span> <span class="k">with</span> <span class="n">RAR</span> <span class="n">version</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">magic1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic1</span> <span class="o">=</span> <span class="n">magic1Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Variable</span> <span class="n">part</span> <span class="k">of</span> <span class="n">magic</span> <span class="n">signature</span><span class="p">:</span> <span class="mi">0</span> <span class="n">means</span> <span class="n">old</span> <span class="p">(</span><span class="n">RAR</span> <span class="mf">1.5</span><span class="o">-</span><span class="mf">4.0</span><span class="p">)</span>
+<span class="n">format</span><span class="p">,</span> <span class="mi">1</span> <span class="n">means</span> <span class="n">new</span> <span class="p">(</span><span class="n">RAR</span> <span class="mi">5</span><span class="o">+</span><span class="p">)</span> <span class="n">format</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">New</span> <span class="n">format</span> <span class="p">(</span><span class="n">RAR</span> <span class="mi">5</span><span class="o">+</span><span class="p">)</span> <span class="n">magic</span> <span class="n">contains</span> <span class="n">extra</span> <span class="n">byte</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">magic3Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">magic3</span> <span class="o">=</span> <span class="n">magic3Expr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =</span>
+  <span class="n">Rar_MagicSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_DosTime], io: KaitaiStream, root: KaitaiStruct, parent: Rar_BlockFileHeader): Rar_DosTime =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Rar_DosTime</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">timeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">timeExpr</span>
+  <span class="k">let</span> <span class="n">dateExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">dateExpr</span>
+
+<span class="k">proc </span><span class="nf">month</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">monthInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">monthInst</span>
+  <span class="k">let</span> <span class="n">monthInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">date</span> <span class="ow">and</span> <span class="mi">480</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">5</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">monthInst</span> <span class="o">=</span> <span class="n">monthInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">monthInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">monthInst</span>
+
+<span class="k">proc </span><span class="nf">seconds</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondsInst</span>
+  <span class="k">let</span> <span class="n">secondsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">time</span> <span class="ow">and</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">secondsInst</span> <span class="o">=</span> <span class="n">secondsInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondsInst</span>
+
+<span class="k">proc </span><span class="nf">year</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span>
+  <span class="k">let</span> <span class="n">yearInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">date</span> <span class="ow">and</span> <span class="mi">65024</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">=</span> <span class="n">yearInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span>
+
+<span class="k">proc </span><span class="nf">minutes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">minutesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">minutesInst</span>
+  <span class="k">let</span> <span class="n">minutesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">time</span> <span class="ow">and</span> <span class="mi">2016</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">5</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">minutesInst</span> <span class="o">=</span> <span class="n">minutesInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">minutesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">minutesInst</span>
+
+<span class="k">proc </span><span class="nf">day</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dayInst</span>
+  <span class="k">let</span> <span class="n">dayInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">date</span> <span class="ow">and</span> <span class="mi">31</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dayInst</span> <span class="o">=</span> <span class="n">dayInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dayInst</span>
+
+<span class="k">proc </span><span class="nf">hours</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_DosTime</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hoursInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hoursInst</span>
+  <span class="k">let</span> <span class="n">hoursInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">time</span> <span class="ow">and</span> <span class="mi">63488</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">11</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hoursInst</span> <span class="o">=</span> <span class="n">hoursInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hoursInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hoursInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_DosTime], filename: string): Rar_DosTime =</span>
+  <span class="n">Rar_DosTime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

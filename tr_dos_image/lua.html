@@ -156,7 +156,22 @@ empty (contain no file data) they can be omitted.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="TR-DOS flat-file disk image parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="TR-DOS flat-file disk image parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="TR-DOS flat-file disk image parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="TR-DOS flat-file disk image parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -177,6 +192,11 @@ empty (contain no file data) they can be omitted.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="TR-DOS flat-file disk image parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="TR-DOS flat-file disk image parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -213,6 +233,305 @@ empty (contain no file data) they can be omitted.</p>
             
         </h2>
 
+        
+
+        <h3>tr_dos_image.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/tr_dos_image.lua" download="tr_dos_image.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are</span>
+<span class="c1">-- headerless and contain consequent &quot;logical tracks&quot;, each logical track</span>
+<span class="c1">-- consists of 16 256-byte sectors.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Logical tracks are defined the same way as used by TR-DOS: for single-side</span>
+<span class="c1">-- floppies it&#39;s just a physical track number, for two-side floppies sides are</span>
+<span class="c1">-- interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</span>
+<span class="c1">-- </span>
+<span class="c1">-- So, this format definition is more for TR-DOS filesystem than for .trd files,</span>
+<span class="c1">-- which are formatless.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Strings (file names, disk label, disk password) are padded with spaces and use</span>
+<span class="c1">-- ZX Spectrum character set, including UDGs, block drawing chars and Basic</span>
+<span class="c1">-- tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)</span>
+<span class="c1">-- replaced with (up arrow, pound, copyright symbol).</span>
+<span class="c1">-- </span>
+<span class="c1">-- .trd file can be smaller than actual floppy disk, if last logical tracks are</span>
+<span class="c1">-- empty (contain no file data) they can be omitted.</span>
+<span class="n">TrDosImage</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">DiskType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">type_80_tracks_double_side</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+  <span class="n">type_40_tracks_double_side</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+  <span class="n">type_80_tracks_single_side</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+  <span class="n">type_40_tracks_single_side</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">File</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">files</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
+    <span class="kr">if</span> <span class="n">_</span><span class="p">.</span><span class="n">is_terminator</span> <span class="kr">then</span>
+      <span class="kr">break</span>
+    <span class="kr">end</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">volume_info</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">volume_info</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_info</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_info</span>
+<span class="kr">end</span>
+
+<span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_m_volume_info</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">VolumeInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_volume_info</span>
+<span class="kr">end</span>
+
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">VolumeInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">VolumeInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">VolumeInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">catalog_end</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">catalog_end</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">catalog_end</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">self</span><span class="p">.</span><span class="n">unused</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">first_free_sector_sector</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">first_free_sector_track</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">disk_type</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">DiskType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+<span class="n">self</span><span class="p">.</span><span class="n">num_files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">num_free_sectors</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">tr_dos_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">tr_dos_id</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\016</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\016</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">tr_dos_id</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">self</span><span class="p">.</span><span class="n">unused_2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">unused_3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">num_deleted_files</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">unused_4</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">VolumeInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_tracks</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">VolumeInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_tracks</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_tracks</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_tracks</span>
+<span class="kr">end</span>
+
+<span class="n">self</span><span class="p">.</span><span class="n">_m_num_tracks</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">disk_type</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">80</span><span class="p">))</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_tracks</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">VolumeInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_sides</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">VolumeInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_sides</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_sides</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_sides</span>
+<span class="kr">end</span>
+
+<span class="n">self</span><span class="p">.</span><span class="n">_m_num_sides</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">disk_type</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_sides</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- track number is logical, for double-sided disks it&#39;s</span>
+<span class="c1">-- (physical_track &lt;&lt; 1) | side, the same way that tracks are stored</span>
+<span class="c1">-- sequentially in .trd file</span>
+<span class="c1">-- </span>
+<span class="c1">-- Number of non-deleted files. Directory can have more than</span>
+<span class="c1">-- number_of_files entries due to deleted files</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthCode</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthCode</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthCode</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">start_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Default memory address to load this byte array into.</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">Filename</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">Filename</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">Filename</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">Filename</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">first_byte</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">Filename</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">first_byte</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first_byte</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first_byte</span>
+<span class="kr">end</span>
+
+<span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_m_first_byte</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first_byte</span>
+<span class="kr">end</span>
+
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthPrint</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthPrint</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthPrint</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">extent_no</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthGeneric</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthGeneric</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthGeneric</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthBasic</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthBasic</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">PositionAndLengthBasic</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">program_and_data_length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">program_length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">File</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">File</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">File</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_raw_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_name</span><span class="p">))</span>
+<span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">Filename</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">extension</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">extension</span>
+<span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">66</span> <span class="kr">then</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">position_and_length</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthBasic</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">67</span> <span class="kr">then</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">position_and_length</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthCode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">35</span> <span class="kr">then</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">position_and_length</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthPrint</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">else</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">position_and_length</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="n">PositionAndLengthGeneric</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">self</span><span class="p">.</span><span class="n">length_sectors</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">starting_sector</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">starting_track</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">File</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_deleted</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">File</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_deleted</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_deleted</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_deleted</span>
+<span class="kr">end</span>
+
+<span class="n">self</span><span class="p">.</span><span class="n">_m_is_deleted</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">first_byte</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_deleted</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">File</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_terminator</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">File</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_terminator</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_terminator</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_terminator</span>
+<span class="kr">end</span>
+
+<span class="n">self</span><span class="p">.</span><span class="n">_m_is_terminator</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">first_byte</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_terminator</span>
+<span class="kr">end</span>
+
+<span class="n">TrDosImage</span><span class="p">.</span><span class="n">File</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">contents</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">TrDosImage</span><span class="p">.</span><span class="nc">File</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">contents</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_contents</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_contents</span>
+<span class="kr">end</span>
+
+<span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((((</span><span class="n">self</span><span class="p">.</span><span class="n">starting_track</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">starting_sector</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)))</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_m_contents</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length_sectors</span> <span class="o">*</span> <span class="mi">256</span><span class="p">))</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_contents</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

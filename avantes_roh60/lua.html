@@ -164,7 +164,22 @@ the integration time before comparing them.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title=".roh file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".roh file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".roh file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".roh file format parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -185,6 +200,11 @@ the integration time before comparing them.</p>
                 <li class="active">
                 
                 <a href="lua.html" title=".roh file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".roh file format parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -221,6 +241,90 @@ the integration time before comparing them.</p>
             
         </h2>
 
+        
+
+        <h3>avantes_roh60.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/avantes_roh60.lua" download="avantes_roh60.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Avantes USB spectrometers are supplied with a Windows binary which </span>
+<span class="c1">-- generates one ROH and one RCM file when the user clicks &quot;Save</span>
+<span class="c1">-- experiment&quot;. In the version of 6.0, the ROH file contains a header </span>
+<span class="c1">-- of 22 four-byte floats, then the spectrum as a float array and a </span>
+<span class="c1">-- footer of 3 floats. The first and last pixel numbers are specified in the </span>
+<span class="c1">-- header and determine the (length+1) of the spectral data. In the tested </span>
+<span class="c1">-- files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this </span>
+<span class="c1">-- automatically anyway.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The wavelength calibration is stored as a polynomial with coefficients</span>
+<span class="c1">-- of &#39;wlintercept&#39;, &#39;wlx1&#39;, ... &#39;wlx4&#39;, the argument of which is the</span>
+<span class="c1">-- (pixel number + 1), as found out by comparing with the original </span>
+<span class="c1">-- Avantes converted data files. There is no intensity calibration saved,</span>
+<span class="c1">-- but it is recommended to do it in your program - the CCD in the spectrometer </span>
+<span class="c1">-- is so uneven that one should prepare exact pixel-to-pixel calibration curves </span>
+<span class="c1">-- to get reasonable spectral results.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The rest of the header floats is not known to the author. Note that the </span>
+<span class="c1">-- newer version of Avantes software has a different format, see also</span>
+<span class="c1">-- https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</span>
+<span class="c1">-- </span>
+<span class="c1">-- The RCM file contains the user-specified comment, so it may be useful</span>
+<span class="c1">-- for automatic conversion of data. You may wish to divide the spectra by </span>
+<span class="c1">-- the integration time before comparing them.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Written and tested by Filip Dominec, 2017-2018</span>
+<span class="n">AvantesRoh60</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">AvantesRoh60</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">AvantesRoh60</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">unknown1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wlintercept</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wlx1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wlx2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wlx3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">wlx4</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">unknown2</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">unknown2</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ipixfirst</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ipixlast</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">unknown3</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">unknown3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">ipixlast</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ipixlast</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">math.ceil</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ipixlast</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ipixfirst</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ipixfirst</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">math.ceil</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ipixfirst</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">spectrum</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">integration_ms</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">averaging</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pixel_smoothing</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

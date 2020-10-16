@@ -156,7 +156,22 @@ as:</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -177,6 +192,11 @@ as:</p>
                 <li class="active">
                 
                 <a href="lua.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -213,6 +233,235 @@ as:</p>
             
         </h2>
 
+        
+
+        <h3>asn1_der.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/asn1_der.lua" download="asn1_der.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding</span>
+<span class="c1">-- Rules) is a standard-backed serialization scheme used in many</span>
+<span class="c1">-- different use-cases. Particularly popular usage scenarios are X.509</span>
+<span class="c1">-- certificates and some telecommunication / networking protocols.</span>
+<span class="c1">-- </span>
+<span class="c1">-- DER is self-describing encoding scheme which allows representation</span>
+<span class="c1">-- of simple, atomic data elements, such as strings and numbers, and</span>
+<span class="c1">-- complex objects, such as sequences of other elements.</span>
+<span class="c1">-- </span>
+<span class="c1">-- DER is a subset of BER (Basic Encoding Rules), with an emphasis on</span>
+<span class="c1">-- being non-ambiguous: there&#39;s always exactly one canonical way to</span>
+<span class="c1">-- encode a data structure defined in terms of ASN.1 using DER.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This spec allows full parsing of format syntax, but to understand</span>
+<span class="c1">-- the semantics, one would typically require a dictionary of Object</span>
+<span class="c1">-- Identifiers (OIDs), to match OID bodies against some human-readable</span>
+<span class="c1">-- list of constants. OIDs are covered by many different standards,</span>
+<span class="c1">-- so typically it&#39;s simpler to use a pre-compiled list of them, such</span>
+<span class="c1">-- as:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg</span>
+<span class="c1">-- * http://oid-info.com/</span>
+<span class="c1">-- * https://www.alvestrand.no/objectid/top.html</span>
+<span class="c1">-- See also: Source (https://www.itu.int/rec/T-REC-X.690-201508-I/en)</span>
+<span class="n">Asn1Der</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">end_of_content</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">boolean</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">integer</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">bit_string</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">octet_string</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">null_value</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">object_id</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">object_descriptor</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">external</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">real</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">enumerated</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">embedded_pdv</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">utf8string</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">relative_oid</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">sequence_10</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="n">printable_string</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+  <span class="n">ia5string</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+  <span class="n">sequence_30</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
+  <span class="n">set</span> <span class="o">=</span> <span class="mi">49</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type_tag</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">LenEncoded</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type_tag</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">printable_string</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyPrintableString</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">sequence_10</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodySequence</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">set</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodySequence</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">sequence_30</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodySequence</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">utf8string</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyUtf8string</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">TypeTag</span><span class="p">.</span><span class="n">object_id</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyObjectId</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">result</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodySequence</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodySequence</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodySequence</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyUtf8string</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyUtf8string</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyUtf8string</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier)</span>
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyObjectId</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyObjectId</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyObjectId</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">first_and_second</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">rest</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyObjectId</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">first</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyObjectId</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">first</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_first</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">first_and_second</span> <span class="o">/</span> <span class="mi">40</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_first</span>
+<span class="kr">end</span>
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyObjectId</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">second</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyObjectId</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">second</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_second</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_second</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_second</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">first_and_second</span> <span class="o">%</span> <span class="mi">40</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_second</span>
+<span class="kr">end</span>
+
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">LenEncoded</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">LenEncoded</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">LenEncoded</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">130</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">int2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">129</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">int1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">LenEncoded</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">LenEncoded</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">result</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_result</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_result</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_result</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">129</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">int1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">130</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">int2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">b1</span><span class="p">))))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_result</span>
+<span class="kr">end</span>
+
+
+<span class="n">Asn1Der</span><span class="p">.</span><span class="n">BodyPrintableString</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyPrintableString</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Asn1Der</span><span class="p">.</span><span class="nc">BodyPrintableString</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

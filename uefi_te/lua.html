@@ -169,7 +169,22 @@ provides an opportunity for use of a smaller system flash part.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="TE (Terse Executable) file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="TE (Terse Executable) file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="TE (Terse Executable) file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="TE (Terse Executable) file parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -185,6 +200,11 @@ provides an opportunity for use of a smaller system flash part.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="TE (Terse Executable) file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="TE (Terse Executable) file parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -221,6 +241,205 @@ provides an opportunity for use of a smaller system flash part.</p>
             
         </h2>
 
+        
+
+        <h3>uefi_te.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/uefi_te.lua" download="uefi_te.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- This type of executables could be found inside the UEFI firmware. The UEFI </span>
+<span class="c1">-- firmware is stored in SPI flash memory, which is a chip soldered on a </span>
+<span class="c1">-- system’s motherboard. UEFI firmware is very modular: it usually contains </span>
+<span class="c1">-- dozens, if not hundreds, of executables. To store all these separates files, </span>
+<span class="c1">-- the firmware is laid out in volumes using the Firmware File System (FFS), a </span>
+<span class="c1">-- file system specifically designed to store firmware images. The volumes </span>
+<span class="c1">-- contain files that are identified by GUIDs and each of these files contain </span>
+<span class="c1">-- one or more sections holding the data. One of these sections contains the </span>
+<span class="c1">-- actual executable image. Most of the executable images follow the PE format. </span>
+<span class="c1">-- However, some of them follow the TE format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The Terse Executable (TE) image format was created as a mechanism to reduce</span>
+<span class="c1">-- the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a </span>
+<span class="c1">-- corresponding reduction of image sizes for executables running in the PI </span>
+<span class="c1">-- (Platform Initialization) Architecture environment. Reducing image size </span>
+<span class="c1">-- provides an opportunity for use of a smaller system flash part.</span>
+<span class="c1">-- </span>
+<span class="c1">-- So the TE format is basically a stripped version of PE.</span>
+<span class="c1">-- See also: Source (https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf)</span>
+<span class="n">UefiTe</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_te_hdr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_te_hdr</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">te_hdr</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">te_hdr</span><span class="p">.</span><span class="n">num_sections</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">sections</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">Section</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span><span class="p">.</span><span class="n">MachineType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">i386</span> <span class="o">=</span> <span class="mi">332</span><span class="p">,</span>
+  <span class="n">r4000</span> <span class="o">=</span> <span class="mi">358</span><span class="p">,</span>
+  <span class="n">wcemipsv2</span> <span class="o">=</span> <span class="mi">361</span><span class="p">,</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="mi">388</span><span class="p">,</span>
+  <span class="n">sh3</span> <span class="o">=</span> <span class="mi">418</span><span class="p">,</span>
+  <span class="n">sh3dsp</span> <span class="o">=</span> <span class="mi">419</span><span class="p">,</span>
+  <span class="n">sh4</span> <span class="o">=</span> <span class="mi">422</span><span class="p">,</span>
+  <span class="n">sh5</span> <span class="o">=</span> <span class="mi">424</span><span class="p">,</span>
+  <span class="n">arm</span> <span class="o">=</span> <span class="mi">448</span><span class="p">,</span>
+  <span class="n">thumb</span> <span class="o">=</span> <span class="mi">450</span><span class="p">,</span>
+  <span class="n">armnt</span> <span class="o">=</span> <span class="mi">452</span><span class="p">,</span>
+  <span class="n">am33</span> <span class="o">=</span> <span class="mi">467</span><span class="p">,</span>
+  <span class="n">powerpc</span> <span class="o">=</span> <span class="mi">496</span><span class="p">,</span>
+  <span class="n">powerpcfp</span> <span class="o">=</span> <span class="mi">497</span><span class="p">,</span>
+  <span class="n">ia64</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+  <span class="n">mips16</span> <span class="o">=</span> <span class="mi">614</span><span class="p">,</span>
+  <span class="n">mipsfpu</span> <span class="o">=</span> <span class="mi">870</span><span class="p">,</span>
+  <span class="n">mipsfpu16</span> <span class="o">=</span> <span class="mi">1126</span><span class="p">,</span>
+  <span class="n">ebc</span> <span class="o">=</span> <span class="mi">3772</span><span class="p">,</span>
+  <span class="n">riscv32</span> <span class="o">=</span> <span class="mi">20530</span><span class="p">,</span>
+  <span class="n">riscv64</span> <span class="o">=</span> <span class="mi">20580</span><span class="p">,</span>
+  <span class="n">riscv128</span> <span class="o">=</span> <span class="mi">20776</span><span class="p">,</span>
+  <span class="n">amd64</span> <span class="o">=</span> <span class="mi">34404</span><span class="p">,</span>
+  <span class="n">m32r</span> <span class="o">=</span> <span class="mi">36929</span><span class="p">,</span>
+  <span class="n">arm64</span> <span class="o">=</span> <span class="mi">43620</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span><span class="p">.</span><span class="n">SubsystemEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">native</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">windows_gui</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">windows_cui</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">posix_cui</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">windows_ce_gui</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">efi_application</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">efi_boot_service_driver</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">efi_runtime_driver</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">efi_rom</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">xbox</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">windows_boot_application</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">TeHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">TeHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\086\090</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\086\090</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span><span class="p">.</span><span class="n">MachineType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_sections</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">subsystem</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">TeHeader</span><span class="p">.</span><span class="n">SubsystemEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">stripped_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entry_point_addr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">base_of_code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">image_base</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_dirs</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">HeaderDataDirs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">HeaderDataDirs</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">HeaderDataDirs</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">HeaderDataDirs</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">base_relocation_table</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">UefiTe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">DataDir</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">DataDir</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">DataDir</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">Section</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">Section</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">Section</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_relocations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_linenumbers</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_relocations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_linenumbers</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">UefiTe</span><span class="p">.</span><span class="n">Section</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">UefiTe</span><span class="p">.</span><span class="nc">Section</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">pointer_to_raw_data</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">te_hdr</span><span class="p">.</span><span class="n">stripped_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">te_hdr</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size_of_raw_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

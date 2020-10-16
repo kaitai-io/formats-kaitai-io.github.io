@@ -165,7 +165,22 @@ decompiler utility.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="gettext binary database parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="gettext binary database parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="gettext binary database parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="gettext binary database parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -186,6 +201,11 @@ decompiler utility.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="gettext binary database parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="gettext binary database parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -222,6 +242,539 @@ decompiler utility.</p>
             
         </h2>
 
+        
+
+        <h3>gettext_mo.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/gettext_mo.lua" download="gettext_mo.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- [GNU gettext](https://www.gnu.org/software/gettext/) is a popular</span>
+<span class="c1">-- solution in free/open source software world to do i18n/l10n of</span>
+<span class="c1">-- software, by providing translated strings that will substitute</span>
+<span class="c1">-- strings in original language (typically, English).</span>
+<span class="c1">-- </span>
+<span class="c1">-- gettext .mo is a binary database format which stores these string</span>
+<span class="c1">-- translation pairs in an efficient binary format, ready to be used by</span>
+<span class="c1">-- gettext-enabled software. .mo format is a result of compilation of</span>
+<span class="c1">-- text-based .po files using</span>
+<span class="c1">-- [msgfmt](https://www.gnu.org/software/gettext/manual/html_node/msgfmt-Invocation.html#msgfmt-Invocation)</span>
+<span class="c1">-- utility. The reverse conversion (.mo -&gt; .po) is also possible using</span>
+<span class="c1">-- [msgunfmt](https://www.gnu.org/software/gettext/manual/html_node/msgunfmt-Invocation.html#msgunfmt-Invocation)</span>
+<span class="c1">-- decompiler utility.</span>
+<span class="c1">-- See also: Source (https://gitlab.com/worr/libintl)</span>
+<span class="n">GettextMo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mo</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">collision_step</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">collision_step</span> <span class="o">=</span> <span class="n">collision_step</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">original</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">original</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_original</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_original</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_original</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">originals</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">].</span><span class="n">str</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_original</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">translation</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translation</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translation</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_translation</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">translations</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">].</span><span class="n">str</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translation</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">next_idx</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">next_idx</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next_idx</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next_idx</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_next_idx</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">collision_step</span><span class="p">)</span> <span class="o">-</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">collision_step</span><span class="p">))</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">num_hashtable_items</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next_idx</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashLookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">next</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">hashtable_items</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">next_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">].</span><span class="n">val</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">collision_step</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span>
+<span class="kr">end</span>
+
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">LookupIteration</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">LookupIteration</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">current</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">LookupIteration</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">LookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">found</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">LookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">found</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_found</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_found</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_found</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">query</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="n">original</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_found</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">LookupIteration</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">LookupIteration</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">next</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">found</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">LookupIteration</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="nb">next</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">query</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_next</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- def lookup(s:str, t:gettext_mo.GettextMo):</span>
+<span class="c1">--   try:</span>
+<span class="c1">--     l=gettext_mo.GettextMo.HashtableLookup(s, string_hash(s), t._io, _parent=t, _root=t)</span>
+<span class="c1">--     e=l.entry</span>
+<span class="c1">--     while(not e.found):</span>
+<span class="c1">--       e=e.next</span>
+<span class="c1">--     return e.current</span>
+<span class="c1">--   except:</span>
+<span class="c1">--     raise Exception(&quot;Not found &quot;+s+&quot; in the hashtable!&quot;)</span>
+<span class="c1">-- </span>
+<span class="c1">-- lookup(t.mo.originals[145].str, t)</span>
+<span class="c1">-- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/gettext.c)</span>
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashtableLookup</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">hash</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashtableLookup</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">collision_step</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">collision_step</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_collision_step</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_collision_step</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_collision_step</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">hash</span> <span class="o">%</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_collision_step</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashtableLookup</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">idx</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">idx</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_idx</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_idx</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hash</span> <span class="o">%</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">num_hashtable_items</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_idx</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashtableLookup</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">hash_lookup_iteration</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">hash_lookup_iteration</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hash_lookup_iteration</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hash_lookup_iteration</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_hash_lookup_iteration</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">HashLookupIteration</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">mo</span><span class="p">.</span><span class="n">hashtable_items</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">].</span><span class="n">val</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">collision_step</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hash_lookup_iteration</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">HashtableLookup</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">entry</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">HashtableLookup</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">entry</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_entry</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_entry</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_entry</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">LookupIteration</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hash_lookup_iteration</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">query</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_entry</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- def string_hash(s):</span>
+<span class="c1">--   s=s.encode(&quot;utf-8&quot;)</span>
+<span class="c1">--   h = 0</span>
+<span class="c1">--   for i in range(len(s)):</span>
+<span class="c1">--     h = h &lt;&lt; 4</span>
+<span class="c1">--     h += s[i]</span>
+<span class="c1">--     tmp = h &amp; 0xF0000000</span>
+<span class="c1">--     if tmp != 0:</span>
+<span class="c1">--       h ^= tmp</span>
+<span class="c1">--       h ^= tmp &gt;&gt; 24</span>
+<span class="c1">--   return h</span>
+<span class="c1">-- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/strhash.c)</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">signature</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\222\018\004\149</span><span class="s2">&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">true</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\149\004\018\222</span><span class="s2">&quot;</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">false</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Version</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_originals</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_translations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_hashtable_items</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Version</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_originals</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_translations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_hashtable_items</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">originals</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">originals</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_originals</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_originals</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">translations</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">translations</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_translations</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_translations</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_translations</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">hashtable_items</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">hashtable_items</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">ofs_hashtable_items</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_hashtable_items</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+      <span class="kr">end</span>
+    <span class="kr">else</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_hashtable_items</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+      <span class="kr">end</span>
+    <span class="kr">end</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_hashtable_items</span>
+<span class="kr">end</span>
+
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Version</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_raw</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version_raw</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Version</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">major</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_major</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_major</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_major</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version_raw</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_major</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Version</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">minor</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Version</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">minor</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minor</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minor</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_minor</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version_raw</span> <span class="o">&amp;</span> <span class="mi">65535</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_minor</span>
+<span class="kr">end</span>
+
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask</span> <span class="o">=</span> <span class="mi">2147483648</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">val_1</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">val_1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val_1</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val_1</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_val_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val_1</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_system_dependent</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_system_dependent</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_system_dependent</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_system_dependent</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_is_system_dependent</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">val_1</span> <span class="o">&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_system_dependent</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">HashtableItem</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">HashtableItem</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">val</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">raw_val</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">val_1</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">mask</span><span class="p">))</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_val</span>
+<span class="kr">end</span>
+
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Descriptor</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Descriptor</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Descriptor</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Descriptor</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">GettextMo</span><span class="p">.</span><span class="n">Mo</span><span class="p">.</span><span class="n">Descriptor</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GettextMo</span><span class="p">.</span><span class="nc">Mo</span><span class="p">.</span><span class="nc">Descriptor</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">str</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_str</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_str</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_str</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_str</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_str</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_str</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_str</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

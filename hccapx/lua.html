@@ -150,7 +150,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Hashcat capture file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Hashcat capture file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Hashcat capture file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Hashcat capture file parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -171,6 +186,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="Hashcat capture file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Hashcat capture file parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -207,6 +227,132 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>hccapx.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/hccapx.lua" download="hccapx.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Native format of Hashcat password &quot;recovery&quot; utility</span>
+<span class="c1">-- See also: Source (https://hashcat.net/wiki/doku.php?id=hccapx)</span>
+<span class="n">Hccapx</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Hccapx</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Hccapx</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">records</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">records</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hccapx</span><span class="p">.</span><span class="n">HccapxRecord</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Hccapx</span><span class="p">.</span><span class="n">HccapxRecord</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Hccapx</span><span class="p">.</span><span class="nc">HccapxRecord</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Hccapx</span><span class="p">.</span><span class="nc">HccapxRecord</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\072\067\080\088</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\072\067\080\088</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ignore_replay_counter</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">message_pair</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">align_to_byte</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_essid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">essid</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_essid</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">padding1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">32</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">len_essid</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">keyver</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">keymic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mac_ap</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">nonce_ap</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mac_station</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">nonce_station</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_eapol</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">eapol</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_eapol</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">padding2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">256</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">len_eapol</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The version number of the .hccapx file format.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Indicates if the message pair matching was done based on</span>
+<span class="c1">-- replay counter or not.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Whenever it was set to 1 it means that the replay counter</span>
+<span class="c1">-- was ignored (i.e. it was not considered at all by the</span>
+<span class="c1">-- matching algorithm).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Hashcat currently does not perform any particular action</span>
+<span class="c1">-- based on this bit, but nonetheless this information could be</span>
+<span class="c1">-- crucial for some 3th party tools and for</span>
+<span class="c1">-- analysis/statistics. There could be some opportunity to</span>
+<span class="c1">-- implement some further logic based on this particular</span>
+<span class="c1">-- information also within hashcat (in the future).</span>
+<span class="c1">-- </span>
+<span class="c1">-- The message_pair value describes which messages of the 4-way</span>
+<span class="c1">-- handshake were combined to form the .hccapx structure. It is</span>
+<span class="c1">-- always a pair of 2 messages: 1 from the AP (access point)</span>
+<span class="c1">-- and 1 from the STA (client).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Furthermore, the message_pair value also gives a hint from</span>
+<span class="c1">-- which of the 2 messages the EAPOL origins. This is</span>
+<span class="c1">-- interesting data, but not necessarily needed for hashcat to</span>
+<span class="c1">-- be able to crack the hash.</span>
+<span class="c1">-- </span>
+<span class="c1">-- On the other hand, it could be very important to know if</span>
+<span class="c1">-- “only” message 1 and message 2 were captured or if for</span>
+<span class="c1">-- instance message 3 and/or message 4 were captured too. If</span>
+<span class="c1">-- message 3 and/or message 4 were captured it should be a hard</span>
+<span class="c1">-- evidence that the connection was established and that the</span>
+<span class="c1">-- password the client used was the correct one.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The flag used to distinguish WPA from WPA2 ciphers. Value of</span>
+<span class="c1">-- 1 means WPA, other - WPA2.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The final hash value. MD5 for WPA and SHA-1 for WPA2</span>
+<span class="c1">-- (truncated to 128 bit).</span>
+<span class="c1">-- </span>
+<span class="c1">-- The BSSID (MAC address) of the access point.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Nonce (random salt) generated by the access point.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The MAC address of the client connecting to the access point.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Nonce (random salt) generated by the client connecting to the access point.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The length of the EAPOL data.</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

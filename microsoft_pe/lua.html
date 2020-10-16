@@ -179,7 +179,22 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="Microsoft PE (Portable Executable) file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Microsoft PE (Portable Executable) file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Microsoft PE (Portable Executable) file format parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -200,6 +215,11 @@ section#format-index .row {
                 <li class="active">
                 
                 <a href="lua.html" title="Microsoft PE (Portable Executable) file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Microsoft PE (Portable Executable) file format parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -236,6 +256,604 @@ section#format-index .row {
             
         </h2>
 
+        
+
+        <h3>microsoft_pe.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/microsoft_pe.lua" download="microsoft_pe.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx)</span>
+<span class="n">MicrosoftPe</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">rom_image</span> <span class="o">=</span> <span class="mi">263</span><span class="p">,</span>
+  <span class="n">pe32</span> <span class="o">=</span> <span class="mi">267</span><span class="p">,</span>
+  <span class="n">pe32_plus</span> <span class="o">=</span> <span class="mi">523</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mz</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">MzPlaceholder</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">pe</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">pe</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pe</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pe</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">ofs_pe</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_pe</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeHeader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pe</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only)</span>
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateRevision</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">revision_1_0</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+  <span class="n">revision_2_0</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">x509</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">pkcs_signed_data</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">reserved_1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">ts_stack_signed</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CertificateEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CertificateEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateRevision</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">certificate_type</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">certificate_bytes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Specifies the length of the attribute certificate entry.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Contains the certificate version number.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Specifies the type of content in bCertificate.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Contains a certificate, such as an Authenticode signature.</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderWindows</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderWindows</span><span class="p">.</span><span class="n">SubsystemEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">native</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">windows_gui</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">windows_cui</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">posix_cui</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="n">windows_ce_gui</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">efi_application</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">efi_boot_service_driver</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">efi_runtime_driver</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">efi_rom</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">xbox</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">windows_boot_application</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderWindows</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderWindows</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">image_base_32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32_plus</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">image_base_64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">section_alignment</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_alignment</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">major_operating_system_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">minor_operating_system_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">major_image_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">minor_image_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">major_subsystem_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">minor_subsystem_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">win32_version_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_headers</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">check_sum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">subsystem</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderWindows</span><span class="p">.</span><span class="n">SubsystemEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">dll_characteristics</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_stack_reserve_32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32_plus</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_stack_reserve_64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_stack_commit_32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32_plus</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_stack_commit_64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_heap_reserve_32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32_plus</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_heap_reserve_64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_heap_commit_32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">std</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32_plus</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">size_of_heap_commit_64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">loader_flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_rva_and_sizes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderDataDirs</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderDataDirs</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderDataDirs</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">export_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">import_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">resource_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">exception_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">certificate_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">base_relocation_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">architecture</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">global_ptr</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tls_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">load_config_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">bound_import</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">iat</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">delay_import_descriptor</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">clr_runtime_header</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">DataDir</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">DataDir</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">DataDir</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffSymbol</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffSymbol</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffSymbol</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_name_annoying</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_name_annoying</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_annoying</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">section_number</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">storage_class</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_aux_symbols</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffSymbol</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">section</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffSymbol</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">section</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_section</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_section</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_section</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">pe</span><span class="p">.</span><span class="n">sections</span><span class="p">[(</span><span class="n">self</span><span class="p">.</span><span class="n">section_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_section</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffSymbol</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffSymbol</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">section</span><span class="p">.</span><span class="n">pointer_to_raw_data</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_data</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">PeHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">PeHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pe_signature</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pe_signature</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\080\069\000\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\080\069\000\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">pe_signature</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">coff_hdr</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_optional_hdr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">coff_hdr</span><span class="p">.</span><span class="n">size_of_optional_header</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_optional_hdr</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">optional_hdr</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeader</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">coff_hdr</span><span class="p">.</span><span class="n">number_of_sections</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">sections</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Section</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">certificate_table</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">PeHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">certificate_table</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_certificate_table</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_certificate_table</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">optional_hdr</span><span class="p">.</span><span class="n">data_dirs</span><span class="p">.</span><span class="n">certificate_table</span><span class="p">.</span><span class="n">virtual_address</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">optional_hdr</span><span class="p">.</span><span class="n">data_dirs</span><span class="p">.</span><span class="n">certificate_table</span><span class="p">.</span><span class="n">virtual_address</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_certificate_table</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">optional_hdr</span><span class="p">.</span><span class="n">data_dirs</span><span class="p">.</span><span class="n">certificate_table</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_certificate_table</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_certificate_table</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateTable</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_certificate_table</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderStd</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">windows</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderWindows</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data_dirs</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderDataDirs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Section</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Section</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Section</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_raw_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_relocations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_linenumbers</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_relocations</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_linenumbers</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Section</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Section</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pointer_to_raw_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">size_of_raw_data</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateTable</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CertificateTable</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CertificateTable</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">MzPlaceholder</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">MzPlaceholder</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">MzPlaceholder</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\077\090</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\077\090</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">58</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_pe</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- In PE file, an offset to PE header.</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">OptionalHeaderStd</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderStd</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">OptionalHeaderStd</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">major_linker_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">minor_linker_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_initialized_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_uninitialized_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">address_of_entry_point</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">base_of_code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">PeFormat</span><span class="p">.</span><span class="n">pe32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">base_of_data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: 3.3. COFF File Header (Object and Image)</span>
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">MachineType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">i386</span> <span class="o">=</span> <span class="mi">332</span><span class="p">,</span>
+  <span class="n">r4000</span> <span class="o">=</span> <span class="mi">358</span><span class="p">,</span>
+  <span class="n">wcemipsv2</span> <span class="o">=</span> <span class="mi">361</span><span class="p">,</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="mi">388</span><span class="p">,</span>
+  <span class="n">sh3</span> <span class="o">=</span> <span class="mi">418</span><span class="p">,</span>
+  <span class="n">sh3dsp</span> <span class="o">=</span> <span class="mi">419</span><span class="p">,</span>
+  <span class="n">sh4</span> <span class="o">=</span> <span class="mi">422</span><span class="p">,</span>
+  <span class="n">sh5</span> <span class="o">=</span> <span class="mi">424</span><span class="p">,</span>
+  <span class="n">arm</span> <span class="o">=</span> <span class="mi">448</span><span class="p">,</span>
+  <span class="n">thumb</span> <span class="o">=</span> <span class="mi">450</span><span class="p">,</span>
+  <span class="n">armnt</span> <span class="o">=</span> <span class="mi">452</span><span class="p">,</span>
+  <span class="n">am33</span> <span class="o">=</span> <span class="mi">467</span><span class="p">,</span>
+  <span class="n">powerpc</span> <span class="o">=</span> <span class="mi">496</span><span class="p">,</span>
+  <span class="n">powerpcfp</span> <span class="o">=</span> <span class="mi">497</span><span class="p">,</span>
+  <span class="n">ia64</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+  <span class="n">mips16</span> <span class="o">=</span> <span class="mi">614</span><span class="p">,</span>
+  <span class="n">mipsfpu</span> <span class="o">=</span> <span class="mi">870</span><span class="p">,</span>
+  <span class="n">mipsfpu16</span> <span class="o">=</span> <span class="mi">1126</span><span class="p">,</span>
+  <span class="n">ebc</span> <span class="o">=</span> <span class="mi">3772</span><span class="p">,</span>
+  <span class="n">riscv32</span> <span class="o">=</span> <span class="mi">20530</span><span class="p">,</span>
+  <span class="n">riscv64</span> <span class="o">=</span> <span class="mi">20580</span><span class="p">,</span>
+  <span class="n">riscv128</span> <span class="o">=</span> <span class="mi">20776</span><span class="p">,</span>
+  <span class="n">amd64</span> <span class="o">=</span> <span class="mi">34404</span><span class="p">,</span>
+  <span class="n">m32r</span> <span class="o">=</span> <span class="mi">36929</span><span class="p">,</span>
+  <span class="n">arm64</span> <span class="o">=</span> <span class="mi">43620</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">MachineType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_sections</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">time_date_stamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pointer_to_symbol_table</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">number_of_symbols</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">size_of_optional_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symbol_table_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symbol_table_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table_size</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">number_of_symbols</span> <span class="o">*</span> <span class="mi">18</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table_size</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symbol_name_table_offset</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symbol_name_table_offset</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_offset</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_offset</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pointer_to_symbol_table</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">symbol_table_size</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_offset</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symbol_name_table_size</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symbol_name_table_size</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_size</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_size</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">symbol_name_table_offset</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_name_table_size</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symbol_table</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CoffHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symbol_table</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pointer_to_symbol_table</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">number_of_symbols</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CoffSymbol</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbol_table</span>
+<span class="kr">end</span>
+
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_from_offset</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_from_offset</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_offset</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_offset</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">symbol_name_table_offset</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">name_offset</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_offset</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_offset</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_offset</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_offset</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_offset</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_offset</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_name_offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_offset</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_name</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">name_from_offset</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">name_from_short</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_zeroes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_zeroes</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_zeroes</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_zeroes</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_name_zeroes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_zeroes</span>
+<span class="kr">end</span>
+
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">Annoyingstring</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_from_short</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">Annoyingstring</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_from_short</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_short</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_short</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">name_zeroes</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_short</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_from_short</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

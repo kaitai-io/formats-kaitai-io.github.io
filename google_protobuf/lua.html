@@ -171,6 +171,11 @@ are the fields' default values, etc, etc.</li>
                 
                 <li>
                 
+                <a href="go.html" title="Google Protocol Buffers (protobuf) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Google Protocol Buffers (protobuf) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -187,6 +192,11 @@ are the fields' default values, etc, etc.</li>
                 <li class="active">
                 
                 <a href="lua.html" title="Google Protocol Buffers (protobuf) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Google Protocol Buffers (protobuf) parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -223,6 +233,170 @@ are the fields' default values, etc, etc.</li>
             
         </h2>
 
+        
+
+        <h3>google_protobuf.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/google_protobuf.lua" download="google_protobuf.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;vlq_base128_le&quot;</span><span class="p">)</span>
+<span class="c1">-- </span>
+<span class="c1">-- Google Protocol Buffers (AKA protobuf) is a popular data</span>
+<span class="c1">-- serialization scheme used for communication protocols, data storage,</span>
+<span class="c1">-- etc. There are implementations are available for almost every</span>
+<span class="c1">-- popular language. The focus points of this scheme are brevity (data</span>
+<span class="c1">-- is encoded in a very size-efficient manner) and extensibility (one</span>
+<span class="c1">-- can add keys to the structure, while keeping it readable in previous</span>
+<span class="c1">-- version of software).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Protobuf uses semi-self-describing encoding scheme for its</span>
+<span class="c1">-- messages. It means that it is possible to parse overall structure of</span>
+<span class="c1">-- the message (skipping over fields one can&#39;t understand), but to</span>
+<span class="c1">-- fully understand the message, one needs a protocol definition file</span>
+<span class="c1">-- (`.proto`). To be specific:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * &quot;Keys&quot; in key-value pairs provided in the message are identified</span>
+<span class="c1">--   only with an integer &quot;field tag&quot;. `.proto` file provides info on</span>
+<span class="c1">--   which symbolic field names these field tags map to.</span>
+<span class="c1">-- * &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data</span>
+<span class="c1">--   type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
+<span class="c1">--   `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
+<span class="c1">--   it&#39;s enough information to determine how many bytes to</span>
+<span class="c1">--   parse. Interpretation of the value should be done according to the</span>
+<span class="c1">--   type specified in `.proto` file.</span>
+<span class="c1">-- * There&#39;s no direct information on which fields are optional /</span>
+<span class="c1">--   required, which fields may be repeated or constitute a map, what</span>
+<span class="c1">--   restrictions are placed on fields usage in a single message, what</span>
+<span class="c1">--   are the fields&#39; default values, etc, etc.</span>
+<span class="c1">-- See also: Source (https://developers.google.com/protocol-buffers/docs/encoding)</span>
+<span class="n">GoogleProtobuf</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">pairs</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Key-value pairs which constitute a message.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Key-value pair.</span>
+<span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">varint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">bit_64</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">len_delimited</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">group_start</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">group_end</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">bit_32</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">Pair</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">Pair</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">wire_type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span><span class="p">.</span><span class="n">varint</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span><span class="p">.</span><span class="n">len_delimited</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">DelimitedBytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span><span class="p">.</span><span class="n">bit_64</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span><span class="p">.</span><span class="n">bit_32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough</span>
+<span class="c1">-- information to parse value from the wire, i.e. read correct</span>
+<span class="c1">-- amount of bytes, but there&#39;s not enough informaton to</span>
+<span class="c1">-- interprete in unambiguously. For example, one can&#39;t clearly</span>
+<span class="c1">-- distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
+<span class="c1">-- signed zigzag-encoded varints from regular unsigned varints,</span>
+<span class="c1">-- arbitrary bytes from UTF-8 encoded strings, etc.</span>
+<span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">wire_type</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">Pair</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">wire_type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_wire_type</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_wire_type</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_wire_type</span> <span class="o">=</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">WireTypes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_wire_type</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Identifies a field of protocol. One can look up symbolic</span>
+<span class="c1">-- field name in a `.proto` file by this field tag.</span>
+<span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">field_tag</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">Pair</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">field_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_field_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_field_tag</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_field_tag</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_field_tag</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Key is a bit-mapped variable-length integer: lower 3 bits</span>
+<span class="c1">-- are used for &quot;wire type&quot;, and everything higher designates</span>
+<span class="c1">-- an integer &quot;field tag&quot;.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Value that corresponds to field identified by</span>
+<span class="c1">-- `field_tag`. Type is determined approximately: there is</span>
+<span class="c1">-- enough information to parse it unambiguously from a stream,</span>
+<span class="c1">-- but further infromation from `.proto` file is required to</span>
+<span class="c1">-- interprete it properly.</span>
+
+<span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">DelimitedBytes</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">DelimitedBytes</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">GoogleProtobuf</span><span class="p">.</span><span class="nc">DelimitedBytes</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

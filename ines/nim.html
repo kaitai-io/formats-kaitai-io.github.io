@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.nes file format: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Firmware</li>
+        <li class="active">.nes file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.nes file format:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        nes
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/WTFPL.html">WTFPL</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .nes file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".nes file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".nes file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".nes file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".nes file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".nes file format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".nes file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".nes file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".nes file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".nes file format parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title=".nes file format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".nes file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".nes file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".nes file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".nes file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse .nes file format
+            
+        </h2>
+
+        
+
+        <h3>ines.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/ines.nim" download="ines.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">Ines</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header</span>
+    <span class="p">`</span><span class="n">trainer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">prgRom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">chrRom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">playchoice10</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Playchoice10</span>
+    <span class="p">`</span><span class="n">title</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">Ines_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenPrgRom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">lenChrRom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">f6</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F6</span>
+    <span class="p">`</span><span class="n">f7</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F7</span>
+    <span class="p">`</span><span class="n">lenPrgRam</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">f9</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F9</span>
+    <span class="p">`</span><span class="n">f10</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F10</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines</span>
+    <span class="p">`</span><span class="n">rawF6</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawF7</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawF9</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawF10</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">mapperInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">Ines_Header_F6</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lowerMapper</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">fourScreen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">trainer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasBatteryRam</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">mirroring</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F6_Mirroring</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header</span>
+  <span class="n">Ines_Header_F6_Mirroring</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">horizontal</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vertical</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">Ines_Header_F7</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">upperMapper</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">playchoice10</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">vsUnisystem</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header</span>
+  <span class="n">Ines_Header_F9</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">tvSystem</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F9_TvSystem</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header</span>
+  <span class="n">Ines_Header_F9_TvSystem</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">ntsc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">pal</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">Ines_Header_F10</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">busConflict</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">prgRam</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">reserved2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">tvSystem</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header_F10_TvSystem</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Header</span>
+  <span class="n">Ines_Header_F10_TvSystem</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">ntsc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">dual1</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">pal</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">dual2</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="n">Ines_Playchoice10</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">instRom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">prom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Playchoice10_Prom</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines</span>
+  <span class="n">Ines_Playchoice10_Prom</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">counterOut</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ines_Playchoice10</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ines</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Header</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F6], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F6</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F7], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F7</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F9], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F9</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Playchoice10</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10_Prom], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Playchoice10): Ines_Playchoice10_Prom</span>
+
+<span class="k">proc </span><span class="nf">mapper</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ines_Header</span><span class="p">):</span> <span class="kt">int</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/INES&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ines =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">rawHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawHeader</span> <span class="o">=</span> <span class="n">rawHeaderExpr</span>
+  <span class="k">let</span> <span class="n">rawHeaderIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeaderExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">Ines_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeaderIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">f6</span><span class="p">.</span><span class="n">trainer</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">trainerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">512</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">trainer</span> <span class="o">=</span> <span class="n">trainerExpr</span>
+  <span class="k">let</span> <span class="n">prgRomExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenPrgRom</span> <span class="o">*</span> <span class="mi">16384</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">prgRom</span> <span class="o">=</span> <span class="n">prgRomExpr</span>
+  <span class="k">let</span> <span class="n">chrRomExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenChrRom</span> <span class="o">*</span> <span class="mi">8192</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">chrRom</span> <span class="o">=</span> <span class="n">chrRomExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">f7</span><span class="p">.</span><span class="n">playchoice10</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">playchoice10Expr</span> <span class="o">=</span> <span class="n">Ines_Playchoice10</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">playchoice10</span> <span class="o">=</span> <span class="n">playchoice10Expr</span>
+  <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">titleExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">(),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">titleExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines], filename: string): Ines =</span>
+  <span class="n">Ines</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Header =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Header</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">PRG</span> <span class="n">ROM</span> <span class="ow">in</span> <span class="mi">16</span> <span class="n">KB</span> <span class="n">units</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenPrgRomExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenPrgRom</span> <span class="o">=</span> <span class="n">lenPrgRomExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">CHR</span> <span class="n">ROM</span> <span class="ow">in</span> <span class="mi">8</span> <span class="n">KB</span> <span class="n">units</span> <span class="p">(</span><span class="n">Value</span> <span class="mi">0</span> <span class="n">means</span> <span class="n">the</span> <span class="n">board</span> <span class="n">uses</span> <span class="n">CHR</span> <span class="n">RAM</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenChrRomExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenChrRom</span> <span class="o">=</span> <span class="n">lenChrRomExpr</span>
+  <span class="k">let</span> <span class="n">rawF6Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawF6</span> <span class="o">=</span> <span class="n">rawF6Expr</span>
+  <span class="k">let</span> <span class="n">rawF6Io</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawF6Expr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">f6Expr</span> <span class="o">=</span> <span class="n">Ines_Header_F6</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawF6Io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">f6</span> <span class="o">=</span> <span class="n">f6Expr</span>
+  <span class="k">let</span> <span class="n">rawF7Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawF7</span> <span class="o">=</span> <span class="n">rawF7Expr</span>
+  <span class="k">let</span> <span class="n">rawF7Io</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawF7Expr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">f7Expr</span> <span class="o">=</span> <span class="n">Ines_Header_F7</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawF7Io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">f7</span> <span class="o">=</span> <span class="n">f7Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">PRG</span> <span class="n">RAM</span> <span class="ow">in</span> <span class="mi">8</span> <span class="n">KB</span> <span class="n">units</span> <span class="p">(</span><span class="n">Value</span> <span class="mi">0</span> <span class="n">infers</span> <span class="mi">8</span> <span class="n">KB</span> <span class="k">for</span> <span class="n">compatibility</span><span class="p">;</span> <span class="n">see</span> <span class="n">PRG</span> <span class="n">RAM</span> <span class="n">circuit</span> <span class="n">on</span> <span class="n">nesdev</span><span class="p">.</span><span class="n">com</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenPrgRamExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenPrgRam</span> <span class="o">=</span> <span class="n">lenPrgRamExpr</span>
+  <span class="k">let</span> <span class="n">rawF9Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawF9</span> <span class="o">=</span> <span class="n">rawF9Expr</span>
+  <span class="k">let</span> <span class="n">rawF9Io</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawF9Expr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">f9Expr</span> <span class="o">=</span> <span class="n">Ines_Header_F9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawF9Io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">f9</span> <span class="o">=</span> <span class="n">f9Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">this</span> <span class="n">one</span> <span class="ow">is</span> <span class="n">unofficial</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">rawF10Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawF10</span> <span class="o">=</span> <span class="n">rawF10Expr</span>
+  <span class="k">let</span> <span class="n">rawF10Io</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawF10Expr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">f10Expr</span> <span class="o">=</span> <span class="n">Ines_Header_F10</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawF10Io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">f10</span> <span class="o">=</span> <span class="n">f10Expr</span>
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+
+<span class="k">proc </span><span class="nf">mapper</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ines_Header</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/Mapper&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">mapperInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">mapperInst</span>
+  <span class="k">let</span> <span class="n">mapperInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">f6</span><span class="p">.</span><span class="n">lowerMapper</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">f7</span><span class="p">.</span><span class="n">upperMapper</span> <span class="ow">shl</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">mapperInst</span> <span class="o">=</span> <span class="n">mapperInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">mapperInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">mapperInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header], filename: string): Ines_Header =</span>
+  <span class="n">Ines_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/INES#Flags_6&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F6], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F6 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Header_F6</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Lower</span> <span class="n">nibble</span> <span class="k">of</span> <span class="n">mapper</span> <span class="n">number</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lowerMapperExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lowerMapper</span> <span class="o">=</span> <span class="n">lowerMapperExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Ignore</span> <span class="n">mirroring</span> <span class="n">control</span> <span class="ow">or</span> <span class="n">above</span> <span class="n">mirroring</span> <span class="n">bit</span><span class="p">;</span> <span class="n">instead</span> <span class="n">provide</span> <span class="n">four</span><span class="o">-</span><span class="n">screen</span> <span class="n">VRAM</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">fourScreenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fourScreen</span> <span class="o">=</span> <span class="n">fourScreenExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="mi">512</span><span class="o">-</span><span class="n">byte</span> <span class="n">trainer</span> <span class="n">at</span> <span class="o">$</span><span class="mi">7000</span><span class="o">-$</span><span class="mi">71</span><span class="err">FF (stored before PRG data)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">trainerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">trainer</span> <span class="o">=</span> <span class="n">trainerExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="n">on</span> <span class="n">the</span> <span class="n">cartridge</span> <span class="n">contains</span> <span class="n">battery</span><span class="o">-</span><span class="n">backed</span> <span class="n">PRG</span> <span class="n">RAM</span> <span class="p">(</span><span class="o">$</span><span class="mi">6000</span><span class="o">-</span><span class="mi">7</span><span class="err">FFF) or other persistent memory</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">hasBatteryRamExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasBatteryRam</span> <span class="o">=</span> <span class="n">hasBatteryRamExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">if</span> <span class="mi">0</span><span class="p">,</span> <span class="n">horizontal</span> <span class="n">arrangement</span><span class="p">.</span> <span class="k">if</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vertical</span> <span class="n">arrangement</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">mirroringExpr</span> <span class="o">=</span> <span class="n">Ines_Header_F6_Mirroring</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">mirroring</span> <span class="o">=</span> <span class="n">mirroringExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F6], filename: string): Ines_Header_F6 =</span>
+  <span class="n">Ines_Header_F6</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/INES#Flags_7&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F7], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F7 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Header_F7</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Upper</span> <span class="n">nibble</span> <span class="k">of</span> <span class="n">mapper</span> <span class="n">number</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">upperMapperExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">upperMapper</span> <span class="o">=</span> <span class="n">upperMapperExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="n">equal</span> <span class="n">to</span> <span class="mi">2</span><span class="p">,</span> <span class="n">flags</span> <span class="mi">8</span><span class="o">-</span><span class="mi">15</span> <span class="n">are</span> <span class="ow">in</span> <span class="n">NES</span> <span class="mf">2.0</span> <span class="n">format</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Determines</span> <span class="k">if</span> <span class="n">it</span> <span class="n">made</span> <span class="k">for</span> <span class="n">a</span> <span class="n">Nintendo</span> <span class="n">PlayChoice</span><span class="o">-</span><span class="mi">10</span> <span class="ow">or</span> <span class="ow">not</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">playchoice10Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">playchoice10</span> <span class="o">=</span> <span class="n">playchoice10Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Determines</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">made</span> <span class="k">for</span> <span class="n">a</span> <span class="n">Nintendo</span> <span class="n">VS</span> <span class="n">Unisystem</span> <span class="ow">or</span> <span class="ow">not</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">vsUnisystemExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">vsUnisystem</span> <span class="o">=</span> <span class="n">vsUnisystemExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F7], filename: string): Ines_Header_F7 =</span>
+  <span class="n">Ines_Header_F7</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/INES#Flags_9&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F9], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F9 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Header_F9</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">if</span> <span class="mi">0</span><span class="p">,</span> <span class="n">NTSC</span><span class="p">.</span> <span class="k">If</span> <span class="mi">1</span><span class="p">,</span> <span class="n">PAL</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">tvSystemExpr</span> <span class="o">=</span> <span class="n">Ines_Header_F9_TvSystem</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tvSystem</span> <span class="o">=</span> <span class="n">tvSystemExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F9], filename: string): Ines_Header_F9 =</span>
+  <span class="n">Ines_Header_F9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.nesdev.com/w/index.php/INES#Flags_10&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Header_F10</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">reserved1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">reserved1Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="mi">0</span><span class="p">,</span> <span class="n">no</span> <span class="n">bus</span> <span class="n">conflicts</span><span class="p">.</span> <span class="k">If</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bus</span> <span class="n">conflicts</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">busConflictExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">busConflict</span> <span class="o">=</span> <span class="n">busConflictExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PRG</span> <span class="n">ram</span> <span class="ow">is</span> <span class="n">present</span><span class="p">.</span> <span class="k">If</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">not</span> <span class="n">present</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">prgRamExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">prgRam</span> <span class="o">=</span> <span class="n">prgRamExpr</span>
+  <span class="k">let</span> <span class="n">reserved2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="n">reserved2Expr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">if</span> <span class="mi">0</span><span class="p">,</span> <span class="n">NTSC</span><span class="p">.</span> <span class="k">If</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PAL</span><span class="p">.</span> <span class="k">If</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dual</span> <span class="n">compatible</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">tvSystemExpr</span> <span class="o">=</span> <span class="n">Ines_Header_F10_TvSystem</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tvSystem</span> <span class="o">=</span> <span class="n">tvSystemExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Header_F10], filename: string): Ines_Header_F10 =</span>
+  <span class="n">Ines_Header_F10</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://wiki.nesdev.com/w/index.php/PC10_ROM-Images&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Playchoice10 =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Playchoice10</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">instRomExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8192</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">instRom</span> <span class="o">=</span> <span class="n">instRomExpr</span>
+  <span class="k">let</span> <span class="n">promExpr</span> <span class="o">=</span> <span class="n">Ines_Playchoice10_Prom</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">prom</span> <span class="o">=</span> <span class="n">promExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10], filename: string): Ines_Playchoice10 =</span>
+  <span class="n">Ines_Playchoice10</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10_Prom], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Playchoice10): Ines_Playchoice10_Prom =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ines_Playchoice10_Prom</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ines</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+  <span class="k">let</span> <span class="n">counterOutExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">counterOut</span> <span class="o">=</span> <span class="n">counterOutExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ines_Playchoice10_Prom], filename: string): Ines_Playchoice10_Prom =</span>
+  <span class="n">Ines_Playchoice10_Prom</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

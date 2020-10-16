@@ -177,7 +177,22 @@ understands how to access data in AppleSingle container.</p>
                 
                 <li>
                 
+                <a href="cpp_stl_11.html" title="AppleSingle / AppleDouble parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="AppleSingle / AppleDouble parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="AppleSingle / AppleDouble parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="AppleSingle / AppleDouble parsing Go library">Go</a></li>
                 
                 
                 <li>
@@ -198,6 +213,11 @@ understands how to access data in AppleSingle container.</p>
                 <li class="active">
                 
                 <a href="lua.html" title="AppleSingle / AppleDouble parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="AppleSingle / AppleDouble parsing Nim library">Nim</a></li>
                 
                 
                 <li>
@@ -234,6 +254,173 @@ understands how to access data in AppleSingle container.</p>
             
         </h2>
 
+        
+
+        <h3>apple_single_double.lua</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/lua/apple_single_double.lua" download="apple_single_double.lua" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1">--</span>
+<span class="c1">-- This file is compatible with Lua 5.3</span>
+
+<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- AppleSingle and AppleDouble files are used by certain Mac</span>
+<span class="c1">-- applications (e.g. Finder) to store Mac-specific file attributes on</span>
+<span class="c1">-- filesystems that do not support that.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Syntactically, both formats are the same, the only difference is how</span>
+<span class="c1">-- they are being used:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * AppleSingle means that only one file will be created on external</span>
+<span class="c1">--   filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple</span>
+<span class="c1">--   terminology), and the attributes (AKA &quot;resource fork&quot;).</span>
+<span class="c1">-- * AppleDouble means that two files will be created: a normal file</span>
+<span class="c1">--   that keeps the data (&quot;data fork&quot;) is kept separately from an</span>
+<span class="c1">--   auxiliary file that contains attributes (&quot;resource fork&quot;), which</span>
+<span class="c1">--   is kept with the same name, but starting with an extra dot and</span>
+<span class="c1">--   underscore `._` to keep it hidden.</span>
+<span class="c1">-- </span>
+<span class="c1">-- In modern practice (Mac OS X), Finder only uses AppleDouble to keep</span>
+<span class="c1">-- compatibility with other OSes, as virtually nobody outside of Mac</span>
+<span class="c1">-- understands how to access data in AppleSingle container.</span>
+<span class="c1">-- See also: Source (http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf)</span>
+<span class="n">AppleSingleDouble</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FileType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">apple_single</span> <span class="o">=</span> <span class="mi">333312</span><span class="p">,</span>
+  <span class="n">apple_double</span> <span class="o">=</span> <span class="mi">333319</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FileType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_entries</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Must be all 0.</span>
+
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="p">.</span><span class="n">Types</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+  <span class="n">data_fork</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">resource_fork</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">real_name</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="n">comment</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">icon_bw</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">icon_color</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="n">file_dates_info</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">finder_info</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="n">macintosh_file_info</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">prodos_file_info</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="n">msdos_file_info</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="n">afp_short_name</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+  <span class="n">afp_file_info</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+  <span class="n">afp_directory_id</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">Entry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">Entry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="p">.</span><span class="n">Types</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">Entry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">finder_info</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Information specific to Finder.</span>
+<span class="c1">-- See also: older Inside Macintosh, Volume II page 84 or Volume IV page 104.</span>
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">FinderInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">FinderInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_creator</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Point</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">folder_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- File icon&#39;s coordinates when displaying this folder.</span>
+<span class="c1">-- </span>
+<span class="c1">-- File folder ID (=window).</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Specifies 2D coordinate in QuickDraw grid.</span>
+<span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Point</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">Point</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">AppleSingleDouble</span><span class="p">.</span><span class="nc">Point</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+
+        </div>
         
     </div>
 </section>

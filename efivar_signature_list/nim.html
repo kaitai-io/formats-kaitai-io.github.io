@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UEFI Variable with Signature List: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Security</li>
+        <li class="active">UEFI Variable with Signature List</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UEFI Variable with Signature List:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Parse UEFI variables db and dbx that contain signatures, certificates and
+hashes. On a Linux system using UEFI, these variables are readable from
+/sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+/sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+/sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+/sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+(&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+as EFI_GLOBAL_VARIABLE).
+Each file contains an EFI attribute (32-bit integer) followed by a list of
+EFI_SIGNATURE_LIST structures.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UEFI Variable with Signature List
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UEFI Variable with Signature List parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="UEFI Variable with Signature List parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UEFI Variable with Signature List parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UEFI Variable with Signature List parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="UEFI Variable with Signature List parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UEFI Variable with Signature List parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UEFI Variable with Signature List parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UEFI Variable with Signature List parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="UEFI Variable with Signature List parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UEFI Variable with Signature List parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UEFI Variable with Signature List parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UEFI Variable with Signature List parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse UEFI Variable with Signature List
+            
+        </h2>
+
+        
+
+        <h3>efivar_signature_list.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/efivar_signature_list.nim" download="efivar_signature_list.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">EfivarSignatureList</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">varAttributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EfivarSignatureList_EfiVarAttr</span>
+    <span class="p">`</span><span class="n">signatures</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">EfivarSignatureList_SignatureList</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">EfivarSignatureList_SignatureList</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">signatureType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenSignatureList</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenSignatureHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenSignature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">signatures</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">EfivarSignatureList_SignatureData</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EfivarSignatureList</span>
+    <span class="p">`</span><span class="n">rawSignatures</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+    <span class="p">`</span><span class="n">isCertSha512X509Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha224Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertX509Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha256X509Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertRsa2048KeyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha512Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha384Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha1Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertRsa2048Sha1Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha256Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertSha384X509Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertRsa2048Sha256Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCertDerPkcs7Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">EfivarSignatureList_SignatureData</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">owner</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span>
+  <span class="n">EfivarSignatureList_EfiVarAttr</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">enhancedAuthenticatedAccess</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">appendWrite</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">timeBasedAuthenticatedWriteAccess</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">authenticatedWriteAccess</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hardwareErrorRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">runtimeAccess</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bootserviceAccess</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nonVolatile</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EfivarSignatureList</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EfivarSignatureList</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureList], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList): EfivarSignatureList_SignatureList</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureData], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList_SignatureList): EfivarSignatureList_SignatureData</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_EfiVarAttr], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList): EfivarSignatureList_EfiVarAttr</span>
+
+<span class="k">proc </span><span class="nf">isCertSha512X509</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha224</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertX509</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha256X509</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertRsa2048Key</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha512</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha384</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha1</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertRsa2048Sha1</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha256</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertSha384X509</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertRsa2048Sha256</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+<span class="k">proc </span><span class="nf">isCertDerPkcs7</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Parse</span> <span class="n">UEFI</span> <span class="n">variables</span> <span class="n">db</span> <span class="ow">and</span> <span class="n">dbx</span> <span class="n">that</span> <span class="n">contain</span> <span class="n">signatures</span><span class="p">,</span> <span class="n">certificates</span> <span class="ow">and</span>
+<span class="n">hashes</span><span class="p">.</span> <span class="n">On</span> <span class="n">a</span> <span class="n">Linux</span> <span class="n">system</span> <span class="n">using</span> <span class="n">UEFI</span><span class="p">,</span> <span class="n">these</span> <span class="n">variables</span> <span class="n">are</span> <span class="n">readable</span> <span class="kn">from</span>
+<span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">efi</span><span class="o">/</span><span class="n">efivars</span><span class="o">/</span><span class="n">db</span><span class="o">-</span><span class="n">d719b2cb</span><span class="o">-</span><span class="mi">3</span><span class="err">d3a-4596-a3bc-dad00e67656f,</span>
+<span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">efi</span><span class="o">/</span><span class="n">efivars</span><span class="o">/</span><span class="n">dbDefault</span><span class="o">-</span><span class="mi">8</span><span class="err">be4df61-93ca-11d2-aa0d-00e098032b8c,</span>
+<span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">efi</span><span class="o">/</span><span class="n">efivars</span><span class="o">/</span><span class="n">dbx</span><span class="o">-</span><span class="n">d719b2cb</span><span class="o">-</span><span class="mi">3</span><span class="err">d3a-4596-a3bc-dad00e67656f and</span>
+<span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">efi</span><span class="o">/</span><span class="n">efivars</span><span class="o">/</span><span class="n">dbxDefault</span><span class="o">-</span><span class="mi">8</span><span class="err">be4df61-93ca-11d2-aa0d-00e098032b8c.</span>
+<span class="p">(</span><span class="s">&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot;</span> <span class="ow">is</span> <span class="n">defined</span> <span class="k">as</span>
+<span class="n">EFI_IMAGE_SECURITY_DATABASE_GUID</span> <span class="ow">and</span> <span class="s">&quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;</span>
+<span class="k">as</span> <span class="n">EFI_GLOBAL_VARIABLE</span><span class="p">).</span>
+<span class="n">Each</span> <span class="n">file</span> <span class="n">contains</span> <span class="n">an</span> <span class="n">EFI</span> <span class="n">attribute</span> <span class="p">(</span><span class="mi">32</span><span class="o">-</span><span class="n">bit</span> <span class="n">integer</span><span class="p">)</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">a</span> <span class="n">list</span> <span class="k">of</span>
+<span class="n">EFI_SIGNATURE_LIST</span> <span class="n">structures</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EfivarSignatureList =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EfivarSignatureList</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Attributes</span> <span class="k">of</span> <span class="n">the</span> <span class="n">UEFI</span> <span class="n">variable</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">varAttributesExpr</span> <span class="o">=</span> <span class="n">EfivarSignatureList_EfiVarAttr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">varAttributes</span> <span class="o">=</span> <span class="n">varAttributesExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">signatures</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList], filename: string): EfivarSignatureList =</span>
+  <span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_SIGNATURE_LIST&quot;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureList], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList): EfivarSignatureList_SignatureList =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EfivarSignatureList_SignatureList</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="k">Type</span> <span class="k">of</span> <span class="n">the</span> <span class="n">signature</span> <span class="k">as</span> <span class="n">a</span> <span class="n">GUID</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">signatureTypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">=</span> <span class="n">signatureTypeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Total</span> <span class="n">size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">signature</span> <span class="n">list</span><span class="p">,</span> <span class="n">including</span> <span class="n">this</span> <span class="n">header</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenSignatureListExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenSignatureList</span> <span class="o">=</span> <span class="n">lenSignatureListExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">signature</span> <span class="n">header</span> <span class="n">which</span> <span class="n">precedes</span> <span class="n">the</span> <span class="kt">array</span> <span class="k">of</span> <span class="n">signatures</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenSignatureHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenSignatureHeader</span> <span class="o">=</span> <span class="n">lenSignatureHeaderExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">each</span> <span class="n">signature</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenSignatureExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenSignature</span> <span class="o">=</span> <span class="n">lenSignatureExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Header</span> <span class="n">before</span> <span class="n">the</span> <span class="kt">array</span> <span class="k">of</span> <span class="n">signatures</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSignatureHeader</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">An</span> <span class="kt">array</span> <span class="k">of</span> <span class="n">signatures</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenSignature</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">lenSignatureList</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">lenSignatureHeader</span><span class="p">)</span> <span class="o">-</span> <span class="mi">28</span><span class="p">)</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">lenSignature</span><span class="p">)):</span>
+      <span class="k">let</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSignature</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawSignatures</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">rawSignaturesIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">EfivarSignatureList_SignatureData</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSignaturesIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">signatures</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">isCertSha512X509</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA512</span> <span class="n">hash</span> <span class="k">of</span> <span class="n">an</span> <span class="n">X</span><span class="p">.</span><span class="mi">509</span> <span class="n">certificate</span><span class="sc">&#39;s To-Be-Signed contents, and a time of revocation</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_X509_SHA512_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512X509Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha512X509InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">99</span><span class="sc">&#39;u8, -65&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">109</span><span class="sc">&#39;u8, 68&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">2</span><span class="sc">&#39;u8, 37&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">38</span><span class="sc">&#39;u8, 76&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">68</span><span class="sc">&#39;u8, -6&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">36</span><span class="sc">&#39;u8, 101&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">46</span><span class="sc">&#39;u8, -80&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="sc">&#39;u8, -99&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512X509Inst</span> <span class="o">=</span> <span class="n">isCertSha512X509InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512X509Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha224</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">224</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_SHA224_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha224Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha224Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha224InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">51</span><span class="sc">&#39;u8, 82&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">110</span><span class="sc">&#39;u8, 11&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">92</span><span class="sc">&#39;u8, -90&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">55</span><span class="sc">&#39;u8, 68&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">108</span><span class="sc">&#39;u8, 7&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">39</span><span class="sc">&#39;u8, -85&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="sc">&#39;u8, -65&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">56</span><span class="sc">&#39;u8, -67&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha224Inst</span> <span class="o">=</span> <span class="n">isCertSha224InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha224Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha224Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertX509</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">X</span><span class="p">.</span><span class="mi">509</span> <span class="n">certificate</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_X509_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertX509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertX509Inst</span>
+  <span class="k">let</span> <span class="n">isCertX509InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">95</span><span class="sc">&#39;u8, 89&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">64</span><span class="sc">&#39;u8, -91&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">28</span><span class="sc">&#39;u8, -108&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">89</span><span class="sc">&#39;u8, 74&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">121</span><span class="sc">&#39;u8, -75&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">85</span><span class="sc">&#39;u8, 21&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">92</span><span class="sc">&#39;u8, 43&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="sc">&#39;u8, 114&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertX509Inst</span> <span class="o">=</span> <span class="n">isCertX509InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertX509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertX509Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha256X509</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA256</span> <span class="n">hash</span> <span class="k">of</span> <span class="n">an</span> <span class="n">X</span><span class="p">.</span><span class="mi">509</span> <span class="n">certificate</span><span class="sc">&#39;s To-Be-Signed contents, and a time of revocation</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_X509_SHA256_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256X509Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha256X509InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">110</span><span class="sc">&#39;u8, -92&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">46</span><span class="sc">&#39;u8, 59&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">64</span><span class="sc">&#39;u8, -106&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">121</span><span class="sc">&#39;u8, 64&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">76</span><span class="sc">&#39;u8, 32&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="sc">&#39;u8, -7&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">114</span><span class="sc">&#39;u8, -15&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">3</span><span class="sc">&#39;u8, -19&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256X509Inst</span> <span class="o">=</span> <span class="n">isCertSha256X509InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256X509Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertRsa2048Key</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">RSA</span><span class="o">-</span><span class="mi">2048</span> <span class="n">key</span> <span class="p">(</span><span class="n">only</span> <span class="n">the</span> <span class="n">modulus</span> <span class="n">since</span> <span class="n">the</span> <span class="n">public</span> <span class="n">key</span> <span class="n">exponent</span> <span class="ow">is</span> <span class="n">known</span> <span class="n">to</span> <span class="n">be</span> <span class="mh">0x10001</span><span class="p">)</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_RSA2048_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048KeyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048KeyInst</span>
+  <span class="k">let</span> <span class="n">isCertRsa2048KeyInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">24</span><span class="sc">&#39;u8, 102&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">87</span><span class="sc">&#39;u8, 60&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="sc">&#39;u8, 38&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">52</span><span class="sc">&#39;u8, 78&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">86</span><span class="sc">&#39;u8, 20&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">19</span><span class="sc">&#39;u8, 119&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">110</span><span class="sc">&#39;u8, -123&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">77</span><span class="sc">&#39;u8, -74&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048KeyInst</span> <span class="o">=</span> <span class="n">isCertRsa2048KeyInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048KeyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048KeyInst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha512</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">512</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_SHA512_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha512InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">82</span><span class="sc">&#39;u8, 15&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">62</span><span class="sc">&#39;u8, 9&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="sc">&#39;u8, -90&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">80</span><span class="sc">&#39;u8, 79&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">97</span><span class="sc">&#39;u8, 27&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">44</span><span class="sc">&#39;u8, 30&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">43</span><span class="sc">&#39;u8, -119&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">63</span><span class="sc">&#39;u8, -102&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512Inst</span> <span class="o">=</span> <span class="n">isCertSha512InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha512Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha384</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">384</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_SHA384_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha384InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">7</span><span class="sc">&#39;u8, 83&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">62</span><span class="sc">&#39;u8, -1&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="sc">&#39;u8, -97&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">55</span><span class="sc">&#39;u8, 72&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">123</span><span class="sc">&#39;u8, -15&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">118</span><span class="sc">&#39;u8, -43&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">108</span><span class="sc">&#39;u8, 112&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">30</span><span class="sc">&#39;u8, 1&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384Inst</span> <span class="o">=</span> <span class="n">isCertSha384InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha1</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">1</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_SHA1_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha1Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha1InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">18</span><span class="sc">&#39;u8, -91&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">108</span><span class="sc">&#39;u8, -126&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">16</span><span class="sc">&#39;u8, -49&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">55</span><span class="sc">&#39;u8, 74&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">79</span><span class="sc">&#39;u8, -121&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">66</span><span class="sc">&#39;u8, 1&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">73</span><span class="sc">&#39;u8, 102&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">49</span><span class="sc">&#39;u8, -67&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha1Inst</span> <span class="o">=</span> <span class="n">isCertSha1InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha1Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertRsa2048Sha1</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">RSA</span><span class="o">-</span><span class="mi">2048</span> <span class="n">signature</span> <span class="k">of</span> <span class="n">a</span> <span class="n">SHA</span><span class="o">-</span><span class="mi">1</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_RSA2048_SHA1_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha1Inst</span>
+  <span class="k">let</span> <span class="n">isCertRsa2048Sha1InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">79</span><span class="sc">&#39;u8, 68&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="sc">&#39;u8, 103&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">67</span><span class="sc">&#39;u8, -121&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="sc">&#39;u8, 72&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="sc">&#39;u8, 40&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">30</span><span class="sc">&#39;u8, -86&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">72</span><span class="sc">&#39;u8, 115&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">96</span><span class="sc">&#39;u8, -128&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha1Inst</span> <span class="o">=</span> <span class="n">isCertRsa2048Sha1InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha1Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha256</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA</span><span class="o">-</span><span class="mi">256</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_SHA256_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha256InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">38</span><span class="sc">&#39;u8, 22&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="sc">&#39;u8, -63&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">76</span><span class="sc">&#39;u8, 80&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">110</span><span class="sc">&#39;u8, 64&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">84</span><span class="sc">&#39;u8, -87&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">65</span><span class="sc">&#39;u8, -7&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">54</span><span class="sc">&#39;u8, -109&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">67</span><span class="sc">&#39;u8, 40&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256Inst</span> <span class="o">=</span> <span class="n">isCertSha256InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha256Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertSha384X509</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">SHA384</span> <span class="n">hash</span> <span class="k">of</span> <span class="n">an</span> <span class="n">X</span><span class="p">.</span><span class="mi">509</span> <span class="n">certificate</span><span class="sc">&#39;s To-Be-Signed contents, and a time of revocation</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_X509_SHA384_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384X509Inst</span>
+  <span class="k">let</span> <span class="n">isCertSha384X509InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">110</span><span class="sc">&#39;u8, -121&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">118</span><span class="sc">&#39;u8, 112&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">62</span><span class="sc">&#39;u8, -128&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">26</span><span class="sc">&#39;u8, 78&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">86</span><span class="sc">&#39;u8, -46&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">40</span><span class="sc">&#39;u8, -77&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">73</span><span class="sc">&#39;u8, -90&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">122</span><span class="sc">&#39;u8, 91&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384X509Inst</span> <span class="o">=</span> <span class="n">isCertSha384X509InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384X509Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertSha384X509Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertRsa2048Sha256</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">RSA</span><span class="o">-</span><span class="mi">2048</span> <span class="n">signature</span> <span class="k">of</span> <span class="n">a</span> <span class="n">SHA</span><span class="o">-</span><span class="mi">256</span> <span class="n">hash</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_RSA2048_SHA256_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha256Inst</span>
+  <span class="k">let</span> <span class="n">isCertRsa2048Sha256InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">112</span><span class="sc">&#39;u8, 97&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">77</span><span class="sc">&#39;u8, -30&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">101</span><span class="sc">&#39;u8, -121&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">61</span><span class="sc">&#39;u8, 74&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">83</span><span class="sc">&#39;u8, -115&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">14</span><span class="sc">&#39;u8, -25&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">69</span><span class="sc">&#39;u8, -93&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">39</span><span class="sc">&#39;u8, -124&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha256Inst</span> <span class="o">=</span> <span class="n">isCertRsa2048Sha256InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertRsa2048Sha256Inst</span>
+
+<span class="k">proc </span><span class="nf">isCertDerPkcs7</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EfivarSignatureList_SignatureList</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">DER</span><span class="o">-</span><span class="n">encoded</span> <span class="n">PKCS</span> <span class="c">#7 version 1.5 [RFC2315]</span>
+  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_CERT_TYPE_PKCS7_GUID&quot;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertDerPkcs7Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertDerPkcs7Inst</span>
+  <span class="k">let</span> <span class="n">isCertDerPkcs7InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">signatureType</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">99</span><span class="sc">&#39;u8, -46&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">81</span><span class="sc">&#39;u8, 74&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">33</span><span class="sc">&#39;u8, 104&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">18</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="o">-</span><span class="mi">118</span><span class="sc">&#39;u8, -87&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">52</span><span class="sc">&#39;u8, 125&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">55</span><span class="sc">&#39;u8, 86&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">101</span><span class="sc">&#39;u8, -89&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCertDerPkcs7Inst</span> <span class="o">=</span> <span class="n">isCertDerPkcs7InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertDerPkcs7Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCertDerPkcs7Inst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureList], filename: string): EfivarSignatureList_SignatureList =</span>
+  <span class="n">EfivarSignatureList_SignatureList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="s">&quot;EFI_SIGNATURE_DATA&quot;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureData], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList_SignatureList): EfivarSignatureList_SignatureData =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EfivarSignatureList_SignatureData</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">An</span> <span class="n">identifier</span> <span class="n">which</span> <span class="n">identifies</span> <span class="n">the</span> <span class="n">agent</span> <span class="n">which</span> <span class="n">added</span> <span class="n">the</span> <span class="n">signature</span> <span class="n">to</span> <span class="n">the</span> <span class="n">list</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ownerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">ownerExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">format</span> <span class="k">of</span> <span class="n">the</span> <span class="n">signature</span> <span class="ow">is</span> <span class="n">defined</span> <span class="n">by</span> <span class="n">the</span> <span class="n">SignatureType</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_SignatureData], filename: string): EfivarSignatureList_SignatureData =</span>
+  <span class="n">EfivarSignatureList_SignatureData</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Attributes</span> <span class="k">of</span> <span class="n">a</span> <span class="n">UEFI</span> <span class="n">variable</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_EfiVarAttr], io: KaitaiStream, root: KaitaiStruct, parent: EfivarSignatureList): EfivarSignatureList_EfiVarAttr =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EfivarSignatureList_EfiVarAttr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EfivarSignatureList</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">enhancedAuthenticatedAccessExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">enhancedAuthenticatedAccess</span> <span class="o">=</span> <span class="n">enhancedAuthenticatedAccessExpr</span>
+  <span class="k">let</span> <span class="n">appendWriteExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">appendWrite</span> <span class="o">=</span> <span class="n">appendWriteExpr</span>
+  <span class="k">let</span> <span class="n">timeBasedAuthenticatedWriteAccessExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">timeBasedAuthenticatedWriteAccess</span> <span class="o">=</span> <span class="n">timeBasedAuthenticatedWriteAccessExpr</span>
+  <span class="k">let</span> <span class="n">authenticatedWriteAccessExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">authenticatedWriteAccess</span> <span class="o">=</span> <span class="n">authenticatedWriteAccessExpr</span>
+  <span class="k">let</span> <span class="n">hardwareErrorRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hardwareErrorRecord</span> <span class="o">=</span> <span class="n">hardwareErrorRecordExpr</span>
+  <span class="k">let</span> <span class="n">runtimeAccessExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">runtimeAccess</span> <span class="o">=</span> <span class="n">runtimeAccessExpr</span>
+  <span class="k">let</span> <span class="n">bootserviceAccessExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bootserviceAccess</span> <span class="o">=</span> <span class="n">bootserviceAccessExpr</span>
+  <span class="k">let</span> <span class="n">nonVolatileExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nonVolatile</span> <span class="o">=</span> <span class="n">nonVolatileExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Reserved</span> <span class="p">(</span><span class="n">unused</span><span class="p">)</span> <span class="n">bits</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">reserved1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">reserved1Expr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EfivarSignatureList_EfiVarAttr], filename: string): EfivarSignatureList_EfiVarAttr =</span>
+  <span class="n">EfivarSignatureList_EfiVarAttr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
