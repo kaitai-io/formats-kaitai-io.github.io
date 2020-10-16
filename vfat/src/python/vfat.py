@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Vfat(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,7 +16,7 @@ class Vfat(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.boot_sector = self._root.BootSector(self._io, self, self._root)
+        self.boot_sector = Vfat.BootSector(self._io, self, self._root)
 
     class ExtBiosParamBlockFat32(KaitaiStruct):
         """Extended BIOS Parameter Block for FAT32."""
@@ -27,11 +28,13 @@ class Vfat(KaitaiStruct):
 
         def _read(self):
             self.ls_per_fat = self._io.read_u4le()
-            self.has_active_fat = self._io.read_bits_int(1) != 0
-            self.reserved1 = self._io.read_bits_int(3)
-            self.active_fat_id = self._io.read_bits_int(4)
+            self.has_active_fat = self._io.read_bits_int_be(1) != 0
+            self.reserved1 = self._io.read_bits_int_be(3)
+            self.active_fat_id = self._io.read_bits_int_be(4)
             self._io.align_to_byte()
-            self.reserved2 = self._io.ensure_fixed_contents(b"\x00")
+            self.reserved2 = self._io.read_bytes(1)
+            if not self.reserved2 == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.reserved2, self._io, u"/types/ext_bios_param_block_fat32/seq/4")
             self.fat_version = self._io.read_u2le()
             self.root_dir_start_clus = self._io.read_u4le()
             self.ls_fs_info = self._io.read_u2le()
@@ -55,12 +58,12 @@ class Vfat(KaitaiStruct):
         def _read(self):
             self.jmp_instruction = self._io.read_bytes(3)
             self.oem_name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 32)).decode(u"ASCII")
-            self.bpb = self._root.BiosParamBlock(self._io, self, self._root)
+            self.bpb = Vfat.BiosParamBlock(self._io, self, self._root)
             if not (self.is_fat32):
-                self.ebpb_fat16 = self._root.ExtBiosParamBlockFat16(self._io, self, self._root)
+                self.ebpb_fat16 = Vfat.ExtBiosParamBlockFat16(self._io, self, self._root)
 
             if self.is_fat32:
-                self.ebpb_fat32 = self._root.ExtBiosParamBlockFat32(self._io, self, self._root)
+                self.ebpb_fat32 = Vfat.ExtBiosParamBlockFat32(self._io, self, self._root)
 
 
         @property
@@ -183,7 +186,7 @@ class Vfat(KaitaiStruct):
         def _read(self):
             self.records = [None] * (self._root.boot_sector.bpb.max_root_dir_rec)
             for i in range(self._root.boot_sector.bpb.max_root_dir_rec):
-                self.records[i] = self._root.RootDirectoryRec(self._io, self, self._root)
+                self.records[i] = Vfat.RootDirectoryRec(self._io, self, self._root)
 
 
 
@@ -228,8 +231,8 @@ class Vfat(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.boot_sector.pos_root_dir)
         self._raw__m_root_dir = self._io.read_bytes(self.boot_sector.size_root_dir)
-        io = KaitaiStream(BytesIO(self._raw__m_root_dir))
-        self._m_root_dir = self._root.RootDirectory(io, self, self._root)
+        _io__raw__m_root_dir = KaitaiStream(BytesIO(self._raw__m_root_dir))
+        self._m_root_dir = Vfat.RootDirectory(_io__raw__m_root_dir, self, self._root)
         self._io.seek(_pos)
         return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 

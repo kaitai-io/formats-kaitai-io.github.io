@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Rar;
@@ -152,7 +152,7 @@ sub _read {
         $self->{add_size} = $self->{_io}->read_u4le();
     }
     my $_on = $self->block_type();
-    if ($_on == $BLOCK_TYPES_FILE_HEADER) {
+    if ($_on == $Rar::BLOCK_TYPES_FILE_HEADER) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Rar::BlockFileHeader->new($io__raw_body, $self, $self->{_root});
@@ -358,10 +358,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic1} = $self->{_io}->ensure_fixed_contents(pack('C*', (82, 97, 114, 33, 26, 7)));
+    $self->{magic1} = $self->{_io}->read_bytes(6);
     $self->{version} = $self->{_io}->read_u1();
     if ($self->version() == 1) {
-        $self->{magic3} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{magic3} = $self->{_io}->read_bytes(1);
     }
 }
 

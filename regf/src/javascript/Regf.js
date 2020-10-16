@@ -94,7 +94,10 @@ var Regf = (function() {
       this._read();
     }
     HiveBinHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([104, 98, 105, 110]);
+      this.signature = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [104, 98, 105, 110]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([104, 98, 105, 110], this.signature, this._io, "/types/hive_bin_header/seq/0");
+      }
       this.offset = this._io.readU4le();
       this.size = this._io.readU4le();
       this.unknown1 = this._io.readU4le();
@@ -466,7 +469,10 @@ var Regf = (function() {
       this._read();
     }
     FileHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([114, 101, 103, 102]);
+      this.signature = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [114, 101, 103, 102]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([114, 101, 103, 102], this.signature, this._io, "/types/file_header/seq/0");
+      }
       this.primarySequenceNumber = this._io.readU4le();
       this.secondarySequenceNumber = this._io.readU4le();
       this.lastModificationDateAndTime = new Filetime(this._io, this, this._root);

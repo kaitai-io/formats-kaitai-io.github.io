@@ -111,10 +111,10 @@ var SudoersTs = (function() {
       this._read();
     }
     TsFlag.prototype._read = function() {
-      this.reserved0 = this._io.readBitsInt(6);
-      this.anyuid = this._io.readBitsInt(1) != 0;
-      this.disabled = this._io.readBitsInt(1) != 0;
-      this.reserved1 = this._io.readBitsInt(8);
+      this.reserved0 = this._io.readBitsIntBe(6);
+      this.anyuid = this._io.readBitsIntBe(1) != 0;
+      this.disabled = this._io.readBitsIntBe(1) != 0;
+      this.reserved1 = this._io.readBitsIntBe(8);
     }
 
     /**

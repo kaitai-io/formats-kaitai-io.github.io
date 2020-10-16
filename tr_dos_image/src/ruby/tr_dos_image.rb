@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -57,14 +57,16 @@ class TrDosImage < Kaitai::Struct::Struct
     end
 
     def _read
-      @catalog_end = @_io.ensure_fixed_contents([0].pack('C*'))
+      @catalog_end = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), catalog_end, _io, "/types/volume_info/seq/0") if not catalog_end == [0].pack('C*')
       @unused = @_io.read_bytes(224)
       @first_free_sector_sector = @_io.read_u1
       @first_free_sector_track = @_io.read_u1
-      @disk_type = Kaitai::Struct::Stream::resolve_enum(DISK_TYPE, @_io.read_u1)
+      @disk_type = Kaitai::Struct::Stream::resolve_enum(TrDosImage::DISK_TYPE, @_io.read_u1)
       @num_files = @_io.read_u1
       @num_free_sectors = @_io.read_u2le
-      @tr_dos_id = @_io.ensure_fixed_contents([16].pack('C*'))
+      @tr_dos_id = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([16].pack('C*'), tr_dos_id, _io, "/types/volume_info/seq/7") if not tr_dos_id == [16].pack('C*')
       @unused_2 = @_io.read_bytes(2)
       @password = @_io.read_bytes(9)
       @unused_3 = @_io.read_bytes(1)
@@ -75,12 +77,12 @@ class TrDosImage < Kaitai::Struct::Struct
     end
     def num_tracks
       return @num_tracks unless @num_tracks.nil?
-      @num_tracks = ((I__DISK_TYPE[disk_type] & 1) != 0 ? 40 : 80)
+      @num_tracks = ((TrDosImage::I__DISK_TYPE[disk_type] & 1) != 0 ? 40 : 80)
       @num_tracks
     end
     def num_sides
       return @num_sides unless @num_sides.nil?
-      @num_sides = ((I__DISK_TYPE[disk_type] & 8) != 0 ? 1 : 2)
+      @num_sides = ((TrDosImage::I__DISK_TYPE[disk_type] & 8) != 0 ? 1 : 2)
       @num_sides
     end
     attr_reader :catalog_end
@@ -196,8 +198,8 @@ class TrDosImage < Kaitai::Struct::Struct
 
     def _read
       @_raw_name = @_io.read_bytes(8)
-      io = Kaitai::Struct::Stream.new(@_raw_name)
-      @name = Filename.new(io, self, @_root)
+      _io__raw_name = Kaitai::Struct::Stream.new(@_raw_name)
+      @name = Filename.new(_io__raw_name, self, @_root)
       @extension = @_io.read_u1
       case extension
       when 66

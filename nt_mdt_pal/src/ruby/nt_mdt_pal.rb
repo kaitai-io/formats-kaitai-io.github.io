@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,7 +16,8 @@ class NtMdtPal < Kaitai::Struct::Struct
   end
 
   def _read
-    @signature = @_io.ensure_fixed_contents([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*'))
+    @signature = @_io.read_bytes(26)
+    raise Kaitai::Struct::ValidationNotEqualError.new([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*'), signature, _io, "/seq/0") if not signature == [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*')
     @count = @_io.read_u4be
     @meta = Array.new(count)
     (count).times { |i|

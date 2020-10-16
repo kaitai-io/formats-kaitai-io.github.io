@@ -142,11 +142,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="quicktime_mov parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="quicktime_mov parsing C# library">C#</a></li>
                 
                 
@@ -720,77 +715,84 @@ section#format-index .row {
             <span class="k">if</span> <span class="p">(</span><span class="n">len32</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">len64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
             <span class="p">}</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">atomType</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">STBL</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">MOOF</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">MVHD</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MvhdBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">MINF</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TRAK</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TRAF</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">MDIA</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">FTYP</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FtypBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">MOOV</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TKHD</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TkhdBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">DINF</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">AtomType</span> <span class="n">on</span> <span class="o">=</span> <span class="n">atomType</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">atomType</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">MOOF</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TKHD</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TkhdBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">STBL</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TRAF</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MINF</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TRAK</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MOOV</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MDIA</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">DINF</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomList</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MVHD</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MvhdBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">FTYP</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FtypBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">Integer</span> <span class="n">len</span><span class="p">;</span>

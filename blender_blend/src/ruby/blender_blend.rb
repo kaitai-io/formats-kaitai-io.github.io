@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -91,8 +91,8 @@ class BlenderBlend < Kaitai::Struct::Struct
       case code
       when "DNA1"
         @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Dna1Body.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Dna1Body.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end
@@ -149,28 +149,33 @@ class BlenderBlend < Kaitai::Struct::Struct
     end
 
     def _read
-      @id = @_io.ensure_fixed_contents([83, 68, 78, 65].pack('C*'))
-      @name_magic = @_io.ensure_fixed_contents([78, 65, 77, 69].pack('C*'))
+      @id = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 68, 78, 65].pack('C*'), id, _io, "/types/dna1_body/seq/0") if not id == [83, 68, 78, 65].pack('C*')
+      @name_magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([78, 65, 77, 69].pack('C*'), name_magic, _io, "/types/dna1_body/seq/1") if not name_magic == [78, 65, 77, 69].pack('C*')
       @num_names = @_io.read_u4le
       @names = Array.new(num_names)
       (num_names).times { |i|
         @names[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       @padding_1 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @type_magic = @_io.ensure_fixed_contents([84, 89, 80, 69].pack('C*'))
+      @type_magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([84, 89, 80, 69].pack('C*'), type_magic, _io, "/types/dna1_body/seq/5") if not type_magic == [84, 89, 80, 69].pack('C*')
       @num_types = @_io.read_u4le
       @types = Array.new(num_types)
       (num_types).times { |i|
         @types[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       @padding_2 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @tlen_magic = @_io.ensure_fixed_contents([84, 76, 69, 78].pack('C*'))
+      @tlen_magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([84, 76, 69, 78].pack('C*'), tlen_magic, _io, "/types/dna1_body/seq/9") if not tlen_magic == [84, 76, 69, 78].pack('C*')
       @lengths = Array.new(num_types)
       (num_types).times { |i|
         @lengths[i] = @_io.read_u2le
       }
       @padding_3 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @strc_magic = @_io.ensure_fixed_contents([83, 84, 82, 67].pack('C*'))
+      @strc_magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 84, 82, 67].pack('C*'), strc_magic, _io, "/types/dna1_body/seq/12") if not strc_magic == [83, 84, 82, 67].pack('C*')
       @num_structs = @_io.read_u4le
       @structs = Array.new(num_structs)
       (num_structs).times { |i|
@@ -201,9 +206,10 @@ class BlenderBlend < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([66, 76, 69, 78, 68, 69, 82].pack('C*'))
-      @ptr_size_id = Kaitai::Struct::Stream::resolve_enum(PTR_SIZE, @_io.read_u1)
-      @endian = Kaitai::Struct::Stream::resolve_enum(ENDIAN, @_io.read_u1)
+      @magic = @_io.read_bytes(7)
+      raise Kaitai::Struct::ValidationNotEqualError.new([66, 76, 69, 78, 68, 69, 82].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [66, 76, 69, 78, 68, 69, 82].pack('C*')
+      @ptr_size_id = Kaitai::Struct::Stream::resolve_enum(BlenderBlend::PTR_SIZE, @_io.read_u1)
+      @endian = Kaitai::Struct::Stream::resolve_enum(BlenderBlend::ENDIAN, @_io.read_u1)
       @version = (@_io.read_bytes(3)).force_encoding("ASCII")
       self
     end

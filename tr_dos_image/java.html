@@ -156,11 +156,6 @@ empty (contain no file data) they can be omitted.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="TR-DOS flat-file disk image parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="TR-DOS flat-file disk image parsing C# library">C#</a></li>
                 
                 
@@ -266,6 +261,7 @@ empty (contain no file data) they can be omitted.</p>
 <span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 
 
 <span class="cm">/**</span>
@@ -356,14 +352,20 @@ empty (contain no file data) they can be omitted.</p>
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">catalogEnd</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">catalogEnd</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">catalogEnd</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">})))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">catalogEnd</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/volume_info/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">this</span><span class="p">.</span><span class="na">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">224</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">firstFreeSectorSector</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">firstFreeSectorTrack</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">diskType</span> <span class="o">=</span> <span class="n">TrDosImage</span><span class="p">.</span><span class="na">DiskType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">numFiles</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">numFreeSectors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">trDosId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">16</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">trDosId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">trDosId</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">16</span> <span class="p">})))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">16</span> <span class="p">},</span> <span class="n">trDosId</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/volume_info/seq/7&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">this</span><span class="p">.</span><span class="na">unused2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">password</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">unused3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>

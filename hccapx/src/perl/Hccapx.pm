@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Hccapx;
@@ -75,10 +75,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (72, 67, 80, 88)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version} = $self->{_io}->read_u4le();
-    $self->{ignore_replay_counter} = $self->{_io}->read_bits_int(1);
-    $self->{message_pair} = $self->{_io}->read_bits_int(7);
+    $self->{ignore_replay_counter} = $self->{_io}->read_bits_int_be(1);
+    $self->{message_pair} = $self->{_io}->read_bits_int_be(7);
     $self->{_io}->align_to_byte();
     $self->{len_essid} = $self->{_io}->read_u1();
     $self->{essid} = $self->{_io}->read_bytes($self->len_essid());

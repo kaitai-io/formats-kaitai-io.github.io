@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -162,10 +162,10 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @platform_id = Kaitai::Struct::Stream::resolve_enum(PLATFORMS, @_io.read_u2be)
+        @platform_id = Kaitai::Struct::Stream::resolve_enum(Ttf::Name::PLATFORMS, @_io.read_u2be)
         @encoding_id = @_io.read_u2be
         @language_id = @_io.read_u2be
-        @name_id = Kaitai::Struct::Stream::resolve_enum(NAMES, @_io.read_u2be)
+        @name_id = Kaitai::Struct::Stream::resolve_enum(Ttf::Name::NAMES, @_io.read_u2be)
         @len_str = @_io.read_u2be
         @ofs_str = @_io.read_u2be
         self
@@ -226,7 +226,8 @@ class Ttf < Kaitai::Struct::Struct
       @version = Fixed.new(@_io, self, @_root)
       @font_revision = Fixed.new(@_io, self, @_root)
       @checksum_adjustment = @_io.read_u4be
-      @magic_number = @_io.ensure_fixed_contents([95, 15, 60, 245].pack('C*'))
+      @magic_number = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([95, 15, 60, 245].pack('C*'), magic_number, _io, "/types/head/seq/3") if not magic_number == [95, 15, 60, 245].pack('C*')
       @flags = Kaitai::Struct::Stream::resolve_enum(FLAGS, @_io.read_u2be)
       @units_per_em = @_io.read_u2be
       @created = @_io.read_u8be
@@ -289,7 +290,8 @@ class Ttf < Kaitai::Struct::Struct
       @x_max_extend = @_io.read_s2be
       @caret_slope_rise = @_io.read_s2be
       @caret_slope_run = @_io.read_s2be
-      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
+      @reserved = @_io.read_bytes(10)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), reserved, _io, "/types/hhea/seq/10") if not reserved == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       @metric_data_format = @_io.read_s2be
       @number_of_hmetrics = @_io.read_u2be
       self
@@ -366,11 +368,11 @@ class Ttf < Kaitai::Struct::Struct
         @version = @_io.read_u2be
         @length = @_io.read_u2be
         @format = @_io.read_u1
-        @reserved = @_io.read_bits_int(4)
-        @is_override = @_io.read_bits_int(1) != 0
-        @is_cross_stream = @_io.read_bits_int(1) != 0
-        @is_minimum = @_io.read_bits_int(1) != 0
-        @is_horizontal = @_io.read_bits_int(1) != 0
+        @reserved = @_io.read_bits_int_be(4)
+        @is_override = @_io.read_bits_int_be(1) != 0
+        @is_cross_stream = @_io.read_bits_int_be(1) != 0
+        @is_minimum = @_io.read_bits_int_be(1) != 0
+        @is_horizontal = @_io.read_bits_int_be(1) != 0
         @_io.align_to_byte
         if format == 0
           @format0 = Format0.new(@_io, self, @_root)
@@ -451,52 +453,52 @@ class Ttf < Kaitai::Struct::Struct
       case tag
       when "head"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Head.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Head.new(_io__raw_value, self, @_root)
       when "cvt "
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Cvt.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Cvt.new(_io__raw_value, self, @_root)
       when "prep"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Prep.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Prep.new(_io__raw_value, self, @_root)
       when "kern"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Kern.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Kern.new(_io__raw_value, self, @_root)
       when "hhea"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Hhea.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Hhea.new(_io__raw_value, self, @_root)
       when "post"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Post.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Post.new(_io__raw_value, self, @_root)
       when "OS/2"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Os2.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Os2.new(_io__raw_value, self, @_root)
       when "name"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Name.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Name.new(_io__raw_value, self, @_root)
       when "maxp"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Maxp.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Maxp.new(_io__raw_value, self, @_root)
       when "glyf"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Glyf.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Glyf.new(_io__raw_value, self, @_root)
       when "fpgm"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Fpgm.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Fpgm.new(_io__raw_value, self, @_root)
       when "cmap"
         @_raw_value = io.read_bytes(length)
-        io = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Cmap.new(io, self, @_root)
+        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Cmap.new(_io__raw_value, self, @_root)
       else
         @value = io.read_bytes(length)
       end
@@ -783,76 +785,76 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @basic_latin = @_io.read_bits_int(1) != 0
-        @latin_1_supplement = @_io.read_bits_int(1) != 0
-        @latin_extended_a = @_io.read_bits_int(1) != 0
-        @latin_extended_b = @_io.read_bits_int(1) != 0
-        @ipa_extensions = @_io.read_bits_int(1) != 0
-        @spacing_modifier_letters = @_io.read_bits_int(1) != 0
-        @combining_diacritical_marks = @_io.read_bits_int(1) != 0
-        @basic_greek = @_io.read_bits_int(1) != 0
-        @greek_symbols_and_coptic = @_io.read_bits_int(1) != 0
-        @cyrillic = @_io.read_bits_int(1) != 0
-        @armenian = @_io.read_bits_int(1) != 0
-        @basic_hebrew = @_io.read_bits_int(1) != 0
-        @hebrew_extended = @_io.read_bits_int(1) != 0
-        @basic_arabic = @_io.read_bits_int(1) != 0
-        @arabic_extended = @_io.read_bits_int(1) != 0
-        @devanagari = @_io.read_bits_int(1) != 0
-        @bengali = @_io.read_bits_int(1) != 0
-        @gurmukhi = @_io.read_bits_int(1) != 0
-        @gujarati = @_io.read_bits_int(1) != 0
-        @oriya = @_io.read_bits_int(1) != 0
-        @tamil = @_io.read_bits_int(1) != 0
-        @telugu = @_io.read_bits_int(1) != 0
-        @kannada = @_io.read_bits_int(1) != 0
-        @malayalam = @_io.read_bits_int(1) != 0
-        @thai = @_io.read_bits_int(1) != 0
-        @lao = @_io.read_bits_int(1) != 0
-        @basic_georgian = @_io.read_bits_int(1) != 0
-        @georgian_extended = @_io.read_bits_int(1) != 0
-        @hangul_jamo = @_io.read_bits_int(1) != 0
-        @latin_extended_additional = @_io.read_bits_int(1) != 0
-        @greek_extended = @_io.read_bits_int(1) != 0
-        @general_punctuation = @_io.read_bits_int(1) != 0
-        @superscripts_and_subscripts = @_io.read_bits_int(1) != 0
-        @currency_symbols = @_io.read_bits_int(1) != 0
-        @combining_diacritical_marks_for_symbols = @_io.read_bits_int(1) != 0
-        @letterlike_symbols = @_io.read_bits_int(1) != 0
-        @number_forms = @_io.read_bits_int(1) != 0
-        @arrows = @_io.read_bits_int(1) != 0
-        @mathematical_operators = @_io.read_bits_int(1) != 0
-        @miscellaneous_technical = @_io.read_bits_int(1) != 0
-        @control_pictures = @_io.read_bits_int(1) != 0
-        @optical_character_recognition = @_io.read_bits_int(1) != 0
-        @enclosed_alphanumerics = @_io.read_bits_int(1) != 0
-        @box_drawing = @_io.read_bits_int(1) != 0
-        @block_elements = @_io.read_bits_int(1) != 0
-        @geometric_shapes = @_io.read_bits_int(1) != 0
-        @miscellaneous_symbols = @_io.read_bits_int(1) != 0
-        @dingbats = @_io.read_bits_int(1) != 0
-        @cjk_symbols_and_punctuation = @_io.read_bits_int(1) != 0
-        @hiragana = @_io.read_bits_int(1) != 0
-        @katakana = @_io.read_bits_int(1) != 0
-        @bopomofo = @_io.read_bits_int(1) != 0
-        @hangul_compatibility_jamo = @_io.read_bits_int(1) != 0
-        @cjk_miscellaneous = @_io.read_bits_int(1) != 0
-        @enclosed_cjk_letters_and_months = @_io.read_bits_int(1) != 0
-        @cjk_compatibility = @_io.read_bits_int(1) != 0
-        @hangul = @_io.read_bits_int(1) != 0
-        @reserved_for_unicode_subranges1 = @_io.read_bits_int(1) != 0
-        @reserved_for_unicode_subranges2 = @_io.read_bits_int(1) != 0
-        @cjk_unified_ideographs = @_io.read_bits_int(1) != 0
-        @private_use_area = @_io.read_bits_int(1) != 0
-        @cjk_compatibility_ideographs = @_io.read_bits_int(1) != 0
-        @alphabetic_presentation_forms = @_io.read_bits_int(1) != 0
-        @arabic_presentation_forms_a = @_io.read_bits_int(1) != 0
-        @combining_half_marks = @_io.read_bits_int(1) != 0
-        @cjk_compatibility_forms = @_io.read_bits_int(1) != 0
-        @small_form_variants = @_io.read_bits_int(1) != 0
-        @arabic_presentation_forms_b = @_io.read_bits_int(1) != 0
-        @halfwidth_and_fullwidth_forms = @_io.read_bits_int(1) != 0
-        @specials = @_io.read_bits_int(1) != 0
+        @basic_latin = @_io.read_bits_int_be(1) != 0
+        @latin_1_supplement = @_io.read_bits_int_be(1) != 0
+        @latin_extended_a = @_io.read_bits_int_be(1) != 0
+        @latin_extended_b = @_io.read_bits_int_be(1) != 0
+        @ipa_extensions = @_io.read_bits_int_be(1) != 0
+        @spacing_modifier_letters = @_io.read_bits_int_be(1) != 0
+        @combining_diacritical_marks = @_io.read_bits_int_be(1) != 0
+        @basic_greek = @_io.read_bits_int_be(1) != 0
+        @greek_symbols_and_coptic = @_io.read_bits_int_be(1) != 0
+        @cyrillic = @_io.read_bits_int_be(1) != 0
+        @armenian = @_io.read_bits_int_be(1) != 0
+        @basic_hebrew = @_io.read_bits_int_be(1) != 0
+        @hebrew_extended = @_io.read_bits_int_be(1) != 0
+        @basic_arabic = @_io.read_bits_int_be(1) != 0
+        @arabic_extended = @_io.read_bits_int_be(1) != 0
+        @devanagari = @_io.read_bits_int_be(1) != 0
+        @bengali = @_io.read_bits_int_be(1) != 0
+        @gurmukhi = @_io.read_bits_int_be(1) != 0
+        @gujarati = @_io.read_bits_int_be(1) != 0
+        @oriya = @_io.read_bits_int_be(1) != 0
+        @tamil = @_io.read_bits_int_be(1) != 0
+        @telugu = @_io.read_bits_int_be(1) != 0
+        @kannada = @_io.read_bits_int_be(1) != 0
+        @malayalam = @_io.read_bits_int_be(1) != 0
+        @thai = @_io.read_bits_int_be(1) != 0
+        @lao = @_io.read_bits_int_be(1) != 0
+        @basic_georgian = @_io.read_bits_int_be(1) != 0
+        @georgian_extended = @_io.read_bits_int_be(1) != 0
+        @hangul_jamo = @_io.read_bits_int_be(1) != 0
+        @latin_extended_additional = @_io.read_bits_int_be(1) != 0
+        @greek_extended = @_io.read_bits_int_be(1) != 0
+        @general_punctuation = @_io.read_bits_int_be(1) != 0
+        @superscripts_and_subscripts = @_io.read_bits_int_be(1) != 0
+        @currency_symbols = @_io.read_bits_int_be(1) != 0
+        @combining_diacritical_marks_for_symbols = @_io.read_bits_int_be(1) != 0
+        @letterlike_symbols = @_io.read_bits_int_be(1) != 0
+        @number_forms = @_io.read_bits_int_be(1) != 0
+        @arrows = @_io.read_bits_int_be(1) != 0
+        @mathematical_operators = @_io.read_bits_int_be(1) != 0
+        @miscellaneous_technical = @_io.read_bits_int_be(1) != 0
+        @control_pictures = @_io.read_bits_int_be(1) != 0
+        @optical_character_recognition = @_io.read_bits_int_be(1) != 0
+        @enclosed_alphanumerics = @_io.read_bits_int_be(1) != 0
+        @box_drawing = @_io.read_bits_int_be(1) != 0
+        @block_elements = @_io.read_bits_int_be(1) != 0
+        @geometric_shapes = @_io.read_bits_int_be(1) != 0
+        @miscellaneous_symbols = @_io.read_bits_int_be(1) != 0
+        @dingbats = @_io.read_bits_int_be(1) != 0
+        @cjk_symbols_and_punctuation = @_io.read_bits_int_be(1) != 0
+        @hiragana = @_io.read_bits_int_be(1) != 0
+        @katakana = @_io.read_bits_int_be(1) != 0
+        @bopomofo = @_io.read_bits_int_be(1) != 0
+        @hangul_compatibility_jamo = @_io.read_bits_int_be(1) != 0
+        @cjk_miscellaneous = @_io.read_bits_int_be(1) != 0
+        @enclosed_cjk_letters_and_months = @_io.read_bits_int_be(1) != 0
+        @cjk_compatibility = @_io.read_bits_int_be(1) != 0
+        @hangul = @_io.read_bits_int_be(1) != 0
+        @reserved_for_unicode_subranges1 = @_io.read_bits_int_be(1) != 0
+        @reserved_for_unicode_subranges2 = @_io.read_bits_int_be(1) != 0
+        @cjk_unified_ideographs = @_io.read_bits_int_be(1) != 0
+        @private_use_area = @_io.read_bits_int_be(1) != 0
+        @cjk_compatibility_ideographs = @_io.read_bits_int_be(1) != 0
+        @alphabetic_presentation_forms = @_io.read_bits_int_be(1) != 0
+        @arabic_presentation_forms_a = @_io.read_bits_int_be(1) != 0
+        @combining_half_marks = @_io.read_bits_int_be(1) != 0
+        @cjk_compatibility_forms = @_io.read_bits_int_be(1) != 0
+        @small_form_variants = @_io.read_bits_int_be(1) != 0
+        @arabic_presentation_forms_b = @_io.read_bits_int_be(1) != 0
+        @halfwidth_and_fullwidth_forms = @_io.read_bits_int_be(1) != 0
+        @specials = @_io.read_bits_int_be(1) != 0
         @_io.align_to_byte
         @reserved = @_io.read_bytes(7)
         self
@@ -936,42 +938,42 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @symbol_character_set = @_io.read_bits_int(1) != 0
-        @oem_character_set = @_io.read_bits_int(1) != 0
-        @macintosh_character_set = @_io.read_bits_int(1) != 0
-        @reserved_for_alternate_ansi_oem = @_io.read_bits_int(7)
-        @cp1361_korean_johab = @_io.read_bits_int(1) != 0
-        @cp950_chinese_traditional_chars_taiwan_and_hong_kong = @_io.read_bits_int(1) != 0
-        @cp949_korean_wansung = @_io.read_bits_int(1) != 0
-        @cp936_chinese_simplified_chars_prc_and_singapore = @_io.read_bits_int(1) != 0
-        @cp932_jis_japan = @_io.read_bits_int(1) != 0
-        @cp874_thai = @_io.read_bits_int(1) != 0
-        @reserved_for_alternate_ansi = @_io.read_bits_int(8)
-        @cp1257_windows_baltic = @_io.read_bits_int(1) != 0
-        @cp1256_arabic = @_io.read_bits_int(1) != 0
-        @cp1255_hebrew = @_io.read_bits_int(1) != 0
-        @cp1254_turkish = @_io.read_bits_int(1) != 0
-        @cp1253_greek = @_io.read_bits_int(1) != 0
-        @cp1251_cyrillic = @_io.read_bits_int(1) != 0
-        @cp1250_latin_2_eastern_europe = @_io.read_bits_int(1) != 0
-        @cp1252_latin_1 = @_io.read_bits_int(1) != 0
-        @cp437_us = @_io.read_bits_int(1) != 0
-        @cp850_we_latin_1 = @_io.read_bits_int(1) != 0
-        @cp708_arabic_asmo_708 = @_io.read_bits_int(1) != 0
-        @cp737_greek_former_437_g = @_io.read_bits_int(1) != 0
-        @cp775_ms_dos_baltic = @_io.read_bits_int(1) != 0
-        @cp852_latin_2 = @_io.read_bits_int(1) != 0
-        @cp855_ibm_cyrillic_primarily_russian = @_io.read_bits_int(1) != 0
-        @cp857_ibm_turkish = @_io.read_bits_int(1) != 0
-        @cp860_ms_dos_portuguese = @_io.read_bits_int(1) != 0
-        @cp861_ms_dos_icelandic = @_io.read_bits_int(1) != 0
-        @cp862_hebrew = @_io.read_bits_int(1) != 0
-        @cp863_ms_dos_canadian_french = @_io.read_bits_int(1) != 0
-        @cp864_arabic = @_io.read_bits_int(1) != 0
-        @cp865_ms_dos_nordic = @_io.read_bits_int(1) != 0
-        @cp866_ms_dos_russian = @_io.read_bits_int(1) != 0
-        @cp869_ibm_greek = @_io.read_bits_int(1) != 0
-        @reserved_for_oem = @_io.read_bits_int(16)
+        @symbol_character_set = @_io.read_bits_int_be(1) != 0
+        @oem_character_set = @_io.read_bits_int_be(1) != 0
+        @macintosh_character_set = @_io.read_bits_int_be(1) != 0
+        @reserved_for_alternate_ansi_oem = @_io.read_bits_int_be(7)
+        @cp1361_korean_johab = @_io.read_bits_int_be(1) != 0
+        @cp950_chinese_traditional_chars_taiwan_and_hong_kong = @_io.read_bits_int_be(1) != 0
+        @cp949_korean_wansung = @_io.read_bits_int_be(1) != 0
+        @cp936_chinese_simplified_chars_prc_and_singapore = @_io.read_bits_int_be(1) != 0
+        @cp932_jis_japan = @_io.read_bits_int_be(1) != 0
+        @cp874_thai = @_io.read_bits_int_be(1) != 0
+        @reserved_for_alternate_ansi = @_io.read_bits_int_be(8)
+        @cp1257_windows_baltic = @_io.read_bits_int_be(1) != 0
+        @cp1256_arabic = @_io.read_bits_int_be(1) != 0
+        @cp1255_hebrew = @_io.read_bits_int_be(1) != 0
+        @cp1254_turkish = @_io.read_bits_int_be(1) != 0
+        @cp1253_greek = @_io.read_bits_int_be(1) != 0
+        @cp1251_cyrillic = @_io.read_bits_int_be(1) != 0
+        @cp1250_latin_2_eastern_europe = @_io.read_bits_int_be(1) != 0
+        @cp1252_latin_1 = @_io.read_bits_int_be(1) != 0
+        @cp437_us = @_io.read_bits_int_be(1) != 0
+        @cp850_we_latin_1 = @_io.read_bits_int_be(1) != 0
+        @cp708_arabic_asmo_708 = @_io.read_bits_int_be(1) != 0
+        @cp737_greek_former_437_g = @_io.read_bits_int_be(1) != 0
+        @cp775_ms_dos_baltic = @_io.read_bits_int_be(1) != 0
+        @cp852_latin_2 = @_io.read_bits_int_be(1) != 0
+        @cp855_ibm_cyrillic_primarily_russian = @_io.read_bits_int_be(1) != 0
+        @cp857_ibm_turkish = @_io.read_bits_int_be(1) != 0
+        @cp860_ms_dos_portuguese = @_io.read_bits_int_be(1) != 0
+        @cp861_ms_dos_icelandic = @_io.read_bits_int_be(1) != 0
+        @cp862_hebrew = @_io.read_bits_int_be(1) != 0
+        @cp863_ms_dos_canadian_french = @_io.read_bits_int_be(1) != 0
+        @cp864_arabic = @_io.read_bits_int_be(1) != 0
+        @cp865_ms_dos_nordic = @_io.read_bits_int_be(1) != 0
+        @cp866_ms_dos_russian = @_io.read_bits_int_be(1) != 0
+        @cp869_ibm_greek = @_io.read_bits_int_be(1) != 0
+        @reserved_for_oem = @_io.read_bits_int_be(16)
         self
       end
       attr_reader :symbol_character_set
@@ -1175,13 +1177,13 @@ class Ttf < Kaitai::Struct::Struct
         end
 
         def _read
-          @reserved = @_io.read_bits_int(2)
-          @y_is_same = @_io.read_bits_int(1) != 0
-          @x_is_same = @_io.read_bits_int(1) != 0
-          @repeat = @_io.read_bits_int(1) != 0
-          @y_short_vector = @_io.read_bits_int(1) != 0
-          @x_short_vector = @_io.read_bits_int(1) != 0
-          @on_curve = @_io.read_bits_int(1) != 0
+          @reserved = @_io.read_bits_int_be(2)
+          @y_is_same = @_io.read_bits_int_be(1) != 0
+          @x_is_same = @_io.read_bits_int_be(1) != 0
+          @repeat = @_io.read_bits_int_be(1) != 0
+          @y_short_vector = @_io.read_bits_int_be(1) != 0
+          @x_short_vector = @_io.read_bits_int_be(1) != 0
+          @on_curve = @_io.read_bits_int_be(1) != 0
           @_io.align_to_byte
           if repeat
             @repeat_value = @_io.read_u1
@@ -1403,20 +1405,20 @@ class Ttf < Kaitai::Struct::Struct
         case format
         when :subtable_format_byte_encoding_table
           @_raw_value = @_io.read_bytes((length - 6))
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = ByteEncodingTable.new(io, self, @_root)
-        when :subtable_format_high_byte_mapping_through_table
-          @_raw_value = @_io.read_bytes((length - 6))
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = HighByteMappingThroughTable.new(io, self, @_root)
-        when :subtable_format_trimmed_table_mapping
-          @_raw_value = @_io.read_bytes((length - 6))
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = TrimmedTableMapping.new(io, self, @_root)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = ByteEncodingTable.new(_io__raw_value, self, @_root)
         when :subtable_format_segment_mapping_to_delta_values
           @_raw_value = @_io.read_bytes((length - 6))
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = SegmentMappingToDeltaValues.new(io, self, @_root)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = SegmentMappingToDeltaValues.new(_io__raw_value, self, @_root)
+        when :subtable_format_high_byte_mapping_through_table
+          @_raw_value = @_io.read_bytes((length - 6))
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = HighByteMappingThroughTable.new(_io__raw_value, self, @_root)
+        when :subtable_format_trimmed_table_mapping
+          @_raw_value = @_io.read_bytes((length - 6))
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = TrimmedTableMapping.new(_io__raw_value, self, @_root)
         else
           @value = @_io.read_bytes((length - 6))
         end

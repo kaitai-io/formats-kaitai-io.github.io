@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class TlsClientHello(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,13 +16,13 @@ class TlsClientHello(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.version = self._root.Version(self._io, self, self._root)
-        self.random = self._root.Random(self._io, self, self._root)
-        self.session_id = self._root.SessionId(self._io, self, self._root)
-        self.cipher_suites = self._root.CipherSuites(self._io, self, self._root)
-        self.compression_methods = self._root.CompressionMethods(self._io, self, self._root)
+        self.version = TlsClientHello.Version(self._io, self, self._root)
+        self.random = TlsClientHello.Random(self._io, self, self._root)
+        self.session_id = TlsClientHello.SessionId(self._io, self, self._root)
+        self.cipher_suites = TlsClientHello.CipherSuites(self._io, self, self._root)
+        self.compression_methods = TlsClientHello.CompressionMethods(self._io, self, self._root)
         if self._io.is_eof() == False:
-            self.extensions = self._root.Extensions(self._io, self, self._root)
+            self.extensions = TlsClientHello.Extensions(self._io, self, self._root)
 
 
     class ServerName(KaitaiStruct):
@@ -73,7 +74,7 @@ class TlsClientHello(KaitaiStruct):
             self.server_names = []
             i = 0
             while not self._io.is_eof():
-                self.server_names.append(self._root.ServerName(self._io, self, self._root))
+                self.server_names.append(TlsClientHello.ServerName(self._io, self, self._root))
                 i += 1
 
 
@@ -117,7 +118,7 @@ class TlsClientHello(KaitaiStruct):
             self.alpn_protocols = []
             i = 0
             while not self._io.is_eof():
-                self.alpn_protocols.append(self._root.Protocol(self._io, self, self._root))
+                self.alpn_protocols.append(TlsClientHello.Protocol(self._io, self, self._root))
                 i += 1
 
 
@@ -134,7 +135,7 @@ class TlsClientHello(KaitaiStruct):
             self.extensions = []
             i = 0
             while not self._io.is_eof():
-                self.extensions.append(self._root.Extension(self._io, self, self._root))
+                self.extensions.append(TlsClientHello.Extension(self._io, self, self._root))
                 i += 1
 
 
@@ -176,12 +177,12 @@ class TlsClientHello(KaitaiStruct):
             _on = self.type
             if _on == 0:
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Sni(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = TlsClientHello.Sni(_io__raw_body, self, self._root)
             elif _on == 16:
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Alpn(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = TlsClientHello.Alpn(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
 

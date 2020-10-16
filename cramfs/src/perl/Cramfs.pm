@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -80,11 +80,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (69, 61, 205, 40)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{size} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u4le();
     $self->{future} = $self->{_io}->read_u4le();
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83)));
+    $self->{signature} = $self->{_io}->read_bytes(16);
     $self->{fsid} = Cramfs::Info->new($self->{_io}, $self, $self->{_root});
     $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes(16));
     $self->{root} = Cramfs::Inode->new($self->{_io}, $self, $self->{_root});

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Pcx;
@@ -50,7 +50,7 @@ sub _read {
 sub palette_256 {
     my ($self) = @_;
     return $self->{palette_256} if ($self->{palette_256});
-    if ( (($self->hdr()->version() == $VERSIONS_V3_0) && ($self->hdr()->bits_per_pixel() == 8) && ($self->hdr()->num_planes() == 1)) ) {
+    if ( (($self->hdr()->version() == $Pcx::VERSIONS_V3_0) && ($self->hdr()->bits_per_pixel() == 8) && ($self->hdr()->num_planes() == 1)) ) {
         my $_pos = $self->{_io}->pos();
         $self->{_io}->seek(($self->_io()->size() - 769));
         $self->{palette_256} = Pcx::TPalette256->new($self->{_io}, $self, $self->{_root});
@@ -99,7 +99,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (10)));
+    $self->{magic} = $self->{_io}->read_bytes(1);
     $self->{version} = $self->{_io}->read_u1();
     $self->{encoding} = $self->{_io}->read_u1();
     $self->{bits_per_pixel} = $self->{_io}->read_u1();
@@ -110,7 +110,7 @@ sub _read {
     $self->{hdpi} = $self->{_io}->read_u2le();
     $self->{vdpi} = $self->{_io}->read_u2le();
     $self->{palette_16} = $self->{_io}->read_bytes(48);
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{reserved} = $self->{_io}->read_bytes(1);
     $self->{num_planes} = $self->{_io}->read_u1();
     $self->{bytes_per_line} = $self->{_io}->read_u2le();
     $self->{palette_info} = $self->{_io}->read_u2le();
@@ -233,7 +233,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (12)));
+    $self->{magic} = $self->{_io}->read_bytes(1);
     $self->{colors} = ();
     my $n_colors = 256;
     for (my $i = 0; $i < $n_colors; $i++) {

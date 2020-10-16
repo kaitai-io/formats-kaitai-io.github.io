@@ -178,23 +178,30 @@ public class PacketPpi extends KaitaiStruct {
         this._raw_fields = this._io.readBytes((header().pphLen() - 8));
         KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
         this.fields = new PacketPpiFields(_io__raw_fields, this, _root);
-        switch (header().pphDlt()) {
-        case PPI: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new PacketPpi(_io__raw_body);
-            break;
-        }
-        case ETHERNET: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new EthernetFrame(_io__raw_body);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytesFull();
-            break;
-        }
+        {
+            Linktype on = header().pphDlt();
+            if (on != null) {
+                switch (header().pphDlt()) {
+                case PPI: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new PacketPpi(_io__raw_body);
+                    break;
+                }
+                case ETHERNET: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new EthernetFrame(_io__raw_body);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytesFull();
+                    break;
+                }
+                }
+            } else {
+                this.body = this._io.readBytesFull();
+            }
         }
     }
     public static class PacketPpiFields extends KaitaiStruct {
@@ -295,14 +302,14 @@ public class PacketPpi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.unused1 = this._io.readBitsInt(1) != 0;
-            this.aggregateDelimiter = this._io.readBitsInt(1) != 0;
-            this.moreAggregates = this._io.readBitsInt(1) != 0;
-            this.aggregate = this._io.readBitsInt(1) != 0;
-            this.dupRx = this._io.readBitsInt(1) != 0;
-            this.rxShortGuard = this._io.readBitsInt(1) != 0;
-            this.isHt40 = this._io.readBitsInt(1) != 0;
-            this.greenfield = this._io.readBitsInt(1) != 0;
+            this.unused1 = this._io.readBitsIntBe(1) != 0;
+            this.aggregateDelimiter = this._io.readBitsIntBe(1) != 0;
+            this.moreAggregates = this._io.readBitsIntBe(1) != 0;
+            this.aggregate = this._io.readBitsIntBe(1) != 0;
+            this.dupRx = this._io.readBitsIntBe(1) != 0;
+            this.rxShortGuard = this._io.readBitsIntBe(1) != 0;
+            this.isHt40 = this._io.readBitsIntBe(1) != 0;
+            this.greenfield = this._io.readBitsIntBe(1) != 0;
             this._io.alignToByte();
             this.unused2 = this._io.readBytes(3);
         }
@@ -482,29 +489,36 @@ public class PacketPpi extends KaitaiStruct {
         private void _read() {
             this.pfhType = PacketPpi.PfhType.byId(this._io.readU2le());
             this.pfhDatalen = this._io.readU2le();
-            switch (pfhType()) {
-            case RADIO_802_11_COMMON: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
-                break;
-            }
-            case RADIO_802_11N_MAC_EXT: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
-                break;
-            }
-            case RADIO_802_11N_MAC_PHY_EXT: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(pfhDatalen());
-                break;
-            }
+            {
+                PfhType on = pfhType();
+                if (on != null) {
+                    switch (pfhType()) {
+                    case RADIO_802_11_COMMON: {
+                        this._raw_body = this._io.readBytes(pfhDatalen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case RADIO_802_11N_MAC_EXT: {
+                        this._raw_body = this._io.readBytes(pfhDatalen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case RADIO_802_11N_MAC_PHY_EXT: {
+                        this._raw_body = this._io.readBytes(pfhDatalen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(pfhDatalen());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(pfhDatalen());
+                }
             }
         }
         private PfhType pfhType;
@@ -550,21 +564,21 @@ public class PacketPpi extends KaitaiStruct {
             this.mcs = this._io.readU1();
             this.numStreams = this._io.readU1();
             this.rssiCombined = this._io.readU1();
-            rssiAntCtl = new ArrayList<Integer>((int) (4));
+            rssiAntCtl = new ArrayList<Integer>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.rssiAntCtl.add(this._io.readU1());
             }
-            rssiAntExt = new ArrayList<Integer>((int) (4));
+            rssiAntExt = new ArrayList<Integer>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.rssiAntExt.add(this._io.readU1());
             }
             this.extChannelFreq = this._io.readU2le();
             this.extChannelFlags = new ChannelFlags(this._io, this, _root);
-            rfSignalNoise = new ArrayList<SignalNoise>((int) (4));
+            rfSignalNoise = new ArrayList<SignalNoise>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.rfSignalNoise.add(new SignalNoise(this._io, this, _root));
             }
-            evm = new ArrayList<Long>((int) (4));
+            evm = new ArrayList<Long>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.evm.add(this._io.readU4le());
             }
@@ -589,15 +603,15 @@ public class PacketPpi extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.spectrum2ghz = this._io.readBitsInt(1) != 0;
-                this.ofdm = this._io.readBitsInt(1) != 0;
-                this.cck = this._io.readBitsInt(1) != 0;
-                this.turbo = this._io.readBitsInt(1) != 0;
-                this.unused = this._io.readBitsInt(8);
-                this.gfsk = this._io.readBitsInt(1) != 0;
-                this.dynCckOfdm = this._io.readBitsInt(1) != 0;
-                this.onlyPassiveScan = this._io.readBitsInt(1) != 0;
-                this.spectrum5ghz = this._io.readBitsInt(1) != 0;
+                this.spectrum2ghz = this._io.readBitsIntBe(1) != 0;
+                this.ofdm = this._io.readBitsIntBe(1) != 0;
+                this.cck = this._io.readBitsIntBe(1) != 0;
+                this.turbo = this._io.readBitsIntBe(1) != 0;
+                this.unused = this._io.readBitsIntBe(8);
+                this.gfsk = this._io.readBitsIntBe(1) != 0;
+                this.dynCckOfdm = this._io.readBitsIntBe(1) != 0;
+                this.onlyPassiveScan = this._io.readBitsIntBe(1) != 0;
+                this.spectrum5ghz = this._io.readBitsIntBe(1) != 0;
             }
             private boolean spectrum2ghz;
             private boolean ofdm;

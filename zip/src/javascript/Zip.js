@@ -383,7 +383,10 @@ var Zip = (function() {
       this._read();
     }
     PkSection.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([80, 75]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 75]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([80, 75], this.magic, this._io, "/types/pk_section/seq/0");
+      }
       this.sectionType = this._io.readU2le();
       switch (this.sectionType) {
       case 513:

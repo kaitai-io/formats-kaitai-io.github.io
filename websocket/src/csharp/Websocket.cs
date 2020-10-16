@@ -75,11 +75,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _finished = m_io.ReadBitsInt(1) != 0;
-                _reserved = m_io.ReadBitsInt(3);
-                _opcode = ((Websocket.Opcode) m_io.ReadBitsInt(4));
-                _isMasked = m_io.ReadBitsInt(1) != 0;
-                _lenPayloadPrimary = m_io.ReadBitsInt(7);
+                _finished = m_io.ReadBitsIntBe(1) != 0;
+                _reserved = m_io.ReadBitsIntBe(3);
+                _opcode = ((Websocket.Opcode) m_io.ReadBitsIntBe(4));
+                _isMasked = m_io.ReadBitsIntBe(1) != 0;
+                _lenPayloadPrimary = m_io.ReadBitsIntBe(7);
                 m_io.AlignToByte();
                 if (LenPayloadPrimary == 126) {
                     _lenPayloadExtended1 = m_io.ReadU2be();

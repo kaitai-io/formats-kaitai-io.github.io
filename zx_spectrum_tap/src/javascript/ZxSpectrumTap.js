@@ -160,7 +160,10 @@ var ZxSpectrumTap = (function() {
     ArrayParams.prototype._read = function() {
       this.reserved = this._io.readU1();
       this.varName = this._io.readU1();
-      this.reserved1 = this._io.ensureFixedContents([0, 128]);
+      this.reserved1 = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved1, [0, 128]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 128], this.reserved1, this._io, "/types/array_params/seq/2");
+      }
     }
 
     /**

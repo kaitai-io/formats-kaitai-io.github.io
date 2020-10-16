@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Stl(KaitaiStruct):
     """STL files are used to represent simple 3D models, defined using
@@ -36,7 +37,7 @@ class Stl(KaitaiStruct):
         self.num_triangles = self._io.read_u4le()
         self.triangles = [None] * (self.num_triangles)
         for i in range(self.num_triangles):
-            self.triangles[i] = self._root.Triangle(self._io, self, self._root)
+            self.triangles[i] = Stl.Triangle(self._io, self, self._root)
 
 
     class Triangle(KaitaiStruct):
@@ -51,10 +52,10 @@ class Stl(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.normal = self._root.Vec3d(self._io, self, self._root)
+            self.normal = Stl.Vec3d(self._io, self, self._root)
             self.vertices = [None] * (3)
             for i in range(3):
-                self.vertices[i] = self._root.Vec3d(self._io, self, self._root)
+                self.vertices[i] = Stl.Vec3d(self._io, self, self._root)
 
             self.abr = self._io.read_u2le()
 

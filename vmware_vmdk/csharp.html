@@ -164,11 +164,6 @@ section#format-index .row {
                 <a href="index.html" title="VMWare Virtual Disk parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="VMWare Virtual Disk parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="VMWare Virtual Disk parsing C# library">C#</a></li>
@@ -302,7 +297,11 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">75</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">86</span> <span class="p">});</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">75</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">86</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">75</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">86</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
             <span class="n">_flags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HeaderFlags</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
             <span class="n">_sizeMax</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
@@ -336,15 +335,15 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
-                <span class="n">_zeroedGrainTableEntry</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_useSecondaryGrainDir</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_validNewLineDetectionTest</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+                <span class="n">_zeroedGrainTableEntry</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_useSecondaryGrainDir</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_validNewLineDetectionTest</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="n">_reserved2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_reserved3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
-                <span class="n">_hasMetadata</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_hasCompressedGrain</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
+                <span class="n">_hasMetadata</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_hasCompressedGrain</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="n">_reserved4</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
             <span class="p">}</span>

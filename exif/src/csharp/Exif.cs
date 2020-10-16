@@ -52,7 +52,7 @@ namespace Kaitai
                 }
 
                 if (m_isLe == null) {
-                    throw new Exception("Unable to decide on endianness");
+                    throw new UndecidedEndiannessError();
                 } else if (m_isLe == true) {
                     _readLE();
                 } else {
@@ -89,7 +89,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -133,8 +133,8 @@ namespace Kaitai
                                 _nextIfd = new Ifd(m_io, this, m_root, m_isLe);
                             }
                             m_io.Seek(_pos);
+                            f_nextIfd = true;
                         }
-                        f_nextIfd = true;
                         return _nextIfd;
                     }
                 }
@@ -646,7 +646,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -724,8 +724,8 @@ namespace Kaitai
                                 _data = io.ReadBytes(ByteLength);
                             }
                             io.Seek(_pos);
+                            f_data = true;
                         }
-                        f_data = true;
                         return _data;
                     }
                 }

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -25,7 +25,8 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([80, 77].pack('C*'))
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([80, 77].pack('C*'), magic, _io, "/types/partition_entry/seq/0") if not magic == [80, 77].pack('C*')
       @reserved_1 = @_io.read_bytes(2)
       @number_of_partitions = @_io.read_u4be
       @partition_start = @_io.read_u4be
@@ -140,8 +141,8 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     _pos = io.pos
     io.seek(_root.sector_size)
     @_raw_partition_lookup = io.read_bytes(sector_size)
-    io = Kaitai::Struct::Stream.new(@_raw_partition_lookup)
-    @partition_lookup = PartitionEntry.new(io, self, @_root)
+    _io__raw_partition_lookup = Kaitai::Struct::Stream.new(@_raw_partition_lookup)
+    @partition_lookup = PartitionEntry.new(_io__raw_partition_lookup, self, @_root)
     io.seek(_pos)
     @partition_lookup
   end
@@ -154,8 +155,8 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     @partition_entries = Array.new(_root.partition_lookup.number_of_partitions)
     (_root.partition_lookup.number_of_partitions).times { |i|
       @_raw_partition_entries[i] = io.read_bytes(sector_size)
-      io = Kaitai::Struct::Stream.new(@_raw_partition_entries[i])
-      @partition_entries[i] = PartitionEntry.new(io, self, @_root)
+      _io__raw_partition_entries = Kaitai::Struct::Stream.new(@_raw_partition_entries[i])
+      @partition_entries[i] = PartitionEntry.new(_io__raw_partition_entries, self, @_root)
     }
     io.seek(_pos)
     @partition_entries

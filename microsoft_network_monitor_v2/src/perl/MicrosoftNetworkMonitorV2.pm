@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
-use EthernetFrame;
+use IO::KaitaiStruct 0.009_000;
 use WindowsSystemtime;
+use EthernetFrame;
 
 ########################################################################
 package MicrosoftNetworkMonitorV2;
@@ -141,7 +141,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (71, 77, 66, 85)));
+    $self->{signature} = $self->{_io}->read_bytes(4);
     $self->{version_minor} = $self->{_io}->read_u1();
     $self->{version_major} = $self->{_io}->read_u1();
     $self->{mac_type} = $self->{_io}->read_u2le();
@@ -386,7 +386,7 @@ sub _read {
     $self->{orig_len} = $self->{_io}->read_u4le();
     $self->{inc_len} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->mac_type();
-    if ($_on == $LINKTYPE_ETHERNET) {
+    if ($_on == $MicrosoftNetworkMonitorV2::LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->inc_len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);

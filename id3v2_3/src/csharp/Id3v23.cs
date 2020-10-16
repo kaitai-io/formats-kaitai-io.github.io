@@ -36,8 +36,8 @@ namespace Kaitai
             }
             private void _read()
             {
-                _padding = m_io.ReadBitsInt(1) != 0;
-                _value = m_io.ReadBitsInt(7);
+                _padding = m_io.ReadBitsIntBe(1) != 0;
+                _value = m_io.ReadBitsIntBe(7);
             }
             private bool _padding;
             private ulong _value;
@@ -212,14 +212,14 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flagDiscardAlterTag = m_io.ReadBitsInt(1) != 0;
-                    _flagDiscardAlterFile = m_io.ReadBitsInt(1) != 0;
-                    _flagReadOnly = m_io.ReadBitsInt(1) != 0;
-                    _reserved1 = m_io.ReadBitsInt(5);
-                    _flagCompressed = m_io.ReadBitsInt(1) != 0;
-                    _flagEncrypted = m_io.ReadBitsInt(1) != 0;
-                    _flagGrouping = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(5);
+                    _flagDiscardAlterTag = m_io.ReadBitsIntBe(1) != 0;
+                    _flagDiscardAlterFile = m_io.ReadBitsIntBe(1) != 0;
+                    _flagReadOnly = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved1 = m_io.ReadBitsIntBe(5);
+                    _flagCompressed = m_io.ReadBitsIntBe(1) != 0;
+                    _flagEncrypted = m_io.ReadBitsIntBe(1) != 0;
+                    _flagGrouping = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(5);
                 }
                 private bool _flagDiscardAlterTag;
                 private bool _flagDiscardAlterFile;
@@ -312,8 +312,8 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flagCrc = m_io.ReadBitsInt(1) != 0;
-                    _reserved = m_io.ReadBitsInt(15);
+                    _flagCrc = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(15);
                 }
                 private bool _flagCrc;
                 private ulong _reserved;
@@ -359,7 +359,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 73, 68, 51 });
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 73, 68, 51 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 68, 51 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _versionMajor = m_io.ReadU1();
                 _versionRevision = m_io.ReadU1();
                 _flags = new Flags(m_io, this, m_root);
@@ -380,10 +384,10 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flagUnsynchronization = m_io.ReadBitsInt(1) != 0;
-                    _flagHeaderex = m_io.ReadBitsInt(1) != 0;
-                    _flagExperimental = m_io.ReadBitsInt(1) != 0;
-                    _reserved = m_io.ReadBitsInt(5);
+                    _flagUnsynchronization = m_io.ReadBitsIntBe(1) != 0;
+                    _flagHeaderex = m_io.ReadBitsIntBe(1) != 0;
+                    _flagExperimental = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(5);
                 }
                 private bool _flagUnsynchronization;
                 private bool _flagHeaderex;

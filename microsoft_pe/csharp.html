@@ -177,11 +177,6 @@ section#format-index .row {
                 <a href="index.html" title="Microsoft PE (Portable Executable) file format parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="Microsoft PE (Portable Executable) file format parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
@@ -700,7 +695,11 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_peSignature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">80</span><span class="p">,</span> <span class="m">69</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_peSignature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">PeSignature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">80</span><span class="p">,</span> <span class="m">69</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">80</span><span class="p">,</span> <span class="m">69</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">},</span> <span class="n">PeSignature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/pe_header/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_coffHdr</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CoffHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="n">__raw_optionalHdr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">CoffHdr</span><span class="p">.</span><span class="n">SizeOfOptionalHeader</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_optionalHdr</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_optionalHdr</span><span class="p">);</span>
@@ -726,8 +725,8 @@ section#format-index .row {
                         <span class="kt">var</span> <span class="n">io___raw_certificateTable</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_certificateTable</span><span class="p">);</span>
                         <span class="n">_certificateTable</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertificateTable</span><span class="p">(</span><span class="n">io___raw_certificateTable</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_certificateTable</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_certificateTable</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_certificateTable</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -892,7 +891,11 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">90</span> <span class="p">});</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">90</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">90</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/mz_placeholder/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_data1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">58</span><span class="p">);</span>
                 <span class="n">_ofsPe</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="p">}</span>
@@ -1138,8 +1141,8 @@ section#format-index .row {
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">NameZeroes</span> <span class="p">==</span> <span class="m">0</span> <span class="p">?</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">SymbolNameTableOffset</span> <span class="p">+</span> <span class="n">NameOffset</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
                         <span class="n">_nameFromOffset</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_nameFromOffset</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_nameFromOffset</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameFromOffset</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -1201,8 +1204,8 @@ section#format-index .row {
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
                         <span class="n">_nameFromShort</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_nameFromShort</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_nameFromShort</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameFromShort</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>

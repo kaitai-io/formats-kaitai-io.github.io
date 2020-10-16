@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -31,7 +32,10 @@ public class QuakePak extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 80, 65, 67, 75 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 80, 65, 67, 75 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 65, 67, 75 }, magic(), _io(), "/seq/0");
+        }
         this.ofsIndex = this._io.readU4le();
         this.lenIndex = this._io.readU4le();
     }

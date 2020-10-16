@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -97,14 +98,20 @@ public class TrDosImage extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.catalogEnd = this._io.ensureFixedContents(new byte[] { 0 });
+            this.catalogEnd = this._io.readBytes(1);
+            if (!(Arrays.equals(catalogEnd(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, catalogEnd(), _io(), "/types/volume_info/seq/0");
+            }
             this.unused = this._io.readBytes(224);
             this.firstFreeSectorSector = this._io.readU1();
             this.firstFreeSectorTrack = this._io.readU1();
             this.diskType = TrDosImage.DiskType.byId(this._io.readU1());
             this.numFiles = this._io.readU1();
             this.numFreeSectors = this._io.readU2le();
-            this.trDosId = this._io.ensureFixedContents(new byte[] { 16 });
+            this.trDosId = this._io.readBytes(1);
+            if (!(Arrays.equals(trDosId(), new byte[] { 16 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16 }, trDosId(), _io(), "/types/volume_info/seq/7");
+            }
             this.unused2 = this._io.readBytes(2);
             this.password = this._io.readBytes(9);
             this.unused3 = this._io.readBytes(1);

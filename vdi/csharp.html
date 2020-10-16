@@ -148,11 +148,6 @@ or you can convert images of other formats.</li>
                 <a href="index.html" title="VirtualBox Disk Image parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="VirtualBox Disk Image parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="VirtualBox Disk Image parsing C# library">C#</a></li>
@@ -321,7 +316,11 @@ or you can convert images of other formats.</li>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_text</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">64</span><span class="p">));</span>
-                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">127</span><span class="p">,</span> <span class="m">16</span><span class="p">,</span> <span class="m">218</span><span class="p">,</span> <span class="m">190</span> <span class="p">});</span>
+                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">127</span><span class="p">,</span> <span class="m">16</span><span class="p">,</span> <span class="m">218</span><span class="p">,</span> <span class="m">190</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">127</span><span class="p">,</span> <span class="m">16</span><span class="p">,</span> <span class="m">218</span><span class="p">,</span> <span class="m">190</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/1&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_version</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Version</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">SubheaderSizeIsDynamic</span><span class="p">)</span> <span class="p">{</span>
                     <span class="n">_headerSizeOptional</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
@@ -474,12 +473,12 @@ or you can convert images of other formats.</li>
                     <span class="p">}</span>
                     <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
                     <span class="p">{</span>
-                        <span class="n">_reserved0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">15</span><span class="p">);</span>
-                        <span class="n">_zeroExpand</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
-                        <span class="n">_diff</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_fixed</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_reserved2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">8</span><span class="p">);</span>
+                        <span class="n">_reserved0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">15</span><span class="p">);</span>
+                        <span class="n">_zeroExpand</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
+                        <span class="n">_diff</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_fixed</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_reserved2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">8</span><span class="p">);</span>
                     <span class="p">}</span>
                     <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved0</span><span class="p">;</span>
                     <span class="k">private</span> <span class="kt">bool</span> <span class="n">_zeroExpand</span><span class="p">;</span>

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -20,7 +20,8 @@ class DsStore < Kaitai::Struct::Struct
   end
 
   def _read
-    @alignment_header = @_io.ensure_fixed_contents([0, 0, 0, 1].pack('C*'))
+    @alignment_header = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 1].pack('C*'), alignment_header, _io, "/seq/0") if not alignment_header == [0, 0, 0, 1].pack('C*')
     @buddy_allocator_header = BuddyAllocatorHeader.new(@_io, self, @_root)
     self
   end
@@ -31,7 +32,8 @@ class DsStore < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([66, 117, 100, 49].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([66, 117, 100, 49].pack('C*'), magic, _io, "/types/buddy_allocator_header/seq/0") if not magic == [66, 117, 100, 49].pack('C*')
       @ofs_bookkeeping_info_block = @_io.read_u4be
       @len_bookkeeping_info_block = @_io.read_u4be
       @copy_ofs_bookkeeping_info_block = @_io.read_u4be
@@ -236,8 +238,8 @@ class DsStore < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(_parent.block_addresses[_parent.directory_entries[idx].block_id].offset)
       @_raw_master_block = @_io.read_bytes(_parent.block_addresses[_parent.directory_entries[idx].block_id].size)
-      io = Kaitai::Struct::Stream.new(@_raw_master_block)
-      @master_block = MasterBlock.new(io, self, @_root)
+      _io__raw_master_block = Kaitai::Struct::Stream.new(@_raw_master_block)
+      @master_block = MasterBlock.new(_io__raw_master_block, self, @_root)
       @_io.seek(_pos)
       @master_block
     end
@@ -398,8 +400,8 @@ class DsStore < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek((buddy_allocator_header.ofs_bookkeeping_info_block + 4))
     @_raw_buddy_allocator_body = @_io.read_bytes(buddy_allocator_header.len_bookkeeping_info_block)
-    io = Kaitai::Struct::Stream.new(@_raw_buddy_allocator_body)
-    @buddy_allocator_body = BuddyAllocatorBody.new(io, self, @_root)
+    _io__raw_buddy_allocator_body = Kaitai::Struct::Stream.new(@_raw_buddy_allocator_body)
+    @buddy_allocator_body = BuddyAllocatorBody.new(_io__raw_buddy_allocator_body, self, @_root)
     @_io.seek(_pos)
     @buddy_allocator_body
   end

@@ -61,7 +61,11 @@ namespace Kaitai
                 __raw_scriptSig = m_io.ReadBytes(LenScript);
                 var io___raw_scriptSig = new KaitaiStream(__raw_scriptSig);
                 _scriptSig = new ScriptSignature(io___raw_scriptSig, this, m_root);
-                _endOfVin = m_io.EnsureFixedContents(new byte[] { 255, 255, 255, 255 });
+                _endOfVin = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(EndOfVin, new byte[] { 255, 255, 255, 255 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 255, 255, 255, 255 }, EndOfVin, M_Io, "/types/vin/seq/4");
+                }
             }
             public partial class ScriptSignature : KaitaiStruct
             {
@@ -107,12 +111,24 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _sequence = m_io.EnsureFixedContents(new byte[] { 48 });
+                        _sequence = m_io.ReadBytes(1);
+                        if (!((KaitaiStream.ByteArrayCompare(Sequence, new byte[] { 48 }) == 0)))
+                        {
+                            throw new ValidationNotEqualError(new byte[] { 48 }, Sequence, M_Io, "/types/vin/types/script_signature/types/der_signature/seq/0");
+                        }
                         _lenSig = m_io.ReadU1();
-                        _sep1 = m_io.EnsureFixedContents(new byte[] { 2 });
+                        _sep1 = m_io.ReadBytes(1);
+                        if (!((KaitaiStream.ByteArrayCompare(Sep1, new byte[] { 2 }) == 0)))
+                        {
+                            throw new ValidationNotEqualError(new byte[] { 2 }, Sep1, M_Io, "/types/vin/types/script_signature/types/der_signature/seq/2");
+                        }
                         _lenSigR = m_io.ReadU1();
                         _sigR = m_io.ReadBytes(LenSigR);
-                        _sep2 = m_io.EnsureFixedContents(new byte[] { 2 });
+                        _sep2 = m_io.ReadBytes(1);
+                        if (!((KaitaiStream.ByteArrayCompare(Sep2, new byte[] { 2 }) == 0)))
+                        {
+                            throw new ValidationNotEqualError(new byte[] { 2 }, Sep2, M_Io, "/types/vin/types/script_signature/types/der_signature/seq/5");
+                        }
                         _lenSigS = m_io.ReadU1();
                         _sigS = m_io.ReadBytes(LenSigS);
                     }

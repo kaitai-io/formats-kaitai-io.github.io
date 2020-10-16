@@ -113,7 +113,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 86, 90 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 86, 90 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 86, 90 }, Magic, M_Io, "/types/te_header/seq/0");
+                }
                 _machine = ((MachineType) m_io.ReadU2le());
                 _numSections = m_io.ReadU1();
                 _subsystem = ((SubsystemEnum) m_io.ReadU1());

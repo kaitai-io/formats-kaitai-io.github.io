@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -105,11 +105,11 @@ sub _read {
     my ($self) = @_;
 
     $self->{ls_per_fat} = $self->{_io}->read_u4le();
-    $self->{has_active_fat} = $self->{_io}->read_bits_int(1);
-    $self->{reserved1} = $self->{_io}->read_bits_int(3);
-    $self->{active_fat_id} = $self->{_io}->read_bits_int(4);
+    $self->{has_active_fat} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(3);
+    $self->{active_fat_id} = $self->{_io}->read_bits_int_be(4);
     $self->{_io}->align_to_byte();
-    $self->{reserved2} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{reserved2} = $self->{_io}->read_bytes(1);
     $self->{fat_version} = $self->{_io}->read_u2le();
     $self->{root_dir_start_clus} = $self->{_io}->read_u4le();
     $self->{ls_fs_info} = $self->{_io}->read_u2le();

@@ -186,11 +186,6 @@ features got limited support in v1.3).</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Warcraft II map files parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Warcraft II map files parsing C# library">C#</a></li>
                 
                 
@@ -296,6 +291,7 @@ features got limited support in v1.3).</p>
 <span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
@@ -653,7 +649,10 @@ features got limited support in v1.3).</p>
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">})))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">magic</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/section_type/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">this</span><span class="p">.</span><span class="na">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">idTag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
         <span class="p">}</span>

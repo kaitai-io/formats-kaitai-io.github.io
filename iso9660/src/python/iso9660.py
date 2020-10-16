@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Iso9660(KaitaiStruct):
     """ISO9660 is standard filesystem used on read-only optical discs
@@ -39,23 +40,29 @@ class Iso9660(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.unused1 = self._io.ensure_fixed_contents(b"\x00")
+            self.unused1 = self._io.read_bytes(1)
+            if not self.unused1 == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.unused1, self._io, u"/types/vol_desc_primary/seq/0")
             self.system_id = (self._io.read_bytes(32)).decode(u"UTF-8")
             self.volume_id = (self._io.read_bytes(32)).decode(u"UTF-8")
-            self.unused2 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00")
-            self.vol_space_size = self._root.U4bi(self._io, self, self._root)
-            self.unused3 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
-            self.vol_set_size = self._root.U2bi(self._io, self, self._root)
-            self.vol_seq_num = self._root.U2bi(self._io, self, self._root)
-            self.logical_block_size = self._root.U2bi(self._io, self, self._root)
-            self.path_table_size = self._root.U4bi(self._io, self, self._root)
+            self.unused2 = self._io.read_bytes(8)
+            if not self.unused2 == b"\x00\x00\x00\x00\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00\x00", self.unused2, self._io, u"/types/vol_desc_primary/seq/3")
+            self.vol_space_size = Iso9660.U4bi(self._io, self, self._root)
+            self.unused3 = self._io.read_bytes(32)
+            if not self.unused3 == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", self.unused3, self._io, u"/types/vol_desc_primary/seq/5")
+            self.vol_set_size = Iso9660.U2bi(self._io, self, self._root)
+            self.vol_seq_num = Iso9660.U2bi(self._io, self, self._root)
+            self.logical_block_size = Iso9660.U2bi(self._io, self, self._root)
+            self.path_table_size = Iso9660.U4bi(self._io, self, self._root)
             self.lba_path_table_le = self._io.read_u4le()
             self.lba_opt_path_table_le = self._io.read_u4le()
             self.lba_path_table_be = self._io.read_u4be()
             self.lba_opt_path_table_be = self._io.read_u4be()
             self._raw_root_dir = self._io.read_bytes(34)
-            io = KaitaiStream(BytesIO(self._raw_root_dir))
-            self.root_dir = self._root.DirEntry(io, self, self._root)
+            _io__raw_root_dir = KaitaiStream(BytesIO(self._raw_root_dir))
+            self.root_dir = Iso9660.DirEntry(_io__raw_root_dir, self, self._root)
             self.vol_set_id = (self._io.read_bytes(128)).decode(u"UTF-8")
             self.publisher_id = (self._io.read_bytes(128)).decode(u"UTF-8")
             self.data_preparer_id = (self._io.read_bytes(128)).decode(u"UTF-8")
@@ -63,10 +70,10 @@ class Iso9660(KaitaiStruct):
             self.copyright_file_id = (self._io.read_bytes(38)).decode(u"UTF-8")
             self.abstract_file_id = (self._io.read_bytes(36)).decode(u"UTF-8")
             self.bibliographic_file_id = (self._io.read_bytes(37)).decode(u"UTF-8")
-            self.vol_create_datetime = self._root.DecDatetime(self._io, self, self._root)
-            self.vol_mod_datetime = self._root.DecDatetime(self._io, self, self._root)
-            self.vol_expire_datetime = self._root.DecDatetime(self._io, self, self._root)
-            self.vol_effective_datetime = self._root.DecDatetime(self._io, self, self._root)
+            self.vol_create_datetime = Iso9660.DecDatetime(self._io, self, self._root)
+            self.vol_mod_datetime = Iso9660.DecDatetime(self._io, self, self._root)
+            self.vol_expire_datetime = Iso9660.DecDatetime(self._io, self, self._root)
+            self.vol_effective_datetime = Iso9660.DecDatetime(self._io, self, self._root)
             self.file_structure_version = self._io.read_u1()
             self.unused4 = self._io.read_u1()
             self.application_area = self._io.read_bytes(512)
@@ -79,8 +86,8 @@ class Iso9660(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek((self.lba_path_table_le * self._root.sector_size))
             self._raw__m_path_table = self._io.read_bytes(self.path_table_size.le)
-            io = KaitaiStream(BytesIO(self._raw__m_path_table))
-            self._m_path_table = self._root.PathTableLe(io, self, self._root)
+            _io__raw__m_path_table = KaitaiStream(BytesIO(self._raw__m_path_table))
+            self._m_path_table = Iso9660.PathTableLe(_io__raw__m_path_table, self, self._root)
             self._io.seek(_pos)
             return self._m_path_table if hasattr(self, '_m_path_table') else None
 
@@ -125,8 +132,8 @@ class Iso9660(KaitaiStruct):
             self.len = self._io.read_u1()
             if self.len > 0:
                 self._raw_body = self._io.read_bytes((self.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DirEntryBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Iso9660.DirEntryBody(_io__raw_body, self, self._root)
 
 
 
@@ -139,13 +146,15 @@ class Iso9660(KaitaiStruct):
 
         def _read(self):
             self.type = self._io.read_u1()
-            self.magic = self._io.ensure_fixed_contents(b"\x43\x44\x30\x30\x31")
+            self.magic = self._io.read_bytes(5)
+            if not self.magic == b"\x43\x44\x30\x30\x31":
+                raise kaitaistruct.ValidationNotEqualError(b"\x43\x44\x30\x30\x31", self.magic, self._io, u"/types/vol_desc/seq/1")
             self.version = self._io.read_u1()
             if self.type == 0:
-                self.vol_desc_boot_record = self._root.VolDescBootRecord(self._io, self, self._root)
+                self.vol_desc_boot_record = Iso9660.VolDescBootRecord(self._io, self, self._root)
 
             if self.type == 1:
-                self.vol_desc_primary = self._root.VolDescPrimary(self._io, self, self._root)
+                self.vol_desc_primary = Iso9660.VolDescPrimary(self._io, self, self._root)
 
 
 
@@ -178,7 +187,7 @@ class Iso9660(KaitaiStruct):
             self.entries = []
             i = 0
             while True:
-                _ = self._root.DirEntry(self._io, self, self._root)
+                _ = Iso9660.DirEntry(self._io, self, self._root)
                 self.entries.append(_)
                 if _.len == 0:
                     break
@@ -224,7 +233,7 @@ class Iso9660(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.PathTableEntryLe(self._io, self, self._root))
+                self.entries.append(Iso9660.PathTableEntryLe(self._io, self, self._root))
                 i += 1
 
 
@@ -260,13 +269,13 @@ class Iso9660(KaitaiStruct):
 
         def _read(self):
             self.len_ext_attr_rec = self._io.read_u1()
-            self.lba_extent = self._root.U4bi(self._io, self, self._root)
-            self.size_extent = self._root.U4bi(self._io, self, self._root)
-            self.datetime = self._root.Datetime(self._io, self, self._root)
+            self.lba_extent = Iso9660.U4bi(self._io, self, self._root)
+            self.size_extent = Iso9660.U4bi(self._io, self, self._root)
+            self.datetime = Iso9660.Datetime(self._io, self, self._root)
             self.file_flags = self._io.read_u1()
             self.file_unit_size = self._io.read_u1()
             self.interleave_gap_size = self._io.read_u1()
-            self.vol_seq_num = self._root.U2bi(self._io, self, self._root)
+            self.vol_seq_num = Iso9660.U2bi(self._io, self, self._root)
             self.len_file_name = self._io.read_u1()
             self.file_name = (self._io.read_bytes(self.len_file_name)).decode(u"UTF-8")
             if (self.len_file_name % 2) == 0:
@@ -284,8 +293,8 @@ class Iso9660(KaitaiStruct):
                 _pos = io.pos()
                 io.seek((self.lba_extent.le * self._root.sector_size))
                 self._raw__m_extent_as_dir = io.read_bytes(self.size_extent.le)
-                io = KaitaiStream(BytesIO(self._raw__m_extent_as_dir))
-                self._m_extent_as_dir = self._root.DirEntries(io, self, self._root)
+                _io__raw__m_extent_as_dir = KaitaiStream(BytesIO(self._raw__m_extent_as_dir))
+                self._m_extent_as_dir = Iso9660.DirEntries(_io__raw__m_extent_as_dir, self, self._root)
                 io.seek(_pos)
 
             return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None
@@ -320,7 +329,7 @@ class Iso9660(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek((16 * self.sector_size))
-        self._m_primary_vol_desc = self._root.VolDesc(self._io, self, self._root)
+        self._m_primary_vol_desc = Iso9660.VolDesc(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_primary_vol_desc if hasattr(self, '_m_primary_vol_desc') else None
 

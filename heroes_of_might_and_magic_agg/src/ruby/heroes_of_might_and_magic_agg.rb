@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -69,8 +69,8 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     @filenames = Array.new(num_files)
     (num_files).times { |i|
       @_raw_filenames[i] = @_io.read_bytes(15)
-      io = Kaitai::Struct::Stream.new(@_raw_filenames[i])
-      @filenames[i] = Filename.new(io, self, @_root)
+      _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames[i])
+      @filenames[i] = Filename.new(_io__raw_filenames, self, @_root)
     }
     @_io.seek(_pos)
     @filenames

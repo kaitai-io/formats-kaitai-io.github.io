@@ -276,7 +276,10 @@ var MicrosoftPe = (function() {
       this._read();
     }
     PeHeader.prototype._read = function() {
-      this.peSignature = this._io.ensureFixedContents([80, 69, 0, 0]);
+      this.peSignature = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.peSignature, [80, 69, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([80, 69, 0, 0], this.peSignature, this._io, "/types/pe_header/seq/0");
+      }
       this.coffHdr = new CoffHeader(this._io, this, this._root);
       this._raw_optionalHdr = this._io.readBytes(this.coffHdr.sizeOfOptionalHeader);
       var _io__raw_optionalHdr = new KaitaiStream(this._raw_optionalHdr);
@@ -386,7 +389,10 @@ var MicrosoftPe = (function() {
       this._read();
     }
     MzPlaceholder.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([77, 90]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 90]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([77, 90], this.magic, this._io, "/types/mz_placeholder/seq/0");
+      }
       this.data1 = this._io.readBytes(58);
       this.ofsPe = this._io.readU4le();
     }

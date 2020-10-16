@@ -140,11 +140,6 @@ section#format-index .row {
                 <a href="index.html" title="Android Boot Image parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="Android Boot Image parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="Android Boot Image parsing C# library">C#</a></li>
@@ -279,7 +274,11 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">65</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">79</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">33</span> <span class="p">});</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">65</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">79</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">33</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">65</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">79</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">33</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="n">_kernel</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Load</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
             <span class="n">_ramdisk</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Load</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
             <span class="n">_second</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Load</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -592,8 +591,8 @@ section#format-index .row {
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(((((((((</span><span class="n">PageSize</span> <span class="p">+</span> <span class="n">Kernel</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">Ramdisk</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">Second</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">RecoveryDtbo</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">/</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">*</span> <span class="n">PageSize</span><span class="p">));</span>
                     <span class="n">_dtbImg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Dtb</span><span class="p">.</span><span class="n">Size</span><span class="p">);</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_dtbImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="n">f_dtbImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">_dtbImg</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -610,8 +609,8 @@ section#format-index .row {
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((((((</span><span class="n">PageSize</span> <span class="p">+</span> <span class="n">Kernel</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">/</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">*</span> <span class="n">PageSize</span><span class="p">));</span>
                     <span class="n">_ramdiskImg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Ramdisk</span><span class="p">.</span><span class="n">Size</span><span class="p">);</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_ramdiskImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="n">f_ramdiskImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">_ramdiskImg</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -628,8 +627,8 @@ section#format-index .row {
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">RecoveryDtbo</span><span class="p">.</span><span class="n">Offset</span><span class="p">);</span>
                     <span class="n">_recoveryDtboImg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecoveryDtbo</span><span class="p">.</span><span class="n">Size</span><span class="p">);</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_recoveryDtboImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="n">f_recoveryDtboImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">_recoveryDtboImg</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -646,8 +645,8 @@ section#format-index .row {
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(((((((</span><span class="n">PageSize</span> <span class="p">+</span> <span class="n">Kernel</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">Ramdisk</span><span class="p">.</span><span class="n">Size</span><span class="p">)</span> <span class="p">+</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">/</span> <span class="n">PageSize</span><span class="p">)</span> <span class="p">*</span> <span class="n">PageSize</span><span class="p">));</span>
                     <span class="n">_secondImg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Second</span><span class="p">.</span><span class="n">Size</span><span class="p">);</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_secondImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="n">f_secondImg</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">_secondImg</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>

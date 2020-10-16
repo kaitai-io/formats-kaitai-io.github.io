@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class TrDosImage(KaitaiStruct):
     """.trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
@@ -44,7 +45,7 @@ class TrDosImage(KaitaiStruct):
         self.files = []
         i = 0
         while True:
-            _ = self._root.File(self._io, self, self._root)
+            _ = TrDosImage.File(self._io, self, self._root)
             self.files.append(_)
             if _.is_terminator:
                 break
@@ -58,14 +59,18 @@ class TrDosImage(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.catalog_end = self._io.ensure_fixed_contents(b"\x00")
+            self.catalog_end = self._io.read_bytes(1)
+            if not self.catalog_end == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.catalog_end, self._io, u"/types/volume_info/seq/0")
             self.unused = self._io.read_bytes(224)
             self.first_free_sector_sector = self._io.read_u1()
             self.first_free_sector_track = self._io.read_u1()
-            self.disk_type = self._root.DiskType(self._io.read_u1())
+            self.disk_type = KaitaiStream.resolve_enum(TrDosImage.DiskType, self._io.read_u1())
             self.num_files = self._io.read_u1()
             self.num_free_sectors = self._io.read_u2le()
-            self.tr_dos_id = self._io.ensure_fixed_contents(b"\x10")
+            self.tr_dos_id = self._io.read_bytes(1)
+            if not self.tr_dos_id == b"\x10":
+                raise kaitaistruct.ValidationNotEqualError(b"\x10", self.tr_dos_id, self._io, u"/types/volume_info/seq/7")
             self.unused_2 = self._io.read_bytes(2)
             self.password = self._io.read_bytes(9)
             self.unused_3 = self._io.read_bytes(1)
@@ -170,18 +175,18 @@ class TrDosImage(KaitaiStruct):
 
         def _read(self):
             self._raw_name = self._io.read_bytes(8)
-            io = KaitaiStream(BytesIO(self._raw_name))
-            self.name = self._root.Filename(io, self, self._root)
+            _io__raw_name = KaitaiStream(BytesIO(self._raw_name))
+            self.name = TrDosImage.Filename(_io__raw_name, self, self._root)
             self.extension = self._io.read_u1()
             _on = self.extension
             if _on == 66:
-                self.position_and_length = self._root.PositionAndLengthBasic(self._io, self, self._root)
+                self.position_and_length = TrDosImage.PositionAndLengthBasic(self._io, self, self._root)
             elif _on == 67:
-                self.position_and_length = self._root.PositionAndLengthCode(self._io, self, self._root)
+                self.position_and_length = TrDosImage.PositionAndLengthCode(self._io, self, self._root)
             elif _on == 35:
-                self.position_and_length = self._root.PositionAndLengthPrint(self._io, self, self._root)
+                self.position_and_length = TrDosImage.PositionAndLengthPrint(self._io, self, self._root)
             else:
-                self.position_and_length = self._root.PositionAndLengthGeneric(self._io, self, self._root)
+                self.position_and_length = TrDosImage.PositionAndLengthGeneric(self._io, self, self._root)
             self.length_sectors = self._io.read_u1()
             self.starting_sector = self._io.read_u1()
             self.starting_track = self._io.read_u1()
@@ -221,7 +226,7 @@ class TrDosImage(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(2048)
-        self._m_volume_info = self._root.VolumeInfo(self._io, self, self._root)
+        self._m_volume_info = TrDosImage.VolumeInfo(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_volume_info if hasattr(self, '_m_volume_info') else None
 

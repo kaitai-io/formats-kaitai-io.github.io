@@ -145,7 +145,10 @@ var Nitf = (function() {
     BandInfo.prototype._read = function() {
       this.representation = KaitaiStream.bytesToStr(this._io.readBytes(2), "UTF-8");
       this.subcategory = KaitaiStream.bytesToStr(this._io.readBytes(6), "UTF-8");
-      this.imgFilterCondition = this._io.ensureFixedContents([78]);
+      this.imgFilterCondition = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.imgFilterCondition, [78]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([78], this.imgFilterCondition, this._io, "/types/band_info/seq/2");
+      }
       this.imgFilterCode = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
       this.numLuts = KaitaiStream.bytesToStr(this._io.readBytes(1), "UTF-8");
       if (Number.parseInt(this.numLuts, 10) != 0) {
@@ -228,12 +231,18 @@ var Nitf = (function() {
       this._read();
     }
     GraphicSubHeader.prototype._read = function() {
-      this.filePartTypeSy = this._io.ensureFixedContents([83, 89]);
+      this.filePartTypeSy = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.filePartTypeSy, [83, 89]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([83, 89], this.filePartTypeSy, this._io, "/types/graphic_sub_header/seq/0");
+      }
       this.graphicId = KaitaiStream.bytesToStr(this._io.readBytes(10), "UTF-8");
       this.graphicName = KaitaiStream.bytesToStr(this._io.readBytes(20), "UTF-8");
       this.graphicClassification = new Clasnfo(this._io, this, this._root);
       this.encryption = new Encrypt(this._io, this, this._root);
-      this.graphicType = this._io.ensureFixedContents([67]);
+      this.graphicType = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.graphicType, [67]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([67], this.graphicType, this._io, "/types/graphic_sub_header/seq/5");
+      }
       this.reserved1 = KaitaiStream.bytesToStr(this._io.readBytes(13), "UTF-8");
       this.graphicDisplayLevel = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
       this.graphicAttachmentLevel = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
@@ -528,7 +537,10 @@ var Nitf = (function() {
       this._read();
     }
     ImageSubHeader.prototype._read = function() {
-      this.filePartType = this._io.ensureFixedContents([73, 77]);
+      this.filePartType = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.filePartType, [73, 77]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([73, 77], this.filePartType, this._io, "/types/image_sub_header/seq/0");
+      }
       this.imageId1 = KaitaiStream.bytesToStr(this._io.readBytes(10), "UTF-8");
       this.imageDateTime = new DateTime(this._io, this, this._root);
       this.targetId = KaitaiStream.bytesToStr(this._io.readBytes(17), "UTF-8");
@@ -616,7 +628,10 @@ var Nitf = (function() {
       this._read();
     }
     ReservedSubHeader.prototype._read = function() {
-      this.filePartTypeRe = this._io.ensureFixedContents([82, 69]);
+      this.filePartTypeRe = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.filePartTypeRe, [82, 69]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([82, 69], this.filePartTypeRe, this._io, "/types/reserved_sub_header/seq/0");
+      }
       this.resTypeId = KaitaiStream.bytesToStr(this._io.readBytes(25), "UTF-8");
       this.resVersion = KaitaiStream.bytesToStr(this._io.readBytes(2), "UTF-8");
       this.reclasnfo = new Clasnfo(this._io, this, this._root);
@@ -637,7 +652,10 @@ var Nitf = (function() {
       this._read();
     }
     DataSubHeaderBase.prototype._read = function() {
-      this.filePartTypeDe = this._io.ensureFixedContents([68, 69]);
+      this.filePartTypeDe = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.filePartTypeDe, [68, 69]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([68, 69], this.filePartTypeDe, this._io, "/types/data_sub_header_base/seq/0");
+      }
       this.desid = KaitaiStream.bytesToStr(this._io.readBytes(25), "UTF-8");
       this.dataDefinitionVersion = KaitaiStream.bytesToStr(this._io.readBytes(2), "UTF-8");
       this.declasnfo = new Clasnfo(this._io, this, this._root);
@@ -702,10 +720,19 @@ var Nitf = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.fileProfileName = this._io.ensureFixedContents([78, 73, 84, 70]);
-      this.fileVersion = this._io.ensureFixedContents([48, 50, 46, 49, 48]);
+      this.fileProfileName = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.fileProfileName, [78, 73, 84, 70]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([78, 73, 84, 70], this.fileProfileName, this._io, "/types/header/seq/0");
+      }
+      this.fileVersion = this._io.readBytes(5);
+      if (!((KaitaiStream.byteArrayCompare(this.fileVersion, [48, 50, 46, 49, 48]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([48, 50, 46, 49, 48], this.fileVersion, this._io, "/types/header/seq/1");
+      }
       this.complexityLevel = this._io.readBytes(2);
-      this.standardType = this._io.ensureFixedContents([66, 70, 48, 49]);
+      this.standardType = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.standardType, [66, 70, 48, 49]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([66, 70, 48, 49], this.standardType, this._io, "/types/header/seq/3");
+      }
       this.originatingStationId = KaitaiStream.bytesToStr(this._io.readBytes(10), "UTF-8");
       this.fileDateTime = new DateTime(this._io, this, this._root);
       this.fileTitle = KaitaiStream.bytesToStr(this._io.readBytes(80), "UTF-8");

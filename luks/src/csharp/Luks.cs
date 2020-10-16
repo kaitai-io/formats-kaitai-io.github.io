@@ -45,8 +45,16 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 76, 85, 75, 83, 186, 190 });
-                _version = m_io.EnsureFixedContents(new byte[] { 0, 1 });
+                _magic = m_io.ReadBytes(6);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 76, 85, 75, 83, 186, 190 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 76, 85, 75, 83, 186, 190 }, Magic, M_Io, "/types/partition_header/seq/0");
+                }
+                _version = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Version, new byte[] { 0, 1 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 1 }, Version, M_Io, "/types/partition_header/seq/1");
+                }
                 _cipherNameSpecification = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(32));
                 _cipherModeSpecification = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(32));
                 _hashSpecification = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(32));

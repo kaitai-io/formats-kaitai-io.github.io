@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.bmp file format: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">.bmp file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.bmp file format:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The <strong>BMP file format</strong>, also known as <strong>bitmap image file</strong> or <strong>device independent
+bitmap (DIB) file format</strong> or simply a <strong>bitmap</strong>, is a raster graphics image file
+format used to store bitmap digital images, independently of the display
+device (such as a graphics adapter), especially on Microsoft Windows
+and OS/2 operating systems.</p>
+<h2>Samples</h2>
+<p>Great collection of various BMP sample files:
+<a href="http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html"><strong>BMP Suite Image List</strong></a> (by Jason Summers)</p>
+<p>If only there was such a comprehensive sample suite for every file format! It's like
+a dream for every developer of any binary file format parser. It contains a lot of
+different types and variations of BMP files, even the tricky ones, where it's not clear
+from the specification how to deal with them (marked there as &quot;<strong>q</strong>uestionable&quot;).</p>
+<p>If you make a program which will be able to read all the &quot;<strong>g</strong>ood&quot; and &quot;<strong>q</strong>uestionable&quot;
+BMP files and won't crash on the &quot;<strong>b</strong>ad&quot; ones, it will definitely have one of the most
+extensive support of BMP files in the universe!</p>
+<h2>BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</h2>
+<p>A beneficial discussion on Adobe forum (archived):
+<a href="https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950"><strong>Invalid BMP Format with Alpha channel</strong></a></p>
+<p>In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn't
+any documentation available for this header at the time (and still isn't).
+However, Chris Cox (former Adobe employee) claimed that they hadn't invented any type
+of proprietary header and everything they were writing was taken directly
+from the Microsoft documentation.</p>
+<p>It showed up that the unknown header was called BITMAPV3INFOHEADER.
+Although Microsoft has apparently requested and verified the use of the header,
+the documentation on MSDN has probably got lost and they have probably
+forgotten about this type of header.</p>
+<p>This is the only source I could find about these structures, so we could't rely
+on it so much, but I think supporting them as a read-only format won't harm anything.
+Due to the fact that it isn't documented anywhere else, most applications don't support it.</p>
+<p>All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</p>
+<p><img src="https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png" alt="Bitmap headers overview" /></p>
+<h2>Specs</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage">Bitmap Storage (Windows Dev Center)</a>
+<ul>
+<li>BITMAPFILEHEADER</li>
+<li>BITMAPINFOHEADER</li>
+<li>BITMAPV4HEADER</li>
+<li>BITMAPV5HEADER</li>
+</ul>
+</li>
+<li><a href="https://www.fileformat.info/format/os2bmp/egff.htm">OS/2 Bitmap File Format</a>
+<ul>
+<li>BITMAPFILEHEADER (OS2BMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (OS21XBITMAPHEADER)</li>
+<li>OS22XBITMAPHEADER</li>
+</ul>
+</li>
+<li><a href="http://netghost.narod.ru/gff/graphics/summary/micbmp.htm">Microsoft Windows Bitmap</a>
+<ul>
+<li>BITMAPFILEHEADER (WINBMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (WIN2XBITMAPHEADER)</li>
+<li>BITMAPINFOHEADER (WINNTBITMAPHEADER)</li>
+<li>BITMAPV4HEADER (WIN4XBITMAPHEADER)</li>
+</ul>
+</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        bmp
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000189.shtml">LOC fdd000189</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/115">PRONOM fmt/115</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/116">PRONOM fmt/116</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/117">PRONOM fmt/117</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/118">PRONOM fmt/118</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/119">PRONOM fmt/119</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/25">PRONOM x-fmt/25</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q192869">Wikidata Q192869</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/BMP">BMP in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/BMP">BMP in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .bmp file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".bmp file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".bmp file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".bmp file format parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title=".bmp file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".bmp file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".bmp file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".bmp file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".bmp file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".bmp file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+<p>See the usage examples in the <a href="//doc.kaitai.io/lang_javascript.html" target="_blank">JavaScript notes</a>.</p>
+
+<p>Parse structure from an ArrayBuffer:</p>
+
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">arrayBuffer</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bmp</span><span class="p">(</span><span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="nx">data</span><span class="p">.</span><span class="nx">fileHdr</span> <span class="c1">// =&gt; get file hdr</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse .bmp file format
+            
+        </h2>
+
+        
+
+        <h3>Bmp.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Bmp.js" download="Bmp.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Bmp</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * The **BMP file format**, also known as **bitmap image file** or **device independent</span>
+<span class="cm"> * bitmap (DIB) file format** or simply a **bitmap**, is a raster graphics image file</span>
+<span class="cm"> * format used to store bitmap digital images, independently of the display</span>
+<span class="cm"> * device (such as a graphics adapter), especially on Microsoft Windows</span>
+<span class="cm"> * and OS/2 operating systems.</span>
+<span class="cm"> * </span>
+<span class="cm"> * ## Samples</span>
+<span class="cm"> * </span>
+<span class="cm"> * Great collection of various BMP sample files:</span>
+<span class="cm"> * [**BMP Suite Image List**](</span>
+<span class="cm"> *   http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html</span>
+<span class="cm"> * ) (by Jason Summers)</span>
+<span class="cm"> * </span>
+<span class="cm"> * If only there was such a comprehensive sample suite for every file format! It&#39;s like</span>
+<span class="cm"> * a dream for every developer of any binary file format parser. It contains a lot of</span>
+<span class="cm"> * different types and variations of BMP files, even the tricky ones, where it&#39;s not clear</span>
+<span class="cm"> * from the specification how to deal with them (marked there as &quot;**q**uestionable&quot;).</span>
+<span class="cm"> * </span>
+<span class="cm"> * If you make a program which will be able to read all the &quot;**g**ood&quot; and &quot;**q**uestionable&quot;</span>
+<span class="cm"> * BMP files and won&#39;t crash on the &quot;**b**ad&quot; ones, it will definitely have one of the most</span>
+<span class="cm"> * extensive support of BMP files in the universe!</span>
+<span class="cm"> * </span>
+<span class="cm"> * ## BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</span>
+<span class="cm"> * </span>
+<span class="cm"> * A beneficial discussion on Adobe forum (archived):</span>
+<span class="cm"> * [**Invalid BMP Format with Alpha channel**](</span>
+<span class="cm"> *   https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950</span>
+<span class="cm"> * )</span>
+<span class="cm"> * </span>
+<span class="cm"> * In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn&#39;t</span>
+<span class="cm"> * any documentation available for this header at the time (and still isn&#39;t).</span>
+<span class="cm"> * However, Chris Cox (former Adobe employee) claimed that they hadn&#39;t invented any type</span>
+<span class="cm"> * of proprietary header and everything they were writing was taken directly</span>
+<span class="cm"> * from the Microsoft documentation.</span>
+<span class="cm"> * </span>
+<span class="cm"> * It showed up that the unknown header was called BITMAPV3INFOHEADER.</span>
+<span class="cm"> * Although Microsoft has apparently requested and verified the use of the header,</span>
+<span class="cm"> * the documentation on MSDN has probably got lost and they have probably</span>
+<span class="cm"> * forgotten about this type of header.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This is the only source I could find about these structures, so we could&#39;t rely</span>
+<span class="cm"> * on it so much, but I think supporting them as a read-only format won&#39;t harm anything.</span>
+<span class="cm"> * Due to the fact that it isn&#39;t documented anywhere else, most applications don&#39;t support it.</span>
+<span class="cm"> * </span>
+<span class="cm"> * All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</span>
+<span class="cm"> * </span>
+<span class="cm"> * ![Bitmap headers overview](</span>
+<span class="cm"> *   https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png</span>
+<span class="cm"> * )</span>
+<span class="cm"> * </span>
+<span class="cm"> * ## Specs</span>
+<span class="cm"> *  * [Bitmap Storage (Windows Dev Center)](</span>
+<span class="cm"> *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage</span>
+<span class="cm"> *    )</span>
+<span class="cm"> *     * BITMAPFILEHEADER</span>
+<span class="cm"> *     * BITMAPINFOHEADER</span>
+<span class="cm"> *     * BITMAPV4HEADER</span>
+<span class="cm"> *     * BITMAPV5HEADER</span>
+<span class="cm"> *  * [OS/2 Bitmap File Format](</span>
+<span class="cm"> *       https://www.fileformat.info/format/os2bmp/egff.htm</span>
+<span class="cm"> *    )</span>
+<span class="cm"> *     * BITMAPFILEHEADER (OS2BMPFILEHEADER)</span>
+<span class="cm"> *     * BITMAPCOREHEADER (OS21XBITMAPHEADER)</span>
+<span class="cm"> *     * OS22XBITMAPHEADER</span>
+<span class="cm"> *  * [Microsoft Windows Bitmap](</span>
+<span class="cm"> *       http://netghost.narod.ru/gff/graphics/summary/micbmp.htm</span>
+<span class="cm"> *    )</span>
+<span class="cm"> *     * BITMAPFILEHEADER (WINBMPFILEHEADER)</span>
+<span class="cm"> *     * BITMAPCOREHEADER (WIN2XBITMAPHEADER)</span>
+<span class="cm"> *     * BITMAPINFOHEADER (WINNTBITMAPHEADER)</span>
+<span class="cm"> *     * BITMAPV4HEADER (WIN4XBITMAPHEADER)</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">Bmp</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Intent</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">BUSINESS</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">GRAPHICS</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">IMAGES</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">ABS_COLORIMETRIC</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;BUSINESS&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;GRAPHICS&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;IMAGES&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;ABS_COLORIMETRIC&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorSpace</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">CALIBRATED_RGB</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">PROFILE_LINKED</span><span class="o">:</span> <span class="mi">1279872587</span><span class="p">,</span>
+    <span class="nx">PROFILE_EMBEDDED</span><span class="o">:</span> <span class="mi">1296188740</span><span class="p">,</span>
+    <span class="nx">WINDOWS</span><span class="o">:</span> <span class="mi">1466527264</span><span class="p">,</span>
+    <span class="nx">S_RGB</span><span class="o">:</span> <span class="mi">1934772034</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;CALIBRATED_RGB&quot;</span><span class="p">,</span>
+    <span class="mi">1279872587</span><span class="o">:</span> <span class="s2">&quot;PROFILE_LINKED&quot;</span><span class="p">,</span>
+    <span class="mi">1296188740</span><span class="o">:</span> <span class="s2">&quot;PROFILE_EMBEDDED&quot;</span><span class="p">,</span>
+    <span class="mi">1466527264</span><span class="o">:</span> <span class="s2">&quot;WINDOWS&quot;</span><span class="p">,</span>
+    <span class="mi">1934772034</span><span class="o">:</span> <span class="s2">&quot;S_RGB&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Os2Rendering</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">NO_HALFTONING</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">ERROR_DIFFUSION</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">PANDA</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">SUPER_CIRCLE</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NO_HALFTONING&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;ERROR_DIFFUSION&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;PANDA&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;SUPER_CIRCLE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">BITMAP_CORE_HEADER</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">BITMAP_INFO_HEADER</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">BITMAP_V2_INFO_HEADER</span><span class="o">:</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="nx">BITMAP_V3_INFO_HEADER</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+    <span class="nx">OS2_2X_BITMAP_HEADER</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="nx">BITMAP_V4_HEADER</span><span class="o">:</span> <span class="mi">108</span><span class="p">,</span>
+    <span class="nx">BITMAP_V5_HEADER</span><span class="o">:</span> <span class="mi">124</span><span class="p">,</span>
+
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;BITMAP_CORE_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;BITMAP_INFO_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">52</span><span class="o">:</span> <span class="s2">&quot;BITMAP_V2_INFO_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;BITMAP_V3_INFO_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;OS2_2X_BITMAP_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">108</span><span class="o">:</span> <span class="s2">&quot;BITMAP_V4_HEADER&quot;</span><span class="p">,</span>
+    <span class="mi">124</span><span class="o">:</span> <span class="s2">&quot;BITMAP_V5_HEADER&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">RGB</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">RLE8</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">RLE4</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">BITFIELDS</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">JPEG</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">PNG</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">ALPHA_BITFIELDS</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;RGB&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RLE8&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;RLE4&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;BITFIELDS&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;PNG&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;ALPHA_BITFIELDS&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Os2Compressions</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">RGB</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">RLE8</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">RLE4</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">HUFFMAN_1D</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">RLE24</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;RGB&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RLE8&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;RLE4&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;HUFFMAN_1D&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;RLE24&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">Bmp</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Bmp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">fileHdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_dibInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">fileHdr</span><span class="p">.</span><span class="nx">ofsBitmap</span> <span class="o">-</span> <span class="mi">14</span><span class="p">));</span>
+    <span class="kd">var</span> <span class="nx">_io__raw_dibInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_dibInfo</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dibInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BitmapInfo</span><span class="p">(</span><span class="nx">_io__raw_dibInfo</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_bitmap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">_io__raw_bitmap</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_bitmap</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">bitmap</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bitmap</span><span class="p">(</span><span class="nx">_io__raw_bitmap</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">CieXyz</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">CieXyz</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CieXyz</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CieXyz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint2Dot30</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint2Dot30</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint2Dot30</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">CieXyz</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">RgbRecord</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">RgbRecord</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">RgbRecord</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">hasReservedField</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hasReservedField</span> <span class="o">=</span> <span class="nx">hasReservedField</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">RgbRecord</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">green</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">red</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasReservedField</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">RgbRecord</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BitmapV5Extension</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">BitmapV5Extension</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BitmapV5Extension</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BitmapV5Extension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">intent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ofsProfile</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenProfile</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapV5Extension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;hasProfile&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_hasProfile</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_hasProfile</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_hasProfile</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">bitmapV4Ext</span><span class="p">.</span><span class="nx">colorSpaceType</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorSpace</span><span class="p">.</span><span class="nx">PROFILE_LINKED</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">bitmapV4Ext</span><span class="p">.</span><span class="nx">colorSpaceType</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorSpace</span><span class="p">.</span><span class="nx">PROFILE_EMBEDDED</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_hasProfile</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see {@link https://docs.microsoft.com/en-us/previous-versions/windows/desktop/wcs/using-structures-in-wcs-1-0|&quot;If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252).&quot;}</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapV5Extension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;profileData&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_profileData</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_profileData</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasProfile</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="mi">14</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">ofsProfile</span><span class="p">));</span>
+          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">bitmapV4Ext</span><span class="p">.</span><span class="nx">colorSpaceType</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorSpace</span><span class="p">.</span><span class="nx">PROFILE_LINKED</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="kc">true</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_profileData</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesTerminate</span><span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenProfile</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;windows-1252&quot;</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">default</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_profileData</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenProfile</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_profileData</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">BitmapV5Extension</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">ColorMask</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorMask</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ColorMask</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">hasAlphaMask</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hasAlphaMask</span> <span class="o">=</span> <span class="nx">hasAlphaMask</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ColorMask</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redMask</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">greenMask</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blueMask</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasAlphaMask</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">alphaMask</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ColorMask</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BitmapV4Extension</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">BitmapV4Extension</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BitmapV4Extension</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BitmapV4Extension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">colorSpaceType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">endpointRed</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CieXyz</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">endpointGreen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CieXyz</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">endpointBlue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CieXyz</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">gammaRed</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint16Dot16</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">gammaBlue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint16Dot16</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">gammaGreen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FixedPoint16Dot16</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">BitmapV4Extension</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BitmapInfoExtension</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">BitmapInfoExtension</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BitmapInfoExtension</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BitmapInfoExtension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">extendsOs22xBitmap</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">compression</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">extendsOs22xBitmap</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">os2Compression</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenImage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">xResolution</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">yResolution</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numColorsUsed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numColorsImportant</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.</span>
+<span class="cm">     * This may be set to zero for BI_RGB bitmaps.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">BitmapInfoExtension</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">FixedPoint2Dot30</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">FixedPoint2Dot30</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">FixedPoint2Dot30</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">FixedPoint2Dot30</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">raw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FixedPoint2Dot30</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">raw</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">FixedPoint2Dot30</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Replace with an opaque type if you care about the pixels.</span>
+<span class="cm">   * You can look at an example of a JavaScript implementation: https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js</span>
+<span class="cm">   * </span>
+<span class="cm">   * There is a proposal for adding bitmap data type to Kaitai Struct: https://github.com/kaitai-io/kaitai_struct/issues/188</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Bitmap</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Bitmap</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bitmap</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bitmap</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Bitmap</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader|Source}</span>
+<span class="cm">   * @see {@link https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BitmapHeader</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">BitmapHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BitmapHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">lenHeader</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">=</span> <span class="nx">lenHeader</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isCoreHeader</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="kc">true</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">imageWidth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="kc">false</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">imageWidth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isCoreHeader</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="kc">true</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="kc">false</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numPlanes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsBitmapInfo</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bitmapInfoExt</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BitmapInfoExtension</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskHere</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colorMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ColorMask</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">!=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_V2_INFO_HEADER</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsOs22xBitmap</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">os22xBitmapExt</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Os22xBitmapExtension</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsBitmapV4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bitmapV4Ext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BitmapV4Extension</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsBitmapV5</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bitmapV5Ext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BitmapV5Extension</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;extendsBitmapV4&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV4</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV4</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">&gt;=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_V4_HEADER</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV4</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;extendsOs22xBitmap&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsOs22xBitmap</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsOs22xBitmap</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsOs22xBitmap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">OS2_2X_BITMAP_HEADER</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsOs22xBitmap</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;usesFixedPalette&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_usesFixedPalette</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_usesFixedPalette</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_usesFixedPalette</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsBitmapInfo</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsOs22xBitmap</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">JPEG</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">PNG</span><span class="p">))</span> <span class="p">))</span> <span class="p">)))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_usesFixedPalette</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;extendsBitmapInfo&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapInfo</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapInfo</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">&gt;=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_INFO_HEADER</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapInfo</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;imageHeight&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_imageHeight</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_imageHeight</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_imageHeight</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span><span class="p">)</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_imageHeight</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isCoreHeader&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isCoreHeader</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCoreHeader</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCoreHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_CORE_HEADER</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCoreHeader</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;extendsBitmapV5&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV5</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV5</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV5</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">&gt;=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_V5_HEADER</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_extendsBitmapV5</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isColorMaskHere&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_V2_INFO_HEADER</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_V3_INFO_HEADER</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extendsBitmapV4</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;bottomUp&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_bottomUp</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bottomUp</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_bottomUp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">imageHeightRaw</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bottomUp</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Image width, px</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Image height, px (positive =&gt; bottom-up image, negative =&gt; top-down image)</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of planes for target device, must be 1</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of bits per pixel that image buffer uses (1, 4, 8, 16, 24 or 32)</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">BitmapHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Os22xBitmapExtension</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Os22xBitmapExtension</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Os22xBitmapExtension</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Os22xBitmapExtension</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">units</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">recording</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rendering</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">colorEncoding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">identifier</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Specifies how the bitmap scan lines are stored.</span>
+<span class="cm">     * The only valid value for this field is 0, indicating that the bitmap is</span>
+<span class="cm">     * stored from left to right and from the bottom up.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Specifies the halftoning algorithm used on the bitmap data.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * rendering == os2_rendering::error_diffusion</span>
+<span class="cm">     *   =&gt; error damping as a percentage in the range 0 through 100</span>
+<span class="cm">     * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+<span class="cm">     *   =&gt; X dimension of the pattern used in pixels</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * rendering == os2_rendering::error_diffusion</span>
+<span class="cm">     *   =&gt; not used</span>
+<span class="cm">     * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+<span class="cm">     *   =&gt; Y dimension of the pattern used in pixels</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Specifies the color model used to describe the bitmap data.</span>
+<span class="cm">     * The only valid value is 0, indicating the RGB encoding scheme.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Application-specific value</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Os22xBitmapExtension</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">FixedPoint16Dot16</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">FixedPoint16Dot16</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">FixedPoint16Dot16</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">FixedPoint16Dot16</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">raw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FixedPoint16Dot16</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">raw</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">FixedPoint16Dot16</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">ColorTable</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">ColorTable</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ColorTable</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">hasReservedField</span><span class="p">,</span> <span class="nx">numColors</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hasReservedField</span> <span class="o">=</span> <span class="nx">hasReservedField</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">=</span> <span class="nx">numColors</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ColorTable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">colors</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColorsPresent</span><span class="p">))</span>  <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColorsPresent</span><span class="p">));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColorsPresent</span><span class="p">))</span>  <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColors</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">numColorsPresent</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colors</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RgbRecord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">hasReservedField</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ColorTable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numColorsPresent&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numColorsPresent</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numColorsPresent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numColorsPresent</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">size</span> <span class="o">/</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasReservedField</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="mi">3</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numColorsPresent</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * If equal to 0, the pallete should contain as many colors as can fit into the pixel value</span>
+<span class="cm">     * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can</span>
+<span class="cm">     * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,</span>
+<span class="cm">     * it reads as many colors as it can until EOS is reached (and the image data begin).</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ColorTable</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">FileHeader</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">FileHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">FileHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">FileHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fileType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">fileType</span><span class="p">,</span> <span class="p">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">77</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">66</span><span class="p">,</span> <span class="mi">77</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">fileType</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/file_header/seq/0&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenFile</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ofsBitmap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * not reliable, mostly ignored by BMP decoders</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Offset to actual raw pixel data of the image</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">FileHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BitmapInfo</span> <span class="o">=</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">BitmapInfo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BitmapInfo</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BitmapHeader</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskHere</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colorMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ColorMask</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">ALPHA_BITFIELDS</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_colorTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_colorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_colorTable</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ColorTable</span><span class="p">(</span><span class="nx">_io__raw_colorTable</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">isCoreHeader</span><span class="p">),</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">extendsBitmapInfo</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">numColorsUsed</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isColorMaskGiven&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskGiven</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskGiven</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskGiven</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">extendsBitmapInfo</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">BITFIELDS</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">ALPHA_BITFIELDS</span><span class="p">))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskHere</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">isColorMaskHere</span><span class="p">))</span> <span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskGiven</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;colorMaskGiven&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGiven</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGiven</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskGiven</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGiven</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskHere</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">colorMask</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">colorMask</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGiven</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;colorMaskBlue&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskBlue</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskBlue</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskBlue</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskGiven</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">colorMaskGiven</span><span class="p">.</span><span class="nx">blueMask</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">255</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskBlue</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;colorMaskAlpha&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskAlpha</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskAlpha</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskAlpha</span> <span class="o">=</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskGiven</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">colorMaskGiven</span><span class="p">.</span><span class="nx">hasAlphaMask</span><span class="p">))</span>  <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">colorMaskGiven</span><span class="p">.</span><span class="nx">alphaMask</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskAlpha</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;colorMaskGreen&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGreen</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGreen</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGreen</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskGiven</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">colorMaskGiven</span><span class="p">.</span><span class="nx">greenMask</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">992</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">65280</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskGreen</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isColorMaskHere&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">HeaderType</span><span class="p">.</span><span class="nx">BITMAP_INFO_HEADER</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">BITFIELDS</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitmapInfoExt</span><span class="p">.</span><span class="nx">compression</span> <span class="o">==</span> <span class="nx">Bmp</span><span class="p">.</span><span class="nx">Compressions</span><span class="p">.</span><span class="nx">ALPHA_BITFIELDS</span><span class="p">))</span> <span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isColorMaskHere</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BitmapInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;colorMaskRed&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskRed</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskRed</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskRed</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isColorMaskGiven</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">colorMaskGiven</span><span class="p">.</span><span class="nx">redMask</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31744</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">16711680</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_colorMaskRed</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">BitmapInfo</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="k">return</span> <span class="nx">Bmp</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Bmp</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

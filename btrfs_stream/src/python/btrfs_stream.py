@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class BtrfsStream(KaitaiStruct):
     """Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
@@ -81,11 +82,11 @@ class BtrfsStream(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.SendStreamHeader(self._io, self, self._root)
+        self.header = BtrfsStream.SendStreamHeader(self._io, self, self._root)
         self.commands = []
         i = 0
         while not self._io.is_eof():
-            self.commands.append(self._root.SendCommand(self._io, self, self._root))
+            self.commands.append(BtrfsStream.SendCommand(self._io, self, self._root))
             i += 1
 
 
@@ -97,7 +98,9 @@ class BtrfsStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00")
+            self.magic = self._io.read_bytes(13)
+            if not self.magic == b"\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00", self.magic, self._io, u"/types/send_stream_header/seq/0")
             self.version = self._io.read_u4le()
 
 
@@ -110,11 +113,11 @@ class BtrfsStream(KaitaiStruct):
 
         def _read(self):
             self.len_data = self._io.read_u4le()
-            self.type = self._root.Command(self._io.read_u2le())
+            self.type = KaitaiStream.resolve_enum(BtrfsStream.Command, self._io.read_u2le())
             self.checksum = self._io.read_bytes(4)
             self._raw_data = self._io.read_bytes(self.len_data)
-            io = KaitaiStream(BytesIO(self._raw_data))
-            self.data = self._root.SendCommand.Tlvs(io, self, self._root)
+            _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+            self.data = BtrfsStream.SendCommand.Tlvs(_io__raw_data, self, self._root)
 
         class Tlv(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -124,73 +127,73 @@ class BtrfsStream(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.type = self._root.Attribute(self._io.read_u2le())
+                self.type = KaitaiStream.resolve_enum(BtrfsStream.Attribute, self._io.read_u2le())
                 self.length = self._io.read_u2le()
                 _on = self.type
-                if _on == self._root.Attribute.size:
+                if _on == BtrfsStream.Attribute.ctransid:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.otime:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Timespec(io, self, self._root)
-                elif _on == self._root.Attribute.mode:
+                elif _on == BtrfsStream.Attribute.size:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.uuid:
+                elif _on == BtrfsStream.Attribute.clone_uuid:
                     self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Uuid(io, self, self._root)
-                elif _on == self._root.Attribute.clone_uuid:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Uuid(io, self, self._root)
-                elif _on == self._root.Attribute.atime:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Timespec(io, self, self._root)
-                elif _on == self._root.Attribute.gid:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Uuid(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.file_offset:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.uid:
-                    self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.clone_ctransid:
-                    self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.path_to:
+                elif _on == BtrfsStream.Attribute.otime:
                     self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.String(io, self, self._root)
-                elif _on == self._root.Attribute.ctransid:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Timespec(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.uid:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.clone_len:
+                elif _on == BtrfsStream.Attribute.atime:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Timespec(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.ctime:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Timespec(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.uuid:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Uuid(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.clone_len:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.mtime:
+                elif _on == BtrfsStream.Attribute.xattr_name:
                     self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Timespec(io, self, self._root)
-                elif _on == self._root.Attribute.file_offset:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.String(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.clone_ctransid:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.path_link:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.String(io, self, self._root)
-                elif _on == self._root.Attribute.rdev:
+                elif _on == BtrfsStream.Attribute.mode:
                     self.value = self._io.read_u8le()
-                elif _on == self._root.Attribute.ctime:
+                elif _on == BtrfsStream.Attribute.mtime:
                     self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.Timespec(io, self, self._root)
-                elif _on == self._root.Attribute.clone_path:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.Timespec(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.path_link:
                     self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.String(io, self, self._root)
-                elif _on == self._root.Attribute.xattr_name:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.String(io, self, self._root)
-                elif _on == self._root.Attribute.path:
-                    self._raw_value = self._io.read_bytes(self.length)
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.SendCommand.String(io, self, self._root)
-                elif _on == self._root.Attribute.clone_offset:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.String(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.rdev:
                     self.value = self._io.read_u8le()
+                elif _on == BtrfsStream.Attribute.path_to:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.String(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.path:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.String(_io__raw_value, self, self._root)
+                elif _on == BtrfsStream.Attribute.clone_offset:
+                    self.value = self._io.read_u8le()
+                elif _on == BtrfsStream.Attribute.gid:
+                    self.value = self._io.read_u8le()
+                elif _on == BtrfsStream.Attribute.clone_path:
+                    self._raw_value = self._io.read_bytes(self.length)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = BtrfsStream.SendCommand.String(_io__raw_value, self, self._root)
                 else:
                     self.value = self._io.read_bytes(self.length)
 
@@ -217,7 +220,7 @@ class BtrfsStream(KaitaiStruct):
                 self.tlv = []
                 i = 0
                 while not self._io.is_eof():
-                    self.tlv.append(self._root.SendCommand.Tlv(self._io, self, self._root))
+                    self.tlv.append(BtrfsStream.SendCommand.Tlv(self._io, self, self._root))
                     i += 1
 
 

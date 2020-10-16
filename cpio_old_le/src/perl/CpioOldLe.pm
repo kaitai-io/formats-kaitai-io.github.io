@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package CpioOldLe;
@@ -77,13 +77,13 @@ sub _read {
 
     $self->{header} = CpioOldLe::FileHeader->new($self->{_io}, $self, $self->{_root});
     $self->{path_name} = $self->{_io}->read_bytes(($self->header()->path_name_size() - 1));
-    $self->{string_terminator} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{string_terminator} = $self->{_io}->read_bytes(1);
     if (($self->header()->path_name_size() % 2) == 1) {
-        $self->{path_name_padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{path_name_padding} = $self->{_io}->read_bytes(1);
     }
     $self->{file_data} = $self->{_io}->read_bytes($self->header()->file_size()->value());
     if (($self->header()->file_size()->value() % 2) == 1) {
-        $self->{file_data_padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{file_data_padding} = $self->{_io}->read_bytes(1);
     }
     if ( (($self->path_name() eq pack('C*', (84, 82, 65, 73, 76, 69, 82, 33, 33, 33))) && ($self->header()->file_size()->value() == 0)) ) {
         $self->{end_of_file_padding} = $self->{_io}->read_bytes_full();
@@ -155,7 +155,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (199, 113)));
+    $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{device_number} = $self->{_io}->read_u2le();
     $self->{inode_number} = $self->{_io}->read_u2le();
     $self->{mode} = $self->{_io}->read_u2le();

@@ -151,11 +151,6 @@ subtypes to force parsing in particular transfer syntax.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C# library">C#</a></li>
                 
                 
@@ -8351,7 +8346,10 @@ subtypes to force parsing in particular transfer syntax.</p>
     <span class="p">}</span>
     <span class="nx">TFileHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">preamble</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">68</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">77</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="p">[</span><span class="mi">68</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">77</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">68</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">77</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/t_file_header/seq/1&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="nx">TFileHeader</span><span class="p">;</span>
@@ -8546,7 +8544,10 @@ subtypes to force parsing in particular transfer syntax.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">SeqItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">tagGroup</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">254</span><span class="p">,</span> <span class="mi">255</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tagGroup</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tagGroup</span><span class="p">,</span> <span class="p">[</span><span class="mi">254</span><span class="p">,</span> <span class="mi">255</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">254</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">tagGroup</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/seq_item/seq/0&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">tagElem</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">valueLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">valueLen</span> <span class="o">!=</span> <span class="mi">4294967295</span><span class="p">)</span> <span class="p">{</span>

@@ -59,9 +59,17 @@ digraph {
 				<TR><TD PORT="size_packed_pos">...</TD><TD PORT="size_packed_size">4</TD><TD>u4le</TD><TD PORT="size_packed_type">size_packed</TD></TR>
 				<TR><TD PORT="offset_pos">...</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
 			</TABLE>>];
-			file__inst__contents [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			file__inst__contents_raw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="contents_pos">offset</TD><TD PORT="contents_size">size_packed</TD><TD></TD><TD PORT="contents_type">contents</TD></TR>
+				<TR><TD PORT="contents_raw_pos">offset</TD><TD PORT="contents_raw_size">size_unpacked</TD><TD></TD><TD PORT="contents_raw_type">contents_raw</TD></TR>
+			</TABLE>>];
+			file__inst__contents_zlib [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="contents_zlib_pos">offset</TD><TD PORT="contents_zlib_size">size_packed</TD><TD></TD><TD PORT="contents_zlib_type">contents_zlib</TD></TR>
+			</TABLE>>];
+			file__inst__contents [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>contents</TD><TD>(flags == :compression_zlib ? contents_zlib : contents_raw)</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -72,6 +80,11 @@ digraph {
 	index__seq:files_type -> file__seq [style=bold];
 	index__seq:file_count_type -> index__seq:files__repeat [color="#404040"];
 	file__seq:name_type -> pstr__seq [style=bold];
-	file__seq:offset_type -> file__inst__contents:contents_pos [color="#404040"];
-	file__seq:size_packed_type -> file__inst__contents:contents_size [color="#404040"];
+	file__seq:offset_type -> file__inst__contents_raw:contents_raw_pos [color="#404040"];
+	file__seq:size_unpacked_type -> file__inst__contents_raw:contents_raw_size [color="#404040"];
+	file__seq:offset_type -> file__inst__contents_zlib:contents_zlib_pos [color="#404040"];
+	file__seq:size_packed_type -> file__inst__contents_zlib:contents_zlib_size [color="#404040"];
+	file__seq:flags_type -> file__inst__contents [color="#404040"];
+	file__inst__contents_zlib:contents_zlib_type -> file__inst__contents [color="#404040"];
+	file__inst__contents_raw:contents_raw_type -> file__inst__contents [color="#404040"];
 }

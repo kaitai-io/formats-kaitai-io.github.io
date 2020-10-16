@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MicrosoftPe(KaitaiStruct):
     """
@@ -25,7 +26,7 @@ class MicrosoftPe(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.mz = self._root.MzPlaceholder(self._io, self, self._root)
+        self.mz = MicrosoftPe.MzPlaceholder(self._io, self, self._root)
 
     class CertificateEntry(KaitaiStruct):
         """
@@ -50,8 +51,8 @@ class MicrosoftPe(KaitaiStruct):
 
         def _read(self):
             self.length = self._io.read_u4le()
-            self.revision = self._root.CertificateEntry.CertificateRevision(self._io.read_u2le())
-            self.certificate_type = self._root.CertificateEntry.CertificateType(self._io.read_u2le())
+            self.revision = KaitaiStream.resolve_enum(MicrosoftPe.CertificateEntry.CertificateRevision, self._io.read_u2le())
+            self.certificate_type = KaitaiStream.resolve_enum(MicrosoftPe.CertificateEntry.CertificateType, self._io.read_u2le())
             self.certificate_bytes = self._io.read_bytes((self.length - 8))
 
 
@@ -77,10 +78,10 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            if self._parent.std.format == self._root.PeFormat.pe32:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32:
                 self.image_base_32 = self._io.read_u4le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32_plus:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32_plus:
                 self.image_base_64 = self._io.read_u8le()
 
             self.section_alignment = self._io.read_u4le()
@@ -95,30 +96,30 @@ class MicrosoftPe(KaitaiStruct):
             self.size_of_image = self._io.read_u4le()
             self.size_of_headers = self._io.read_u4le()
             self.check_sum = self._io.read_u4le()
-            self.subsystem = self._root.OptionalHeaderWindows.SubsystemEnum(self._io.read_u2le())
+            self.subsystem = KaitaiStream.resolve_enum(MicrosoftPe.OptionalHeaderWindows.SubsystemEnum, self._io.read_u2le())
             self.dll_characteristics = self._io.read_u2le()
-            if self._parent.std.format == self._root.PeFormat.pe32:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32:
                 self.size_of_stack_reserve_32 = self._io.read_u4le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32_plus:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32_plus:
                 self.size_of_stack_reserve_64 = self._io.read_u8le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32:
                 self.size_of_stack_commit_32 = self._io.read_u4le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32_plus:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32_plus:
                 self.size_of_stack_commit_64 = self._io.read_u8le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32:
                 self.size_of_heap_reserve_32 = self._io.read_u4le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32_plus:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32_plus:
                 self.size_of_heap_reserve_64 = self._io.read_u8le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32:
                 self.size_of_heap_commit_32 = self._io.read_u4le()
 
-            if self._parent.std.format == self._root.PeFormat.pe32_plus:
+            if self._parent.std.format == MicrosoftPe.PeFormat.pe32_plus:
                 self.size_of_heap_commit_64 = self._io.read_u8le()
 
             self.loader_flags = self._io.read_u4le()
@@ -133,21 +134,21 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.export_table = self._root.DataDir(self._io, self, self._root)
-            self.import_table = self._root.DataDir(self._io, self, self._root)
-            self.resource_table = self._root.DataDir(self._io, self, self._root)
-            self.exception_table = self._root.DataDir(self._io, self, self._root)
-            self.certificate_table = self._root.DataDir(self._io, self, self._root)
-            self.base_relocation_table = self._root.DataDir(self._io, self, self._root)
-            self.debug = self._root.DataDir(self._io, self, self._root)
-            self.architecture = self._root.DataDir(self._io, self, self._root)
-            self.global_ptr = self._root.DataDir(self._io, self, self._root)
-            self.tls_table = self._root.DataDir(self._io, self, self._root)
-            self.load_config_table = self._root.DataDir(self._io, self, self._root)
-            self.bound_import = self._root.DataDir(self._io, self, self._root)
-            self.iat = self._root.DataDir(self._io, self, self._root)
-            self.delay_import_descriptor = self._root.DataDir(self._io, self, self._root)
-            self.clr_runtime_header = self._root.DataDir(self._io, self, self._root)
+            self.export_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.import_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.resource_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.exception_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.certificate_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.base_relocation_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.debug = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.architecture = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.global_ptr = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.tls_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.load_config_table = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.bound_import = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.iat = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.delay_import_descriptor = MicrosoftPe.DataDir(self._io, self, self._root)
+            self.clr_runtime_header = MicrosoftPe.DataDir(self._io, self, self._root)
 
 
     class DataDir(KaitaiStruct):
@@ -171,8 +172,8 @@ class MicrosoftPe(KaitaiStruct):
 
         def _read(self):
             self._raw_name_annoying = self._io.read_bytes(8)
-            io = KaitaiStream(BytesIO(self._raw_name_annoying))
-            self.name_annoying = self._root.Annoyingstring(io, self, self._root)
+            _io__raw_name_annoying = KaitaiStream(BytesIO(self._raw_name_annoying))
+            self.name_annoying = MicrosoftPe.Annoyingstring(_io__raw_name_annoying, self, self._root)
             self.value = self._io.read_u4le()
             self.section_number = self._io.read_u2le()
             self.type = self._io.read_u2le()
@@ -207,14 +208,16 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.pe_signature = self._io.ensure_fixed_contents(b"\x50\x45\x00\x00")
-            self.coff_hdr = self._root.CoffHeader(self._io, self, self._root)
+            self.pe_signature = self._io.read_bytes(4)
+            if not self.pe_signature == b"\x50\x45\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x50\x45\x00\x00", self.pe_signature, self._io, u"/types/pe_header/seq/0")
+            self.coff_hdr = MicrosoftPe.CoffHeader(self._io, self, self._root)
             self._raw_optional_hdr = self._io.read_bytes(self.coff_hdr.size_of_optional_header)
-            io = KaitaiStream(BytesIO(self._raw_optional_hdr))
-            self.optional_hdr = self._root.OptionalHeader(io, self, self._root)
+            _io__raw_optional_hdr = KaitaiStream(BytesIO(self._raw_optional_hdr))
+            self.optional_hdr = MicrosoftPe.OptionalHeader(_io__raw_optional_hdr, self, self._root)
             self.sections = [None] * (self.coff_hdr.number_of_sections)
             for i in range(self.coff_hdr.number_of_sections):
-                self.sections[i] = self._root.Section(self._io, self, self._root)
+                self.sections[i] = MicrosoftPe.Section(self._io, self, self._root)
 
 
         @property
@@ -226,8 +229,8 @@ class MicrosoftPe(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek(self.optional_hdr.data_dirs.certificate_table.virtual_address)
                 self._raw__m_certificate_table = self._io.read_bytes(self.optional_hdr.data_dirs.certificate_table.size)
-                io = KaitaiStream(BytesIO(self._raw__m_certificate_table))
-                self._m_certificate_table = self._root.CertificateTable(io, self, self._root)
+                _io__raw__m_certificate_table = KaitaiStream(BytesIO(self._raw__m_certificate_table))
+                self._m_certificate_table = MicrosoftPe.CertificateTable(_io__raw__m_certificate_table, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_certificate_table if hasattr(self, '_m_certificate_table') else None
@@ -241,9 +244,9 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.std = self._root.OptionalHeaderStd(self._io, self, self._root)
-            self.windows = self._root.OptionalHeaderWindows(self._io, self, self._root)
-            self.data_dirs = self._root.OptionalHeaderDataDirs(self._io, self, self._root)
+            self.std = MicrosoftPe.OptionalHeaderStd(self._io, self, self._root)
+            self.windows = MicrosoftPe.OptionalHeaderWindows(self._io, self, self._root)
+            self.data_dirs = MicrosoftPe.OptionalHeaderDataDirs(self._io, self, self._root)
 
 
     class Section(KaitaiStruct):
@@ -288,7 +291,7 @@ class MicrosoftPe(KaitaiStruct):
             self.items = []
             i = 0
             while not self._io.is_eof():
-                self.items.append(self._root.CertificateEntry(self._io, self, self._root))
+                self.items.append(MicrosoftPe.CertificateEntry(self._io, self, self._root))
                 i += 1
 
 
@@ -301,7 +304,9 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x4D\x5A")
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x4D\x5A":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x5A", self.magic, self._io, u"/types/mz_placeholder/seq/0")
             self.data1 = self._io.read_bytes(58)
             self.ofs_pe = self._io.read_u4le()
 
@@ -314,7 +319,7 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.format = self._root.PeFormat(self._io.read_u2le())
+            self.format = KaitaiStream.resolve_enum(MicrosoftPe.PeFormat, self._io.read_u2le())
             self.major_linker_version = self._io.read_u1()
             self.minor_linker_version = self._io.read_u1()
             self.size_of_code = self._io.read_u4le()
@@ -322,7 +327,7 @@ class MicrosoftPe(KaitaiStruct):
             self.size_of_uninitialized_data = self._io.read_u4le()
             self.address_of_entry_point = self._io.read_u4le()
             self.base_of_code = self._io.read_u4le()
-            if self.format == self._root.PeFormat.pe32:
+            if self.format == MicrosoftPe.PeFormat.pe32:
                 self.base_of_data = self._io.read_u4le()
 
 
@@ -367,7 +372,7 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.machine = self._root.CoffHeader.MachineType(self._io.read_u2le())
+            self.machine = KaitaiStream.resolve_enum(MicrosoftPe.CoffHeader.MachineType, self._io.read_u2le())
             self.number_of_sections = self._io.read_u2le()
             self.time_date_stamp = self._io.read_u4le()
             self.pointer_to_symbol_table = self._io.read_u4le()
@@ -411,7 +416,7 @@ class MicrosoftPe(KaitaiStruct):
             self._io.seek(self.pointer_to_symbol_table)
             self._m_symbol_table = [None] * (self.number_of_symbols)
             for i in range(self.number_of_symbols):
-                self._m_symbol_table[i] = self._root.CoffSymbol(self._io, self, self._root)
+                self._m_symbol_table[i] = MicrosoftPe.CoffSymbol(self._io, self, self._root)
 
             self._io.seek(_pos)
             return self._m_symbol_table if hasattr(self, '_m_symbol_table') else None
@@ -492,7 +497,7 @@ class MicrosoftPe(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(self.mz.ofs_pe)
-        self._m_pe = self._root.PeHeader(self._io, self, self._root)
+        self._m_pe = MicrosoftPe.PeHeader(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_pe if hasattr(self, '_m_pe') else None
 

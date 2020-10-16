@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class IcmpPacket < Kaitai::Struct::Struct
@@ -96,7 +96,8 @@ class IcmpPacket < Kaitai::Struct::Struct
     end
 
     def _read
-      @code = @_io.ensure_fixed_contents([0].pack('C*'))
+      @code = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), code, _io, "/types/echo_msg/seq/0") if not code == [0].pack('C*')
       @checksum = @_io.read_u2be
       @identifier = @_io.read_u2be
       @seq_num = @_io.read_u2be

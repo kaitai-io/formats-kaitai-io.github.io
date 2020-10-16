@@ -495,14 +495,23 @@ var Wmf = (function() {
       this._read();
     }
     SpecialHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([215, 205, 198, 154]);
-      this.handle = this._io.ensureFixedContents([0, 0]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [215, 205, 198, 154]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([215, 205, 198, 154], this.magic, this._io, "/types/special_header/seq/0");
+      }
+      this.handle = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.handle, [0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.handle, this._io, "/types/special_header/seq/1");
+      }
       this.left = this._io.readS2le();
       this.top = this._io.readS2le();
       this.right = this._io.readS2le();
       this.bottom = this._io.readS2le();
       this.inch = this._io.readU2le();
-      this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
+      this.reserved = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.reserved, this._io, "/types/special_header/seq/7");
+      }
       this.checksum = this._io.readU2le();
     }
 
@@ -526,40 +535,40 @@ var Wmf = (function() {
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetbkmode(_io__raw_params, this, this._root);
         break;
+      case Wmf.Func.POLYGON:
+        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsPolygon(_io__raw_params, this, this._root);
+        break;
       case Wmf.Func.SETBKCOLOR:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ColorRef(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.SETROP2:
+      case Wmf.Func.SETPOLYFILLMODE:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetrop2(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.POLYLINE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
+        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
         break;
       case Wmf.Func.SETWINDOWORG:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.POLYGON:
+      case Wmf.Func.SETROP2:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolygon(_io__raw_params, this, this._root);
+        this.params = new ParamsSetrop2(_io__raw_params, this, this._root);
         break;
       case Wmf.Func.SETWINDOWEXT:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetwindowext(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.SETPOLYFILLMODE:
+      case Wmf.Func.POLYLINE:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
+        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
         break;
       default:
         this.params = this._io.readBytes(((this.size - 3) * 2));

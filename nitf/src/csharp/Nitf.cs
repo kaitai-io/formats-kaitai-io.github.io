@@ -202,7 +202,11 @@ namespace Kaitai
             {
                 _representation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
                 _subcategory = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
-                _imgFilterCondition = m_io.EnsureFixedContents(new byte[] { 78 });
+                _imgFilterCondition = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(ImgFilterCondition, new byte[] { 78 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 78 }, ImgFilterCondition, M_Io, "/types/band_info/seq/2");
+                }
                 _imgFilterCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 _numLuts = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
                 if (Convert.ToInt64(NumLuts, 10) != 0) {
@@ -331,12 +335,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _filePartTypeSy = m_io.EnsureFixedContents(new byte[] { 83, 89 });
+                _filePartTypeSy = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeSy, new byte[] { 83, 89 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 89 }, FilePartTypeSy, M_Io, "/types/graphic_sub_header/seq/0");
+                }
                 _graphicId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
                 _graphicName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(20));
                 _graphicClassification = new Clasnfo(m_io, this, m_root);
                 _encryption = new Encrypt(m_io, this, m_root);
-                _graphicType = m_io.EnsureFixedContents(new byte[] { 67 });
+                _graphicType = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(GraphicType, new byte[] { 67 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 67 }, GraphicType, M_Io, "/types/graphic_sub_header/seq/5");
+                }
                 _reserved1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(13));
                 _graphicDisplayLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 _graphicAttachmentLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
@@ -852,7 +864,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _filePartType = m_io.EnsureFixedContents(new byte[] { 73, 77 });
+                _filePartType = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(FilePartType, new byte[] { 73, 77 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 77 }, FilePartType, M_Io, "/types/image_sub_header/seq/0");
+                }
                 _imageId1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
                 _imageDateTime = new DateTime(m_io, this, m_root);
                 _targetId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(17));
@@ -1028,7 +1044,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _filePartTypeRe = m_io.EnsureFixedContents(new byte[] { 82, 69 });
+                _filePartTypeRe = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeRe, new byte[] { 82, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 82, 69 }, FilePartTypeRe, M_Io, "/types/reserved_sub_header/seq/0");
+                }
                 _resTypeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
                 _resVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
                 _reclasnfo = new Clasnfo(m_io, this, m_root);
@@ -1070,7 +1090,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _filePartTypeDe = m_io.EnsureFixedContents(new byte[] { 68, 69 });
+                _filePartTypeDe = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeDe, new byte[] { 68, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 68, 69 }, FilePartTypeDe, M_Io, "/types/data_sub_header_base/seq/0");
+                }
                 _desid = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
                 _dataDefinitionVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
                 _declasnfo = new Clasnfo(m_io, this, m_root);
@@ -1178,10 +1202,22 @@ namespace Kaitai
             }
             private void _read()
             {
-                _fileProfileName = m_io.EnsureFixedContents(new byte[] { 78, 73, 84, 70 });
-                _fileVersion = m_io.EnsureFixedContents(new byte[] { 48, 50, 46, 49, 48 });
+                _fileProfileName = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(FileProfileName, new byte[] { 78, 73, 84, 70 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 78, 73, 84, 70 }, FileProfileName, M_Io, "/types/header/seq/0");
+                }
+                _fileVersion = m_io.ReadBytes(5);
+                if (!((KaitaiStream.ByteArrayCompare(FileVersion, new byte[] { 48, 50, 46, 49, 48 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 48, 50, 46, 49, 48 }, FileVersion, M_Io, "/types/header/seq/1");
+                }
                 _complexityLevel = m_io.ReadBytes(2);
-                _standardType = m_io.EnsureFixedContents(new byte[] { 66, 70, 48, 49 });
+                _standardType = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(StandardType, new byte[] { 66, 70, 48, 49 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 66, 70, 48, 49 }, StandardType, M_Io, "/types/header/seq/3");
+                }
                 _originatingStationId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
                 _fileDateTime = new DateTime(m_io, this, m_root);
                 _fileTitle = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));

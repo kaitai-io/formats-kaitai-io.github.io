@@ -30,7 +30,11 @@ namespace Kaitai
             __raw_fields = m_io.ReadBytes((Len - 5));
             var io___raw_fields = new KaitaiStream(__raw_fields);
             _fields = new ElementsList(io___raw_fields, this, m_root);
-            _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
+            _terminator = m_io.ReadBytes(1);
+            if (!((KaitaiStream.ByteArrayCompare(Terminator, new byte[] { 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0 }, Terminator, M_Io, "/seq/2");
+            }
         }
 
         /// <summary>
@@ -228,7 +232,11 @@ namespace Kaitai
             {
                 _len = m_io.ReadS4le();
                 _str = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes((Len - 1)));
-                _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
+                _terminator = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Terminator, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Terminator, M_Io, "/types/string/seq/2");
+                }
             }
             private int _len;
             private string _str;
@@ -285,40 +293,60 @@ namespace Kaitai
                 _typeByte = ((BsonType) m_io.ReadU1());
                 _name = new Cstring(m_io, this, m_root);
                 switch (TypeByte) {
-                case BsonType.NumberDouble: {
-                    _content = m_io.ReadF8le();
-                    break;
-                }
                 case BsonType.CodeWithScope: {
                     _content = new CodeWithScope(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.ObjectId: {
-                    _content = new ObjectId(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.String: {
-                    _content = new String(m_io, this, m_root);
                     break;
                 }
                 case BsonType.RegEx: {
                     _content = new RegEx(m_io, this, m_root);
                     break;
                 }
-                case BsonType.NumberDecimal: {
-                    _content = new F16(m_io, this, m_root);
+                case BsonType.NumberDouble: {
+                    _content = m_io.ReadF8le();
+                    break;
+                }
+                case BsonType.Symbol: {
+                    _content = new String(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Timestamp: {
+                    _content = new Timestamp(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.NumberInt: {
+                    _content = m_io.ReadS4le();
+                    break;
+                }
+                case BsonType.Document: {
+                    _content = new Bson(m_io);
+                    break;
+                }
+                case BsonType.ObjectId: {
+                    _content = new ObjectId(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Javascript: {
+                    _content = new String(m_io, this, m_root);
                     break;
                 }
                 case BsonType.UtcDatetime: {
                     _content = m_io.ReadS8le();
                     break;
                 }
+                case BsonType.Boolean: {
+                    _content = m_io.ReadU1();
+                    break;
+                }
                 case BsonType.NumberLong: {
                     _content = m_io.ReadS8le();
                     break;
                 }
-                case BsonType.Timestamp: {
-                    _content = new Timestamp(m_io, this, m_root);
+                case BsonType.BinData: {
+                    _content = new BinData(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.String: {
+                    _content = new String(m_io, this, m_root);
                     break;
                 }
                 case BsonType.DbPointer: {
@@ -329,28 +357,8 @@ namespace Kaitai
                     _content = new Bson(m_io);
                     break;
                 }
-                case BsonType.Javascript: {
-                    _content = new String(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.Boolean: {
-                    _content = m_io.ReadU1();
-                    break;
-                }
-                case BsonType.Document: {
-                    _content = new Bson(m_io);
-                    break;
-                }
-                case BsonType.Symbol: {
-                    _content = new String(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.NumberInt: {
-                    _content = m_io.ReadS4le();
-                    break;
-                }
-                case BsonType.BinData: {
-                    _content = new BinData(m_io, this, m_root);
+                case BsonType.NumberDecimal: {
+                    _content = new F16(m_io, this, m_root);
                     break;
                 }
                 }
@@ -494,9 +502,9 @@ namespace Kaitai
             }
             private void _read()
             {
-                _str = m_io.ReadBitsInt(1) != 0;
-                _exponent = m_io.ReadBitsInt(15);
-                _significandHi = m_io.ReadBitsInt(49);
+                _str = m_io.ReadBitsIntBe(1) != 0;
+                _exponent = m_io.ReadBitsIntBe(15);
+                _significandHi = m_io.ReadBitsIntBe(49);
                 m_io.AlignToByte();
                 _significandLo = m_io.ReadU8le();
             }

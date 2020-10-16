@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use Compress::Zlib;
 
@@ -47,9 +47,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (137, 80, 78, 71, 13, 10, 26, 10)));
-    $self->{ihdr_len} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 13)));
-    $self->{ihdr_type} = $self->{_io}->ensure_fixed_contents(pack('C*', (73, 72, 68, 82)));
+    $self->{magic} = $self->{_io}->read_bytes(8);
+    $self->{ihdr_len} = $self->{_io}->read_bytes(4);
+    $self->{ihdr_type} = $self->{_io}->read_bytes(4);
     $self->{ihdr} = Png::IhdrChunk->new($self->{_io}, $self, $self->{_root});
     $self->{ihdr_crc} = $self->{_io}->read_bytes(4);
     $self->{chunks} = ();
@@ -783,20 +783,20 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self->_root()->ihdr()->color_type();
-    if ($_on == $COLOR_TYPE_GREYSCALE_ALPHA) {
-        $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $COLOR_TYPE_INDEXED) {
+    if ($_on == $Png::COLOR_TYPE_INDEXED) {
         $self->{bkgd} = Png::BkgdIndexed->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_GREYSCALE) {
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR_ALPHA) {
+        $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_GREYSCALE_ALPHA) {
         $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_TRUECOLOR_ALPHA) {
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR) {
         $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_TRUECOLOR) {
-        $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Png::COLOR_TYPE_GREYSCALE) {
+        $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
     }
 }
 

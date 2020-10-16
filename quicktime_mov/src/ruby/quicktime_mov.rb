@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -262,12 +262,12 @@ class QuicktimeMov < Kaitai::Struct::Struct
     end
 
     def _read
-      @major_brand = Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
+      @major_brand = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
       @minor_version = @_io.read_bytes(4)
       @compatible_brands = []
       i = 0
       while not @_io.eof?
-        @compatible_brands << Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
+        @compatible_brands << Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
         i += 1
       end
       self
@@ -318,55 +318,55 @@ class QuicktimeMov < Kaitai::Struct::Struct
 
     def _read
       @len32 = @_io.read_u4be
-      @atom_type = Kaitai::Struct::Stream::resolve_enum(ATOM_TYPE, @_io.read_u4be)
+      @atom_type = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::ATOM_TYPE, @_io.read_u4be)
       if len32 == 1
         @len64 = @_io.read_u8be
       end
       case atom_type
-      when :atom_type_stbl
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
       when :atom_type_moof
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_mvhd
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = MvhdBody.new(io, self, @_root)
-      when :atom_type_minf
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_trak
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_traf
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_mdia
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_ftyp
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FtypBody.new(io, self, @_root)
-      when :atom_type_moov
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
       when :atom_type_tkhd
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TkhdBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = TkhdBody.new(_io__raw_body, self, @_root)
+      when :atom_type_stbl
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_traf
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_minf
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_trak
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_moov
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_mdia
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
       when :atom_type_dinf
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AtomList.new(_io__raw_body, self, @_root)
+      when :atom_type_mvhd
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = MvhdBody.new(_io__raw_body, self, @_root)
+      when :atom_type_ftyp
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = FtypBody.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len)
       end

@@ -18,7 +18,10 @@ var Edid = (function() {
     this._read();
   }
   Edid.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([0, 255, 255, 255, 255, 255, 255, 0]);
+    this.magic = this._io.readBytes(8);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [0, 255, 255, 255, 255, 255, 255, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 255, 255, 255, 255, 255, 255, 0], this.magic, this._io, "/seq/0");
+    }
     this.mfgBytes = this._io.readU2le();
     this.productCode = this._io.readU2le();
     this.serial = this._io.readU4le();
@@ -54,14 +57,14 @@ var Edid = (function() {
       this._read();
     }
     ChromacityInfo.prototype._read = function() {
-      this.redX10 = this._io.readBitsInt(2);
-      this.redY10 = this._io.readBitsInt(2);
-      this.greenX10 = this._io.readBitsInt(2);
-      this.greenY10 = this._io.readBitsInt(2);
-      this.blueX10 = this._io.readBitsInt(2);
-      this.blueY10 = this._io.readBitsInt(2);
-      this.whiteX10 = this._io.readBitsInt(2);
-      this.whiteY10 = this._io.readBitsInt(2);
+      this.redX10 = this._io.readBitsIntBe(2);
+      this.redY10 = this._io.readBitsIntBe(2);
+      this.greenX10 = this._io.readBitsIntBe(2);
+      this.greenY10 = this._io.readBitsIntBe(2);
+      this.blueX10 = this._io.readBitsIntBe(2);
+      this.blueY10 = this._io.readBitsIntBe(2);
+      this.whiteX10 = this._io.readBitsIntBe(2);
+      this.whiteY10 = this._io.readBitsIntBe(2);
       this._io.alignToByte();
       this.redX92 = this._io.readU1();
       this.redY92 = this._io.readU1();
@@ -309,24 +312,24 @@ var Edid = (function() {
       this._read();
     }
     EstTimingsInfo.prototype._read = function() {
-      this.can72040070 = this._io.readBitsInt(1) != 0;
-      this.can72040088 = this._io.readBitsInt(1) != 0;
-      this.can64048060 = this._io.readBitsInt(1) != 0;
-      this.can64048067 = this._io.readBitsInt(1) != 0;
-      this.can64048072 = this._io.readBitsInt(1) != 0;
-      this.can64048075 = this._io.readBitsInt(1) != 0;
-      this.can80060056 = this._io.readBitsInt(1) != 0;
-      this.can80060060 = this._io.readBitsInt(1) != 0;
-      this.can80060072 = this._io.readBitsInt(1) != 0;
-      this.can80060075 = this._io.readBitsInt(1) != 0;
-      this.can83262475 = this._io.readBitsInt(1) != 0;
-      this.can102476887I = this._io.readBitsInt(1) != 0;
-      this.can102476860 = this._io.readBitsInt(1) != 0;
-      this.can102476870 = this._io.readBitsInt(1) != 0;
-      this.can102476875 = this._io.readBitsInt(1) != 0;
-      this.can1280102475 = this._io.readBitsInt(1) != 0;
-      this.can115287075 = this._io.readBitsInt(1) != 0;
-      this.reserved = this._io.readBitsInt(7);
+      this.can72040070 = this._io.readBitsIntBe(1) != 0;
+      this.can72040088 = this._io.readBitsIntBe(1) != 0;
+      this.can64048060 = this._io.readBitsIntBe(1) != 0;
+      this.can64048067 = this._io.readBitsIntBe(1) != 0;
+      this.can64048072 = this._io.readBitsIntBe(1) != 0;
+      this.can64048075 = this._io.readBitsIntBe(1) != 0;
+      this.can80060056 = this._io.readBitsIntBe(1) != 0;
+      this.can80060060 = this._io.readBitsIntBe(1) != 0;
+      this.can80060072 = this._io.readBitsIntBe(1) != 0;
+      this.can80060075 = this._io.readBitsIntBe(1) != 0;
+      this.can83262475 = this._io.readBitsIntBe(1) != 0;
+      this.can102476887I = this._io.readBitsIntBe(1) != 0;
+      this.can102476860 = this._io.readBitsIntBe(1) != 0;
+      this.can102476870 = this._io.readBitsIntBe(1) != 0;
+      this.can102476875 = this._io.readBitsIntBe(1) != 0;
+      this.can1280102475 = this._io.readBitsIntBe(1) != 0;
+      this.can115287075 = this._io.readBitsIntBe(1) != 0;
+      this.reserved = this._io.readBitsIntBe(7);
     }
 
     /**
@@ -422,8 +425,8 @@ var Edid = (function() {
     }
     StdTiming.prototype._read = function() {
       this.horizActivePixelsMod = this._io.readU1();
-      this.aspectRatio = this._io.readBitsInt(2);
-      this.refreshRateMod = this._io.readBitsInt(5);
+      this.aspectRatio = this._io.readBitsIntBe(2);
+      this.refreshRateMod = this._io.readBitsIntBe(5);
     }
 
     /**

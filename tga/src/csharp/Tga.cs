@@ -112,8 +112,8 @@ namespace Kaitai
                         m_io.Seek(ExtAreaOfs);
                         _extArea = new TgaExtArea(m_io, this, m_root);
                         m_io.Seek(_pos);
+                        f_extArea = true;
                     }
-                    f_extArea = true;
                     return _extArea;
                 }
             }

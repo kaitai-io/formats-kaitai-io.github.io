@@ -119,8 +119,16 @@ namespace Kaitai
             }
             private void _read()
             {
-                _ident = m_io.EnsureFixedContents(new byte[] { 73, 68, 80, 79 });
-                _versionMustBe6 = m_io.EnsureFixedContents(new byte[] { 6, 0, 0, 0 });
+                _ident = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Ident, new byte[] { 73, 68, 80, 79 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, Ident, M_Io, "/types/mdl_header/seq/0");
+                }
+                _versionMustBe6 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(VersionMustBe6, new byte[] { 6, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 6, 0, 0, 0 }, VersionMustBe6, M_Io, "/types/mdl_header/seq/1");
+                }
                 _scale = new Vec3(m_io, this, m_root);
                 _origin = new Vec3(m_io, this, m_root);
                 _radius = m_io.ReadF4le();

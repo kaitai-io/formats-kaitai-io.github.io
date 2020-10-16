@@ -1,13 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from protocol_body import ProtocolBody
+import protocol_body
 class Ipv4Packet(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -27,11 +28,11 @@ class Ipv4Packet(KaitaiStruct):
         self.src_ip_addr = self._io.read_bytes(4)
         self.dst_ip_addr = self._io.read_bytes(4)
         self._raw_options = self._io.read_bytes((self.ihl_bytes - 20))
-        io = KaitaiStream(BytesIO(self._raw_options))
-        self.options = self._root.Ipv4Options(io, self, self._root)
+        _io__raw_options = KaitaiStream(BytesIO(self._raw_options))
+        self.options = Ipv4Packet.Ipv4Options(_io__raw_options, self, self._root)
         self._raw_body = self._io.read_bytes((self.total_length - self.ihl_bytes))
-        io = KaitaiStream(BytesIO(self._raw_body))
-        self.body = ProtocolBody(self.protocol, io)
+        _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+        self.body = protocol_body.ProtocolBody(self.protocol, _io__raw_body)
 
     class Ipv4Options(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -44,7 +45,7 @@ class Ipv4Packet(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Ipv4Option(self._io, self, self._root))
+                self.entries.append(Ipv4Packet.Ipv4Option(self._io, self, self._root))
                 i += 1
 
 

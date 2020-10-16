@@ -7,7 +7,7 @@ digraph {
 
 		nt_mdt__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD>01 B0 93 FF</TD><TD PORT="signature_type">signature</TD></TR>
+			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
 			<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
 			<TR><TD PORT="reserved0_pos">8</TD><TD PORT="reserved0_size">4</TD><TD></TD><TD PORT="reserved0_type">reserved0</TD></TR>
 			<TR><TD PORT="last_frame_pos">12</TD><TD PORT="last_frame_size">2</TD><TD>u2le</TD><TD PORT="last_frame_type">last_frame</TD></TR>
@@ -117,11 +117,11 @@ digraph {
 				</TABLE>>];
 frame_main__seq_frame_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:frame_type_scanned</TD><TD PORT="case0">FdScanned</TD></TR>
+	<TR><TD>:frame_type_mda</TD><TD PORT="case0">FdMetaData</TD></TR>
 	<TR><TD>:frame_type_curves_new</TD><TD PORT="case1">FdCurvesNew</TD></TR>
-	<TR><TD>:frame_type_mda</TD><TD PORT="case2">FdMetaData</TD></TR>
+	<TR><TD>:frame_type_curves</TD><TD PORT="case2">FdSpectroscopy</TD></TR>
 	<TR><TD>:frame_type_spectroscopy</TD><TD PORT="case3">FdSpectroscopy</TD></TR>
-	<TR><TD>:frame_type_curves</TD><TD PORT="case4">FdSpectroscopy</TD></TR>
+	<TR><TD>:frame_type_scanned</TD><TD PORT="case4">FdScanned</TD></TR>
 </TABLE>>];
 			}
 			subgraph cluster__fd_curves_new {
@@ -396,10 +396,10 @@ vec__seq_items_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					scan_dir__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 						<TR><TD PORT="unkn_pos">0</TD><TD PORT="unkn_size">4b</TD><TD>b4</TD><TD PORT="unkn_type">unkn</TD></TR>
-						<TR><TD PORT="double_pass_pos">0:4</TD><TD PORT="double_pass_size">1b</TD><TD>BitsType1</TD><TD PORT="double_pass_type">double_pass</TD></TR>
-						<TR><TD PORT="bottom_pos">0:5</TD><TD PORT="bottom_size">1b</TD><TD>BitsType1</TD><TD PORT="bottom_type">bottom</TD></TR>
-						<TR><TD PORT="left_pos">0:6</TD><TD PORT="left_size">1b</TD><TD>BitsType1</TD><TD PORT="left_type">left</TD></TR>
-						<TR><TD PORT="horizontal_pos">0:7</TD><TD PORT="horizontal_size">1b</TD><TD>BitsType1</TD><TD PORT="horizontal_type">horizontal</TD></TR>
+						<TR><TD PORT="double_pass_pos">0:4</TD><TD PORT="double_pass_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="double_pass_type">double_pass</TD></TR>
+						<TR><TD PORT="bottom_pos">0:5</TD><TD PORT="bottom_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="bottom_type">bottom</TD></TR>
+						<TR><TD PORT="left_pos">0:6</TD><TD PORT="left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="left_type">left</TD></TR>
+						<TR><TD PORT="horizontal_pos">0:7</TD><TD PORT="horizontal_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="horizontal_type">horizontal</TD></TR>
 					</TABLE>>];
 				}
 			}
@@ -453,11 +453,11 @@ vec__seq_items_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	frame_main__seq:version_type -> version__seq [style=bold];
 	frame_main__seq:date_time_type -> date_time__seq [style=bold];
 	frame_main__seq:frame_data_type -> frame_main__seq_frame_data_switch [style=bold];
-	frame_main__seq_frame_data_switch:case0 -> fd_scanned__seq [style=bold];
+	frame_main__seq_frame_data_switch:case0 -> fd_meta_data__seq [style=bold];
 	frame_main__seq_frame_data_switch:case1 -> fd_curves_new__seq [style=bold];
-	frame_main__seq_frame_data_switch:case2 -> fd_meta_data__seq [style=bold];
+	frame_main__seq_frame_data_switch:case2 -> fd_spectroscopy__seq [style=bold];
 	frame_main__seq_frame_data_switch:case3 -> fd_spectroscopy__seq [style=bold];
-	frame_main__seq_frame_data_switch:case4 -> fd_spectroscopy__seq [style=bold];
+	frame_main__seq_frame_data_switch:case4 -> fd_scanned__seq [style=bold];
 	frame_main__seq:type_type -> frame_main__seq:frame_data_type [color="#404040"];
 	fd_curves_new__seq:blocks_headers_type -> block_descr__seq [style=bold];
 	fd_curves_new__seq:block_count_type -> fd_curves_new__seq:blocks_headers__repeat [color="#404040"];

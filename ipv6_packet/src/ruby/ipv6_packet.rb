@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Ipv6Packet < Kaitai::Struct::Struct
@@ -13,9 +13,9 @@ class Ipv6Packet < Kaitai::Struct::Struct
   end
 
   def _read
-    @version = @_io.read_bits_int(4)
-    @traffic_class = @_io.read_bits_int(8)
-    @flow_label = @_io.read_bits_int(20)
+    @version = @_io.read_bits_int_be(4)
+    @traffic_class = @_io.read_bits_int_be(8)
+    @flow_label = @_io.read_bits_int_be(20)
     @_io.align_to_byte
     @payload_length = @_io.read_u2be
     @next_header_type = @_io.read_u1

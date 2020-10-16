@@ -67,7 +67,11 @@ namespace Kaitai
             private void _read()
             {
                 _text = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(64));
-                _signature = m_io.EnsureFixedContents(new byte[] { 127, 16, 218, 190 });
+                _signature = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 127, 16, 218, 190 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 127, 16, 218, 190 }, Signature, M_Io, "/types/header/seq/1");
+                }
                 _version = new Version(m_io, this, m_root);
                 if (SubheaderSizeIsDynamic) {
                     _headerSizeOptional = m_io.ReadU4le();
@@ -220,12 +224,12 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _reserved0 = m_io.ReadBitsInt(15);
-                        _zeroExpand = m_io.ReadBitsInt(1) != 0;
-                        _reserved1 = m_io.ReadBitsInt(6);
-                        _diff = m_io.ReadBitsInt(1) != 0;
-                        _fixed = m_io.ReadBitsInt(1) != 0;
-                        _reserved2 = m_io.ReadBitsInt(8);
+                        _reserved0 = m_io.ReadBitsIntBe(15);
+                        _zeroExpand = m_io.ReadBitsIntBe(1) != 0;
+                        _reserved1 = m_io.ReadBitsIntBe(6);
+                        _diff = m_io.ReadBitsIntBe(1) != 0;
+                        _fixed = m_io.ReadBitsIntBe(1) != 0;
+                        _reserved2 = m_io.ReadBitsIntBe(8);
                     }
                     private ulong _reserved0;
                     private bool _zeroExpand;

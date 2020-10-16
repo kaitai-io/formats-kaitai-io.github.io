@@ -158,11 +158,6 @@ section#format-index .row {
                 <a href="index.html" title="DNS (Domain Name Service) packet parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="DNS (Domain Name Service) packet parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="DNS (Domain Name Service) packet parsing C# library">C#</a></li>
@@ -715,13 +710,25 @@ section#format-index .row {
                 <span class="n">_ttl</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
                 <span class="n">_rdlength</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Mx</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Srv</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MxInfo</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Service</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ptr</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">A</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Cname</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ns</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
                     <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -733,7 +740,19 @@ section#format-index .row {
                     <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AuthorityInfo</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Cname</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Mx</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MxInfo</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Txt</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TxtBody</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ptr</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
                     <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -743,30 +762,6 @@ section#format-index .row {
                     <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
                     <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AddressV6</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Txt</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
-                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TxtBody</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Ns</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
-                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DomainName</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">Srv</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
-                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Service</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">A</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Rdlength</span><span class="p">);</span>
-                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Address</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>

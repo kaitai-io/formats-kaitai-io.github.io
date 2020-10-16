@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Code6502;
@@ -229,370 +229,370 @@ sub _read {
 
     $self->{code} = $self->{_io}->read_u1();
     my $_on = $self->code();
-    if ($_on == $OPCODE_LSR_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_AND_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_BIT_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ROR_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_STY_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_EOR_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ABS_Y) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_STY_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_IND_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ROL_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_EOR_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_BMI_REL) {
+    if ($_on == $Code6502::OPCODE_BCC_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_INC_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_CPY_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ORA_IND_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_JSR_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_AND_ABS_Y) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_CMP_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_LDA_IND_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_SBC_IND_Y) {
+    elsif ($_on == $Code6502::OPCODE_CPX_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_AND_X_IND) {
+    elsif ($_on == $Code6502::OPCODE_STA_ZPG_X) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_BVC_REL) {
+    elsif ($_on == $Code6502::OPCODE_STA_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_BCS_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_ORA_X_IND) {
+    elsif ($_on == $Code6502::OPCODE_LDY_ZPG_X) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_ORA_ABS_Y) {
+    elsif ($_on == $Code6502::OPCODE_LSR_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_LSR_ABS) {
+    elsif ($_on == $Code6502::OPCODE_AND_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_LDX_ZPG_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ROL_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_ADC_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_ADC_ABS) {
+    elsif ($_on == $Code6502::OPCODE_STA_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STY_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDY_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDX_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_BEQ_REL) {
+    elsif ($_on == $Code6502::OPCODE_BNE_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_SBC_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDX_ABS_Y) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_IMM) {
+    elsif ($_on == $Code6502::OPCODE_LDA_IMM) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_BCS_REL) {
+    elsif ($_on == $Code6502::OPCODE_ADC_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_LSR_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_ADC_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_STA_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_CPX_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_JMP_IND) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_ADC_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_EOR_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_EOR_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_STA_X_IND) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_SBC_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CPY_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDX_ABS_Y) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_ADC_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_BPL_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_SBC_ZPG_X) {
+    elsif ($_on == $Code6502::OPCODE_ORA_IMM) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_STA_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ROR_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_ADC_IND_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_BCC_REL) {
+    elsif ($_on == $Code6502::OPCODE_EOR_IND_Y) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDA_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_BIT_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ROL_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_STY_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_JSR_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_EOR_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_EOR_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDA_ABS_Y) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDA_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_BMI_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_AND_IMM) {
+    elsif ($_on == $Code6502::OPCODE_STY_ZPG_X) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_LDY_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ADC_X_IND) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_ADC_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ROL_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_STX_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_BNE_REL) {
+    elsif ($_on == $Code6502::OPCODE_ASL_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LSR_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ORA_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ADC_ABS_Y) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDY_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDA_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_BVS_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_EOR_ABS_Y) {
+    elsif ($_on == $Code6502::OPCODE_LDA_X_IND) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_INC_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ASL_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_AND_ABS_Y) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_CPY_ABS) {
+    elsif ($_on == $Code6502::OPCODE_LDX_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_AND_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CPX_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STX_ABS) {
+    elsif ($_on == $Code6502::OPCODE_DEC_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ROR_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDX_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_DEC_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_SBC_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_LDY_IMM) {
+    elsif ($_on == $Code6502::OPCODE_ROR_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_LDA_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_ABS_Y) {
+    elsif ($_on == $Code6502::OPCODE_INC_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_LSR_ZPG_X) {
+    elsif ($_on == $Code6502::OPCODE_AND_X_IND) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_EOR_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_SBC_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_CMP_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_ASL_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_INC_ABS) {
+    elsif ($_on == $Code6502::OPCODE_EOR_X_IND) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ORA_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STA_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_X_IND) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_X_IND) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_IND_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_X_IND) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_LDY_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_DEC_ZPG_X) {
+    elsif ($_on == $Code6502::OPCODE_SBC_X_IND) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_SBC_ABS_Y) {
+    elsif ($_on == $Code6502::OPCODE_ASL_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_SBC_ABS_Y) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STX_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_ROL_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_AND_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_LSR_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_SBC_X_IND) {
+    elsif ($_on == $Code6502::OPCODE_STX_ZPG_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_LDA_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_JMP_IND) {
+    elsif ($_on == $Code6502::OPCODE_ORA_ABS_Y) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STA_ABS_Y) {
+    elsif ($_on == $Code6502::OPCODE_EOR_ABS_Y) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_ASL_ABS) {
+    elsif ($_on == $Code6502::OPCODE_BIT_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_CMP_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDX_ABS) {
+    elsif ($_on == $Code6502::OPCODE_LDX_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_ADC_ZPG_X) {
+    elsif ($_on == $Code6502::OPCODE_LDY_IMM) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_ROR_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_JMP_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_STA_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_BIT_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_DEC_ABS_X) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_STX_ZPG_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ABS_Y) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDA_X_IND) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CPY_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_IND_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_IND_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_IND_Y) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ROR_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDX_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CPX_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_BVS_REL) {
+    elsif ($_on == $Code6502::OPCODE_BEQ_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_LDY_ABS) {
+    elsif ($_on == $Code6502::OPCODE_DEC_ABS_X) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_INC_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_AND_IND_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_SBC_ABS) {
+    elsif ($_on == $Code6502::OPCODE_AND_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_EOR_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_SBC_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_ROL_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_IMM) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_ADC_X_IND) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_ABS_X) {
+    elsif ($_on == $Code6502::OPCODE_CMP_ABS_Y) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_CPX_ABS) {
+    elsif ($_on == $Code6502::OPCODE_SBC_IND_Y) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_STX_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_CMP_ABS) {
+    elsif ($_on == $Code6502::OPCODE_STY_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_LDA_ABS) {
+    elsif ($_on == $Code6502::OPCODE_CPY_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_DEC_ABS) {
         $self->{args} = $self->{_io}->read_u2le();
     }
-    elsif ($_on == $OPCODE_ROL_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ROR_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_STA_ABS_Y) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_INC_ABS_X) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDA_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_INC_ZPG_X) {
+    elsif ($_on == $Code6502::OPCODE_CMP_IND_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_LDA_IMM) {
+    elsif ($_on == $Code6502::OPCODE_CPY_IMM) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_DEC_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_LDX_ZPG_Y) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_ADC_IND_Y) {
+    elsif ($_on == $Code6502::OPCODE_SBC_ZPG_X) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_LDA_IND_Y) {
+    elsif ($_on == $Code6502::OPCODE_ORA_X_IND) {
         $self->{args} = $self->{_io}->read_u1();
     }
-    elsif ($_on == $OPCODE_BPL_REL) {
+    elsif ($_on == $Code6502::OPCODE_ROL_ZPG_X) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_ORA_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_STA_IND_Y) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_AND_ABS) {
+        $self->{args} = $self->{_io}->read_u2le();
+    }
+    elsif ($_on == $Code6502::OPCODE_AND_IMM) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_CMP_X_IND) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_LDY_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_INC_ZPG) {
+        $self->{args} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Code6502::OPCODE_BVC_REL) {
         $self->{args} = $self->{_io}->read_s1();
     }
-    elsif ($_on == $OPCODE_LSR_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_JMP_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_DEC_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_ABS) {
-        $self->{args} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $OPCODE_ROR_ZPG) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_LDY_ZPG_X) {
-        $self->{args} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $OPCODE_CPX_ZPG) {
+    elsif ($_on == $Code6502::OPCODE_ORA_ZPG) {
         $self->{args} = $self->{_io}->read_u1();
     }
 }

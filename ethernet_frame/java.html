@@ -166,11 +166,6 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C# library">C#</a></li>
                 
                 
@@ -338,23 +333,30 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
         <span class="k">if</span> <span class="p">(</span><span class="n">etherType1</span><span class="p">()</span> <span class="o">==</span> <span class="n">EtherTypeEnum</span><span class="p">.</span><span class="na">IEEE_802_1Q_TPID</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">etherType2</span> <span class="o">=</span> <span class="n">EtherTypeEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">());</span>
         <span class="p">}</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="n">etherType</span><span class="p">())</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="n">IPV4</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-            <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">IPV6</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-            <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span class="p">{</span>
+            <span class="n">EtherTypeEnum</span> <span class="n">on</span> <span class="o">=</span> <span class="n">etherType</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">etherType</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">IPV4</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">IPV6</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
@@ -382,9 +384,9 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">priority</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">dropEligible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">vlanId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">priority</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dropEligible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">vlanId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">priority</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">dropEligible</span><span class="p">;</span>

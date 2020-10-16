@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -58,8 +58,8 @@ class Nitf < Kaitai::Struct::Struct
 
     def _read
       @_raw_reserved_sub_header = @_io.read_bytes(_parent.header.lrnfo[idx].length_reserved_extension_subheader.to_i)
-      io = Kaitai::Struct::Stream.new(@_raw_reserved_sub_header)
-      @reserved_sub_header = ReservedSubHeader.new(io, self, @_root)
+      _io__raw_reserved_sub_header = Kaitai::Struct::Stream.new(@_raw_reserved_sub_header)
+      @reserved_sub_header = ReservedSubHeader.new(_io__raw_reserved_sub_header, self, @_root)
       @reserved_data_field = @_io.read_bytes(_parent.header.lrnfo[idx].length_reserved_extension_segment.to_i)
       self
     end
@@ -128,7 +128,8 @@ class Nitf < Kaitai::Struct::Struct
     def _read
       @representation = (@_io.read_bytes(2)).force_encoding("UTF-8")
       @subcategory = (@_io.read_bytes(6)).force_encoding("UTF-8")
-      @img_filter_condition = @_io.ensure_fixed_contents([78].pack('C*'))
+      @img_filter_condition = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([78].pack('C*'), img_filter_condition, _io, "/types/band_info/seq/2") if not img_filter_condition == [78].pack('C*')
       @img_filter_code = (@_io.read_bytes(3)).force_encoding("UTF-8")
       @num_luts = (@_io.read_bytes(1)).force_encoding("UTF-8")
       if num_luts.to_i != 0
@@ -176,7 +177,7 @@ class Nitf < Kaitai::Struct::Struct
     end
     def has_mask
       return @has_mask unless @has_mask.nil?
-      @has_mask =  ((image_sub_header.img_compression[0, (1 - 1)] == "M") || (image_sub_header.img_compression[1, (2 - 1)] == "M")) 
+      @has_mask =  ((image_sub_header.img_compression[0..(1 - 1)] == "M") || (image_sub_header.img_compression[1..(2 - 1)] == "M")) 
       @has_mask
     end
     attr_reader :image_sub_header
@@ -207,12 +208,14 @@ class Nitf < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_part_type_sy = @_io.ensure_fixed_contents([83, 89].pack('C*'))
+      @file_part_type_sy = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 89].pack('C*'), file_part_type_sy, _io, "/types/graphic_sub_header/seq/0") if not file_part_type_sy == [83, 89].pack('C*')
       @graphic_id = (@_io.read_bytes(10)).force_encoding("UTF-8")
       @graphic_name = (@_io.read_bytes(20)).force_encoding("UTF-8")
       @graphic_classification = Clasnfo.new(@_io, self, @_root)
       @encryption = Encrypt.new(@_io, self, @_root)
-      @graphic_type = @_io.ensure_fixed_contents([67].pack('C*'))
+      @graphic_type = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([67].pack('C*'), graphic_type, _io, "/types/graphic_sub_header/seq/5") if not graphic_type == [67].pack('C*')
       @reserved1 = (@_io.read_bytes(13)).force_encoding("UTF-8")
       @graphic_display_level = (@_io.read_bytes(3)).force_encoding("UTF-8")
       @graphic_attachment_level = (@_io.read_bytes(3)).force_encoding("UTF-8")
@@ -457,8 +460,8 @@ class Nitf < Kaitai::Struct::Struct
 
     def _read
       @_raw_data_sub_header = @_io.read_bytes(_parent.header.ldnfo[idx].length_data_extension_subheader.to_i)
-      io = Kaitai::Struct::Stream.new(@_raw_data_sub_header)
-      @data_sub_header = DataSubHeader.new(io, self, @_root)
+      _io__raw_data_sub_header = Kaitai::Struct::Stream.new(@_raw_data_sub_header)
+      @data_sub_header = DataSubHeader.new(_io__raw_data_sub_header, self, @_root)
       @data_data_field = @_io.read_bytes(_parent.header.ldnfo[idx].length_data_extension_segment.to_i)
       self
     end
@@ -498,7 +501,8 @@ class Nitf < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_part_type = @_io.ensure_fixed_contents([73, 77].pack('C*'))
+      @file_part_type = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([73, 77].pack('C*'), file_part_type, _io, "/types/image_sub_header/seq/0") if not file_part_type == [73, 77].pack('C*')
       @image_id_1 = (@_io.read_bytes(10)).force_encoding("UTF-8")
       @image_date_time = DateTime.new(@_io, self, @_root)
       @target_id = (@_io.read_bytes(17)).force_encoding("UTF-8")
@@ -616,7 +620,8 @@ class Nitf < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_part_type_re = @_io.ensure_fixed_contents([82, 69].pack('C*'))
+      @file_part_type_re = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([82, 69].pack('C*'), file_part_type_re, _io, "/types/reserved_sub_header/seq/0") if not file_part_type_re == [82, 69].pack('C*')
       @res_type_id = (@_io.read_bytes(25)).force_encoding("UTF-8")
       @res_version = (@_io.read_bytes(2)).force_encoding("UTF-8")
       @reclasnfo = Clasnfo.new(@_io, self, @_root)
@@ -640,7 +645,8 @@ class Nitf < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_part_type_de = @_io.ensure_fixed_contents([68, 69].pack('C*'))
+      @file_part_type_de = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([68, 69].pack('C*'), file_part_type_de, _io, "/types/data_sub_header_base/seq/0") if not file_part_type_de == [68, 69].pack('C*')
       @desid = (@_io.read_bytes(25)).force_encoding("UTF-8")
       @data_definition_version = (@_io.read_bytes(2)).force_encoding("UTF-8")
       @declasnfo = Clasnfo.new(@_io, self, @_root)
@@ -701,10 +707,13 @@ class Nitf < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_profile_name = @_io.ensure_fixed_contents([78, 73, 84, 70].pack('C*'))
-      @file_version = @_io.ensure_fixed_contents([48, 50, 46, 49, 48].pack('C*'))
+      @file_profile_name = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([78, 73, 84, 70].pack('C*'), file_profile_name, _io, "/types/header/seq/0") if not file_profile_name == [78, 73, 84, 70].pack('C*')
+      @file_version = @_io.read_bytes(5)
+      raise Kaitai::Struct::ValidationNotEqualError.new([48, 50, 46, 49, 48].pack('C*'), file_version, _io, "/types/header/seq/1") if not file_version == [48, 50, 46, 49, 48].pack('C*')
       @complexity_level = @_io.read_bytes(2)
-      @standard_type = @_io.ensure_fixed_contents([66, 70, 48, 49].pack('C*'))
+      @standard_type = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([66, 70, 48, 49].pack('C*'), standard_type, _io, "/types/header/seq/3") if not standard_type == [66, 70, 48, 49].pack('C*')
       @originating_station_id = (@_io.read_bytes(10)).force_encoding("UTF-8")
       @file_date_time = DateTime.new(@_io, self, @_root)
       @file_title = (@_io.read_bytes(80)).force_encoding("UTF-8")

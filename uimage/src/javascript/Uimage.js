@@ -168,7 +168,10 @@ var Uimage = (function() {
       this._read();
     }
     Uheader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([39, 5, 25, 86]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [39, 5, 25, 86]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([39, 5, 25, 86], this.magic, this._io, "/types/uheader/seq/0");
+      }
       this.headerCrc = this._io.readU4be();
       this.timestamp = this._io.readU4be();
       this.lenImage = this._io.readU4be();

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -32,7 +32,8 @@ class S3m < Kaitai::Struct::Struct
 
   def _read
     @song_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
-    @magic1 = @_io.ensure_fixed_contents([26].pack('C*'))
+    @magic1 = @_io.read_bytes(1)
+    raise Kaitai::Struct::ValidationNotEqualError.new([26].pack('C*'), magic1, _io, "/seq/1") if not magic1 == [26].pack('C*')
     @file_type = @_io.read_u1
     @reserved1 = @_io.read_bytes(2)
     @num_orders = @_io.read_u2le
@@ -41,12 +42,13 @@ class S3m < Kaitai::Struct::Struct
     @flags = @_io.read_u2le
     @version = @_io.read_u2le
     @samples_format = @_io.read_u2le
-    @magic2 = @_io.ensure_fixed_contents([83, 67, 82, 77].pack('C*'))
+    @magic2 = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 77].pack('C*'), magic2, _io, "/seq/10") if not magic2 == [83, 67, 82, 77].pack('C*')
     @global_volume = @_io.read_u1
     @initial_speed = @_io.read_u1
     @initial_tempo = @_io.read_u1
-    @is_stereo = @_io.read_bits_int(1) != 0
-    @master_volume = @_io.read_bits_int(7)
+    @is_stereo = @_io.read_bits_int_be(1) != 0
+    @master_volume = @_io.read_bits_int_be(7)
     @_io.align_to_byte
     @ultra_click_removal = @_io.read_u1
     @has_custom_pan = @_io.read_u1
@@ -80,10 +82,10 @@ class S3m < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved1 = @_io.read_bits_int(2)
-      @has_custom_pan = @_io.read_bits_int(1) != 0
-      @reserved2 = @_io.read_bits_int(1) != 0
-      @pan = @_io.read_bits_int(4)
+      @reserved1 = @_io.read_bits_int_be(2)
+      @has_custom_pan = @_io.read_bits_int_be(1) != 0
+      @reserved2 = @_io.read_bits_int_be(1) != 0
+      @pan = @_io.read_bits_int_be(4)
       self
     end
     attr_reader :reserved1
@@ -103,10 +105,10 @@ class S3m < Kaitai::Struct::Struct
     end
 
     def _read
-      @has_fx = @_io.read_bits_int(1) != 0
-      @has_volume = @_io.read_bits_int(1) != 0
-      @has_note_and_instrument = @_io.read_bits_int(1) != 0
-      @channel_num = @_io.read_bits_int(5)
+      @has_fx = @_io.read_bits_int_be(1) != 0
+      @has_volume = @_io.read_bits_int_be(1) != 0
+      @has_note_and_instrument = @_io.read_bits_int_be(1) != 0
+      @channel_num = @_io.read_bits_int_be(5)
       @_io.align_to_byte
       if has_note_and_instrument
         @note = @_io.read_u1
@@ -159,8 +161,8 @@ class S3m < Kaitai::Struct::Struct
     end
 
     def _read
-      @is_disabled = @_io.read_bits_int(1) != 0
-      @ch_type = @_io.read_bits_int(7)
+      @is_disabled = @_io.read_bits_int_be(1) != 0
+      @ch_type = @_io.read_bits_int_be(7)
       self
     end
     attr_reader :is_disabled
@@ -200,8 +202,8 @@ class S3m < Kaitai::Struct::Struct
     def _read
       @size = @_io.read_u2le
       @_raw_body = @_io.read_bytes((size - 2))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PatternCells.new(io, self, @_root)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = PatternCells.new(_io__raw_body, self, @_root)
       self
     end
     attr_reader :size
@@ -277,7 +279,8 @@ class S3m < Kaitai::Struct::Struct
       @tuning_hz = @_io.read_u4le
       @reserved2 = @_io.read_bytes(12)
       @sample_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
-      @magic = @_io.ensure_fixed_contents([83, 67, 82, 83].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 83].pack('C*'), magic, _io, "/types/instrument/seq/6") if not magic == [83, 67, 82, 83].pack('C*')
       self
     end
     class Sampled < Kaitai::Struct::Struct
@@ -327,7 +330,8 @@ class S3m < Kaitai::Struct::Struct
       end
 
       def _read
-        @reserved1 = @_io.ensure_fixed_contents([0, 0, 0].pack('C*'))
+        @reserved1 = @_io.read_bytes(3)
+        raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0].pack('C*'), reserved1, _io, "/types/instrument/types/adlib/seq/0") if not reserved1 == [0, 0, 0].pack('C*')
         @_unnamed1 = @_io.read_bytes(16)
         self
       end

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Vp8Ivf;
@@ -34,10 +34,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic1} = $self->{_io}->ensure_fixed_contents(pack('C*', (68, 75, 73, 70)));
+    $self->{magic1} = $self->{_io}->read_bytes(4);
     $self->{version} = $self->{_io}->read_u2le();
     $self->{len_header} = $self->{_io}->read_u2le();
-    $self->{codec} = $self->{_io}->ensure_fixed_contents(pack('C*', (86, 80, 56, 48)));
+    $self->{codec} = $self->{_io}->read_bytes(4);
     $self->{width} = $self->{_io}->read_u2le();
     $self->{height} = $self->{_io}->read_u2le();
     $self->{framerate} = $self->{_io}->read_u4le();

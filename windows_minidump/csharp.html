@@ -140,11 +140,6 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 <a href="index.html" title="Windows MiniDump parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="Windows MiniDump parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
@@ -332,8 +327,16 @@ used for that purpose in Windows and Google Chrome projects.</p>
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_magic1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">80</span> <span class="p">});</span>
-            <span class="n">_magic2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">147</span><span class="p">,</span> <span class="m">167</span> <span class="p">});</span>
+            <span class="n">_magic1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic1</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">80</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">80</span> <span class="p">},</span> <span class="n">Magic1</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">_magic2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic2</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">147</span><span class="p">,</span> <span class="m">167</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">147</span><span class="p">,</span> <span class="m">167</span> <span class="p">},</span> <span class="n">Magic2</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
             <span class="n">_numStreams</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="n">_ofsStreams</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
@@ -520,8 +523,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsServicePack</span><span class="p">);</span>
                         <span class="n">_servicePack</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MinidumpString</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_servicePack</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_servicePack</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_servicePack</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -710,10 +713,22 @@ used for that purpose in Windows and Google Chrome projects.</p>
                     <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsData</span><span class="p">);</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">StreamType</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">MemoryList</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MemoryList</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">MiscInfo</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
                         <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MiscInfo</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">ThreadList</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ThreadList</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">Exception</span><span class="p">:</span> <span class="p">{</span>
@@ -722,22 +737,10 @@ used for that purpose in Windows and Google Chrome projects.</p>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExceptionStream</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">MemoryList</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
-                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MemoryList</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">SystemInfo</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
                         <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SystemInfo</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">StreamTypes</span><span class="p">.</span><span class="n">ThreadList</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
-                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ThreadList</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">default</span><span class="p">:</span> <span class="p">{</span>

@@ -139,11 +139,6 @@ and, optionally, an argument. Register arguments are part of the
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="code_6502 parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="code_6502 parsing C# library">C#</a></li>
                 
                 
@@ -244,8 +239,8 @@ and, optionally, an argument. Register arguments are part of the
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -431,251 +426,251 @@ and, optionally, an argument. Register arguments are part of the
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OPCODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Code6502</span><span class="o">::</span><span class="no">OPCODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">code</span>
-      <span class="k">when</span> <span class="ss">:opcode_lsr_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_bit_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_asl_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ror_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sty_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sty_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_rol_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_bmi_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_inc_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpy_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_jsr_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_bvc_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_lsr_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldx_zpg_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_rol_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sty_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldy_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldx_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_beq_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldx_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_bcs_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">when</span> <span class="ss">:opcode_bcc_rel</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldy_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_bne_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpy_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_stx_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldy_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_lsr_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_inc_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_eor_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_asl_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_dec_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_stx_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_jmp_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_asl_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldx_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ror_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_bit_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_dec_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_stx_zpg_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_abs_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpy_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">when</span> <span class="ss">:opcode_ora_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_asl_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_ind_y</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ror_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldx_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_and_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpx_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_bvs_rel</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldy_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_inc_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_rol_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sbc_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_x_ind</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_sta_abs_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpx_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_cmp_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_abs</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_rol_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_inc_zpg_x</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lda_imm</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_dec_zpg</span>
-        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_adc_ind_y</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">when</span> <span class="ss">:opcode_lda_ind_y</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpx_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_bcs_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldy_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_lsr_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_bne_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_lsr_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpx_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_jmp_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpy_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldx_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">when</span> <span class="ss">:opcode_bpl_rel</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:opcode_lsr_zpg</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_imm</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_jmp_abs</span>
+      <span class="k">when</span> <span class="ss">:opcode_ror_abs_x</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_dec_abs</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_abs</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_ora_abs</span>
+      <span class="k">when</span> <span class="ss">:opcode_bit_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_rol_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sty_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_jsr_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_bmi_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sty_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_rol_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_stx_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_asl_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lsr_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_adc_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldy_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_bvs_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_inc_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_asl_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldx_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpx_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_dec_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ror_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldx_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_dec_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_abs</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
       <span class="k">when</span> <span class="ss">:opcode_ror_zpg</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_ldy_zpg_x</span>
+      <span class="k">when</span> <span class="ss">:opcode_inc_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_x_ind</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_cpx_zpg</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_asl_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldy_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_asl_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_rol_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lsr_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_stx_zpg_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_bit_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldx_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldy_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_jmp_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_beq_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_dec_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_eor_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_stx_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sty_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpy_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_dec_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_ror_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_abs_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_inc_abs_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_lda_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cpy_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldx_zpg_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_sbc_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_rol_zpg_x</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_sta_ind_y</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_abs</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_and_imm</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_cmp_x_ind</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ldy_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_inc_zpg</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_bvc_rel</span>
+        <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="k">when</span> <span class="ss">:opcode_ora_zpg</span>
         <span class="vi">@args</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">end</span>
       <span class="nb">self</span>

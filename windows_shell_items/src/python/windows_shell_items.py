@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class WindowsShellItems(KaitaiStruct):
     """Windows Shell Items (AKA "shellbags") is an undocumented set of
@@ -33,7 +34,7 @@ class WindowsShellItems(KaitaiStruct):
         self.items = []
         i = 0
         while True:
-            _ = self._root.ShellItem(self._io, self, self._root)
+            _ = WindowsShellItems.ShellItem(self._io, self, self._root)
             self.items.append(_)
             if _.len_data == 0:
                 break
@@ -50,12 +51,12 @@ class WindowsShellItems(KaitaiStruct):
             self.code = self._io.read_u1()
             _on = self.code
             if _on == 31:
-                self.body1 = self._root.RootFolderBody(self._io, self, self._root)
+                self.body1 = WindowsShellItems.RootFolderBody(self._io, self, self._root)
             _on = (self.code & 112)
             if _on == 32:
-                self.body2 = self._root.VolumeBody(self._io, self, self._root)
+                self.body2 = WindowsShellItems.VolumeBody(self._io, self, self._root)
             elif _on == 48:
-                self.body2 = self._root.FileEntryBody(self._io, self, self._root)
+                self.body2 = WindowsShellItems.FileEntryBody(self._io, self, self._root)
 
 
     class ShellItem(KaitaiStruct):
@@ -73,8 +74,8 @@ class WindowsShellItems(KaitaiStruct):
             self.len_data = self._io.read_u2le()
             if self.len_data >= 2:
                 self._raw_data = self._io.read_bytes((self.len_data - 2))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.ShellItemData(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = WindowsShellItems.ShellItemData(_io__raw_data, self, self._root)
 
 
 

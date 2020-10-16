@@ -135,7 +135,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _code = m_io.EnsureFixedContents(new byte[] { 0 });
+                _code = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Code, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Code, M_Io, "/types/echo_msg/seq/0");
+                }
                 _checksum = m_io.ReadU2be();
                 _identifier = m_io.ReadU2be();
                 _seqNum = m_io.ReadU2be();

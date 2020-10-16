@@ -27,7 +27,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 69, 71, 76, 36 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 69, 71, 76, 36 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, Magic, M_Io, "/seq/0");
+            }
             _crc32 = m_io.ReadU4le();
             __raw_contents = m_io.ReadBytesFull();
             var io___raw_contents = new KaitaiStream(__raw_contents);
@@ -110,7 +114,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 36, 98, 66, 95 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 36, 98, 66, 95 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, Magic, M_Io, "/types/cache/seq/0");
+                }
                 _version = m_io.ReadU4le();
                 _deviceVersion = m_io.ReadU4le();
                 _numEntries = m_io.ReadU4le();

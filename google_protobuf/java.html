@@ -376,23 +376,28 @@ are the fields' default values, etc, etc.</li>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">wireType</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">VARINT</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">LEN_DELIMITED</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DelimitedBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">BIT_64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">BIT_32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">WireTypes</span> <span class="n">on</span> <span class="o">=</span> <span class="n">wireType</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">wireType</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">VARINT</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">LEN_DELIMITED</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DelimitedBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BIT_64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BIT_32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">WireTypes</span> <span class="n">wireType</span><span class="p">;</span>

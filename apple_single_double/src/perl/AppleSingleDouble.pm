@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package AppleSingleDouble;
@@ -129,7 +129,7 @@ sub body {
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->ofs_body());
     my $_on = $self->type();
-    if ($_on == $TYPES_FINDER_INFO) {
+    if ($_on == $AppleSingleDouble::Entry::TYPES_FINDER_INFO) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = AppleSingleDouble::FinderInfo->new($io__raw_body, $self, $self->{_root});

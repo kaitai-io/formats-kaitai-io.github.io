@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class IcmpPacket extends KaitaiStruct {
     public static IcmpPacket fromFile(String fileName) throws IOException {
@@ -185,7 +186,10 @@ public class IcmpPacket extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.code = this._io.ensureFixedContents(new byte[] { 0 });
+            this.code = this._io.readBytes(1);
+            if (!(Arrays.equals(code(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, code(), _io(), "/types/echo_msg/seq/0");
+            }
             this.checksum = this._io.readU2be();
             this.identifier = this._io.readU2be();
             this.seqNum = this._io.readU2be();

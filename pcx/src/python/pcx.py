@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Pcx(KaitaiStruct):
 
@@ -27,8 +28,8 @@ class Pcx(KaitaiStruct):
 
     def _read(self):
         self._raw_hdr = self._io.read_bytes(128)
-        io = KaitaiStream(BytesIO(self._raw_hdr))
-        self.hdr = self._root.Header(io, self, self._root)
+        _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
+        self.hdr = Pcx.Header(_io__raw_hdr, self, self._root)
 
     class Header(KaitaiStruct):
         """
@@ -42,9 +43,11 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x0A")
-            self.version = self._root.Versions(self._io.read_u1())
-            self.encoding = self._root.Encodings(self._io.read_u1())
+            self.magic = self._io.read_bytes(1)
+            if not self.magic == b"\x0A":
+                raise kaitaistruct.ValidationNotEqualError(b"\x0A", self.magic, self._io, u"/types/header/seq/0")
+            self.version = KaitaiStream.resolve_enum(Pcx.Versions, self._io.read_u1())
+            self.encoding = KaitaiStream.resolve_enum(Pcx.Encodings, self._io.read_u1())
             self.bits_per_pixel = self._io.read_u1()
             self.img_x_min = self._io.read_u2le()
             self.img_y_min = self._io.read_u2le()
@@ -53,7 +56,9 @@ class Pcx(KaitaiStruct):
             self.hdpi = self._io.read_u2le()
             self.vdpi = self._io.read_u2le()
             self.palette_16 = self._io.read_bytes(48)
-            self.reserved = self._io.ensure_fixed_contents(b"\x00")
+            self.reserved = self._io.read_bytes(1)
+            if not self.reserved == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.reserved, self._io, u"/types/header/seq/11")
             self.num_planes = self._io.read_u1()
             self.bytes_per_line = self._io.read_u2le()
             self.palette_info = self._io.read_u2le()
@@ -69,10 +74,12 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x0C")
+            self.magic = self._io.read_bytes(1)
+            if not self.magic == b"\x0C":
+                raise kaitaistruct.ValidationNotEqualError(b"\x0C", self.magic, self._io, u"/types/t_palette_256/seq/0")
             self.colors = [None] * (256)
             for i in range(256):
-                self.colors[i] = self._root.Rgb(self._io, self, self._root)
+                self.colors[i] = Pcx.Rgb(self._io, self, self._root)
 
 
 
@@ -98,10 +105,10 @@ class Pcx(KaitaiStruct):
         if hasattr(self, '_m_palette_256'):
             return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
 
-        if  ((self.hdr.version == self._root.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
+        if  ((self.hdr.version == Pcx.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
             _pos = self._io.pos()
             self._io.seek((self._io.size() - 769))
-            self._m_palette_256 = self._root.TPalette256(self._io, self, self._root)
+            self._m_palette_256 = Pcx.TPalette256(self._io, self, self._root)
             self._io.seek(_pos)
 
         return self._m_palette_256 if hasattr(self, '_m_palette_256') else None

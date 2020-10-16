@@ -1,15 +1,16 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from ipv4_packet import Ipv4Packet
-from ipv6_packet import Ipv6Packet
+import ipv4_packet
+import ipv6_packet
 class EthernetFrame(KaitaiStruct):
     """Ethernet frame is a OSI data link layer (layer 2) protocol data unit
     for Ethernet networks. In practice, many other networks and/or
@@ -38,22 +39,22 @@ class EthernetFrame(KaitaiStruct):
     def _read(self):
         self.dst_mac = self._io.read_bytes(6)
         self.src_mac = self._io.read_bytes(6)
-        self.ether_type_1 = self._root.EtherTypeEnum(self._io.read_u2be())
-        if self.ether_type_1 == self._root.EtherTypeEnum.ieee_802_1q_tpid:
-            self.tci = self._root.TagControlInfo(self._io, self, self._root)
+        self.ether_type_1 = KaitaiStream.resolve_enum(EthernetFrame.EtherTypeEnum, self._io.read_u2be())
+        if self.ether_type_1 == EthernetFrame.EtherTypeEnum.ieee_802_1q_tpid:
+            self.tci = EthernetFrame.TagControlInfo(self._io, self, self._root)
 
-        if self.ether_type_1 == self._root.EtherTypeEnum.ieee_802_1q_tpid:
-            self.ether_type_2 = self._root.EtherTypeEnum(self._io.read_u2be())
+        if self.ether_type_1 == EthernetFrame.EtherTypeEnum.ieee_802_1q_tpid:
+            self.ether_type_2 = KaitaiStream.resolve_enum(EthernetFrame.EtherTypeEnum, self._io.read_u2be())
 
         _on = self.ether_type
-        if _on == self._root.EtherTypeEnum.ipv4:
+        if _on == EthernetFrame.EtherTypeEnum.ipv4:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Ipv4Packet(io)
-        elif _on == self._root.EtherTypeEnum.ipv6:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ipv4_packet.Ipv4Packet(_io__raw_body)
+        elif _on == EthernetFrame.EtherTypeEnum.ipv6:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Ipv6Packet(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ipv6_packet.Ipv6Packet(_io__raw_body)
         else:
             self.body = self._io.read_bytes_full()
 
@@ -68,9 +69,9 @@ class EthernetFrame(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.priority = self._io.read_bits_int(3)
-            self.drop_eligible = self._io.read_bits_int(1) != 0
-            self.vlan_id = self._io.read_bits_int(12)
+            self.priority = self._io.read_bits_int_be(3)
+            self.drop_eligible = self._io.read_bits_int_be(1) != 0
+            self.vlan_id = self._io.read_bits_int_be(12)
 
 
     @property
@@ -83,7 +84,7 @@ class EthernetFrame(KaitaiStruct):
         if hasattr(self, '_m_ether_type'):
             return self._m_ether_type if hasattr(self, '_m_ether_type') else None
 
-        self._m_ether_type = (self.ether_type_2 if self.ether_type_1 == self._root.EtherTypeEnum.ieee_802_1q_tpid else self.ether_type_1)
+        self._m_ether_type = (self.ether_type_2 if self.ether_type_1 == EthernetFrame.EtherTypeEnum.ieee_802_1q_tpid else self.ether_type_1)
         return self._m_ether_type if hasattr(self, '_m_ether_type') else None
 
 

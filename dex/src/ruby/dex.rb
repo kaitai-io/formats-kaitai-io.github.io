@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -53,7 +53,8 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([100, 101, 120, 10].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([100, 101, 120, 10].pack('C*'), magic, _io, "/types/header_item/seq/0") if not magic == [100, 101, 120, 10].pack('C*')
       @version_str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(4), 0, false)).force_encoding("ascii")
       @checksum = @_io.read_u4le
       @signature = @_io.read_bytes(20)
@@ -234,42 +235,42 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @value_arg = @_io.read_bits_int(3)
-      @value_type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE_ENUM, @_io.read_bits_int(5))
+      @value_arg = @_io.read_bits_int_be(3)
+      @value_type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE_ENUM, @_io.read_bits_int_be(5))
       @_io.align_to_byte
       case value_type
-      when :value_type_enum_double
-        @value = @_io.read_f8le
+      when :value_type_enum_int
+        @value = @_io.read_s4le
       when :value_type_enum_annotation
         @value = EncodedAnnotation.new(@_io, self, @_root)
-      when :value_type_enum_type
-        @value = @_io.read_u4le
-      when :value_type_enum_char
-        @value = @_io.read_u2le
+      when :value_type_enum_long
+        @value = @_io.read_s8le
       when :value_type_enum_method_handle
         @value = @_io.read_u4le
-      when :value_type_enum_array
-        @value = EncodedArray.new(@_io, self, @_root)
       when :value_type_enum_byte
         @value = @_io.read_s1
-      when :value_type_enum_method
-        @value = @_io.read_u4le
+      when :value_type_enum_array
+        @value = EncodedArray.new(@_io, self, @_root)
       when :value_type_enum_method_type
         @value = @_io.read_u4le
       when :value_type_enum_short
         @value = @_io.read_s2le
-      when :value_type_enum_string
+      when :value_type_enum_method
         @value = @_io.read_u4le
-      when :value_type_enum_int
-        @value = @_io.read_s4le
-      when :value_type_enum_field
-        @value = @_io.read_u4le
-      when :value_type_enum_long
-        @value = @_io.read_s8le
+      when :value_type_enum_double
+        @value = @_io.read_f8le
       when :value_type_enum_float
         @value = @_io.read_f4le
+      when :value_type_enum_type
+        @value = @_io.read_u4le
       when :value_type_enum_enum
         @value = @_io.read_u4le
+      when :value_type_enum_field
+        @value = @_io.read_u4le
+      when :value_type_enum_string
+        @value = @_io.read_u4le
+      when :value_type_enum_char
+        @value = @_io.read_u2le
       end
       self
     end
@@ -612,7 +613,7 @@ class Dex < Kaitai::Struct::Struct
 
     def _read
       @class_idx = @_io.read_u4le
-      @access_flags = Kaitai::Struct::Stream::resolve_enum(CLASS_ACCESS_FLAGS, @_io.read_u4le)
+      @access_flags = Kaitai::Struct::Stream::resolve_enum(Dex::CLASS_ACCESS_FLAGS, @_io.read_u4le)
       @superclass_idx = @_io.read_u4le
       @interfaces_off = @_io.read_u4le
       @source_file_idx = @_io.read_u4le

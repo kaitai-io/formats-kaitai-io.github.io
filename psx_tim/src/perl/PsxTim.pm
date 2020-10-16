@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package PsxTim;
@@ -39,7 +39,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (16, 0, 0, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{flags} = $self->{_io}->read_u4le();
     if ($self->has_clut()) {
         $self->{clut} = PsxTim::Bitmap->new($self->{_io}, $self, $self->{_root});

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -35,8 +35,8 @@ class UefiTe < Kaitai::Struct::Struct
 
   def _read
     @_raw_te_hdr = @_io.read_bytes(40)
-    io = Kaitai::Struct::Stream.new(@_raw_te_hdr)
-    @te_hdr = TeHeader.new(io, self, @_root)
+    _io__raw_te_hdr = Kaitai::Struct::Stream.new(@_raw_te_hdr)
+    @te_hdr = TeHeader.new(_io__raw_te_hdr, self, @_root)
     @sections = Array.new(te_hdr.num_sections)
     (te_hdr.num_sections).times { |i|
       @sections[i] = Section.new(@_io, self, @_root)
@@ -96,7 +96,8 @@ class UefiTe < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([86, 90].pack('C*'))
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([86, 90].pack('C*'), magic, _io, "/types/te_header/seq/0") if not magic == [86, 90].pack('C*')
       @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE_TYPE, @_io.read_u2le)
       @num_sections = @_io.read_u1
       @subsystem = Kaitai::Struct::Stream::resolve_enum(SUBSYSTEM_ENUM, @_io.read_u1)

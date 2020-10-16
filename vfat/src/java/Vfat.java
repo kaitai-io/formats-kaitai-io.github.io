@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -54,11 +55,14 @@ public class Vfat extends KaitaiStruct {
         }
         private void _read() {
             this.lsPerFat = this._io.readU4le();
-            this.hasActiveFat = this._io.readBitsInt(1) != 0;
-            this.reserved1 = this._io.readBitsInt(3);
-            this.activeFatId = this._io.readBitsInt(4);
+            this.hasActiveFat = this._io.readBitsIntBe(1) != 0;
+            this.reserved1 = this._io.readBitsIntBe(3);
+            this.activeFatId = this._io.readBitsIntBe(4);
             this._io.alignToByte();
-            this.reserved2 = this._io.ensureFixedContents(new byte[] { 0 });
+            this.reserved2 = this._io.readBytes(1);
+            if (!(Arrays.equals(reserved2(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, reserved2(), _io(), "/types/ext_bios_param_block_fat32/seq/4");
+            }
             this.fatVersion = this._io.readU2le();
             this.rootDirStartClus = this._io.readU4le();
             this.lsFsInfo = this._io.readU2le();
@@ -501,7 +505,7 @@ public class Vfat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            records = new ArrayList<RootDirectoryRec>((int) (_root.bootSector().bpb().maxRootDirRec()));
+            records = new ArrayList<RootDirectoryRec>(((Number) (_root.bootSector().bpb().maxRootDirRec())).intValue());
             for (int i = 0; i < _root.bootSector().bpb().maxRootDirRec(); i++) {
                 this.records.add(new RootDirectoryRec(this._io, this, _root));
             }
@@ -592,7 +596,7 @@ public class Vfat extends KaitaiStruct {
             return this.fats;
         long _pos = this._io.pos();
         this._io.seek(bootSector().posFats());
-        fats = new ArrayList<byte[]>((int) (bootSector().bpb().numFats()));
+        fats = new ArrayList<byte[]>(((Number) (bootSector().bpb().numFats())).intValue());
         for (int i = 0; i < bootSector().bpb().numFats(); i++) {
             this.fats.add(this._io.readBytes(bootSector().sizeFat()));
         }

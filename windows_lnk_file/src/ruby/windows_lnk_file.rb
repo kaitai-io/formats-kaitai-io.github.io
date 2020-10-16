@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -74,8 +74,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     def _read
       @len_id_list = @_io.read_u2le
       @_raw_id_list = @_io.read_bytes(len_id_list)
-      io = Kaitai::Struct::Stream.new(@_raw_id_list)
-      @id_list = WindowsShellItems.new(io)
+      _io__raw_id_list = Kaitai::Struct::Stream.new(@_raw_id_list)
+      @id_list = WindowsShellItems.new(_io__raw_id_list)
       self
     end
     attr_reader :len_id_list
@@ -108,8 +108,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     def _read
       @len_all = @_io.read_u4le
       @_raw_all = @_io.read_bytes((len_all - 4))
-      io = Kaitai::Struct::Stream.new(@_raw_all)
-      @all = All.new(io, self, @_root)
+      _io__raw_all = Kaitai::Struct::Stream.new(@_raw_all)
+      @all = All.new(_io__raw_all, self, @_root)
       self
     end
 
@@ -122,7 +122,7 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       end
 
       def _read
-        @drive_type = Kaitai::Struct::Stream::resolve_enum(DRIVE_TYPES, @_io.read_u4le)
+        @drive_type = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::DRIVE_TYPES, @_io.read_u4le)
         @drive_serial_number = @_io.read_u4le
         @ofs_volume_label = @_io.read_u4le
         if is_unicode
@@ -162,8 +162,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       def _read
         @len_header = @_io.read_u4le
         @_raw_header = @_io.read_bytes((len_header - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = Header.new(io, self, @_root)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = Header.new(_io__raw_header, self, @_root)
         self
       end
       def volume_id
@@ -202,8 +202,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       def _read
         @len_all = @_io.read_u4le
         @_raw_body = @_io.read_bytes((len_all - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VolumeIdBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VolumeIdBody.new(_io__raw_body, self, @_root)
         self
       end
       attr_reader :len_all
@@ -220,10 +220,10 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       end
 
       def _read
-        @reserved1 = @_io.read_bits_int(6)
-        @has_common_net_rel_link = @_io.read_bits_int(1) != 0
-        @has_volume_id_and_local_base_path = @_io.read_bits_int(1) != 0
-        @reserved2 = @_io.read_bits_int(24)
+        @reserved1 = @_io.read_bits_int_be(6)
+        @has_common_net_rel_link = @_io.read_bits_int_be(1) != 0
+        @has_volume_id_and_local_base_path = @_io.read_bits_int_be(1) != 0
+        @reserved2 = @_io.read_bits_int_be(24)
         self
       end
       attr_reader :reserved1
@@ -276,18 +276,18 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     end
 
     def _read
-      @is_unicode = @_io.read_bits_int(1) != 0
-      @has_icon_location = @_io.read_bits_int(1) != 0
-      @has_arguments = @_io.read_bits_int(1) != 0
-      @has_work_dir = @_io.read_bits_int(1) != 0
-      @has_rel_path = @_io.read_bits_int(1) != 0
-      @has_name = @_io.read_bits_int(1) != 0
-      @has_link_info = @_io.read_bits_int(1) != 0
-      @has_link_target_id_list = @_io.read_bits_int(1) != 0
-      @_unnamed8 = @_io.read_bits_int(16)
-      @reserved = @_io.read_bits_int(5)
-      @keep_local_id_list_for_unc_target = @_io.read_bits_int(1) != 0
-      @_unnamed11 = @_io.read_bits_int(2)
+      @is_unicode = @_io.read_bits_int_be(1) != 0
+      @has_icon_location = @_io.read_bits_int_be(1) != 0
+      @has_arguments = @_io.read_bits_int_be(1) != 0
+      @has_work_dir = @_io.read_bits_int_be(1) != 0
+      @has_rel_path = @_io.read_bits_int_be(1) != 0
+      @has_name = @_io.read_bits_int_be(1) != 0
+      @has_link_info = @_io.read_bits_int_be(1) != 0
+      @has_link_target_id_list = @_io.read_bits_int_be(1) != 0
+      @_unnamed8 = @_io.read_bits_int_be(16)
+      @reserved = @_io.read_bits_int_be(5)
+      @keep_local_id_list_for_unc_target = @_io.read_bits_int_be(1) != 0
+      @_unnamed11 = @_io.read_bits_int_be(2)
       self
     end
     attr_reader :is_unicode
@@ -313,20 +313,23 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     end
 
     def _read
-      @len_header = @_io.ensure_fixed_contents([76, 0, 0, 0].pack('C*'))
-      @link_clsid = @_io.ensure_fixed_contents([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*'))
+      @len_header = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 0, 0, 0].pack('C*'), len_header, _io, "/types/file_header/seq/0") if not len_header == [76, 0, 0, 0].pack('C*')
+      @link_clsid = @_io.read_bytes(16)
+      raise Kaitai::Struct::ValidationNotEqualError.new([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*'), link_clsid, _io, "/types/file_header/seq/1") if not link_clsid == [1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*')
       @_raw_flags = @_io.read_bytes(4)
-      io = Kaitai::Struct::Stream.new(@_raw_flags)
-      @flags = LinkFlags.new(io, self, @_root)
+      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
+      @flags = LinkFlags.new(_io__raw_flags, self, @_root)
       @file_attrs = @_io.read_u4le
       @time_creation = @_io.read_u8le
       @time_access = @_io.read_u8le
       @time_write = @_io.read_u8le
       @target_file_size = @_io.read_u4le
       @icon_index = @_io.read_s4le
-      @show_command = Kaitai::Struct::Stream::resolve_enum(WINDOW_STATE, @_io.read_u4le)
+      @show_command = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::WINDOW_STATE, @_io.read_u4le)
       @hotkey = @_io.read_u2le
-      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
+      @reserved = @_io.read_bytes(10)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), reserved, _io, "/types/file_header/seq/11") if not reserved == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       self
     end
 

@@ -1,0 +1,35 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__some_ip_sd {
+		label="SomeIpSd";
+		graph[style=dotted];
+
+		some_ip_sd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">1</TD><TD>SdFlags</TD><TD PORT="flags_type">flags</TD></TR>
+			<TR><TD PORT="reserved_pos">1</TD><TD PORT="reserved_size">3</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			<TR><TD PORT="len_entries_pos">4</TD><TD PORT="len_entries_size">4</TD><TD>u4be</TD><TD PORT="len_entries_type">len_entries</TD></TR>
+			<TR><TD PORT="entries_pos">8</TD><TD PORT="entries_size">len_entries</TD><TD>SomeIpSdEntries</TD><TD PORT="entries_type">entries</TD></TR>
+			<TR><TD PORT="len_options_pos">...</TD><TD PORT="len_options_size">4</TD><TD>u4be</TD><TD PORT="len_options_type">len_options</TD></TR>
+			<TR><TD PORT="options_pos">...</TD><TD PORT="options_size">len_options</TD><TD>SomeIpSdOptions</TD><TD PORT="options_type">options</TD></TR>
+		</TABLE>>];
+		subgraph cluster__sd_flags {
+			label="SomeIpSd::SdFlags";
+			graph[style=dotted];
+
+			sd_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reboot_pos">0</TD><TD PORT="reboot_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="reboot_type">reboot</TD></TR>
+				<TR><TD PORT="unicast_pos">0:1</TD><TD PORT="unicast_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="unicast_type">unicast</TD></TR>
+				<TR><TD PORT="initial_data_pos">0:2</TD><TD PORT="initial_data_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="initial_data_type">initial_data</TD></TR>
+				<TR><TD PORT="reserved_pos">0:3</TD><TD PORT="reserved_size">5b</TD><TD>b5</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+	}
+	some_ip_sd__seq:flags_type -> sd_flags__seq [style=bold];
+	some_ip_sd__seq:len_entries_type -> some_ip_sd__seq:entries_size [color="#404040"];
+	some_ip_sd__seq:entries_type -> some_ip_sd_entries__seq [style=bold];
+	some_ip_sd__seq:len_options_type -> some_ip_sd__seq:options_size [color="#404040"];
+	some_ip_sd__seq:options_type -> some_ip_sd_options__seq [style=bold];
+}

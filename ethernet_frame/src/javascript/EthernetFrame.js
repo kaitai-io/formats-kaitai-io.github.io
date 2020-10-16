@@ -87,9 +87,9 @@ var EthernetFrame = (function() {
       this._read();
     }
     TagControlInfo.prototype._read = function() {
-      this.priority = this._io.readBitsInt(3);
-      this.dropEligible = this._io.readBitsInt(1) != 0;
-      this.vlanId = this._io.readBitsInt(12);
+      this.priority = this._io.readBitsIntBe(3);
+      this.dropEligible = this._io.readBitsIntBe(1) != 0;
+      this.vlanId = this._io.readBitsIntBe(12);
     }
 
     /**

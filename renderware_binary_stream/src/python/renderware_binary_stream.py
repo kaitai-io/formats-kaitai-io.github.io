@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RenderwareBinaryStream(KaitaiStruct):
     """
@@ -189,34 +190,34 @@ class RenderwareBinaryStream(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.code = self._root.Sections(self._io.read_u4le())
+        self.code = KaitaiStream.resolve_enum(RenderwareBinaryStream.Sections, self._io.read_u4le())
         self.size = self._io.read_u4le()
         self.library_id_stamp = self._io.read_u4le()
         _on = self.code
-        if _on == self._root.Sections.texture_dictionary:
+        if _on == RenderwareBinaryStream.Sections.geometry:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.geometry_list:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.texture_dictionary:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.clump:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.geometry_list:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.texture_native:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.texture_native:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.frame_list:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.clump:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.geometry:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.frame_list:
             self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
         else:
             self.body = self._io.read_bytes(self.size)
 
@@ -258,14 +259,14 @@ class RenderwareBinaryStream(KaitaiStruct):
             self.num_vertices = self._io.read_u4le()
             self.num_morph_targets = self._io.read_u4le()
             if self._parent.version < 212992:
-                self.surf_prop = self._root.SurfaceProperties(self._io, self, self._root)
+                self.surf_prop = RenderwareBinaryStream.SurfaceProperties(self._io, self, self._root)
 
             if not (self.is_native):
-                self.geometry = self._root.GeometryNonNative(self._io, self, self._root)
+                self.geometry = RenderwareBinaryStream.GeometryNonNative(self._io, self, self._root)
 
             self.morph_targets = [None] * (self.num_morph_targets)
             for i in range(self.num_morph_targets):
-                self.morph_targets[i] = self._root.MorphTarget(self._io, self, self._root)
+                self.morph_targets[i] = RenderwareBinaryStream.MorphTarget(self._io, self, self._root)
 
 
         @property
@@ -312,18 +313,18 @@ class RenderwareBinaryStream(KaitaiStruct):
             if self._parent.is_prelit:
                 self.prelit_colors = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    self.prelit_colors[i] = self._root.Rgba(self._io, self, self._root)
+                    self.prelit_colors[i] = RenderwareBinaryStream.Rgba(self._io, self, self._root)
 
 
             if  ((self._parent.is_textured) or (self._parent.is_textured2)) :
                 self.tex_coords = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    self.tex_coords[i] = self._root.TexCoord(self._io, self, self._root)
+                    self.tex_coords[i] = RenderwareBinaryStream.TexCoord(self._io, self, self._root)
 
 
             self.triangles = [None] * (self._parent.num_triangles)
             for i in range(self._parent.num_triangles):
-                self.triangles[i] = self._root.Triangle(self._io, self, self._root)
+                self.triangles[i] = RenderwareBinaryStream.Triangle(self._io, self, self._root)
 
 
 
@@ -378,19 +379,19 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_sphere = self._root.Sphere(self._io, self, self._root)
+            self.bounding_sphere = RenderwareBinaryStream.Sphere(self._io, self, self._root)
             self.has_vertices = self._io.read_u4le()
             self.has_normals = self._io.read_u4le()
             if self.has_vertices != 0:
                 self.vertices = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    self.vertices[i] = self._root.Vector3d(self._io, self, self._root)
+                    self.vertices[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
 
 
             if self.has_normals != 0:
                 self.normals = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    self.normals[i] = self._root.Vector3d(self._io, self, self._root)
+                    self.normals[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
 
 
 
@@ -427,7 +428,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self.num_frames = self._io.read_u4le()
             self.frames = [None] * (self.num_frames)
             for i in range(self.num_frames):
-                self.frames[i] = self._root.Frame(self._io, self, self._root)
+                self.frames[i] = RenderwareBinaryStream.Frame(self._io, self, self._root)
 
 
 
@@ -445,7 +446,7 @@ class RenderwareBinaryStream(KaitaiStruct):
         def _read(self):
             self.entries = [None] * (3)
             for i in range(3):
-                self.entries[i] = self._root.Vector3d(self._io, self, self._root)
+                self.entries[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
 
 
 
@@ -481,30 +482,32 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._io.ensure_fixed_contents(b"\x01\x00\x00\x00")
+            self.code = self._io.read_bytes(4)
+            if not self.code == b"\x01\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x01\x00\x00\x00", self.code, self._io, u"/types/list_with_header/seq/0")
             self.header_size = self._io.read_u4le()
             self.library_id_stamp = self._io.read_u4le()
             _on = self._parent.code
-            if _on == self._root.Sections.texture_dictionary:
+            if _on == RenderwareBinaryStream.Sections.geometry:
                 self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructTextureDictionary(io, self, self._root)
-            elif _on == self._root.Sections.geometry_list:
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructGeometry(_io__raw_header, self, self._root)
+            elif _on == RenderwareBinaryStream.Sections.texture_dictionary:
                 self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructGeometryList(io, self, self._root)
-            elif _on == self._root.Sections.clump:
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructTextureDictionary(_io__raw_header, self, self._root)
+            elif _on == RenderwareBinaryStream.Sections.geometry_list:
                 self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructClump(io, self, self._root)
-            elif _on == self._root.Sections.frame_list:
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructGeometryList(_io__raw_header, self, self._root)
+            elif _on == RenderwareBinaryStream.Sections.clump:
                 self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructFrameList(io, self, self._root)
-            elif _on == self._root.Sections.geometry:
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructClump(_io__raw_header, self, self._root)
+            elif _on == RenderwareBinaryStream.Sections.frame_list:
                 self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructGeometry(io, self, self._root)
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructFrameList(_io__raw_header, self, self._root)
             else:
                 self.header = self._io.read_bytes(self.header_size)
             self.entries = []
@@ -549,8 +552,8 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.rotation_matrix = self._root.Matrix(self._io, self, self._root)
-            self.position = self._root.Vector3d(self._io, self, self._root)
+            self.rotation_matrix = RenderwareBinaryStream.Matrix(self._io, self, self._root)
+            self.position = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
             self.cur_frame_idx = self._io.read_s4le()
             self.matrix_creation_flags = self._io.read_u4le()
 

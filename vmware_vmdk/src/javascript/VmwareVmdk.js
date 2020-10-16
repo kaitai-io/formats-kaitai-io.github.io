@@ -30,7 +30,10 @@ var VmwareVmdk = (function() {
     this._read();
   }
   VmwareVmdk.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([75, 68, 77, 86]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [75, 68, 77, 86]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([75, 68, 77, 86], this.magic, this._io, "/seq/0");
+    }
     this.version = this._io.readS4le();
     this.flags = new HeaderFlags(this._io, this, this._root);
     this.sizeMax = this._io.readS8le();
@@ -59,15 +62,15 @@ var VmwareVmdk = (function() {
       this._read();
     }
     HeaderFlags.prototype._read = function() {
-      this.reserved1 = this._io.readBitsInt(5);
-      this.zeroedGrainTableEntry = this._io.readBitsInt(1) != 0;
-      this.useSecondaryGrainDir = this._io.readBitsInt(1) != 0;
-      this.validNewLineDetectionTest = this._io.readBitsInt(1) != 0;
+      this.reserved1 = this._io.readBitsIntBe(5);
+      this.zeroedGrainTableEntry = this._io.readBitsIntBe(1) != 0;
+      this.useSecondaryGrainDir = this._io.readBitsIntBe(1) != 0;
+      this.validNewLineDetectionTest = this._io.readBitsIntBe(1) != 0;
       this._io.alignToByte();
       this.reserved2 = this._io.readU1();
-      this.reserved3 = this._io.readBitsInt(6);
-      this.hasMetadata = this._io.readBitsInt(1) != 0;
-      this.hasCompressedGrain = this._io.readBitsInt(1) != 0;
+      this.reserved3 = this._io.readBitsIntBe(6);
+      this.hasMetadata = this._io.readBitsIntBe(1) != 0;
+      this.hasCompressedGrain = this._io.readBitsIntBe(1) != 0;
       this._io.alignToByte();
       this.reserved4 = this._io.readU1();
     }

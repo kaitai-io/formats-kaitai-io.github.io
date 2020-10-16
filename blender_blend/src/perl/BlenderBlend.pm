@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -246,8 +246,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{id} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 68, 78, 65)));
-    $self->{name_magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (78, 65, 77, 69)));
+    $self->{id} = $self->{_io}->read_bytes(4);
+    $self->{name_magic} = $self->{_io}->read_bytes(4);
     $self->{num_names} = $self->{_io}->read_u4le();
     $self->{names} = ();
     my $n_names = $self->num_names();
@@ -255,7 +255,7 @@ sub _read {
         $self->{names}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
     $self->{padding_1} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
-    $self->{type_magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (84, 89, 80, 69)));
+    $self->{type_magic} = $self->{_io}->read_bytes(4);
     $self->{num_types} = $self->{_io}->read_u4le();
     $self->{types} = ();
     my $n_types = $self->num_types();
@@ -263,14 +263,14 @@ sub _read {
         $self->{types}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
     $self->{padding_2} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
-    $self->{tlen_magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (84, 76, 69, 78)));
+    $self->{tlen_magic} = $self->{_io}->read_bytes(4);
     $self->{lengths} = ();
     my $n_lengths = $self->num_types();
     for (my $i = 0; $i < $n_lengths; $i++) {
         $self->{lengths}[$i] = $self->{_io}->read_u2le();
     }
     $self->{padding_3} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
-    $self->{strc_magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 84, 82, 67)));
+    $self->{strc_magic} = $self->{_io}->read_bytes(4);
     $self->{num_structs} = $self->{_io}->read_u4le();
     $self->{structs} = ();
     my $n_structs = $self->num_structs();
@@ -384,7 +384,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (66, 76, 69, 78, 68, 69, 82)));
+    $self->{magic} = $self->{_io}->read_bytes(7);
     $self->{ptr_size_id} = $self->{_io}->read_u1();
     $self->{endian} = $self->{_io}->read_u1();
     $self->{version} = Encode::decode("ASCII", $self->{_io}->read_bytes(3));
@@ -393,7 +393,7 @@ sub _read {
 sub psize {
     my ($self) = @_;
     return $self->{psize} if ($self->{psize});
-    $self->{psize} = ($self->ptr_size_id() == $PTR_SIZE_BITS_64 ? 8 : 4);
+    $self->{psize} = ($self->ptr_size_id() == $BlenderBlend::PTR_SIZE_BITS_64 ? 8 : 4);
     return $self->{psize};
 }
 

@@ -133,11 +133,6 @@ section#format-index .row {
                 <a href="index.html" title="ext2 filesystem parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="ext2 filesystem parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="ext2 filesystem parsing C# library">C#</a></li>
@@ -305,7 +300,11 @@ section#format-index .row {
                 <span class="n">_wtime</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_mntCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
                 <span class="n">_maxMntCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">83</span><span class="p">,</span> <span class="m">239</span> <span class="p">});</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">83</span><span class="p">,</span> <span class="m">239</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">83</span><span class="p">,</span> <span class="m">239</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/super_block_struct/seq/15&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_state</span> <span class="p">=</span> <span class="p">((</span><span class="n">StateEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">());</span>
                 <span class="n">_errors</span> <span class="p">=</span> <span class="p">((</span><span class="n">ErrorsEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">());</span>
                 <span class="n">_minorRevLevel</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>

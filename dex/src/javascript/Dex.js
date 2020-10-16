@@ -73,7 +73,10 @@ var Dex = (function() {
       this._read();
     }
     HeaderItem.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([100, 101, 120, 10]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [100, 101, 120, 10]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([100, 101, 120, 10], this.magic, this._io, "/types/header_item/seq/0");
+      }
       this.versionStr = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(4), 0, false), "ascii");
       this.checksum = this._io.readU4le();
       this.signature = this._io.readBytes(20);
@@ -275,33 +278,27 @@ var Dex = (function() {
       this._read();
     }
     EncodedValue.prototype._read = function() {
-      this.valueArg = this._io.readBitsInt(3);
-      this.valueType = this._io.readBitsInt(5);
+      this.valueArg = this._io.readBitsIntBe(3);
+      this.valueType = this._io.readBitsIntBe(5);
       this._io.alignToByte();
       switch (this.valueType) {
-      case Dex.EncodedValue.ValueTypeEnum.DOUBLE:
-        this.value = this._io.readF8le();
+      case Dex.EncodedValue.ValueTypeEnum.INT:
+        this.value = this._io.readS4le();
         break;
       case Dex.EncodedValue.ValueTypeEnum.ANNOTATION:
         this.value = new EncodedAnnotation(this._io, this, this._root);
         break;
-      case Dex.EncodedValue.ValueTypeEnum.TYPE:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.CHAR:
-        this.value = this._io.readU2le();
+      case Dex.EncodedValue.ValueTypeEnum.LONG:
+        this.value = this._io.readS8le();
         break;
       case Dex.EncodedValue.ValueTypeEnum.METHOD_HANDLE:
         this.value = this._io.readU4le();
         break;
-      case Dex.EncodedValue.ValueTypeEnum.ARRAY:
-        this.value = new EncodedArray(this._io, this, this._root);
-        break;
       case Dex.EncodedValue.ValueTypeEnum.BYTE:
         this.value = this._io.readS1();
         break;
-      case Dex.EncodedValue.ValueTypeEnum.METHOD:
-        this.value = this._io.readU4le();
+      case Dex.EncodedValue.ValueTypeEnum.ARRAY:
+        this.value = new EncodedArray(this._io, this, this._root);
         break;
       case Dex.EncodedValue.ValueTypeEnum.METHOD_TYPE:
         this.value = this._io.readU4le();
@@ -309,23 +306,29 @@ var Dex = (function() {
       case Dex.EncodedValue.ValueTypeEnum.SHORT:
         this.value = this._io.readS2le();
         break;
-      case Dex.EncodedValue.ValueTypeEnum.STRING:
+      case Dex.EncodedValue.ValueTypeEnum.METHOD:
         this.value = this._io.readU4le();
         break;
-      case Dex.EncodedValue.ValueTypeEnum.INT:
-        this.value = this._io.readS4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.FIELD:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.LONG:
-        this.value = this._io.readS8le();
+      case Dex.EncodedValue.ValueTypeEnum.DOUBLE:
+        this.value = this._io.readF8le();
         break;
       case Dex.EncodedValue.ValueTypeEnum.FLOAT:
         this.value = this._io.readF4le();
         break;
+      case Dex.EncodedValue.ValueTypeEnum.TYPE:
+        this.value = this._io.readU4le();
+        break;
       case Dex.EncodedValue.ValueTypeEnum.ENUM:
         this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.FIELD:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.STRING:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.CHAR:
+        this.value = this._io.readU2le();
         break;
       }
     }

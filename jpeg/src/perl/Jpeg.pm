@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use Exif;
 
@@ -117,38 +117,38 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (255)));
+    $self->{magic} = $self->{_io}->read_bytes(1);
     $self->{marker} = $self->{_io}->read_u1();
-    if ( (($self->marker() != $MARKER_ENUM_SOI) && ($self->marker() != $MARKER_ENUM_EOI)) ) {
+    if ( (($self->marker() != $Jpeg::Segment::MARKER_ENUM_SOI) && ($self->marker() != $Jpeg::Segment::MARKER_ENUM_EOI)) ) {
         $self->{length} = $self->{_io}->read_u2be();
     }
-    if ( (($self->marker() != $MARKER_ENUM_SOI) && ($self->marker() != $MARKER_ENUM_EOI)) ) {
+    if ( (($self->marker() != $Jpeg::Segment::MARKER_ENUM_SOI) && ($self->marker() != $Jpeg::Segment::MARKER_ENUM_EOI)) ) {
         my $_on = $self->marker();
-        if ($_on == $MARKER_ENUM_SOS) {
-            $self->{_raw_data} = $self->{_io}->read_bytes(($self->length() - 2));
-            my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-            $self->{data} = Jpeg::SegmentSos->new($io__raw_data, $self, $self->{_root});
-        }
-        elsif ($_on == $MARKER_ENUM_APP1) {
+        if ($_on == $Jpeg::Segment::MARKER_ENUM_APP1) {
             $self->{_raw_data} = $self->{_io}->read_bytes(($self->length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
             $self->{data} = Jpeg::SegmentApp1->new($io__raw_data, $self, $self->{_root});
         }
-        elsif ($_on == $MARKER_ENUM_SOF0) {
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_APP0) {
+            $self->{_raw_data} = $self->{_io}->read_bytes(($self->length() - 2));
+            my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+            $self->{data} = Jpeg::SegmentApp0->new($io__raw_data, $self, $self->{_root});
+        }
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_SOF0) {
             $self->{_raw_data} = $self->{_io}->read_bytes(($self->length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
             $self->{data} = Jpeg::SegmentSof0->new($io__raw_data, $self, $self->{_root});
         }
-        elsif ($_on == $MARKER_ENUM_APP0) {
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_SOS) {
             $self->{_raw_data} = $self->{_io}->read_bytes(($self->length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-            $self->{data} = Jpeg::SegmentApp0->new($io__raw_data, $self, $self->{_root});
+            $self->{data} = Jpeg::SegmentSos->new($io__raw_data, $self, $self->{_root});
         }
         else {
             $self->{data} = $self->{_io}->read_bytes(($self->length() - 2));
         }
     }
-    if ($self->marker() == $MARKER_ENUM_SOS) {
+    if ($self->marker() == $Jpeg::Segment::MARKER_ENUM_SOS) {
         $self->{image_data} = $self->{_io}->read_bytes_full();
     }
 }
@@ -500,7 +500,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{extra_zero} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{extra_zero} = $self->{_io}->read_bytes(1);
     $self->{_raw_data} = $self->{_io}->read_bytes_full();
     my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
     $self->{data} = Exif->new($io__raw_data);

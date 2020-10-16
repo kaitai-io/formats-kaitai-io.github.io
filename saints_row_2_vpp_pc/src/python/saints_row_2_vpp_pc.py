@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SaintsRow2VppPc(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,7 +16,9 @@ class SaintsRow2VppPc(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\xCE\x0A\x89\x51\x04")
+        self.magic = self._io.read_bytes(5)
+        if not self.magic == b"\xCE\x0A\x89\x51\x04":
+            raise kaitaistruct.ValidationNotEqualError(b"\xCE\x0A\x89\x51\x04", self.magic, self._io, u"/seq/0")
         self.pad1 = self._io.read_bytes(335)
         self.num_files = self._io.read_s4le()
         self.container_size = self._io.read_s4le()
@@ -39,7 +42,7 @@ class SaintsRow2VppPc(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Offsets.Offset(self._io, self, self._root))
+                self.entries.append(SaintsRow2VppPc.Offsets.Offset(self._io, self, self._root))
                 i += 1
 
 
@@ -121,8 +124,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.ofs_filenames)
         self._raw__m_filenames = self._io.read_bytes(self.len_filenames)
-        io = KaitaiStream(BytesIO(self._raw__m_filenames))
-        self._m_filenames = self._root.Strings(io, self, self._root)
+        _io__raw__m_filenames = KaitaiStream(BytesIO(self._raw__m_filenames))
+        self._m_filenames = SaintsRow2VppPc.Strings(_io__raw__m_filenames, self, self._root)
         self._io.seek(_pos)
         return self._m_filenames if hasattr(self, '_m_filenames') else None
 
@@ -142,8 +145,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(2048)
         self._raw__m_files = self._io.read_bytes(self.len_offsets)
-        io = KaitaiStream(BytesIO(self._raw__m_files))
-        self._m_files = self._root.Offsets(io, self, self._root)
+        _io__raw__m_files = KaitaiStream(BytesIO(self._raw__m_files))
+        self._m_files = SaintsRow2VppPc.Offsets(_io__raw__m_files, self, self._root)
         self._io.seek(_pos)
         return self._m_files if hasattr(self, '_m_files') else None
 
@@ -163,8 +166,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.ofs_extensions)
         self._raw__m_extensions = self._io.read_bytes(self.len_extensions)
-        io = KaitaiStream(BytesIO(self._raw__m_extensions))
-        self._m_extensions = self._root.Strings(io, self, self._root)
+        _io__raw__m_extensions = KaitaiStream(BytesIO(self._raw__m_extensions))
+        self._m_extensions = SaintsRow2VppPc.Strings(_io__raw__m_extensions, self, self._root)
         self._io.seek(_pos)
         return self._m_extensions if hasattr(self, '_m_extensions') else None
 

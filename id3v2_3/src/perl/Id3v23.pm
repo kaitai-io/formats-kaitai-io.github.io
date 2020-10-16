@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -73,8 +73,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{padding} = $self->{_io}->read_bits_int(1);
-    $self->{value} = $self->{_io}->read_bits_int(7);
+    $self->{padding} = $self->{_io}->read_bits_int_be(1);
+    $self->{value} = $self->{_io}->read_bits_int_be(7);
 }
 
 sub padding {
@@ -346,14 +346,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{flag_discard_alter_tag} = $self->{_io}->read_bits_int(1);
-    $self->{flag_discard_alter_file} = $self->{_io}->read_bits_int(1);
-    $self->{flag_read_only} = $self->{_io}->read_bits_int(1);
-    $self->{reserved1} = $self->{_io}->read_bits_int(5);
-    $self->{flag_compressed} = $self->{_io}->read_bits_int(1);
-    $self->{flag_encrypted} = $self->{_io}->read_bits_int(1);
-    $self->{flag_grouping} = $self->{_io}->read_bits_int(1);
-    $self->{reserved2} = $self->{_io}->read_bits_int(5);
+    $self->{flag_discard_alter_tag} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_discard_alter_file} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_read_only} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(5);
+    $self->{flag_compressed} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_encrypted} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_grouping} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved2} = $self->{_io}->read_bits_int_be(5);
 }
 
 sub flag_discard_alter_tag {
@@ -484,8 +484,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{flag_crc} = $self->{_io}->read_bits_int(1);
-    $self->{reserved} = $self->{_io}->read_bits_int(15);
+    $self->{flag_crc} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(15);
 }
 
 sub flag_crc {
@@ -528,7 +528,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (73, 68, 51)));
+    $self->{magic} = $self->{_io}->read_bytes(3);
     $self->{version_major} = $self->{_io}->read_u1();
     $self->{version_revision} = $self->{_io}->read_u1();
     $self->{flags} = Id3v23::Header::Flags->new($self->{_io}, $self, $self->{_root});
@@ -590,10 +590,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{flag_unsynchronization} = $self->{_io}->read_bits_int(1);
-    $self->{flag_headerex} = $self->{_io}->read_bits_int(1);
-    $self->{flag_experimental} = $self->{_io}->read_bits_int(1);
-    $self->{reserved} = $self->{_io}->read_bits_int(5);
+    $self->{flag_unsynchronization} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_headerex} = $self->{_io}->read_bits_int_be(1);
+    $self->{flag_experimental} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(5);
 }
 
 sub flag_unsynchronization {

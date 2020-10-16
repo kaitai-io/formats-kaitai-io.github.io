@@ -263,10 +263,10 @@ var WindowsLnkFile = (function() {
         this._read();
       }
       LinkInfoFlags.prototype._read = function() {
-        this.reserved1 = this._io.readBitsInt(6);
-        this.hasCommonNetRelLink = this._io.readBitsInt(1) != 0;
-        this.hasVolumeIdAndLocalBasePath = this._io.readBitsInt(1) != 0;
-        this.reserved2 = this._io.readBitsInt(24);
+        this.reserved1 = this._io.readBitsIntBe(6);
+        this.hasCommonNetRelLink = this._io.readBitsIntBe(1) != 0;
+        this.hasVolumeIdAndLocalBasePath = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(24);
       }
 
       return LinkInfoFlags;
@@ -317,18 +317,18 @@ var WindowsLnkFile = (function() {
       this._read();
     }
     LinkFlags.prototype._read = function() {
-      this.isUnicode = this._io.readBitsInt(1) != 0;
-      this.hasIconLocation = this._io.readBitsInt(1) != 0;
-      this.hasArguments = this._io.readBitsInt(1) != 0;
-      this.hasWorkDir = this._io.readBitsInt(1) != 0;
-      this.hasRelPath = this._io.readBitsInt(1) != 0;
-      this.hasName = this._io.readBitsInt(1) != 0;
-      this.hasLinkInfo = this._io.readBitsInt(1) != 0;
-      this.hasLinkTargetIdList = this._io.readBitsInt(1) != 0;
-      this._unnamed8 = this._io.readBitsInt(16);
-      this.reserved = this._io.readBitsInt(5);
-      this.keepLocalIdListForUncTarget = this._io.readBitsInt(1) != 0;
-      this._unnamed11 = this._io.readBitsInt(2);
+      this.isUnicode = this._io.readBitsIntBe(1) != 0;
+      this.hasIconLocation = this._io.readBitsIntBe(1) != 0;
+      this.hasArguments = this._io.readBitsIntBe(1) != 0;
+      this.hasWorkDir = this._io.readBitsIntBe(1) != 0;
+      this.hasRelPath = this._io.readBitsIntBe(1) != 0;
+      this.hasName = this._io.readBitsIntBe(1) != 0;
+      this.hasLinkInfo = this._io.readBitsIntBe(1) != 0;
+      this.hasLinkTargetIdList = this._io.readBitsIntBe(1) != 0;
+      this._unnamed8 = this._io.readBitsIntBe(16);
+      this.reserved = this._io.readBitsIntBe(5);
+      this.keepLocalIdListForUncTarget = this._io.readBitsIntBe(1) != 0;
+      this._unnamed11 = this._io.readBitsIntBe(2);
     }
 
     return LinkFlags;
@@ -347,8 +347,14 @@ var WindowsLnkFile = (function() {
       this._read();
     }
     FileHeader.prototype._read = function() {
-      this.lenHeader = this._io.ensureFixedContents([76, 0, 0, 0]);
-      this.linkClsid = this._io.ensureFixedContents([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70]);
+      this.lenHeader = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.lenHeader, [76, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([76, 0, 0, 0], this.lenHeader, this._io, "/types/file_header/seq/0");
+      }
+      this.linkClsid = this._io.readBytes(16);
+      if (!((KaitaiStream.byteArrayCompare(this.linkClsid, [1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70], this.linkClsid, this._io, "/types/file_header/seq/1");
+      }
       this._raw_flags = this._io.readBytes(4);
       var _io__raw_flags = new KaitaiStream(this._raw_flags);
       this.flags = new LinkFlags(_io__raw_flags, this, this._root);
@@ -360,7 +366,10 @@ var WindowsLnkFile = (function() {
       this.iconIndex = this._io.readS4le();
       this.showCommand = this._io.readU4le();
       this.hotkey = this._io.readU2le();
-      this.reserved = this._io.ensureFixedContents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      this.reserved = this._io.readBytes(10);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], this.reserved, this._io, "/types/file_header/seq/11");
+      }
     }
 
     /**

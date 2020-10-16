@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -140,7 +140,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (39, 5, 25, 86)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{header_crc} = $self->{_io}->read_u4be();
     $self->{timestamp} = $self->{_io}->read_u4be();
     $self->{len_image} = $self->{_io}->read_u4be();

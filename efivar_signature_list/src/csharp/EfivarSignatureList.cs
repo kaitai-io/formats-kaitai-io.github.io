@@ -455,15 +455,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _enhancedAuthenticatedAccess = m_io.ReadBitsInt(1) != 0;
-                _appendWrite = m_io.ReadBitsInt(1) != 0;
-                _timeBasedAuthenticatedWriteAccess = m_io.ReadBitsInt(1) != 0;
-                _authenticatedWriteAccess = m_io.ReadBitsInt(1) != 0;
-                _hardwareErrorRecord = m_io.ReadBitsInt(1) != 0;
-                _runtimeAccess = m_io.ReadBitsInt(1) != 0;
-                _bootserviceAccess = m_io.ReadBitsInt(1) != 0;
-                _nonVolatile = m_io.ReadBitsInt(1) != 0;
-                _reserved1 = m_io.ReadBitsInt(24);
+                _enhancedAuthenticatedAccess = m_io.ReadBitsIntBe(1) != 0;
+                _appendWrite = m_io.ReadBitsIntBe(1) != 0;
+                _timeBasedAuthenticatedWriteAccess = m_io.ReadBitsIntBe(1) != 0;
+                _authenticatedWriteAccess = m_io.ReadBitsIntBe(1) != 0;
+                _hardwareErrorRecord = m_io.ReadBitsIntBe(1) != 0;
+                _runtimeAccess = m_io.ReadBitsIntBe(1) != 0;
+                _bootserviceAccess = m_io.ReadBitsIntBe(1) != 0;
+                _nonVolatile = m_io.ReadBitsIntBe(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(24);
             }
             private bool _enhancedAuthenticatedAccess;
             private bool _appendWrite;

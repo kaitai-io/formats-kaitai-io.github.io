@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.nio.charset.Charset;
 
 
 /**
@@ -4048,11 +4048,11 @@ public class Dicom extends KaitaiStruct {
         COEFFICIENTS_SDVN(2145386528),
         COEFFICIENTS_SDHN(2145386544),
         COEFFICIENTS_SDDN(2145386560),
-        DIGITAL_SIGNATURES_SEQUENCE(4294639610),
-        DATA_SET_TRAILING_PADDING(4294770684),
-        ITEM(4294893568),
-        ITEM_DELIMITATION_ITEM(4294893581),
-        SEQUENCE_DELIMITATION_ITEM(4294893789);
+        DIGITAL_SIGNATURES_SEQUENCE(4294639610L),
+        DATA_SET_TRAILING_PADDING(4294770684L),
+        ITEM(4294893568L),
+        ITEM_DELIMITATION_ITEM(4294893581L),
+        SEQUENCE_DELIMITATION_ITEM(4294893789L);
 
         private final long id;
         Tags(long id) { this.id = id; }
@@ -4111,7 +4111,10 @@ public class Dicom extends KaitaiStruct {
         }
         private void _read() {
             this.preamble = this._io.readBytes(128);
-            this.magic = this._io.ensureFixedContents(new byte[] { 68, 73, 67, 77 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 68, 73, 67, 77 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, magic(), _io(), "/types/t_file_header/seq/1");
+            }
         }
         private byte[] preamble;
         private byte[] magic;
@@ -4388,7 +4391,10 @@ public class Dicom extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.tagGroup = this._io.ensureFixedContents(new byte[] { -2, -1 });
+            this.tagGroup = this._io.readBytes(2);
+            if (!(Arrays.equals(tagGroup(), new byte[] { -2, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, tagGroup(), _io(), "/types/seq_item/seq/0");
+            }
             this.tagElem = this._io.readU2le();
             this.valueLen = this._io.readU4le();
             if (valueLen() != 4294967295L) {

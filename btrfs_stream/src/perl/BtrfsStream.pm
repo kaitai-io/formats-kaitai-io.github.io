@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -132,7 +132,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(13);
     $self->{version} = $self->{_io}->read_u4le();
 }
 
@@ -242,90 +242,90 @@ sub _read {
     $self->{type} = $self->{_io}->read_u2le();
     $self->{length} = $self->{_io}->read_u2le();
     my $_on = $self->type();
-    if ($_on == $ATTRIBUTE_SIZE) {
+    if ($_on == $BtrfsStream::ATTRIBUTE_CTRANSID) {
         $self->{value} = $self->{_io}->read_u8le();
     }
-    elsif ($_on == $ATTRIBUTE_OTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_MODE) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_SIZE) {
         $self->{value} = $self->{_io}->read_u8le();
     }
-    elsif ($_on == $ATTRIBUTE_UUID) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_UUID) {
         $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $ATTRIBUTE_CLONE_UUID) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_FILE_OFFSET) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_OTIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_UID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_ATIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CTIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_UUID) {
         $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $ATTRIBUTE_ATIME) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_LEN) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_XATTR_NAME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_CTRANSID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_MODE) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_MTIME) {
         $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $ATTRIBUTE_GID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $ATTRIBUTE_UID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $ATTRIBUTE_CLONE_CTRANSID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $ATTRIBUTE_PATH_TO) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_LINK) {
         $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $ATTRIBUTE_CTRANSID) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_RDEV) {
         $self->{value} = $self->{_io}->read_u8le();
     }
-    elsif ($_on == $ATTRIBUTE_CLONE_LEN) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $ATTRIBUTE_MTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_FILE_OFFSET) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $ATTRIBUTE_PATH_LINK) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_TO) {
         $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $ATTRIBUTE_RDEV) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_OFFSET) {
         $self->{value} = $self->{_io}->read_u8le();
     }
-    elsif ($_on == $ATTRIBUTE_CTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_CLONE_PATH) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_XATTR_NAME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_PATH) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $ATTRIBUTE_CLONE_OFFSET) {
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_GID) {
         $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_PATH) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
     }
     else {
         $self->{value} = $self->{_io}->read_bytes($self->length());

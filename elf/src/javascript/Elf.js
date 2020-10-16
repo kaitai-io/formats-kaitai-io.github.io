@@ -400,7 +400,10 @@ var Elf = (function() {
     this._read();
   }
   Elf.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([127, 69, 76, 70]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [127, 69, 76, 70]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([127, 69, 76, 70], this.magic, this._io, "/seq/0");
+    }
     this.bits = this._io.readU1();
     this.endian = this._io.readU1();
     this.eiVersion = this._io.readU1();
@@ -1489,25 +1492,25 @@ var Elf = (function() {
           io.seek(this.ofsBody);
           if (this._is_le) {
             switch (this.type) {
-            case Elf.ShType.DYNAMIC:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
             case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSTR:
+            case Elf.ShType.DYNAMIC:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
             case Elf.ShType.DYNSYM:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSTR:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);
@@ -1515,25 +1518,25 @@ var Elf = (function() {
             }
           } else {
             switch (this.type) {
-            case Elf.ShType.DYNAMIC:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
             case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSTR:
+            case Elf.ShType.DYNAMIC:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
             case Elf.ShType.DYNSYM:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSTR:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);

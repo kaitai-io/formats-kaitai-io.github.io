@@ -364,6 +364,11 @@ var RenderwareBinaryStream = (function() {
     this.size = this._io.readU4le();
     this.libraryIdStamp = this._io.readU4le();
     switch (this.code) {
+    case RenderwareBinaryStream.Sections.GEOMETRY:
+      this._raw_body = this._io.readBytes(this.size);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new ListWithHeader(_io__raw_body, this, this._root);
+      break;
     case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -374,22 +379,17 @@ var RenderwareBinaryStream = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
-    case RenderwareBinaryStream.Sections.CLUMP:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
     case RenderwareBinaryStream.Sections.TEXTURE_NATIVE:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
-    case RenderwareBinaryStream.Sections.FRAME_LIST:
+    case RenderwareBinaryStream.Sections.CLUMP:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
-    case RenderwareBinaryStream.Sections.GEOMETRY:
+    case RenderwareBinaryStream.Sections.FRAME_LIST:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
@@ -708,10 +708,18 @@ var RenderwareBinaryStream = (function() {
       this._read();
     }
     ListWithHeader.prototype._read = function() {
-      this.code = this._io.ensureFixedContents([1, 0, 0, 0]);
+      this.code = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.code, [1, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([1, 0, 0, 0], this.code, this._io, "/types/list_with_header/seq/0");
+      }
       this.headerSize = this._io.readU4le();
       this.libraryIdStamp = this._io.readU4le();
       switch (this._parent.code) {
+      case RenderwareBinaryStream.Sections.GEOMETRY:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructGeometry(_io__raw_header, this, this._root);
+        break;
       case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
         this._raw_header = this._io.readBytes(this.headerSize);
         var _io__raw_header = new KaitaiStream(this._raw_header);
@@ -731,11 +739,6 @@ var RenderwareBinaryStream = (function() {
         this._raw_header = this._io.readBytes(this.headerSize);
         var _io__raw_header = new KaitaiStream(this._raw_header);
         this.header = new StructFrameList(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.GEOMETRY:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructGeometry(_io__raw_header, this, this._root);
         break;
       default:
         this.header = this._io.readBytes(this.headerSize);

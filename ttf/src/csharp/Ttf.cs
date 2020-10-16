@@ -350,7 +350,11 @@ namespace Kaitai
                 _version = new Fixed(m_io, this, m_root);
                 _fontRevision = new Fixed(m_io, this, m_root);
                 _checksumAdjustment = m_io.ReadU4be();
-                _magicNumber = m_io.EnsureFixedContents(new byte[] { 95, 15, 60, 245 });
+                _magicNumber = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(MagicNumber, new byte[] { 95, 15, 60, 245 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 95, 15, 60, 245 }, MagicNumber, M_Io, "/types/head/seq/3");
+                }
                 _flags = ((Flags) m_io.ReadU2be());
                 _unitsPerEm = m_io.ReadU2be();
                 _created = m_io.ReadU8be();
@@ -453,7 +457,11 @@ namespace Kaitai
                 _xMaxExtend = m_io.ReadS2be();
                 _caretSlopeRise = m_io.ReadS2be();
                 _caretSlopeRun = m_io.ReadS2be();
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                _reserved = m_io.ReadBytes(10);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/hhea/seq/10");
+                }
                 _metricDataFormat = m_io.ReadS2be();
                 _numberOfHmetrics = m_io.ReadU2be();
             }
@@ -581,11 +589,11 @@ namespace Kaitai
                     _version = m_io.ReadU2be();
                     _length = m_io.ReadU2be();
                     _format = m_io.ReadU1();
-                    _reserved = m_io.ReadBitsInt(4);
-                    _isOverride = m_io.ReadBitsInt(1) != 0;
-                    _isCrossStream = m_io.ReadBitsInt(1) != 0;
-                    _isMinimum = m_io.ReadBitsInt(1) != 0;
-                    _isHorizontal = m_io.ReadBitsInt(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(4);
+                    _isOverride = m_io.ReadBitsIntBe(1) != 0;
+                    _isCrossStream = m_io.ReadBitsIntBe(1) != 0;
+                    _isMinimum = m_io.ReadBitsIntBe(1) != 0;
+                    _isHorizontal = m_io.ReadBitsIntBe(1) != 0;
                     m_io.AlignToByte();
                     if (Format == 0) {
                         _format0 = new Format0(m_io, this, m_root);
@@ -1136,76 +1144,76 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _basicLatin = m_io.ReadBitsInt(1) != 0;
-                    _latin1Supplement = m_io.ReadBitsInt(1) != 0;
-                    _latinExtendedA = m_io.ReadBitsInt(1) != 0;
-                    _latinExtendedB = m_io.ReadBitsInt(1) != 0;
-                    _ipaExtensions = m_io.ReadBitsInt(1) != 0;
-                    _spacingModifierLetters = m_io.ReadBitsInt(1) != 0;
-                    _combiningDiacriticalMarks = m_io.ReadBitsInt(1) != 0;
-                    _basicGreek = m_io.ReadBitsInt(1) != 0;
-                    _greekSymbolsAndCoptic = m_io.ReadBitsInt(1) != 0;
-                    _cyrillic = m_io.ReadBitsInt(1) != 0;
-                    _armenian = m_io.ReadBitsInt(1) != 0;
-                    _basicHebrew = m_io.ReadBitsInt(1) != 0;
-                    _hebrewExtended = m_io.ReadBitsInt(1) != 0;
-                    _basicArabic = m_io.ReadBitsInt(1) != 0;
-                    _arabicExtended = m_io.ReadBitsInt(1) != 0;
-                    _devanagari = m_io.ReadBitsInt(1) != 0;
-                    _bengali = m_io.ReadBitsInt(1) != 0;
-                    _gurmukhi = m_io.ReadBitsInt(1) != 0;
-                    _gujarati = m_io.ReadBitsInt(1) != 0;
-                    _oriya = m_io.ReadBitsInt(1) != 0;
-                    _tamil = m_io.ReadBitsInt(1) != 0;
-                    _telugu = m_io.ReadBitsInt(1) != 0;
-                    _kannada = m_io.ReadBitsInt(1) != 0;
-                    _malayalam = m_io.ReadBitsInt(1) != 0;
-                    _thai = m_io.ReadBitsInt(1) != 0;
-                    _lao = m_io.ReadBitsInt(1) != 0;
-                    _basicGeorgian = m_io.ReadBitsInt(1) != 0;
-                    _georgianExtended = m_io.ReadBitsInt(1) != 0;
-                    _hangulJamo = m_io.ReadBitsInt(1) != 0;
-                    _latinExtendedAdditional = m_io.ReadBitsInt(1) != 0;
-                    _greekExtended = m_io.ReadBitsInt(1) != 0;
-                    _generalPunctuation = m_io.ReadBitsInt(1) != 0;
-                    _superscriptsAndSubscripts = m_io.ReadBitsInt(1) != 0;
-                    _currencySymbols = m_io.ReadBitsInt(1) != 0;
-                    _combiningDiacriticalMarksForSymbols = m_io.ReadBitsInt(1) != 0;
-                    _letterlikeSymbols = m_io.ReadBitsInt(1) != 0;
-                    _numberForms = m_io.ReadBitsInt(1) != 0;
-                    _arrows = m_io.ReadBitsInt(1) != 0;
-                    _mathematicalOperators = m_io.ReadBitsInt(1) != 0;
-                    _miscellaneousTechnical = m_io.ReadBitsInt(1) != 0;
-                    _controlPictures = m_io.ReadBitsInt(1) != 0;
-                    _opticalCharacterRecognition = m_io.ReadBitsInt(1) != 0;
-                    _enclosedAlphanumerics = m_io.ReadBitsInt(1) != 0;
-                    _boxDrawing = m_io.ReadBitsInt(1) != 0;
-                    _blockElements = m_io.ReadBitsInt(1) != 0;
-                    _geometricShapes = m_io.ReadBitsInt(1) != 0;
-                    _miscellaneousSymbols = m_io.ReadBitsInt(1) != 0;
-                    _dingbats = m_io.ReadBitsInt(1) != 0;
-                    _cjkSymbolsAndPunctuation = m_io.ReadBitsInt(1) != 0;
-                    _hiragana = m_io.ReadBitsInt(1) != 0;
-                    _katakana = m_io.ReadBitsInt(1) != 0;
-                    _bopomofo = m_io.ReadBitsInt(1) != 0;
-                    _hangulCompatibilityJamo = m_io.ReadBitsInt(1) != 0;
-                    _cjkMiscellaneous = m_io.ReadBitsInt(1) != 0;
-                    _enclosedCjkLettersAndMonths = m_io.ReadBitsInt(1) != 0;
-                    _cjkCompatibility = m_io.ReadBitsInt(1) != 0;
-                    _hangul = m_io.ReadBitsInt(1) != 0;
-                    _reservedForUnicodeSubranges1 = m_io.ReadBitsInt(1) != 0;
-                    _reservedForUnicodeSubranges2 = m_io.ReadBitsInt(1) != 0;
-                    _cjkUnifiedIdeographs = m_io.ReadBitsInt(1) != 0;
-                    _privateUseArea = m_io.ReadBitsInt(1) != 0;
-                    _cjkCompatibilityIdeographs = m_io.ReadBitsInt(1) != 0;
-                    _alphabeticPresentationForms = m_io.ReadBitsInt(1) != 0;
-                    _arabicPresentationFormsA = m_io.ReadBitsInt(1) != 0;
-                    _combiningHalfMarks = m_io.ReadBitsInt(1) != 0;
-                    _cjkCompatibilityForms = m_io.ReadBitsInt(1) != 0;
-                    _smallFormVariants = m_io.ReadBitsInt(1) != 0;
-                    _arabicPresentationFormsB = m_io.ReadBitsInt(1) != 0;
-                    _halfwidthAndFullwidthForms = m_io.ReadBitsInt(1) != 0;
-                    _specials = m_io.ReadBitsInt(1) != 0;
+                    _basicLatin = m_io.ReadBitsIntBe(1) != 0;
+                    _latin1Supplement = m_io.ReadBitsIntBe(1) != 0;
+                    _latinExtendedA = m_io.ReadBitsIntBe(1) != 0;
+                    _latinExtendedB = m_io.ReadBitsIntBe(1) != 0;
+                    _ipaExtensions = m_io.ReadBitsIntBe(1) != 0;
+                    _spacingModifierLetters = m_io.ReadBitsIntBe(1) != 0;
+                    _combiningDiacriticalMarks = m_io.ReadBitsIntBe(1) != 0;
+                    _basicGreek = m_io.ReadBitsIntBe(1) != 0;
+                    _greekSymbolsAndCoptic = m_io.ReadBitsIntBe(1) != 0;
+                    _cyrillic = m_io.ReadBitsIntBe(1) != 0;
+                    _armenian = m_io.ReadBitsIntBe(1) != 0;
+                    _basicHebrew = m_io.ReadBitsIntBe(1) != 0;
+                    _hebrewExtended = m_io.ReadBitsIntBe(1) != 0;
+                    _basicArabic = m_io.ReadBitsIntBe(1) != 0;
+                    _arabicExtended = m_io.ReadBitsIntBe(1) != 0;
+                    _devanagari = m_io.ReadBitsIntBe(1) != 0;
+                    _bengali = m_io.ReadBitsIntBe(1) != 0;
+                    _gurmukhi = m_io.ReadBitsIntBe(1) != 0;
+                    _gujarati = m_io.ReadBitsIntBe(1) != 0;
+                    _oriya = m_io.ReadBitsIntBe(1) != 0;
+                    _tamil = m_io.ReadBitsIntBe(1) != 0;
+                    _telugu = m_io.ReadBitsIntBe(1) != 0;
+                    _kannada = m_io.ReadBitsIntBe(1) != 0;
+                    _malayalam = m_io.ReadBitsIntBe(1) != 0;
+                    _thai = m_io.ReadBitsIntBe(1) != 0;
+                    _lao = m_io.ReadBitsIntBe(1) != 0;
+                    _basicGeorgian = m_io.ReadBitsIntBe(1) != 0;
+                    _georgianExtended = m_io.ReadBitsIntBe(1) != 0;
+                    _hangulJamo = m_io.ReadBitsIntBe(1) != 0;
+                    _latinExtendedAdditional = m_io.ReadBitsIntBe(1) != 0;
+                    _greekExtended = m_io.ReadBitsIntBe(1) != 0;
+                    _generalPunctuation = m_io.ReadBitsIntBe(1) != 0;
+                    _superscriptsAndSubscripts = m_io.ReadBitsIntBe(1) != 0;
+                    _currencySymbols = m_io.ReadBitsIntBe(1) != 0;
+                    _combiningDiacriticalMarksForSymbols = m_io.ReadBitsIntBe(1) != 0;
+                    _letterlikeSymbols = m_io.ReadBitsIntBe(1) != 0;
+                    _numberForms = m_io.ReadBitsIntBe(1) != 0;
+                    _arrows = m_io.ReadBitsIntBe(1) != 0;
+                    _mathematicalOperators = m_io.ReadBitsIntBe(1) != 0;
+                    _miscellaneousTechnical = m_io.ReadBitsIntBe(1) != 0;
+                    _controlPictures = m_io.ReadBitsIntBe(1) != 0;
+                    _opticalCharacterRecognition = m_io.ReadBitsIntBe(1) != 0;
+                    _enclosedAlphanumerics = m_io.ReadBitsIntBe(1) != 0;
+                    _boxDrawing = m_io.ReadBitsIntBe(1) != 0;
+                    _blockElements = m_io.ReadBitsIntBe(1) != 0;
+                    _geometricShapes = m_io.ReadBitsIntBe(1) != 0;
+                    _miscellaneousSymbols = m_io.ReadBitsIntBe(1) != 0;
+                    _dingbats = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkSymbolsAndPunctuation = m_io.ReadBitsIntBe(1) != 0;
+                    _hiragana = m_io.ReadBitsIntBe(1) != 0;
+                    _katakana = m_io.ReadBitsIntBe(1) != 0;
+                    _bopomofo = m_io.ReadBitsIntBe(1) != 0;
+                    _hangulCompatibilityJamo = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkMiscellaneous = m_io.ReadBitsIntBe(1) != 0;
+                    _enclosedCjkLettersAndMonths = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkCompatibility = m_io.ReadBitsIntBe(1) != 0;
+                    _hangul = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForUnicodeSubranges1 = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForUnicodeSubranges2 = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkUnifiedIdeographs = m_io.ReadBitsIntBe(1) != 0;
+                    _privateUseArea = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkCompatibilityIdeographs = m_io.ReadBitsIntBe(1) != 0;
+                    _alphabeticPresentationForms = m_io.ReadBitsIntBe(1) != 0;
+                    _arabicPresentationFormsA = m_io.ReadBitsIntBe(1) != 0;
+                    _combiningHalfMarks = m_io.ReadBitsIntBe(1) != 0;
+                    _cjkCompatibilityForms = m_io.ReadBitsIntBe(1) != 0;
+                    _smallFormVariants = m_io.ReadBitsIntBe(1) != 0;
+                    _arabicPresentationFormsB = m_io.ReadBitsIntBe(1) != 0;
+                    _halfwidthAndFullwidthForms = m_io.ReadBitsIntBe(1) != 0;
+                    _specials = m_io.ReadBitsIntBe(1) != 0;
                     m_io.AlignToByte();
                     _reserved = m_io.ReadBytes(7);
                 }
@@ -1371,42 +1379,42 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _symbolCharacterSet = m_io.ReadBitsInt(1) != 0;
-                    _oemCharacterSet = m_io.ReadBitsInt(1) != 0;
-                    _macintoshCharacterSet = m_io.ReadBitsInt(1) != 0;
-                    _reservedForAlternateAnsiOem = m_io.ReadBitsInt(7);
-                    _cp1361KoreanJohab = m_io.ReadBitsInt(1) != 0;
-                    _cp950ChineseTraditionalCharsTaiwanAndHongKong = m_io.ReadBitsInt(1) != 0;
-                    _cp949KoreanWansung = m_io.ReadBitsInt(1) != 0;
-                    _cp936ChineseSimplifiedCharsPrcAndSingapore = m_io.ReadBitsInt(1) != 0;
-                    _cp932JisJapan = m_io.ReadBitsInt(1) != 0;
-                    _cp874Thai = m_io.ReadBitsInt(1) != 0;
-                    _reservedForAlternateAnsi = m_io.ReadBitsInt(8);
-                    _cp1257WindowsBaltic = m_io.ReadBitsInt(1) != 0;
-                    _cp1256Arabic = m_io.ReadBitsInt(1) != 0;
-                    _cp1255Hebrew = m_io.ReadBitsInt(1) != 0;
-                    _cp1254Turkish = m_io.ReadBitsInt(1) != 0;
-                    _cp1253Greek = m_io.ReadBitsInt(1) != 0;
-                    _cp1251Cyrillic = m_io.ReadBitsInt(1) != 0;
-                    _cp1250Latin2EasternEurope = m_io.ReadBitsInt(1) != 0;
-                    _cp1252Latin1 = m_io.ReadBitsInt(1) != 0;
-                    _cp437Us = m_io.ReadBitsInt(1) != 0;
-                    _cp850WeLatin1 = m_io.ReadBitsInt(1) != 0;
-                    _cp708ArabicAsmo708 = m_io.ReadBitsInt(1) != 0;
-                    _cp737GreekFormer437G = m_io.ReadBitsInt(1) != 0;
-                    _cp775MsDosBaltic = m_io.ReadBitsInt(1) != 0;
-                    _cp852Latin2 = m_io.ReadBitsInt(1) != 0;
-                    _cp855IbmCyrillicPrimarilyRussian = m_io.ReadBitsInt(1) != 0;
-                    _cp857IbmTurkish = m_io.ReadBitsInt(1) != 0;
-                    _cp860MsDosPortuguese = m_io.ReadBitsInt(1) != 0;
-                    _cp861MsDosIcelandic = m_io.ReadBitsInt(1) != 0;
-                    _cp862Hebrew = m_io.ReadBitsInt(1) != 0;
-                    _cp863MsDosCanadianFrench = m_io.ReadBitsInt(1) != 0;
-                    _cp864Arabic = m_io.ReadBitsInt(1) != 0;
-                    _cp865MsDosNordic = m_io.ReadBitsInt(1) != 0;
-                    _cp866MsDosRussian = m_io.ReadBitsInt(1) != 0;
-                    _cp869IbmGreek = m_io.ReadBitsInt(1) != 0;
-                    _reservedForOem = m_io.ReadBitsInt(16);
+                    _symbolCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _oemCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _macintoshCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForAlternateAnsiOem = m_io.ReadBitsIntBe(7);
+                    _cp1361KoreanJohab = m_io.ReadBitsIntBe(1) != 0;
+                    _cp950ChineseTraditionalCharsTaiwanAndHongKong = m_io.ReadBitsIntBe(1) != 0;
+                    _cp949KoreanWansung = m_io.ReadBitsIntBe(1) != 0;
+                    _cp936ChineseSimplifiedCharsPrcAndSingapore = m_io.ReadBitsIntBe(1) != 0;
+                    _cp932JisJapan = m_io.ReadBitsIntBe(1) != 0;
+                    _cp874Thai = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForAlternateAnsi = m_io.ReadBitsIntBe(8);
+                    _cp1257WindowsBaltic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1256Arabic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1255Hebrew = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1254Turkish = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1253Greek = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1251Cyrillic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1250Latin2EasternEurope = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1252Latin1 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp437Us = m_io.ReadBitsIntBe(1) != 0;
+                    _cp850WeLatin1 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp708ArabicAsmo708 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp737GreekFormer437G = m_io.ReadBitsIntBe(1) != 0;
+                    _cp775MsDosBaltic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp852Latin2 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp855IbmCyrillicPrimarilyRussian = m_io.ReadBitsIntBe(1) != 0;
+                    _cp857IbmTurkish = m_io.ReadBitsIntBe(1) != 0;
+                    _cp860MsDosPortuguese = m_io.ReadBitsIntBe(1) != 0;
+                    _cp861MsDosIcelandic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp862Hebrew = m_io.ReadBitsIntBe(1) != 0;
+                    _cp863MsDosCanadianFrench = m_io.ReadBitsIntBe(1) != 0;
+                    _cp864Arabic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp865MsDosNordic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp866MsDosRussian = m_io.ReadBitsIntBe(1) != 0;
+                    _cp869IbmGreek = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForOem = m_io.ReadBitsIntBe(16);
                 }
                 private bool _symbolCharacterSet;
                 private bool _oemCharacterSet;
@@ -1745,13 +1753,13 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _reserved = m_io.ReadBitsInt(2);
-                        _yIsSame = m_io.ReadBitsInt(1) != 0;
-                        _xIsSame = m_io.ReadBitsInt(1) != 0;
-                        _repeat = m_io.ReadBitsInt(1) != 0;
-                        _yShortVector = m_io.ReadBitsInt(1) != 0;
-                        _xShortVector = m_io.ReadBitsInt(1) != 0;
-                        _onCurve = m_io.ReadBitsInt(1) != 0;
+                        _reserved = m_io.ReadBitsIntBe(2);
+                        _yIsSame = m_io.ReadBitsIntBe(1) != 0;
+                        _xIsSame = m_io.ReadBitsIntBe(1) != 0;
+                        _repeat = m_io.ReadBitsIntBe(1) != 0;
+                        _yShortVector = m_io.ReadBitsIntBe(1) != 0;
+                        _xShortVector = m_io.ReadBitsIntBe(1) != 0;
+                        _onCurve = m_io.ReadBitsIntBe(1) != 0;
                         m_io.AlignToByte();
                         if (Repeat) {
                             _repeatValue = m_io.ReadU1();
@@ -2126,6 +2134,12 @@ namespace Kaitai
                         _value = new ByteEncodingTable(io___raw_value, this, m_root);
                         break;
                     }
+                    case SubtableFormat.SegmentMappingToDeltaValues: {
+                        __raw_value = m_io.ReadBytes((Length - 6));
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
+                        break;
+                    }
                     case SubtableFormat.HighByteMappingThroughTable: {
                         __raw_value = m_io.ReadBytes((Length - 6));
                         var io___raw_value = new KaitaiStream(__raw_value);
@@ -2136,12 +2150,6 @@ namespace Kaitai
                         __raw_value = m_io.ReadBytes((Length - 6));
                         var io___raw_value = new KaitaiStream(__raw_value);
                         _value = new TrimmedTableMapping(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case SubtableFormat.SegmentMappingToDeltaValues: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
                         break;
                     }
                     default: {

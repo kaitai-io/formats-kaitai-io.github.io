@@ -126,7 +126,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.EnsureFixedContents(new byte[] { 104, 98, 105, 110 });
+                _signature = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 104, 98, 105, 110 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 104, 98, 105, 110 }, Signature, M_Io, "/types/hive_bin_header/seq/0");
+                }
                 _offset = m_io.ReadU4le();
                 _size = m_io.ReadU4le();
                 _unknown1 = m_io.ReadU4le();
@@ -674,7 +678,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.EnsureFixedContents(new byte[] { 114, 101, 103, 102 });
+                _signature = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 114, 101, 103, 102 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 114, 101, 103, 102 }, Signature, M_Io, "/types/file_header/seq/0");
+                }
                 _primarySequenceNumber = m_io.ReadU4le();
                 _secondarySequenceNumber = m_io.ReadU4le();
                 _lastModificationDateAndTime = new Filetime(m_io, this, m_root);

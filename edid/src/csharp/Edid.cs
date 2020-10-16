@@ -24,7 +24,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 });
+            _magic = m_io.ReadBytes(8);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }, Magic, M_Io, "/seq/0");
+            }
             _mfgBytes = m_io.ReadU2le();
             _productCode = m_io.ReadU2le();
             _serial = m_io.ReadU4le();
@@ -82,14 +86,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _redX10 = m_io.ReadBitsInt(2);
-                _redY10 = m_io.ReadBitsInt(2);
-                _greenX10 = m_io.ReadBitsInt(2);
-                _greenY10 = m_io.ReadBitsInt(2);
-                _blueX10 = m_io.ReadBitsInt(2);
-                _blueY10 = m_io.ReadBitsInt(2);
-                _whiteX10 = m_io.ReadBitsInt(2);
-                _whiteY10 = m_io.ReadBitsInt(2);
+                _redX10 = m_io.ReadBitsIntBe(2);
+                _redY10 = m_io.ReadBitsIntBe(2);
+                _greenX10 = m_io.ReadBitsIntBe(2);
+                _greenY10 = m_io.ReadBitsIntBe(2);
+                _blueX10 = m_io.ReadBitsIntBe(2);
+                _blueY10 = m_io.ReadBitsIntBe(2);
+                _whiteX10 = m_io.ReadBitsIntBe(2);
+                _whiteY10 = m_io.ReadBitsIntBe(2);
                 m_io.AlignToByte();
                 _redX92 = m_io.ReadU1();
                 _redY92 = m_io.ReadU1();
@@ -456,24 +460,24 @@ namespace Kaitai
             }
             private void _read()
             {
-                _can72040070 = m_io.ReadBitsInt(1) != 0;
-                _can72040088 = m_io.ReadBitsInt(1) != 0;
-                _can64048060 = m_io.ReadBitsInt(1) != 0;
-                _can64048067 = m_io.ReadBitsInt(1) != 0;
-                _can64048072 = m_io.ReadBitsInt(1) != 0;
-                _can64048075 = m_io.ReadBitsInt(1) != 0;
-                _can80060056 = m_io.ReadBitsInt(1) != 0;
-                _can80060060 = m_io.ReadBitsInt(1) != 0;
-                _can80060072 = m_io.ReadBitsInt(1) != 0;
-                _can80060075 = m_io.ReadBitsInt(1) != 0;
-                _can83262475 = m_io.ReadBitsInt(1) != 0;
-                _can102476887I = m_io.ReadBitsInt(1) != 0;
-                _can102476860 = m_io.ReadBitsInt(1) != 0;
-                _can102476870 = m_io.ReadBitsInt(1) != 0;
-                _can102476875 = m_io.ReadBitsInt(1) != 0;
-                _can1280102475 = m_io.ReadBitsInt(1) != 0;
-                _can115287075 = m_io.ReadBitsInt(1) != 0;
-                _reserved = m_io.ReadBitsInt(7);
+                _can72040070 = m_io.ReadBitsIntBe(1) != 0;
+                _can72040088 = m_io.ReadBitsIntBe(1) != 0;
+                _can64048060 = m_io.ReadBitsIntBe(1) != 0;
+                _can64048067 = m_io.ReadBitsIntBe(1) != 0;
+                _can64048072 = m_io.ReadBitsIntBe(1) != 0;
+                _can64048075 = m_io.ReadBitsIntBe(1) != 0;
+                _can80060056 = m_io.ReadBitsIntBe(1) != 0;
+                _can80060060 = m_io.ReadBitsIntBe(1) != 0;
+                _can80060072 = m_io.ReadBitsIntBe(1) != 0;
+                _can80060075 = m_io.ReadBitsIntBe(1) != 0;
+                _can83262475 = m_io.ReadBitsIntBe(1) != 0;
+                _can102476887I = m_io.ReadBitsIntBe(1) != 0;
+                _can102476860 = m_io.ReadBitsIntBe(1) != 0;
+                _can102476870 = m_io.ReadBitsIntBe(1) != 0;
+                _can102476875 = m_io.ReadBitsIntBe(1) != 0;
+                _can1280102475 = m_io.ReadBitsIntBe(1) != 0;
+                _can115287075 = m_io.ReadBitsIntBe(1) != 0;
+                _reserved = m_io.ReadBitsIntBe(7);
             }
             private bool _can72040070;
             private bool _can72040088;
@@ -610,8 +614,8 @@ namespace Kaitai
             private void _read()
             {
                 _horizActivePixelsMod = m_io.ReadU1();
-                _aspectRatio = ((AspectRatios) m_io.ReadBitsInt(2));
-                _refreshRateMod = m_io.ReadBitsInt(5);
+                _aspectRatio = ((AspectRatios) m_io.ReadBitsIntBe(2));
+                _refreshRateMod = m_io.ReadBitsIntBe(5);
             }
             private bool f_horizActivePixels;
             private int _horizActivePixels;

@@ -39,9 +39,21 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 });
-            _ihdrLen = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 13 });
-            _ihdrType = m_io.EnsureFixedContents(new byte[] { 73, 72, 68, 82 });
+            _magic = m_io.ReadBytes(8);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }, Magic, M_Io, "/seq/0");
+            }
+            _ihdrLen = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(IhdrLen, new byte[] { 0, 0, 0, 13 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 13 }, IhdrLen, M_Io, "/seq/1");
+            }
+            _ihdrType = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(IhdrType, new byte[] { 73, 72, 68, 82 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 73, 72, 68, 82 }, IhdrType, M_Io, "/seq/2");
+            }
             _ihdr = new IhdrChunk(m_io, this, m_root);
             _ihdrCrc = m_io.ReadBytes(4);
             _chunks = new List<Chunk>();
@@ -596,24 +608,24 @@ namespace Kaitai
             private void _read()
             {
                 switch (M_Root.Ihdr.ColorType) {
-                case Png.ColorType.GreyscaleAlpha: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
-                    break;
-                }
                 case Png.ColorType.Indexed: {
                     _bkgd = new BkgdIndexed(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Greyscale: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 case Png.ColorType.TruecolorAlpha: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
                     break;
                 }
+                case Png.ColorType.GreyscaleAlpha: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
+                    break;
+                }
                 case Png.ColorType.Truecolor: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Greyscale: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 }

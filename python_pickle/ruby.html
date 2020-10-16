@@ -297,8 +297,8 @@ https://www.python.org/dev/peps/pep-0574/</li>
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -753,144 +753,144 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OPCODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PythonPickle</span><span class="o">::</span><span class="no">OPCODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">code</span>
-      <span class="k">when</span> <span class="ss">:opcode_list</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext4</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple1</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_ext2</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_setitem</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_readonly_buffer</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_stop</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binunicode</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_put</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_newfalse</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_long1</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Long1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_unicode</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_empty_list</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_mark</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_persid</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescape</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_stack_global</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binint</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
-      <span class="k">when</span> <span class="ss">:opcode_binput</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_binint1</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_binint2</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext2</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="k">when</span> <span class="ss">:opcode_tuple</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_short_binstring</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">String1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_empty_set</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_string</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Stringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_empty_dict</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binget</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_append</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_pop_mark</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_get</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_newobj</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_reduce</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binbytes</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_next_buffer</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binbytes8</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_setitem</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_frame</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
-      <span class="k">when</span> <span class="ss">:opcode_float</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Floatnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binunicode8</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_int</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_long_binput</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">when</span> <span class="ss">:opcode_empty_tuple</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_newtrue</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_long</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlLong</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_frozenset</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_global</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_obj</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_additems</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_tuple1</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_setitems</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_none</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_build</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_ext4</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="k">when</span> <span class="ss">:opcode_newobj_ex</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binfloat</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
-      <span class="k">when</span> <span class="ss">:opcode_dup</span>
+      <span class="k">when</span> <span class="ss">:opcode_newobj</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_bytearray8</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytearray8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_put</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_stack_global</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_pop_mark</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_append</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_newfalse</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binpersid</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_build</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_dict</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple2</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_long4</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Long4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_short_binunicode</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_tuple3</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_short_binbytes</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_ext1</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_dict</span>
+      <span class="k">when</span> <span class="ss">:opcode_next_buffer</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_appends</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_inst</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_binpersid</span>
+      <span class="k">when</span> <span class="ss">:opcode_binbytes</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_dup</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_memoize</span>
+      <span class="k">when</span> <span class="ss">:opcode_list</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_proto</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_newtrue</span>
+      <span class="k">when</span> <span class="ss">:opcode_pop</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_frame</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">when</span> <span class="ss">:opcode_string</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Stringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binunicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_float</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Floatnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_reduce</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binput</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_memoize</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_persid</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescape</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_none</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binunicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_obj</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binfloat</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+      <span class="k">when</span> <span class="ss">:opcode_newobj_ex</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_list</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binunicode8</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binget</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_global</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_dict</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_binstring</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">String4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_tuple2</span>
+      <span class="k">when</span> <span class="ss">:opcode_setitems</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:opcode_pop</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint2</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_binbytes8</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_inst</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_long_binget</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_long_binput</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_int</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_unicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Long1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binstring</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">String1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_mark</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_frozenset</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple3</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_additems</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_get</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_set</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binbytes</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>

@@ -54,7 +54,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 78, 69, 83, 26 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 78, 69, 83, 26 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _lenPrgRom = m_io.ReadU1();
                 _lenChrRom = m_io.ReadU1();
                 __raw_f6 = m_io.ReadBytes(1);
@@ -70,7 +74,11 @@ namespace Kaitai
                 __raw_f10 = m_io.ReadBytes(1);
                 var io___raw_f10 = new KaitaiStream(__raw_f10);
                 _f10 = new F10(io___raw_f10, this, m_root);
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0 });
+                _reserved = m_io.ReadBytes(5);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/header/seq/8");
+                }
             }
 
             /// <remarks>
@@ -97,11 +105,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _lowerMapper = m_io.ReadBitsInt(4);
-                    _fourScreen = m_io.ReadBitsInt(1) != 0;
-                    _trainer = m_io.ReadBitsInt(1) != 0;
-                    _hasBatteryRam = m_io.ReadBitsInt(1) != 0;
-                    _mirroring = ((Mirroring) m_io.ReadBitsInt(1));
+                    _lowerMapper = m_io.ReadBitsIntBe(4);
+                    _fourScreen = m_io.ReadBitsIntBe(1) != 0;
+                    _trainer = m_io.ReadBitsIntBe(1) != 0;
+                    _hasBatteryRam = m_io.ReadBitsIntBe(1) != 0;
+                    _mirroring = ((Mirroring) m_io.ReadBitsIntBe(1));
                 }
                 private ulong _lowerMapper;
                 private bool _fourScreen;
@@ -157,10 +165,10 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _upperMapper = m_io.ReadBitsInt(4);
-                    _format = m_io.ReadBitsInt(2);
-                    _playchoice10 = m_io.ReadBitsInt(1) != 0;
-                    _vsUnisystem = m_io.ReadBitsInt(1) != 0;
+                    _upperMapper = m_io.ReadBitsIntBe(4);
+                    _format = m_io.ReadBitsIntBe(2);
+                    _playchoice10 = m_io.ReadBitsIntBe(1) != 0;
+                    _vsUnisystem = m_io.ReadBitsIntBe(1) != 0;
                 }
                 private ulong _upperMapper;
                 private ulong _format;
@@ -216,8 +224,8 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved = m_io.ReadBitsInt(7);
-                    _tvSystem = ((TvSystem) m_io.ReadBitsInt(1));
+                    _reserved = m_io.ReadBitsIntBe(7);
+                    _tvSystem = ((TvSystem) m_io.ReadBitsIntBe(1));
                 }
                 private ulong _reserved;
                 private TvSystem _tvSystem;
@@ -259,11 +267,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.ReadBitsInt(2);
-                    _busConflict = m_io.ReadBitsInt(1) != 0;
-                    _prgRam = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(2);
-                    _tvSystem = ((TvSystem) m_io.ReadBitsInt(2));
+                    _reserved1 = m_io.ReadBitsIntBe(2);
+                    _busConflict = m_io.ReadBitsIntBe(1) != 0;
+                    _prgRam = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(2);
+                    _tvSystem = ((TvSystem) m_io.ReadBitsIntBe(2));
                 }
                 private ulong _reserved1;
                 private bool _busConflict;

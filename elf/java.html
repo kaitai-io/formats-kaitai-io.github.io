@@ -146,11 +146,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Executable and Linkable Format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Executable and Linkable Format parsing C# library">C#</a></li>
                 
                 
@@ -255,6 +250,7 @@ section#format-index .row {
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
@@ -559,7 +555,10 @@ section#format-index .row {
         <span class="n">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">70</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">70</span> <span class="p">})))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">70</span> <span class="p">},</span> <span class="n">magic</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="na">bits</span> <span class="o">=</span> <span class="n">Bits</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
         <span class="k">this</span><span class="p">.</span><span class="na">endian</span> <span class="o">=</span> <span class="n">Endian</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
         <span class="k">this</span><span class="p">.</span><span class="na">eiVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
@@ -1175,17 +1174,22 @@ section#format-index .row {
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">endian</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">LE</span><span class="p">:</span> <span class="p">{</span>
-                <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_is_le</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">BE</span><span class="p">:</span> <span class="p">{</span>
-                <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_is_le</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">Endian</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">endian</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">endian</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">LE</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_is_le</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BE</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_is_le</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
@@ -1200,35 +1204,50 @@ section#format-index .row {
             <span class="k">this</span><span class="p">.</span><span class="na">eType</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">ObjType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">machine</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Machine</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">eVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">eEhsize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
@@ -1242,35 +1261,50 @@ section#format-index .row {
             <span class="k">this</span><span class="p">.</span><span class="na">eType</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">ObjType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">machine</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Machine</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">eVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">entryPoint</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">programHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaderOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">eEhsize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
@@ -1358,68 +1392,98 @@ section#format-index .row {
                 <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Bits</span><span class="p">.</span><span class="na">B64</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">flags64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Bits</span><span class="p">.</span><span class="na">B32</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">flags32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_readBE</span><span class="p">()</span> <span class="p">{</span>
@@ -1427,68 +1491,98 @@ section#format-index .row {
                 <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Bits</span><span class="p">.</span><span class="na">B64</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">flags64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">vaddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">paddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">filesz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">memsz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="na">Bits</span><span class="p">.</span><span class="na">B32</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">flags32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="n">DynamicSection</span> <span class="n">dynamic</span><span class="p">;</span>
@@ -1569,47 +1663,67 @@ section#format-index .row {
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_readLE</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_readBE</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">valueOrPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="n">DynamicArrayTags</span> <span class="n">tagEnum</span><span class="p">;</span>
@@ -1664,133 +1778,193 @@ section#format-index .row {
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_readLE</span><span class="p">()</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">ofsName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">ShType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">linkedSectionIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_readBE</span><span class="p">()</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">ofsName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">ShType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">linkedSectionIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">align</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="p">{</span>
+                    <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">entrySize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="n">Object</span> <span class="n">body</span><span class="p">;</span>
@@ -1801,66 +1975,80 @@ section#format-index .row {
                 <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
                 <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsBody</span><span class="p">());</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">_is_le</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynamicSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">STRTAB</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">DYNSTR</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">DYNSYM</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
+                    <span class="p">{</span>
+                        <span class="n">ShType</span> <span class="n">on</span> <span class="o">=</span> <span class="n">type</span><span class="p">();</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">STRTAB</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynamicSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNSYM</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNSTR</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                        <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynamicSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">STRTAB</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">DYNSTR</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">DYNSYM</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
+                    <span class="p">{</span>
+                        <span class="n">ShType</span> <span class="n">on</span> <span class="o">=</span> <span class="n">type</span><span class="p">();</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">STRTAB</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynamicSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNSYM</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">DYNSTR</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                        <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
@@ -1991,15 +2179,20 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
                     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
-                            <span class="k">break</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
-                            <span class="k">break</span><span class="p">;</span>
-                        <span class="p">}</span>
+                        <span class="p">{</span>
+                            <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="p">}</span>
+                            <span class="p">}</span>
                         <span class="p">}</span>
                         <span class="n">i</span><span class="o">++</span><span class="p">;</span>
                     <span class="p">}</span>
@@ -2010,15 +2203,20 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
                     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-                        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
-                        <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
-                            <span class="k">break</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
-                            <span class="k">break</span><span class="p">;</span>
-                        <span class="p">}</span>
+                        <span class="p">{</span>
+                            <span class="n">Bits</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">();</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                                <span class="k">case</span> <span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="p">}</span>
+                            <span class="p">}</span>
                         <span class="p">}</span>
                         <span class="n">i</span><span class="o">++</span><span class="p">;</span>
                     <span class="p">}</span>
@@ -2138,16 +2336,16 @@ section#format-index .row {
             <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">programHeaderOffset</span><span class="p">());</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">_is_le</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">()));</span>
-                <span class="n">programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ProgramHeader</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                <span class="n">programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ProgramHeader</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">qtyProgramHeader</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">programHeaderEntrySize</span><span class="p">()));</span>
                     <span class="n">KaitaiStream</span> <span class="n">_io__raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_programHeaders</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_programHeaders</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">programHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">ProgramHeader</span><span class="p">(</span><span class="n">_io__raw_programHeaders</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">()));</span>
-                <span class="n">programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ProgramHeader</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                <span class="n">programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ProgramHeader</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtyProgramHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">qtyProgramHeader</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">_raw_programHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">programHeaderEntrySize</span><span class="p">()));</span>
                     <span class="n">KaitaiStream</span> <span class="n">_io__raw_programHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_programHeaders</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_programHeaders</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
@@ -2164,16 +2362,16 @@ section#format-index .row {
             <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">sectionHeaderOffset</span><span class="p">());</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">_is_le</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">()));</span>
-                <span class="n">sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SectionHeader</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                <span class="n">sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SectionHeader</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">qtySectionHeader</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sectionHeaderEntrySize</span><span class="p">()));</span>
                     <span class="n">KaitaiStream</span> <span class="n">_io__raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_sectionHeaders</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_sectionHeaders</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">sectionHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">SectionHeader</span><span class="p">(</span><span class="n">_io__raw_sectionHeaders</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">_is_le</span><span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">()));</span>
-                <span class="n">sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SectionHeader</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                <span class="n">sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SectionHeader</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">qtySectionHeader</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">qtySectionHeader</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">_raw_sectionHeaders</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sectionHeaderEntrySize</span><span class="p">()));</span>
                     <span class="n">KaitaiStream</span> <span class="n">_io__raw_sectionHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_sectionHeaders</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_sectionHeaders</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>

@@ -361,13 +361,13 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved = m_io.ReadBitsInt(26);
-                _isctbType = m_io.ReadBitsInt(1) != 0;
-                _isctaType = m_io.ReadBitsInt(1) != 0;
-                _coordinateMode = m_io.ReadBitsInt(1) != 0;
-                _errors = m_io.ReadBitsInt(1) != 0;
-                _text = m_io.ReadBitsInt(1) != 0;
-                _continuation = m_io.ReadBitsInt(1) != 0;
+                _reserved = m_io.ReadBitsIntBe(26);
+                _isctbType = m_io.ReadBitsIntBe(1) != 0;
+                _isctaType = m_io.ReadBitsIntBe(1) != 0;
+                _coordinateMode = m_io.ReadBitsIntBe(1) != 0;
+                _errors = m_io.ReadBitsIntBe(1) != 0;
+                _text = m_io.ReadBitsIntBe(1) != 0;
+                _continuation = m_io.ReadBitsIntBe(1) != 0;
             }
             private bool f_type;
             private RecordType _type;

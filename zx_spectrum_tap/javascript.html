@@ -172,11 +172,6 @@ metainformation prepended as a header.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ZX Spectrum tape file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ZX Spectrum tape file parsing C# library">C#</a></li>
                 
                 
@@ -431,7 +426,10 @@ metainformation prepended as a header.</p>
     <span class="nx">ArrayParams</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">varName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/array_params/seq/2&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>

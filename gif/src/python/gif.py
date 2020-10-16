@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Gif(KaitaiStruct):
     """GIF (Graphics Interchange Format) is an image file format, developed
@@ -44,19 +45,19 @@ class Gif(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.hdr = self._root.Header(self._io, self, self._root)
-        self.logical_screen_descriptor = self._root.LogicalScreenDescriptorStruct(self._io, self, self._root)
+        self.hdr = Gif.Header(self._io, self, self._root)
+        self.logical_screen_descriptor = Gif.LogicalScreenDescriptorStruct(self._io, self, self._root)
         if self.logical_screen_descriptor.has_color_table:
             self._raw_global_color_table = self._io.read_bytes((self.logical_screen_descriptor.color_table_size * 3))
-            io = KaitaiStream(BytesIO(self._raw_global_color_table))
-            self.global_color_table = self._root.ColorTable(io, self, self._root)
+            _io__raw_global_color_table = KaitaiStream(BytesIO(self._raw_global_color_table))
+            self.global_color_table = Gif.ColorTable(_io__raw_global_color_table, self, self._root)
 
         self.blocks = []
         i = 0
         while True:
-            _ = self._root.Block(self._io, self, self._root)
+            _ = Gif.Block(self._io, self, self._root)
             self.blocks.append(_)
-            if  ((self._io.is_eof()) or (_.block_type == self._root.BlockType.end_of_file)) :
+            if  ((self._io.is_eof()) or (_.block_type == Gif.BlockType.end_of_file)) :
                 break
             i += 1
 
@@ -73,7 +74,7 @@ class Gif(KaitaiStruct):
 
         def _read(self):
             self.lzw_min_code_size = self._io.read_u1()
-            self.subblocks = self._root.Subblocks(self._io, self, self._root)
+            self.subblocks = Gif.Subblocks(self._io, self, self._root)
 
 
     class ColorTableEntry(KaitaiStruct):
@@ -139,10 +140,10 @@ class Gif(KaitaiStruct):
             self.flags = self._io.read_u1()
             if self.has_color_table:
                 self._raw_local_color_table = self._io.read_bytes((self.color_table_size * 3))
-                io = KaitaiStream(BytesIO(self._raw_local_color_table))
-                self.local_color_table = self._root.ColorTable(io, self, self._root)
+                _io__raw_local_color_table = KaitaiStream(BytesIO(self._raw_local_color_table))
+                self.local_color_table = Gif.ColorTable(_io__raw_local_color_table, self, self._root)
 
-            self.image_data = self._root.ImageData(self._io, self, self._root)
+            self.image_data = Gif.ImageData(self._io, self, self._root)
 
         @property
         def has_color_table(self):
@@ -185,12 +186,12 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.block_type = self._root.BlockType(self._io.read_u1())
+            self.block_type = KaitaiStream.resolve_enum(Gif.BlockType, self._io.read_u1())
             _on = self.block_type
-            if _on == self._root.BlockType.extension:
-                self.body = self._root.Extension(self._io, self, self._root)
-            elif _on == self._root.BlockType.local_image_descriptor:
-                self.body = self._root.LocalImageDescriptor(self._io, self, self._root)
+            if _on == Gif.BlockType.extension:
+                self.body = Gif.Extension(self._io, self, self._root)
+            elif _on == Gif.BlockType.local_image_descriptor:
+                self.body = Gif.LocalImageDescriptor(self._io, self, self._root)
 
 
     class ColorTable(KaitaiStruct):
@@ -208,7 +209,7 @@ class Gif(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.ColorTableEntry(self._io, self, self._root))
+                self.entries.append(Gif.ColorTableEntry(self._io, self, self._root))
                 i += 1
 
 
@@ -225,7 +226,9 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x47\x49\x46")
+            self.magic = self._io.read_bytes(3)
+            if not self.magic == b"\x47\x49\x46":
+                raise kaitaistruct.ValidationNotEqualError(b"\x47\x49\x46", self.magic, self._io, u"/types/header/seq/0")
             self.version = (self._io.read_bytes(3)).decode(u"ASCII")
 
 
@@ -241,11 +244,15 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.block_size = self._io.ensure_fixed_contents(b"\x04")
+            self.block_size = self._io.read_bytes(1)
+            if not self.block_size == b"\x04":
+                raise kaitaistruct.ValidationNotEqualError(b"\x04", self.block_size, self._io, u"/types/ext_graphic_control/seq/0")
             self.flags = self._io.read_u1()
             self.delay_time = self._io.read_u2le()
             self.transparent_idx = self._io.read_u1()
-            self.terminator = self._io.ensure_fixed_contents(b"\x00")
+            self.terminator = self._io.read_bytes(1)
+            if not self.terminator == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.terminator, self._io, u"/types/ext_graphic_control/seq/4")
 
         @property
         def transparent_color_flag(self):
@@ -284,11 +291,11 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.application_id = self._root.Subblock(self._io, self, self._root)
+            self.application_id = Gif.Subblock(self._io, self, self._root)
             self.subblocks = []
             i = 0
             while True:
-                _ = self._root.Subblock(self._io, self, self._root)
+                _ = Gif.Subblock(self._io, self, self._root)
                 self.subblocks.append(_)
                 if _.len_bytes == 0:
                     break
@@ -306,7 +313,7 @@ class Gif(KaitaiStruct):
             self.entries = []
             i = 0
             while True:
-                _ = self._root.Subblock(self._io, self, self._root)
+                _ = Gif.Subblock(self._io, self, self._root)
                 self.entries.append(_)
                 if _.len_bytes == 0:
                     break
@@ -321,16 +328,16 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.label = self._root.ExtensionLabel(self._io.read_u1())
+            self.label = KaitaiStream.resolve_enum(Gif.ExtensionLabel, self._io.read_u1())
             _on = self.label
-            if _on == self._root.ExtensionLabel.application:
-                self.body = self._root.ExtApplication(self._io, self, self._root)
-            elif _on == self._root.ExtensionLabel.comment:
-                self.body = self._root.Subblocks(self._io, self, self._root)
-            elif _on == self._root.ExtensionLabel.graphic_control:
-                self.body = self._root.ExtGraphicControl(self._io, self, self._root)
+            if _on == Gif.ExtensionLabel.application:
+                self.body = Gif.ExtApplication(self._io, self, self._root)
+            elif _on == Gif.ExtensionLabel.comment:
+                self.body = Gif.Subblocks(self._io, self, self._root)
+            elif _on == Gif.ExtensionLabel.graphic_control:
+                self.body = Gif.ExtGraphicControl(self._io, self, self._root)
             else:
-                self.body = self._root.Subblocks(self._io, self, self._root)
+                self.body = Gif.Subblocks(self._io, self, self._root)
 
 
 

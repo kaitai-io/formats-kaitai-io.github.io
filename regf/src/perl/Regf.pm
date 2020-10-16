@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -175,7 +175,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (104, 98, 105, 110)));
+    $self->{signature} = $self->{_io}->read_bytes(4);
     $self->{offset} = $self->{_io}->read_u4le();
     $self->{size} = $self->{_io}->read_u4le();
     $self->{unknown1} = $self->{_io}->read_u4le();
@@ -377,7 +377,7 @@ sub _read {
     $self->{data_type} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u2le();
     $self->{padding} = $self->{_io}->read_u2le();
-    if ($self->flags() == $VK_FLAGS_VALUE_COMP_NAME) {
+    if ($self->flags() == $Regf::HiveBinCell::SubKeyListVk::VK_FLAGS_VALUE_COMP_NAME) {
         $self->{value_name} = Encode::decode("ascii", $self->{_io}->read_bytes($self->value_name_size()));
     }
 }
@@ -937,7 +937,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (114, 101, 103, 102)));
+    $self->{signature} = $self->{_io}->read_bytes(4);
     $self->{primary_sequence_number} = $self->{_io}->read_u4le();
     $self->{secondary_sequence_number} = $self->{_io}->read_u4le();
     $self->{last_modification_date_and_time} = Regf::Filetime->new($self->{_io}, $self, $self->{_root});

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -103,17 +103,18 @@ class Uimage < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([39, 5, 25, 86].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([39, 5, 25, 86].pack('C*'), magic, _io, "/types/uheader/seq/0") if not magic == [39, 5, 25, 86].pack('C*')
       @header_crc = @_io.read_u4be
       @timestamp = @_io.read_u4be
       @len_image = @_io.read_u4be
       @load_address = @_io.read_u4be
       @entry_address = @_io.read_u4be
       @data_crc = @_io.read_u4be
-      @os_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_OS, @_io.read_u1)
-      @architecture = Kaitai::Struct::Stream::resolve_enum(UIMAGE_ARCH, @_io.read_u1)
-      @image_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_TYPE, @_io.read_u1)
-      @compression_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_COMP, @_io.read_u1)
+      @os_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_OS, @_io.read_u1)
+      @architecture = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_ARCH, @_io.read_u1)
+      @image_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_TYPE, @_io.read_u1)
+      @compression_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_COMP, @_io.read_u1)
       @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("UTF-8")
       self
     end

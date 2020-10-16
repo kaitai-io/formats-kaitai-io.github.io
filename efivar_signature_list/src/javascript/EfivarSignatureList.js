@@ -308,15 +308,15 @@ var EfivarSignatureList = (function() {
       this._read();
     }
     EfiVarAttr.prototype._read = function() {
-      this.enhancedAuthenticatedAccess = this._io.readBitsInt(1) != 0;
-      this.appendWrite = this._io.readBitsInt(1) != 0;
-      this.timeBasedAuthenticatedWriteAccess = this._io.readBitsInt(1) != 0;
-      this.authenticatedWriteAccess = this._io.readBitsInt(1) != 0;
-      this.hardwareErrorRecord = this._io.readBitsInt(1) != 0;
-      this.runtimeAccess = this._io.readBitsInt(1) != 0;
-      this.bootserviceAccess = this._io.readBitsInt(1) != 0;
-      this.nonVolatile = this._io.readBitsInt(1) != 0;
-      this.reserved1 = this._io.readBitsInt(24);
+      this.enhancedAuthenticatedAccess = this._io.readBitsIntBe(1) != 0;
+      this.appendWrite = this._io.readBitsIntBe(1) != 0;
+      this.timeBasedAuthenticatedWriteAccess = this._io.readBitsIntBe(1) != 0;
+      this.authenticatedWriteAccess = this._io.readBitsIntBe(1) != 0;
+      this.hardwareErrorRecord = this._io.readBitsIntBe(1) != 0;
+      this.runtimeAccess = this._io.readBitsIntBe(1) != 0;
+      this.bootserviceAccess = this._io.readBitsIntBe(1) != 0;
+      this.nonVolatile = this._io.readBitsIntBe(1) != 0;
+      this.reserved1 = this._io.readBitsIntBe(24);
     }
 
     /**

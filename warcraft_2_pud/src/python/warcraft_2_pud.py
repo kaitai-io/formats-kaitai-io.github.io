@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Warcraft2Pud(KaitaiStruct):
     """Warcraft II game engine uses this format for map files. External
@@ -151,7 +152,7 @@ class Warcraft2Pud(KaitaiStruct):
         self.sections = []
         i = 0
         while not self._io.is_eof():
-            self.sections.append(self._root.Section(self._io, self, self._root))
+            self.sections.append(Warcraft2Pud.Section(self._io, self, self._root))
             i += 1
 
 
@@ -180,7 +181,7 @@ class Warcraft2Pud(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.terrain = self._root.TerrainType(self._io.read_u2le())
+            self.terrain = KaitaiStream.resolve_enum(Warcraft2Pud.TerrainType, self._io.read_u2le())
 
 
     class SectionVer(KaitaiStruct):
@@ -220,7 +221,9 @@ class Warcraft2Pud(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00")
+            self.magic = self._io.read_bytes(10)
+            if not self.magic == b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00", self.magic, self._io, u"/types/section_type/seq/0")
             self.unused = self._io.read_bytes(2)
             self.id_tag = self._io.read_u4le()
 
@@ -236,7 +239,7 @@ class Warcraft2Pud(KaitaiStruct):
             self.units = []
             i = 0
             while not self._io.is_eof():
-                self.units.append(self._root.Unit(self._io, self, self._root))
+                self.units.append(Warcraft2Pud.Unit(self._io, self, self._root))
                 i += 1
 
 
@@ -254,44 +257,44 @@ class Warcraft2Pud(KaitaiStruct):
             _on = self.name
             if _on == u"SLBR":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionStartingResource(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionStartingResource(_io__raw_body, self, self._root)
             elif _on == u"ERAX":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionEra(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionEra(_io__raw_body, self, self._root)
             elif _on == u"OWNR":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionOwnr(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionOwnr(_io__raw_body, self, self._root)
             elif _on == u"ERA ":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionEra(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionEra(_io__raw_body, self, self._root)
             elif _on == u"SGLD":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionStartingResource(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionStartingResource(_io__raw_body, self, self._root)
             elif _on == u"VER ":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionVer(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionVer(_io__raw_body, self, self._root)
             elif _on == u"SOIL":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionStartingResource(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionStartingResource(_io__raw_body, self, self._root)
             elif _on == u"UNIT":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionUnit(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionUnit(_io__raw_body, self, self._root)
             elif _on == u"DIM ":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionDim(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionDim(_io__raw_body, self, self._root)
             elif _on == u"TYPE":
                 self._raw_body = self._io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SectionType(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Warcraft2Pud.SectionType(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.size)
 
@@ -308,7 +311,7 @@ class Warcraft2Pud(KaitaiStruct):
             self.controller_by_player = []
             i = 0
             while not self._io.is_eof():
-                self.controller_by_player.append(self._root.Controller(self._io.read_u1()))
+                self.controller_by_player.append(KaitaiStream.resolve_enum(Warcraft2Pud.Controller, self._io.read_u1()))
                 i += 1
 
 
@@ -323,7 +326,7 @@ class Warcraft2Pud(KaitaiStruct):
         def _read(self):
             self.x = self._io.read_u2le()
             self.y = self._io.read_u2le()
-            self.u_type = self._root.UnitType(self._io.read_u1())
+            self.u_type = KaitaiStream.resolve_enum(Warcraft2Pud.UnitType, self._io.read_u1())
             self.owner = self._io.read_u1()
             self.options = self._io.read_u2le()
 
@@ -332,7 +335,7 @@ class Warcraft2Pud(KaitaiStruct):
             if hasattr(self, '_m_resource'):
                 return self._m_resource if hasattr(self, '_m_resource') else None
 
-            if  ((self.u_type == self._root.UnitType.gold_mine) or (self.u_type == self._root.UnitType.human_oil_well) or (self.u_type == self._root.UnitType.orc_oil_well) or (self.u_type == self._root.UnitType.oil_patch)) :
+            if  ((self.u_type == Warcraft2Pud.UnitType.gold_mine) or (self.u_type == Warcraft2Pud.UnitType.human_oil_well) or (self.u_type == Warcraft2Pud.UnitType.orc_oil_well) or (self.u_type == Warcraft2Pud.UnitType.oil_patch)) :
                 self._m_resource = (self.options * 2500)
 
             return self._m_resource if hasattr(self, '_m_resource') else None

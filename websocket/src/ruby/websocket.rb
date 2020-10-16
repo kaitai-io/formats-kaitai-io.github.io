@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -57,11 +57,11 @@ class Websocket < Kaitai::Struct::Struct
     end
 
     def _read
-      @finished = @_io.read_bits_int(1) != 0
-      @reserved = @_io.read_bits_int(3)
-      @opcode = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_bits_int(4))
-      @is_masked = @_io.read_bits_int(1) != 0
-      @len_payload_primary = @_io.read_bits_int(7)
+      @finished = @_io.read_bits_int_be(1) != 0
+      @reserved = @_io.read_bits_int_be(3)
+      @opcode = Kaitai::Struct::Stream::resolve_enum(Websocket::OPCODE, @_io.read_bits_int_be(4))
+      @is_masked = @_io.read_bits_int_be(1) != 0
+      @len_payload_primary = @_io.read_bits_int_be(7)
       @_io.align_to_byte
       if len_payload_primary == 126
         @len_payload_extended_1 = @_io.read_u2be

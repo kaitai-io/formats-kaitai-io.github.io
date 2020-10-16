@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class FalloutDat(KaitaiStruct):
 
@@ -26,11 +27,11 @@ class FalloutDat(KaitaiStruct):
         self.timestamp = self._io.read_u4be()
         self.folder_names = [None] * (self.folder_count)
         for i in range(self.folder_count):
-            self.folder_names[i] = self._root.Pstr(self._io, self, self._root)
+            self.folder_names[i] = FalloutDat.Pstr(self._io, self, self._root)
 
         self.folders = [None] * (self.folder_count)
         for i in range(self.folder_count):
-            self.folders[i] = self._root.Folder(self._io, self, self._root)
+            self.folders[i] = FalloutDat.Folder(self._io, self, self._root)
 
 
     class Pstr(KaitaiStruct):
@@ -59,7 +60,7 @@ class FalloutDat(KaitaiStruct):
             self.timestamp = self._io.read_u4be()
             self.files = [None] * (self.file_count)
             for i in range(self.file_count):
-                self.files[i] = self._root.File(self._io, self, self._root)
+                self.files[i] = FalloutDat.File(self._io, self, self._root)
 
 
 
@@ -71,8 +72,8 @@ class FalloutDat(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.name = self._root.Pstr(self._io, self, self._root)
-            self.flags = self._root.Compression(self._io.read_u4be())
+            self.name = FalloutDat.Pstr(self._io, self, self._root)
+            self.flags = KaitaiStream.resolve_enum(FalloutDat.Compression, self._io.read_u4be())
             self.offset = self._io.read_u4be()
             self.size_unpacked = self._io.read_u4be()
             self.size_packed = self._io.read_u4be()
@@ -85,7 +86,7 @@ class FalloutDat(KaitaiStruct):
             io = self._root._io
             _pos = io.pos()
             io.seek(self.offset)
-            self._m_contents = io.read_bytes((self.size_unpacked if self.flags == self._root.Compression.none else self.size_packed))
+            self._m_contents = io.read_bytes((self.size_unpacked if self.flags == FalloutDat.Compression.none else self.size_packed))
             io.seek(_pos)
             return self._m_contents if hasattr(self, '_m_contents') else None
 

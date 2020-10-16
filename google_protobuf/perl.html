@@ -240,7 +240,7 @@ are the fields' default values, etc, etc.</li>
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">VlqBase128Le</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
@@ -323,16 +323,16 @@ are the fields' default values, etc, etc.</li>
 
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">key</span><span class="p">}</span> <span class="o">=</span> <span class="nn">VlqBase128Le</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">});</span>
     <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">wire_type</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$WIRE_TYPES_VARINT</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">GoogleProtobuf::Pair::</span><span class="nv">WIRE_TYPES_VARINT</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span> <span class="o">=</span> <span class="nn">VlqBase128Le</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$WIRE_TYPES_LEN_DELIMITED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">GoogleProtobuf::Pair::</span><span class="nv">WIRE_TYPES_LEN_DELIMITED</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span> <span class="o">=</span> <span class="nn">GoogleProtobuf::DelimitedBytes</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$WIRE_TYPES_BIT_64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">GoogleProtobuf::Pair::</span><span class="nv">WIRE_TYPES_BIT_64</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
     <span class="p">}</span>
-    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$WIRE_TYPES_BIT_32</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">GoogleProtobuf::Pair::</span><span class="nv">WIRE_TYPES_BIT_32</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">}</span>

@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -64,12 +65,21 @@ public class Iso9660 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.unused1 = this._io.ensureFixedContents(new byte[] { 0 });
+            this.unused1 = this._io.readBytes(1);
+            if (!(Arrays.equals(unused1(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, unused1(), _io(), "/types/vol_desc_primary/seq/0");
+            }
             this.systemId = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
             this.volumeId = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
-            this.unused2 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+            this.unused2 = this._io.readBytes(8);
+            if (!(Arrays.equals(unused2(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 }, unused2(), _io(), "/types/vol_desc_primary/seq/3");
+            }
             this.volSpaceSize = new U4bi(this._io, this, _root);
-            this.unused3 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            this.unused3 = this._io.readBytes(32);
+            if (!(Arrays.equals(unused3(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, unused3(), _io(), "/types/vol_desc_primary/seq/5");
+            }
             this.volSetSize = new U2bi(this._io, this, _root);
             this.volSeqNum = new U2bi(this._io, this, _root);
             this.logicalBlockSize = new U2bi(this._io, this, _root);
@@ -313,7 +323,10 @@ public class Iso9660 extends KaitaiStruct {
         }
         private void _read() {
             this.type = this._io.readU1();
-            this.magic = this._io.ensureFixedContents(new byte[] { 67, 68, 48, 48, 49 });
+            this.magic = this._io.readBytes(5);
+            if (!(Arrays.equals(magic(), new byte[] { 67, 68, 48, 48, 49 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 67, 68, 48, 48, 49 }, magic(), _io(), "/types/vol_desc/seq/1");
+            }
             this.version = this._io.readU1();
             if (type() == 0) {
                 this.volDescBootRecord = new VolDescBootRecord(this._io, this, _root);

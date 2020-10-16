@@ -148,7 +148,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _stringMagic = m_io.EnsureFixedContents(new byte[] { 115 });
+                _stringMagic = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(StringMagic, new byte[] { 115 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 115 }, StringMagic, M_Io, "/types/assembly/seq/0");
+                }
                 _length = m_io.ReadU4le();
                 __raw_items = m_io.ReadBytes(Length);
                 var io___raw_items = new KaitaiStream(__raw_items);
@@ -350,40 +354,40 @@ namespace Kaitai
             {
                 _type = ((ObjectType) m_io.ReadU1());
                 switch (Type) {
-                case ObjectType.None: {
-                    _value = new PyNone(m_io, this, m_root);
-                    break;
-                }
-                case ObjectType.CodeObject: {
-                    _value = new CodeObject(m_io, this, m_root);
-                    break;
-                }
-                case ObjectType.Int: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ObjectType.StringRef: {
-                    _value = new StringRef(m_io, this, m_root);
-                    break;
-                }
                 case ObjectType.String: {
                     _value = new PyString(m_io, this, m_root);
-                    break;
-                }
-                case ObjectType.PyFalse: {
-                    _value = new PyFalse(m_io, this, m_root);
-                    break;
-                }
-                case ObjectType.Interned: {
-                    _value = new InternedString(m_io, this, m_root);
                     break;
                 }
                 case ObjectType.Tuple: {
                     _value = new Tuple(m_io, this, m_root);
                     break;
                 }
+                case ObjectType.Int: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
                 case ObjectType.PyTrue: {
                     _value = new PyTrue(m_io, this, m_root);
+                    break;
+                }
+                case ObjectType.PyFalse: {
+                    _value = new PyFalse(m_io, this, m_root);
+                    break;
+                }
+                case ObjectType.None: {
+                    _value = new PyNone(m_io, this, m_root);
+                    break;
+                }
+                case ObjectType.StringRef: {
+                    _value = new StringRef(m_io, this, m_root);
+                    break;
+                }
+                case ObjectType.CodeObject: {
+                    _value = new CodeObject(m_io, this, m_root);
+                    break;
+                }
+                case ObjectType.Interned: {
+                    _value = new InternedString(m_io, this, m_root);
                     break;
                 }
                 }

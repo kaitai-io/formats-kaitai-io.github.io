@@ -328,14 +328,14 @@ var PacketPpi = (function() {
       this._read();
     }
     MacFlags.prototype._read = function() {
-      this.unused1 = this._io.readBitsInt(1) != 0;
-      this.aggregateDelimiter = this._io.readBitsInt(1) != 0;
-      this.moreAggregates = this._io.readBitsInt(1) != 0;
-      this.aggregate = this._io.readBitsInt(1) != 0;
-      this.dupRx = this._io.readBitsInt(1) != 0;
-      this.rxShortGuard = this._io.readBitsInt(1) != 0;
-      this.isHt40 = this._io.readBitsInt(1) != 0;
-      this.greenfield = this._io.readBitsInt(1) != 0;
+      this.unused1 = this._io.readBitsIntBe(1) != 0;
+      this.aggregateDelimiter = this._io.readBitsIntBe(1) != 0;
+      this.moreAggregates = this._io.readBitsIntBe(1) != 0;
+      this.aggregate = this._io.readBitsIntBe(1) != 0;
+      this.dupRx = this._io.readBitsIntBe(1) != 0;
+      this.rxShortGuard = this._io.readBitsIntBe(1) != 0;
+      this.isHt40 = this._io.readBitsIntBe(1) != 0;
+      this.greenfield = this._io.readBitsIntBe(1) != 0;
       this._io.alignToByte();
       this.unused2 = this._io.readBytes(3);
     }
@@ -508,15 +508,15 @@ var PacketPpi = (function() {
         this._read();
       }
       ChannelFlags.prototype._read = function() {
-        this.spectrum2ghz = this._io.readBitsInt(1) != 0;
-        this.ofdm = this._io.readBitsInt(1) != 0;
-        this.cck = this._io.readBitsInt(1) != 0;
-        this.turbo = this._io.readBitsInt(1) != 0;
-        this.unused = this._io.readBitsInt(8);
-        this.gfsk = this._io.readBitsInt(1) != 0;
-        this.dynCckOfdm = this._io.readBitsInt(1) != 0;
-        this.onlyPassiveScan = this._io.readBitsInt(1) != 0;
-        this.spectrum5ghz = this._io.readBitsInt(1) != 0;
+        this.spectrum2ghz = this._io.readBitsIntBe(1) != 0;
+        this.ofdm = this._io.readBitsIntBe(1) != 0;
+        this.cck = this._io.readBitsIntBe(1) != 0;
+        this.turbo = this._io.readBitsIntBe(1) != 0;
+        this.unused = this._io.readBitsIntBe(8);
+        this.gfsk = this._io.readBitsIntBe(1) != 0;
+        this.dynCckOfdm = this._io.readBitsIntBe(1) != 0;
+        this.onlyPassiveScan = this._io.readBitsIntBe(1) != 0;
+        this.spectrum5ghz = this._io.readBitsIntBe(1) != 0;
       }
 
       /**

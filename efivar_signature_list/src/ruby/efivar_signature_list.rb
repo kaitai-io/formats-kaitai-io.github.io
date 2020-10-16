@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -56,8 +56,8 @@ class EfivarSignatureList < Kaitai::Struct::Struct
         @signatures = Array.new((((len_signature_list - len_signature_header) - 28) / len_signature))
         ((((len_signature_list - len_signature_header) - 28) / len_signature)).times { |i|
           @_raw_signatures[i] = @_io.read_bytes(len_signature)
-          io = Kaitai::Struct::Stream.new(@_raw_signatures[i])
-          @signatures[i] = SignatureData.new(io, self, @_root)
+          _io__raw_signatures = Kaitai::Struct::Stream.new(@_raw_signatures[i])
+          @signatures[i] = SignatureData.new(_io__raw_signatures, self, @_root)
         }
       end
       self
@@ -238,15 +238,15 @@ class EfivarSignatureList < Kaitai::Struct::Struct
     end
 
     def _read
-      @enhanced_authenticated_access = @_io.read_bits_int(1) != 0
-      @append_write = @_io.read_bits_int(1) != 0
-      @time_based_authenticated_write_access = @_io.read_bits_int(1) != 0
-      @authenticated_write_access = @_io.read_bits_int(1) != 0
-      @hardware_error_record = @_io.read_bits_int(1) != 0
-      @runtime_access = @_io.read_bits_int(1) != 0
-      @bootservice_access = @_io.read_bits_int(1) != 0
-      @non_volatile = @_io.read_bits_int(1) != 0
-      @reserved1 = @_io.read_bits_int(24)
+      @enhanced_authenticated_access = @_io.read_bits_int_be(1) != 0
+      @append_write = @_io.read_bits_int_be(1) != 0
+      @time_based_authenticated_write_access = @_io.read_bits_int_be(1) != 0
+      @authenticated_write_access = @_io.read_bits_int_be(1) != 0
+      @hardware_error_record = @_io.read_bits_int_be(1) != 0
+      @runtime_access = @_io.read_bits_int_be(1) != 0
+      @bootservice_access = @_io.read_bits_int_be(1) != 0
+      @non_volatile = @_io.read_bits_int_be(1) != 0
+      @reserved1 = @_io.read_bits_int_be(24)
       self
     end
     attr_reader :enhanced_authenticated_access

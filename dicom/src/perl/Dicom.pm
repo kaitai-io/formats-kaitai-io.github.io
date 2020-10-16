@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -4107,7 +4107,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{preamble} = $self->{_io}->read_bytes(128);
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (68, 73, 67, 77)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
 }
 
 sub preamble {
@@ -4419,7 +4419,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{tag_group} = $self->{_io}->ensure_fixed_contents(pack('C*', (254, 255)));
+    $self->{tag_group} = $self->{_io}->read_bytes(2);
     $self->{tag_elem} = $self->{_io}->read_u2le();
     $self->{value_len} = $self->{_io}->read_u4le();
     if ($self->value_len() != 4294967295) {

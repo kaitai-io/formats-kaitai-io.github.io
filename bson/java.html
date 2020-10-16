@@ -274,6 +274,7 @@ section#format-index .row {
 <span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
@@ -310,7 +311,10 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="na">_raw_fields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">));</span>
         <span class="n">KaitaiStream</span> <span class="n">_io__raw_fields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fields</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="na">fields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ElementsList</span><span class="p">(</span><span class="n">_io__raw_fields</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="na">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">terminator</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">})))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">terminator</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/seq/2&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
@@ -394,17 +398,24 @@ section#format-index .row {
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">subtype</span> <span class="o">=</span> <span class="n">Subtype</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">subtype</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">BYTE_ARRAY_DEPRECATED</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_content</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayDeprecated</span><span class="p">(</span><span class="n">_io__raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">Subtype</span> <span class="n">on</span> <span class="o">=</span> <span class="n">subtype</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">subtype</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">BYTE_ARRAY_DEPRECATED</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_content</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayDeprecated</span><span class="p">(</span><span class="n">_io__raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
 
@@ -547,7 +558,10 @@ section#format-index .row {
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">str</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">terminator</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">})))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">terminator</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/string/seq/2&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">String</span> <span class="n">str</span><span class="p">;</span>
@@ -617,75 +631,80 @@ section#format-index .row {
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">typeByte</span> <span class="o">=</span> <span class="n">BsonType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cstring</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">typeByte</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">NUMBER_DOUBLE</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF8le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">CODE_WITH_SCOPE</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CodeWithScope</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">OBJECT_ID</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">STRING</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">REG_EX</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RegEx</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">NUMBER_DECIMAL</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">F16</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">UTC_DATETIME</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS8le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">NUMBER_LONG</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS8le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TIMESTAMP</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">DB_POINTER</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DbPointer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ARRAY</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">JAVASCRIPT</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">BOOLEAN</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">DOCUMENT</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">SYMBOL</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">NUMBER_INT</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4le</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">BIN_DATA</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BinData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">BsonType</span> <span class="n">on</span> <span class="o">=</span> <span class="n">typeByte</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">typeByte</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">CODE_WITH_SCOPE</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CodeWithScope</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">REG_EX</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RegEx</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">NUMBER_DOUBLE</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF8le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">SYMBOL</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TIMESTAMP</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">NUMBER_INT</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">DOCUMENT</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OBJECT_ID</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">JAVASCRIPT</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">UTC_DATETIME</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS8le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BOOLEAN</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">NUMBER_LONG</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS8le</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">BIN_DATA</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BinData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">STRING</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">DB_POINTER</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DbPointer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">ARRAY</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">NUMBER_DECIMAL</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">content</span> <span class="o">=</span> <span class="k">new</span> <span class="n">F16</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">BsonType</span> <span class="n">typeByte</span><span class="p">;</span>
@@ -841,9 +860,9 @@ section#format-index .row {
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">str</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">exponent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">significandHi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">49</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">str</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">exponent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">significandHi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">49</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">significandLo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
         <span class="p">}</span>

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Edid;
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 255, 255, 255, 255, 255, 255, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(8);
     $self->{mfg_bytes} = $self->{_io}->read_u2le();
     $self->{product_code} = $self->{_io}->read_u2le();
     $self->{serial} = $self->{_io}->read_u4le();
@@ -203,14 +203,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{red_x_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{red_y_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{green_x_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{green_y_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{blue_x_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{blue_y_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{white_x_1_0} = $self->{_io}->read_bits_int(2);
-    $self->{white_y_1_0} = $self->{_io}->read_bits_int(2);
+    $self->{red_x_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{red_y_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{green_x_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{green_y_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{blue_x_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{blue_y_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{white_x_1_0} = $self->{_io}->read_bits_int_be(2);
+    $self->{white_y_1_0} = $self->{_io}->read_bits_int_be(2);
     $self->{_io}->align_to_byte();
     $self->{red_x_9_2} = $self->{_io}->read_u1();
     $self->{red_y_9_2} = $self->{_io}->read_u1();
@@ -444,24 +444,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{can_720_400_70} = $self->{_io}->read_bits_int(1);
-    $self->{can_720_400_88} = $self->{_io}->read_bits_int(1);
-    $self->{can_640_480_60} = $self->{_io}->read_bits_int(1);
-    $self->{can_640_480_67} = $self->{_io}->read_bits_int(1);
-    $self->{can_640_480_72} = $self->{_io}->read_bits_int(1);
-    $self->{can_640_480_75} = $self->{_io}->read_bits_int(1);
-    $self->{can_800_600_56} = $self->{_io}->read_bits_int(1);
-    $self->{can_800_600_60} = $self->{_io}->read_bits_int(1);
-    $self->{can_800_600_72} = $self->{_io}->read_bits_int(1);
-    $self->{can_800_600_75} = $self->{_io}->read_bits_int(1);
-    $self->{can_832_624_75} = $self->{_io}->read_bits_int(1);
-    $self->{can_1024_768_87_i} = $self->{_io}->read_bits_int(1);
-    $self->{can_1024_768_60} = $self->{_io}->read_bits_int(1);
-    $self->{can_1024_768_70} = $self->{_io}->read_bits_int(1);
-    $self->{can_1024_768_75} = $self->{_io}->read_bits_int(1);
-    $self->{can_1280_1024_75} = $self->{_io}->read_bits_int(1);
-    $self->{can_1152_870_75} = $self->{_io}->read_bits_int(1);
-    $self->{reserved} = $self->{_io}->read_bits_int(7);
+    $self->{can_720_400_70} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_720_400_88} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640_480_60} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640_480_67} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640_480_72} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640_480_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800_600_56} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800_600_60} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800_600_72} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800_600_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_832_624_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024_768_87_i} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024_768_60} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024_768_70} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024_768_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1280_1024_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1152_870_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(7);
 }
 
 sub can_720_400_70 {
@@ -590,8 +590,8 @@ sub _read {
     my ($self) = @_;
 
     $self->{horiz_active_pixels_mod} = $self->{_io}->read_u1();
-    $self->{aspect_ratio} = $self->{_io}->read_bits_int(2);
-    $self->{refresh_rate_mod} = $self->{_io}->read_bits_int(5);
+    $self->{aspect_ratio} = $self->{_io}->read_bits_int_be(2);
+    $self->{refresh_rate_mod} = $self->{_io}->read_bits_int_be(5);
 }
 
 sub horiz_active_pixels {

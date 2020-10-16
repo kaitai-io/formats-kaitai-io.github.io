@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map;
@@ -111,7 +112,10 @@ public class Lvm2 extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.signature = this._io.ensureFixedContents(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 });
+                    this.signature = this._io.readBytes(8);
+                    if (!(Arrays.equals(signature(), new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, signature(), _io(), "/types/physical_volume/types/label/types/label_header/seq/0");
+                    }
                     this.sectorNumber = this._io.readU8le();
                     this.checksum = this._io.readU4le();
                     this.labelHeader = new LabelHeader(this._io, this, _root);
@@ -137,7 +141,10 @@ public class Lvm2 extends KaitaiStruct {
                     }
                     private void _read() {
                         this.dataOffset = this._io.readU4le();
-                        this.typeIndicator = this._io.ensureFixedContents(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 });
+                        this.typeIndicator = this._io.readBytes(8);
+                        if (!(Arrays.equals(typeIndicator(), new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }))) {
+                            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, typeIndicator(), _io(), "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+                        }
                     }
                     private long dataOffset;
                     private byte[] typeIndicator;
@@ -371,7 +378,10 @@ public class Lvm2 extends KaitaiStruct {
                         }
                         private void _read() {
                             this.checksum = new MetadataAreaHeader(this._io, this, _root);
-                            this.signature = this._io.ensureFixedContents(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 });
+                            this.signature = this._io.readBytes(16);
+                            if (!(Arrays.equals(signature(), new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }))) {
+                                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, signature(), _io(), "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+                            }
                             this.version = this._io.readU4le();
                             this.metadataAreaOffset = this._io.readU8le();
                             this.metadataAreaSize = this._io.readU8le();

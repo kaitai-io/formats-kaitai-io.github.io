@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -120,7 +120,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{text} = Encode::decode("utf-8", $self->{_io}->read_bytes(64));
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (127, 16, 218, 190)));
+    $self->{signature} = $self->{_io}->read_bytes(4);
     $self->{version} = Vdi::Header::Version->new($self->{_io}, $self, $self->{_root});
     if ($self->subheader_size_is_dynamic()) {
         $self->{header_size_optional} = $self->{_io}->read_u4le();
@@ -516,12 +516,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved0} = $self->{_io}->read_bits_int(15);
-    $self->{zero_expand} = $self->{_io}->read_bits_int(1);
-    $self->{reserved1} = $self->{_io}->read_bits_int(6);
-    $self->{diff} = $self->{_io}->read_bits_int(1);
-    $self->{fixed} = $self->{_io}->read_bits_int(1);
-    $self->{reserved2} = $self->{_io}->read_bits_int(8);
+    $self->{reserved0} = $self->{_io}->read_bits_int_be(15);
+    $self->{zero_expand} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(6);
+    $self->{diff} = $self->{_io}->read_bits_int_be(1);
+    $self->{fixed} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved2} = $self->{_io}->read_bits_int_be(8);
 }
 
 sub reserved0 {

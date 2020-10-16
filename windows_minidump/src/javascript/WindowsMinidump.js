@@ -132,8 +132,14 @@ var WindowsMinidump = (function() {
     this._read();
   }
   WindowsMinidump.prototype._read = function() {
-    this.magic1 = this._io.ensureFixedContents([77, 68, 77, 80]);
-    this.magic2 = this._io.ensureFixedContents([147, 167]);
+    this.magic1 = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, [77, 68, 77, 80]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([77, 68, 77, 80], this.magic1, this._io, "/seq/0");
+    }
+    this.magic2 = this._io.readBytes(2);
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, [147, 167]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([147, 167], this.magic2, this._io, "/seq/1");
+    }
     this.version = this._io.readU2le();
     this.numStreams = this._io.readU4le();
     this.ofsStreams = this._io.readU4le();
@@ -373,30 +379,30 @@ var WindowsMinidump = (function() {
         var _pos = this._io.pos;
         this._io.seek(this.ofsData);
         switch (this.streamType) {
+        case WindowsMinidump.StreamTypes.MEMORY_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new MemoryList(_io__raw__m_data, this, this._root);
+          break;
         case WindowsMinidump.StreamTypes.MISC_INFO:
           this._raw__m_data = this._io.readBytes(this.lenData);
           var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
           this._m_data = new MiscInfo(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.THREAD_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new ThreadList(_io__raw__m_data, this, this._root);
           break;
         case WindowsMinidump.StreamTypes.EXCEPTION:
           this._raw__m_data = this._io.readBytes(this.lenData);
           var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
           this._m_data = new ExceptionStream(_io__raw__m_data, this, this._root);
           break;
-        case WindowsMinidump.StreamTypes.MEMORY_LIST:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new MemoryList(_io__raw__m_data, this, this._root);
-          break;
         case WindowsMinidump.StreamTypes.SYSTEM_INFO:
           this._raw__m_data = this._io.readBytes(this.lenData);
           var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
           this._m_data = new SystemInfo(_io__raw__m_data, this, this._root);
-          break;
-        case WindowsMinidump.StreamTypes.THREAD_LIST:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new ThreadList(_io__raw__m_data, this, this._root);
           break;
         default:
           this._m_data = this._io.readBytes(this.lenData);

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use WindowsShellItems;
 
@@ -491,10 +491,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->read_bits_int(6);
-    $self->{has_common_net_rel_link} = $self->{_io}->read_bits_int(1);
-    $self->{has_volume_id_and_local_base_path} = $self->{_io}->read_bits_int(1);
-    $self->{reserved2} = $self->{_io}->read_bits_int(24);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(6);
+    $self->{has_common_net_rel_link} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_volume_id_and_local_base_path} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved2} = $self->{_io}->read_bits_int_be(24);
 }
 
 sub reserved1 {
@@ -625,18 +625,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{is_unicode} = $self->{_io}->read_bits_int(1);
-    $self->{has_icon_location} = $self->{_io}->read_bits_int(1);
-    $self->{has_arguments} = $self->{_io}->read_bits_int(1);
-    $self->{has_work_dir} = $self->{_io}->read_bits_int(1);
-    $self->{has_rel_path} = $self->{_io}->read_bits_int(1);
-    $self->{has_name} = $self->{_io}->read_bits_int(1);
-    $self->{has_link_info} = $self->{_io}->read_bits_int(1);
-    $self->{has_link_target_id_list} = $self->{_io}->read_bits_int(1);
-    $self->{_unnamed8} = $self->{_io}->read_bits_int(16);
-    $self->{reserved} = $self->{_io}->read_bits_int(5);
-    $self->{keep_local_id_list_for_unc_target} = $self->{_io}->read_bits_int(1);
-    $self->{_unnamed11} = $self->{_io}->read_bits_int(2);
+    $self->{is_unicode} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_icon_location} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_arguments} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_work_dir} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_rel_path} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_name} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_link_info} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_link_target_id_list} = $self->{_io}->read_bits_int_be(1);
+    $self->{_unnamed8} = $self->{_io}->read_bits_int_be(16);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(5);
+    $self->{keep_local_id_list_for_unc_target} = $self->{_io}->read_bits_int_be(1);
+    $self->{_unnamed11} = $self->{_io}->read_bits_int_be(2);
 }
 
 sub is_unicode {
@@ -729,8 +729,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len_header} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 0, 0, 0)));
-    $self->{link_clsid} = $self->{_io}->ensure_fixed_contents(pack('C*', (1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70)));
+    $self->{len_header} = $self->{_io}->read_bytes(4);
+    $self->{link_clsid} = $self->{_io}->read_bytes(16);
     $self->{_raw_flags} = $self->{_io}->read_bytes(4);
     my $io__raw_flags = IO::KaitaiStruct::Stream->new($self->{_raw_flags});
     $self->{flags} = WindowsLnkFile::LinkFlags->new($io__raw_flags, $self, $self->{_root});
@@ -742,7 +742,7 @@ sub _read {
     $self->{icon_index} = $self->{_io}->read_s4le();
     $self->{show_command} = $self->{_io}->read_u4le();
     $self->{hotkey} = $self->{_io}->read_u2le();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(10);
 }
 
 sub len_header {

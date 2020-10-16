@@ -58,7 +58,10 @@ var SystemdJournal = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([76, 80, 75, 83, 72, 72, 82, 72]);
+      this.signature = this._io.readBytes(8);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [76, 80, 75, 83, 72, 72, 82, 72]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([76, 80, 75, 83, 72, 72, 82, 72], this.signature, this._io, "/types/header/seq/0");
+      }
       this.compatibleFlags = this._io.readU4le();
       this.incompatibleFlags = this._io.readU4le();
       this.state = this._io.readU1();

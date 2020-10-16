@@ -30,11 +30,20 @@ var MicrosoftCfb = (function() {
       this._read();
     }
     CfbHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([208, 207, 17, 224, 161, 177, 26, 225]);
-      this.clsid = this._io.ensureFixedContents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      this.signature = this._io.readBytes(8);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [208, 207, 17, 224, 161, 177, 26, 225]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([208, 207, 17, 224, 161, 177, 26, 225], this.signature, this._io, "/types/cfb_header/seq/0");
+      }
+      this.clsid = this._io.readBytes(16);
+      if (!((KaitaiStream.byteArrayCompare(this.clsid, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], this.clsid, this._io, "/types/cfb_header/seq/1");
+      }
       this.versionMinor = this._io.readU2le();
       this.versionMajor = this._io.readU2le();
-      this.byteOrder = this._io.ensureFixedContents([254, 255]);
+      this.byteOrder = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.byteOrder, [254, 255]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([254, 255], this.byteOrder, this._io, "/types/cfb_header/seq/4");
+      }
       this.sectorShift = this._io.readU2le();
       this.miniSectorShift = this._io.readU2le();
       this.reserved1 = this._io.readBytes(6);

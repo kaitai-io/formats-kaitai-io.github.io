@@ -119,32 +119,35 @@ var Jpeg = (function() {
       this._read();
     }
     Segment.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([255]);
+      this.magic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [255]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([255], this.magic, this._io, "/types/segment/seq/0");
+      }
       this.marker = this._io.readU1();
       if ( ((this.marker != Jpeg.Segment.MarkerEnum.SOI) && (this.marker != Jpeg.Segment.MarkerEnum.EOI)) ) {
         this.length = this._io.readU2be();
       }
       if ( ((this.marker != Jpeg.Segment.MarkerEnum.SOI) && (this.marker != Jpeg.Segment.MarkerEnum.EOI)) ) {
         switch (this.marker) {
-        case Jpeg.Segment.MarkerEnum.SOS:
-          this._raw_data = this._io.readBytes((this.length - 2));
-          var _io__raw_data = new KaitaiStream(this._raw_data);
-          this.data = new SegmentSos(_io__raw_data, this, this._root);
-          break;
         case Jpeg.Segment.MarkerEnum.APP1:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
           this.data = new SegmentApp1(_io__raw_data, this, this._root);
+          break;
+        case Jpeg.Segment.MarkerEnum.APP0:
+          this._raw_data = this._io.readBytes((this.length - 2));
+          var _io__raw_data = new KaitaiStream(this._raw_data);
+          this.data = new SegmentApp0(_io__raw_data, this, this._root);
           break;
         case Jpeg.Segment.MarkerEnum.SOF0:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
           this.data = new SegmentSof0(_io__raw_data, this, this._root);
           break;
-        case Jpeg.Segment.MarkerEnum.APP0:
+        case Jpeg.Segment.MarkerEnum.SOS:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
-          this.data = new SegmentApp0(_io__raw_data, this, this._root);
+          this.data = new SegmentSos(_io__raw_data, this, this._root);
           break;
         default:
           this.data = this._io.readBytes((this.length - 2));
@@ -309,7 +312,10 @@ var Jpeg = (function() {
       this._read();
     }
     ExifInJpeg.prototype._read = function() {
-      this.extraZero = this._io.ensureFixedContents([0]);
+      this.extraZero = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.extraZero, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.extraZero, this._io, "/types/exif_in_jpeg/seq/0");
+      }
       this._raw_data = this._io.readBytesFull();
       var _io__raw_data = new KaitaiStream(this._raw_data);
       this.data = new Exif(_io__raw_data, this, null);

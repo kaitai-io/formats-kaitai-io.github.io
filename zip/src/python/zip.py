@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Zip(KaitaiStruct):
     """ZIP is a popular archive file format, introduced in 1989 by Phil Katz
@@ -72,7 +73,7 @@ class Zip(KaitaiStruct):
         self.sections = []
         i = 0
         while not self._io.is_eof():
-            self.sections.append(self._root.PkSection(self._io, self, self._root))
+            self.sections.append(Zip.PkSection(self._io, self, self._root))
             i += 1
 
 
@@ -84,7 +85,7 @@ class Zip(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header = self._root.LocalFileHeader(self._io, self, self._root)
+            self.header = Zip.LocalFileHeader(self._io, self, self._root)
             self.body = self._io.read_bytes(self.header.len_body_compressed)
 
 
@@ -109,21 +110,21 @@ class Zip(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._root.ExtraCodes(self._io.read_u2le())
+            self.code = KaitaiStream.resolve_enum(Zip.ExtraCodes, self._io.read_u2le())
             self.len_body = self._io.read_u2le()
             _on = self.code
-            if _on == self._root.ExtraCodes.ntfs:
+            if _on == Zip.ExtraCodes.ntfs:
                 self._raw_body = self._io.read_bytes(self.len_body)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.ExtraField.Ntfs(io, self, self._root)
-            elif _on == self._root.ExtraCodes.extended_timestamp:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.Ntfs(_io__raw_body, self, self._root)
+            elif _on == Zip.ExtraCodes.extended_timestamp:
                 self._raw_body = self._io.read_bytes(self.len_body)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.ExtraField.ExtendedTimestamp(io, self, self._root)
-            elif _on == self._root.ExtraCodes.infozip_unix_var_size:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.ExtendedTimestamp(_io__raw_body, self, self._root)
+            elif _on == Zip.ExtraCodes.infozip_unix_var_size:
                 self._raw_body = self._io.read_bytes(self.len_body)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.ExtraField.InfozipUnixVarSize(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.InfozipUnixVarSize(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len_body)
 
@@ -143,7 +144,7 @@ class Zip(KaitaiStruct):
                 self.attributes = []
                 i = 0
                 while not self._io.is_eof():
-                    self.attributes.append(self._root.ExtraField.Ntfs.Attribute(self._io, self, self._root))
+                    self.attributes.append(Zip.ExtraField.Ntfs.Attribute(self._io, self, self._root))
                     i += 1
 
 
@@ -160,8 +161,8 @@ class Zip(KaitaiStruct):
                     _on = self.tag
                     if _on == 1:
                         self._raw_body = self._io.read_bytes(self.len_body)
-                        io = KaitaiStream(BytesIO(self._raw_body))
-                        self.body = self._root.ExtraField.Ntfs.Attribute1(io, self, self._root)
+                        _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                        self.body = Zip.ExtraField.Ntfs.Attribute1(_io__raw_body, self, self._root)
                     else:
                         self.body = self._io.read_bytes(self.len_body)
 
@@ -237,7 +238,7 @@ class Zip(KaitaiStruct):
             self.version_made_by = self._io.read_u2le()
             self.version_needed_to_extract = self._io.read_u2le()
             self.flags = self._io.read_u2le()
-            self.compression_method = self._root.Compression(self._io.read_u2le())
+            self.compression_method = KaitaiStream.resolve_enum(Zip.Compression, self._io.read_u2le())
             self.last_mod_file_time = self._io.read_u2le()
             self.last_mod_file_date = self._io.read_u2le()
             self.crc32 = self._io.read_u4le()
@@ -252,8 +253,8 @@ class Zip(KaitaiStruct):
             self.ofs_local_header = self._io.read_s4le()
             self.file_name = (self._io.read_bytes(self.len_file_name)).decode(u"UTF-8")
             self._raw_extra = self._io.read_bytes(self.len_extra)
-            io = KaitaiStream(BytesIO(self._raw_extra))
-            self.extra = self._root.Extras(io, self, self._root)
+            _io__raw_extra = KaitaiStream(BytesIO(self._raw_extra))
+            self.extra = Zip.Extras(_io__raw_extra, self, self._root)
             self.comment = (self._io.read_bytes(self.len_comment)).decode(u"UTF-8")
 
         @property
@@ -263,7 +264,7 @@ class Zip(KaitaiStruct):
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_local_header)
-            self._m_local_header = self._root.PkSection(self._io, self, self._root)
+            self._m_local_header = Zip.PkSection(self._io, self, self._root)
             self._io.seek(_pos)
             return self._m_local_header if hasattr(self, '_m_local_header') else None
 
@@ -276,17 +277,19 @@ class Zip(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x50\x4B")
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x50\x4B":
+                raise kaitaistruct.ValidationNotEqualError(b"\x50\x4B", self.magic, self._io, u"/types/pk_section/seq/0")
             self.section_type = self._io.read_u2le()
             _on = self.section_type
             if _on == 513:
-                self.body = self._root.CentralDirEntry(self._io, self, self._root)
+                self.body = Zip.CentralDirEntry(self._io, self, self._root)
             elif _on == 1027:
-                self.body = self._root.LocalFile(self._io, self, self._root)
+                self.body = Zip.LocalFile(self._io, self, self._root)
             elif _on == 1541:
-                self.body = self._root.EndOfCentralDir(self._io, self, self._root)
+                self.body = Zip.EndOfCentralDir(self._io, self, self._root)
             elif _on == 2055:
-                self.body = self._root.DataDescriptor(self._io, self, self._root)
+                self.body = Zip.DataDescriptor(self._io, self, self._root)
 
 
     class Extras(KaitaiStruct):
@@ -300,7 +303,7 @@ class Zip(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.ExtraField(self._io, self, self._root))
+                self.entries.append(Zip.ExtraField(self._io, self, self._root))
                 i += 1
 
 
@@ -315,7 +318,7 @@ class Zip(KaitaiStruct):
         def _read(self):
             self.version = self._io.read_u2le()
             self.flags = self._io.read_u2le()
-            self.compression_method = self._root.Compression(self._io.read_u2le())
+            self.compression_method = KaitaiStream.resolve_enum(Zip.Compression, self._io.read_u2le())
             self.file_mod_time = self._io.read_u2le()
             self.file_mod_date = self._io.read_u2le()
             self.crc32 = self._io.read_u4le()
@@ -325,8 +328,8 @@ class Zip(KaitaiStruct):
             self.len_extra = self._io.read_u2le()
             self.file_name = (self._io.read_bytes(self.len_file_name)).decode(u"UTF-8")
             self._raw_extra = self._io.read_bytes(self.len_extra)
-            io = KaitaiStream(BytesIO(self._raw_extra))
-            self.extra = self._root.Extras(io, self, self._root)
+            _io__raw_extra = KaitaiStream(BytesIO(self._raw_extra))
+            self.extra = Zip.Extras(_io__raw_extra, self, self._root)
 
 
     class EndOfCentralDir(KaitaiStruct):

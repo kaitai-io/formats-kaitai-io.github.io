@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -63,8 +64,14 @@ public class Rtpdump extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.shebang = this._io.ensureFixedContents(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 });
-            this.space = this._io.ensureFixedContents(new byte[] { 32 });
+            this.shebang = this._io.readBytes(12);
+            if (!(Arrays.equals(shebang(), new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }, shebang(), _io(), "/types/header_t/seq/0");
+            }
+            this.space = this._io.readBytes(1);
+            if (!(Arrays.equals(space(), new byte[] { 32 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32 }, space(), _io(), "/types/header_t/seq/1");
+            }
             this.ip = new String(this._io.readBytesTerm(47, false, true, true), Charset.forName("ascii"));
             this.port = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
             this.startSec = this._io.readU4be();

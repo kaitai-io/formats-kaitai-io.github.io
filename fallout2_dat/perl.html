@@ -142,11 +142,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="fallout2_dat parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="fallout2_dat parsing C# library">C#</a></li>
                 
                 
@@ -221,7 +216,7 @@ section#format-index .row {
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">Compress::Zlib</span><span class="p">;</span>
 
@@ -453,16 +448,38 @@ section#format-index .row {
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offset</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">contents</span> <span class="p">{</span>
+<span class="k">sub</span> <span class="nf">contents_raw</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">});</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$COMPRESSION_ZLIB</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_raw</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_raw</span><span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Fallout2Dat::</span><span class="nv">COMPRESSION_NONE</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">my</span> <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
         <span class="k">my</span> <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">pos</span><span class="p">();</span>
         <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">offset</span><span class="p">());</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size_packed</span><span class="p">());</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Compress::Zlib::</span><span class="n">uncompress</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_raw</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size_unpacked</span><span class="p">());</span>
         <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_raw</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">contents_zlib</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_zlib</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_zlib</span><span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Fallout2Dat::</span><span class="nv">COMPRESSION_ZLIB</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="k">my</span> <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">pos</span><span class="p">();</span>
+        <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">offset</span><span class="p">());</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents_zlib</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size_packed</span><span class="p">());</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_zlib</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Compress::Zlib::</span><span class="n">uncompress</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents_zlib</span><span class="p">});</span>
+        <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents_zlib</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">contents</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Fallout2Dat::</span><span class="nv">COMPRESSION_ZLIB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Fallout2Dat::</span><span class="nv">COMPRESSION_NONE</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Fallout2Dat::</span><span class="nv">COMPRESSION_ZLIB</span> <span class="p">?</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">contents_zlib</span><span class="p">()</span> <span class="p">:</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">contents_raw</span><span class="p">());</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">contents</span><span class="p">};</span>
 <span class="p">}</span>
@@ -492,9 +509,9 @@ section#format-index .row {
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offset</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_raw_contents</span> <span class="p">{</span>
+<span class="k">sub</span> <span class="nf">_raw_contents_zlib</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents</span><span class="p">};</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_contents_zlib</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

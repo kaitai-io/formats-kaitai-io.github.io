@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -25,7 +25,8 @@ class GenmidiOp2 < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'))
+    @magic = @_io.read_bytes(8)
+    raise Kaitai::Struct::ValidationNotEqualError.new([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'), magic, _io, "/seq/0") if not magic == [35, 79, 80, 76, 95, 73, 73, 35].pack('C*')
     @instruments = Array.new(175)
     (175).times { |i|
       @instruments[i] = InstrumentEntry.new(@_io, self, @_root)

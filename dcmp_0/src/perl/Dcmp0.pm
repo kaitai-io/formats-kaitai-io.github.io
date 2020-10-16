@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use DcmpVariableLengthInteger;
 
 ########################################################################
@@ -85,21 +85,21 @@ sub _read {
     my ($self) = @_;
 
     $self->{tag} = $self->{_io}->read_u1();
-    my $_on = ( (($self->tag() >= 0) && ($self->tag() <= 31))  ? $TAG_KIND_LITERAL : ( (($self->tag() >= 32) && ($self->tag() <= 74))  ? $TAG_KIND_BACKREFERENCE : ( (($self->tag() >= 75) && ($self->tag() <= 253))  ? $TAG_KIND_TABLE_LOOKUP : ($self->tag() == 254 ? $TAG_KIND_EXTENDED : ($self->tag() == 255 ? $TAG_KIND_END : $TAG_KIND_INVALID)))));
-    if ($_on == $TAG_KIND_END) {
-        $self->{body} = Dcmp0::Chunk::EndBody->new($self->{_io}, $self, $self->{_root});
+    my $_on = ( (($self->tag() >= 0) && ($self->tag() <= 31))  ? $Dcmp0::Chunk::TAG_KIND_LITERAL : ( (($self->tag() >= 32) && ($self->tag() <= 74))  ? $Dcmp0::Chunk::TAG_KIND_BACKREFERENCE : ( (($self->tag() >= 75) && ($self->tag() <= 253))  ? $Dcmp0::Chunk::TAG_KIND_TABLE_LOOKUP : ($self->tag() == 254 ? $Dcmp0::Chunk::TAG_KIND_EXTENDED : ($self->tag() == 255 ? $Dcmp0::Chunk::TAG_KIND_END : $Dcmp0::Chunk::TAG_KIND_INVALID)))));
+    if ($_on == $Dcmp0::Chunk::TAG_KIND_EXTENDED) {
+        $self->{body} = Dcmp0::Chunk::ExtendedBody->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_KIND_LITERAL) {
+    elsif ($_on == $Dcmp0::Chunk::TAG_KIND_LITERAL) {
         $self->{body} = Dcmp0::Chunk::LiteralBody->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_KIND_BACKREFERENCE) {
-        $self->{body} = Dcmp0::Chunk::BackreferenceBody->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Dcmp0::Chunk::TAG_KIND_END) {
+        $self->{body} = Dcmp0::Chunk::EndBody->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_KIND_TABLE_LOOKUP) {
+    elsif ($_on == $Dcmp0::Chunk::TAG_KIND_TABLE_LOOKUP) {
         $self->{body} = Dcmp0::Chunk::TableLookupBody->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_KIND_EXTENDED) {
-        $self->{body} = Dcmp0::Chunk::ExtendedBody->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Dcmp0::Chunk::TAG_KIND_BACKREFERENCE) {
+        $self->{body} = Dcmp0::Chunk::BackreferenceBody->new($self->{_io}, $self, $self->{_root});
     }
 }
 

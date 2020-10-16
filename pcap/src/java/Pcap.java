@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -187,7 +188,10 @@ public class Pcap extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magicNumber = this._io.ensureFixedContents(new byte[] { -44, -61, -78, -95 });
+            this.magicNumber = this._io.readBytes(4);
+            if (!(Arrays.equals(magicNumber(), new byte[] { -44, -61, -78, -95 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, magicNumber(), _io(), "/types/header/seq/0");
+            }
             this.versionMajor = this._io.readU2le();
             this.versionMinor = this._io.readU2le();
             this.thiszone = this._io.readS4le();
@@ -263,23 +267,30 @@ public class Pcap extends KaitaiStruct {
             this.tsUsec = this._io.readU4le();
             this.inclLen = this._io.readU4le();
             this.origLen = this._io.readU4le();
-            switch (_root.hdr().network()) {
-            case PPI: {
-                this._raw_body = this._io.readBytes(inclLen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PacketPpi(_io__raw_body);
-                break;
-            }
-            case ETHERNET: {
-                this._raw_body = this._io.readBytes(inclLen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new EthernetFrame(_io__raw_body);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(inclLen());
-                break;
-            }
+            {
+                Linktype on = _root.hdr().network();
+                if (on != null) {
+                    switch (_root.hdr().network()) {
+                    case PPI: {
+                        this._raw_body = this._io.readBytes(inclLen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new PacketPpi(_io__raw_body);
+                        break;
+                    }
+                    case ETHERNET: {
+                        this._raw_body = this._io.readBytes(inclLen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new EthernetFrame(_io__raw_body);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(inclLen());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(inclLen());
+                }
             }
         }
         private long tsSec;

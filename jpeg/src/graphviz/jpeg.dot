@@ -16,7 +16,7 @@ digraph {
 
 			segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">1</TD><TD>FF</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">1</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="marker_pos">1</TD><TD PORT="marker_size">1</TD><TD>u1→MarkerEnum</TD><TD PORT="marker_type">marker</TD></TR>
 				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
 				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>switch (marker)</TD><TD PORT="data_type">data</TD></TR>
@@ -24,10 +24,10 @@ digraph {
 			</TABLE>>];
 segment__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:marker_enum_sos</TD><TD PORT="case0">SegmentSos</TD></TR>
-	<TR><TD>:marker_enum_app1</TD><TD PORT="case1">SegmentApp1</TD></TR>
+	<TR><TD>:marker_enum_app1</TD><TD PORT="case0">SegmentApp1</TD></TR>
+	<TR><TD>:marker_enum_app0</TD><TD PORT="case1">SegmentApp0</TD></TR>
 	<TR><TD>:marker_enum_sof0</TD><TD PORT="case2">SegmentSof0</TD></TR>
-	<TR><TD>:marker_enum_app0</TD><TD PORT="case3">SegmentApp0</TD></TR>
+	<TR><TD>:marker_enum_sos</TD><TD PORT="case3">SegmentSos</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__segment_sos {
@@ -107,7 +107,7 @@ segment_app1__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 
 			exif_in_jpeg__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="extra_zero_pos">0</TD><TD PORT="extra_zero_size">1</TD><TD>00</TD><TD PORT="extra_zero_type">extra_zero</TD></TR>
+				<TR><TD PORT="extra_zero_pos">0</TD><TD PORT="extra_zero_size">1</TD><TD></TD><TD PORT="extra_zero_type">extra_zero</TD></TR>
 				<TR><TD PORT="data_pos">1</TD><TD PORT="data_size">⇲</TD><TD>Exif</TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
@@ -131,10 +131,10 @@ segment_app1__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	}
 	jpeg__seq:segments_type -> segment__seq [style=bold];
 	segment__seq:data_type -> segment__seq_data_switch [style=bold];
-	segment__seq_data_switch:case0 -> segment_sos__seq [style=bold];
-	segment__seq_data_switch:case1 -> segment_app1__seq [style=bold];
+	segment__seq_data_switch:case0 -> segment_app1__seq [style=bold];
+	segment__seq_data_switch:case1 -> segment_app0__seq [style=bold];
 	segment__seq_data_switch:case2 -> segment_sof0__seq [style=bold];
-	segment__seq_data_switch:case3 -> segment_app0__seq [style=bold];
+	segment__seq_data_switch:case3 -> segment_sos__seq [style=bold];
 	segment__seq:marker_type -> segment__seq:data_type [color="#404040"];
 	segment_sos__seq:components_type -> component__seq [style=bold];
 	segment_sos__seq:num_components_type -> segment_sos__seq:components__repeat [color="#404040"];

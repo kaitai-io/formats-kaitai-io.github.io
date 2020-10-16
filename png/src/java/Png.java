@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -76,9 +77,18 @@ public class Png extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 });
-        this.ihdrLen = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 13 });
-        this.ihdrType = this._io.ensureFixedContents(new byte[] { 73, 72, 68, 82 });
+        this.magic = this._io.readBytes(8);
+        if (!(Arrays.equals(magic(), new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }, magic(), _io(), "/seq/0");
+        }
+        this.ihdrLen = this._io.readBytes(4);
+        if (!(Arrays.equals(ihdrLen(), new byte[] { 0, 0, 0, 13 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 13 }, ihdrLen(), _io(), "/seq/1");
+        }
+        this.ihdrType = this._io.readBytes(4);
+        if (!(Arrays.equals(ihdrType(), new byte[] { 73, 72, 68, 82 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 72, 68, 82 }, ihdrType(), _io(), "/seq/2");
+        }
         this.ihdr = new IhdrChunk(this._io, this, _root);
         this.ihdrCrc = this._io.readBytes(4);
         this.chunks = new ArrayList<Chunk>();
@@ -559,7 +569,7 @@ public class Png extends KaitaiStruct {
             this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
             this._raw_textDatastream = this._io.readBytesFull();
-            this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
+            this.textDatastream = KaitaiStream.processZlib(_raw_textDatastream);
         }
         private String keyword;
         private CompressionMethods compressionMethod;
@@ -684,27 +694,32 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            switch (_root.ihdr().colorType()) {
-            case GREYSCALE_ALPHA: {
-                this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                break;
-            }
-            case INDEXED: {
-                this.bkgd = new BkgdIndexed(this._io, this, _root);
-                break;
-            }
-            case GREYSCALE: {
-                this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                break;
-            }
-            case TRUECOLOR_ALPHA: {
-                this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                break;
-            }
-            case TRUECOLOR: {
-                this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                break;
-            }
+            {
+                ColorType on = _root.ihdr().colorType();
+                if (on != null) {
+                    switch (_root.ihdr().colorType()) {
+                    case INDEXED: {
+                        this.bkgd = new BkgdIndexed(this._io, this, _root);
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                        break;
+                    }
+                    case GREYSCALE: {
+                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private KaitaiStruct bkgd;

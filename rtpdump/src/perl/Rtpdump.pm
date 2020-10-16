@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use RtpPacket;
 
@@ -83,8 +83,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{shebang} = $self->{_io}->ensure_fixed_contents(pack('C*', (35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48)));
-    $self->{space} = $self->{_io}->ensure_fixed_contents(pack('C*', (32)));
+    $self->{shebang} = $self->{_io}->read_bytes(12);
+    $self->{space} = $self->{_io}->read_bytes(1);
     $self->{ip} = Encode::decode("ascii", $self->{_io}->read_bytes_term(47, 0, 1, 1));
     $self->{port} = Encode::decode("ascii", $self->{_io}->read_bytes_term(10, 0, 1, 1));
     $self->{start_sec} = $self->{_io}->read_u4be();

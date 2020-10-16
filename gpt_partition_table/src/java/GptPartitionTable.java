@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -96,7 +97,10 @@ public class GptPartitionTable extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 });
+            this.signature = this._io.readBytes(8);
+            if (!(Arrays.equals(signature(), new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, signature(), _io(), "/types/partition_header/seq/0");
+            }
             this.revision = this._io.readU4le();
             this.headerSize = this._io.readU4le();
             this.crc32Header = this._io.readU4le();
@@ -118,8 +122,8 @@ public class GptPartitionTable extends KaitaiStruct {
             KaitaiStream io = _root._io();
             long _pos = io.pos();
             io.seek((entriesStart() * _root.sectorSize()));
-            this._raw_entries = new ArrayList<byte[]>((int) (entriesCount()));
-            entries = new ArrayList<PartitionEntry>((int) (entriesCount()));
+            this._raw_entries = new ArrayList<byte[]>(((Number) (entriesCount())).intValue());
+            entries = new ArrayList<PartitionEntry>(((Number) (entriesCount())).intValue());
             for (int i = 0; i < entriesCount(); i++) {
                 this._raw_entries.add(io.readBytes(entriesSize()));
                 KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries.get(_raw_entries.size() - 1));

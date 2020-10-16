@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class EfivarSignatureList(KaitaiStruct):
     """Parse UEFI variables db and dbx that contain signatures, certificates and
@@ -30,11 +31,11 @@ class EfivarSignatureList(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.var_attributes = self._root.EfiVarAttr(self._io, self, self._root)
+        self.var_attributes = EfivarSignatureList.EfiVarAttr(self._io, self, self._root)
         self.signatures = []
         i = 0
         while not self._io.is_eof():
-            self.signatures.append(self._root.SignatureList(self._io, self, self._root))
+            self.signatures.append(EfivarSignatureList.SignatureList(self._io, self, self._root))
             i += 1
 
 
@@ -60,8 +61,8 @@ class EfivarSignatureList(KaitaiStruct):
                 self.signatures = [None] * (((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature)
                 for i in range(((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature):
                     self._raw_signatures[i] = self._io.read_bytes(self.len_signature)
-                    io = KaitaiStream(BytesIO(self._raw_signatures[i]))
-                    self.signatures[i] = self._root.SignatureData(io, self, self._root)
+                    _io__raw_signatures = KaitaiStream(BytesIO(self._raw_signatures[i]))
+                    self.signatures[i] = EfivarSignatureList.SignatureData(_io__raw_signatures, self, self._root)
 
 
 
@@ -260,15 +261,15 @@ class EfivarSignatureList(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.enhanced_authenticated_access = self._io.read_bits_int(1) != 0
-            self.append_write = self._io.read_bits_int(1) != 0
-            self.time_based_authenticated_write_access = self._io.read_bits_int(1) != 0
-            self.authenticated_write_access = self._io.read_bits_int(1) != 0
-            self.hardware_error_record = self._io.read_bits_int(1) != 0
-            self.runtime_access = self._io.read_bits_int(1) != 0
-            self.bootservice_access = self._io.read_bits_int(1) != 0
-            self.non_volatile = self._io.read_bits_int(1) != 0
-            self.reserved1 = self._io.read_bits_int(24)
+            self.enhanced_authenticated_access = self._io.read_bits_int_be(1) != 0
+            self.append_write = self._io.read_bits_int_be(1) != 0
+            self.time_based_authenticated_write_access = self._io.read_bits_int_be(1) != 0
+            self.authenticated_write_access = self._io.read_bits_int_be(1) != 0
+            self.hardware_error_record = self._io.read_bits_int_be(1) != 0
+            self.runtime_access = self._io.read_bits_int_be(1) != 0
+            self.bootservice_access = self._io.read_bits_int_be(1) != 0
+            self.non_volatile = self._io.read_bits_int_be(1) != 0
+            self.reserved1 = self._io.read_bits_int_be(24)
 
 
 

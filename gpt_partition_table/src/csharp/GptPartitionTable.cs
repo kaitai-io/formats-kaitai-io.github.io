@@ -82,7 +82,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.EnsureFixedContents(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 });
+                _signature = m_io.ReadBytes(8);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, Signature, M_Io, "/types/partition_header/seq/0");
+                }
                 _revision = m_io.ReadU4le();
                 _headerSize = m_io.ReadU4le();
                 _crc32Header = m_io.ReadU4le();

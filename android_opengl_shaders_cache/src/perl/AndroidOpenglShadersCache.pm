@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (69, 71, 76, 36)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{_raw_contents} = $self->{_io}->read_bytes_full();
     my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
@@ -180,7 +180,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (36, 98, 66, 95)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version} = $self->{_io}->read_u4le();
     $self->{device_version} = $self->{_io}->read_u4le();
     $self->{num_entries} = $self->{_io}->read_u4le();

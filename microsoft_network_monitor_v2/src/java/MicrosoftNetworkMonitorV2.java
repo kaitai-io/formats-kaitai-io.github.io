@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -157,7 +158,10 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.signature = this._io.ensureFixedContents(new byte[] { 71, 77, 66, 85 });
+        this.signature = this._io.readBytes(4);
+        if (!(Arrays.equals(signature(), new byte[] { 71, 77, 66, 85 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, signature(), _io(), "/seq/0");
+        }
         this.versionMinor = this._io.readU1();
         this.versionMajor = this._io.readU1();
         this.macType = Linktype.byId(this._io.readU2le());
@@ -294,17 +298,24 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             this.tsDelta = this._io.readU8le();
             this.origLen = this._io.readU4le();
             this.incLen = this._io.readU4le();
-            switch (_root.macType()) {
-            case ETHERNET: {
-                this._raw_body = this._io.readBytes(incLen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new EthernetFrame(_io__raw_body);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(incLen());
-                break;
-            }
+            {
+                Linktype on = _root.macType();
+                if (on != null) {
+                    switch (_root.macType()) {
+                    case ETHERNET: {
+                        this._raw_body = this._io.readBytes(incLen());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new EthernetFrame(_io__raw_body);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(incLen());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(incLen());
+                }
             }
         }
         private long tsDelta;

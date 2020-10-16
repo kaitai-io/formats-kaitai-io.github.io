@@ -37,13 +37,22 @@ var CpioOldLe = (function() {
     File.prototype._read = function() {
       this.header = new FileHeader(this._io, this, this._root);
       this.pathName = this._io.readBytes((this.header.pathNameSize - 1));
-      this.stringTerminator = this._io.ensureFixedContents([0]);
+      this.stringTerminator = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.stringTerminator, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.stringTerminator, this._io, "/types/file/seq/2");
+      }
       if (KaitaiStream.mod(this.header.pathNameSize, 2) == 1) {
-        this.pathNamePadding = this._io.ensureFixedContents([0]);
+        this.pathNamePadding = this._io.readBytes(1);
+        if (!((KaitaiStream.byteArrayCompare(this.pathNamePadding, [0]) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError([0], this.pathNamePadding, this._io, "/types/file/seq/3");
+        }
       }
       this.fileData = this._io.readBytes(this.header.fileSize.value);
       if (KaitaiStream.mod(this.header.fileSize.value, 2) == 1) {
-        this.fileDataPadding = this._io.ensureFixedContents([0]);
+        this.fileDataPadding = this._io.readBytes(1);
+        if (!((KaitaiStream.byteArrayCompare(this.fileDataPadding, [0]) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError([0], this.fileDataPadding, this._io, "/types/file/seq/5");
+        }
       }
       if ( (((KaitaiStream.byteArrayCompare(this.pathName, [84, 82, 65, 73, 76, 69, 82, 33, 33, 33]) == 0)) && (this.header.fileSize.value == 0)) ) {
         this.endOfFilePadding = this._io.readBytesFull();
@@ -62,7 +71,10 @@ var CpioOldLe = (function() {
       this._read();
     }
     FileHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([199, 113]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [199, 113]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([199, 113], this.magic, this._io, "/types/file_header/seq/0");
+      }
       this.deviceNumber = this._io.readU2le();
       this.inodeNumber = this._io.readU2le();
       this.mode = this._io.readU2le();

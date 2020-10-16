@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -67,7 +68,10 @@ public class Ines extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 78, 69, 83, 26 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 78, 69, 83, 26 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.lenPrgRom = this._io.readU1();
             this.lenChrRom = this._io.readU1();
             this._raw_f6 = this._io.readBytes(1);
@@ -83,7 +87,10 @@ public class Ines extends KaitaiStruct {
             this._raw_f10 = this._io.readBytes(1);
             KaitaiStream _io__raw_f10 = new ByteBufferKaitaiStream(_raw_f10);
             this.f10 = new F10(_io__raw_f10, this, _root);
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0 });
+            this.reserved = this._io.readBytes(5);
+            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, reserved(), _io(), "/types/header/seq/8");
+            }
         }
 
         /**
@@ -124,11 +131,11 @@ public class Ines extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.lowerMapper = this._io.readBitsInt(4);
-                this.fourScreen = this._io.readBitsInt(1) != 0;
-                this.trainer = this._io.readBitsInt(1) != 0;
-                this.hasBatteryRam = this._io.readBitsInt(1) != 0;
-                this.mirroring = Mirroring.byId(this._io.readBitsInt(1));
+                this.lowerMapper = this._io.readBitsIntBe(4);
+                this.fourScreen = this._io.readBitsIntBe(1) != 0;
+                this.trainer = this._io.readBitsIntBe(1) != 0;
+                this.hasBatteryRam = this._io.readBitsIntBe(1) != 0;
+                this.mirroring = Mirroring.byId(this._io.readBitsIntBe(1));
             }
             private long lowerMapper;
             private boolean fourScreen;
@@ -189,10 +196,10 @@ public class Ines extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.upperMapper = this._io.readBitsInt(4);
-                this.format = this._io.readBitsInt(2);
-                this.playchoice10 = this._io.readBitsInt(1) != 0;
-                this.vsUnisystem = this._io.readBitsInt(1) != 0;
+                this.upperMapper = this._io.readBitsIntBe(4);
+                this.format = this._io.readBitsIntBe(2);
+                this.playchoice10 = this._io.readBitsIntBe(1) != 0;
+                this.vsUnisystem = this._io.readBitsIntBe(1) != 0;
             }
             private long upperMapper;
             private long format;
@@ -262,8 +269,8 @@ public class Ines extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved = this._io.readBitsInt(7);
-                this.tvSystem = TvSystem.byId(this._io.readBitsInt(1));
+                this.reserved = this._io.readBitsIntBe(7);
+                this.tvSystem = TvSystem.byId(this._io.readBitsIntBe(1));
             }
             private long reserved;
             private TvSystem tvSystem;
@@ -319,11 +326,11 @@ public class Ines extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.readBitsInt(2);
-                this.busConflict = this._io.readBitsInt(1) != 0;
-                this.prgRam = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(2);
-                this.tvSystem = TvSystem.byId(this._io.readBitsInt(2));
+                this.reserved1 = this._io.readBitsIntBe(2);
+                this.busConflict = this._io.readBitsIntBe(1) != 0;
+                this.prgRam = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(2);
+                this.tvSystem = TvSystem.byId(this._io.readBitsIntBe(2));
             }
             private long reserved1;
             private boolean busConflict;

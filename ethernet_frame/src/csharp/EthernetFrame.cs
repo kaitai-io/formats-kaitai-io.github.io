@@ -90,9 +90,9 @@ namespace Kaitai
             }
             private void _read()
             {
-                _priority = m_io.ReadBitsInt(3);
-                _dropEligible = m_io.ReadBitsInt(1) != 0;
-                _vlanId = m_io.ReadBitsInt(12);
+                _priority = m_io.ReadBitsIntBe(3);
+                _dropEligible = m_io.ReadBitsIntBe(1) != 0;
+                _vlanId = m_io.ReadBitsIntBe(12);
             }
             private ulong _priority;
             private bool _dropEligible;

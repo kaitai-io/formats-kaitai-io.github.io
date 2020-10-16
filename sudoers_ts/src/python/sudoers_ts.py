@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SudoersTs(KaitaiStruct):
     """This spec can be used to parse sudo time stamp files located in directories
@@ -31,7 +32,7 @@ class SudoersTs(KaitaiStruct):
         self.records = []
         i = 0
         while not self._io.is_eof():
-            self.records.append(self._root.Record(self._io, self, self._root))
+            self.records.append(SudoersTs.Record(self._io, self, self._root))
             i += 1
 
 
@@ -43,16 +44,16 @@ class SudoersTs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.TsType(self._io.read_u2le())
-            self.flags = self._root.TsFlag(self._io, self, self._root)
+            self.type = KaitaiStream.resolve_enum(SudoersTs.TsType, self._io.read_u2le())
+            self.flags = SudoersTs.TsFlag(self._io, self, self._root)
             self.auth_uid = self._io.read_u4le()
             self.sid = self._io.read_u4le()
-            self.start_time = self._root.Timespec(self._io, self, self._root)
-            self.ts = self._root.Timespec(self._io, self, self._root)
-            if self.type == self._root.TsType.tty:
+            self.start_time = SudoersTs.Timespec(self._io, self, self._root)
+            self.ts = SudoersTs.Timespec(self._io, self, self._root)
+            if self.type == SudoersTs.TsType.tty:
                 self.ttydev = self._io.read_u4le()
 
-            if self.type == self._root.TsType.ppid:
+            if self.type == SudoersTs.TsType.ppid:
                 self.ppid = self._io.read_u4le()
 
 
@@ -65,10 +66,10 @@ class SudoersTs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved0 = self._io.read_bits_int(6)
-            self.anyuid = self._io.read_bits_int(1) != 0
-            self.disabled = self._io.read_bits_int(1) != 0
-            self.reserved1 = self._io.read_bits_int(8)
+            self.reserved0 = self._io.read_bits_int_be(6)
+            self.anyuid = self._io.read_bits_int_be(1) != 0
+            self.disabled = self._io.read_bits_int_be(1) != 0
+            self.reserved1 = self._io.read_bits_int_be(8)
 
 
     class RecordV1(KaitaiStruct):
@@ -79,15 +80,15 @@ class SudoersTs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.TsType(self._io.read_u2le())
-            self.flags = self._root.TsFlag(self._io, self, self._root)
+            self.type = KaitaiStream.resolve_enum(SudoersTs.TsType, self._io.read_u2le())
+            self.flags = SudoersTs.TsFlag(self._io, self, self._root)
             self.auth_uid = self._io.read_u4le()
             self.sid = self._io.read_u4le()
-            self.ts = self._root.Timespec(self._io, self, self._root)
-            if self.type == self._root.TsType.tty:
+            self.ts = SudoersTs.Timespec(self._io, self, self._root)
+            if self.type == SudoersTs.TsType.tty:
                 self.ttydev = self._io.read_u4le()
 
-            if self.type == self._root.TsType.ppid:
+            if self.type == SudoersTs.TsType.ppid:
                 self.ppid = self._io.read_u4le()
 
 
@@ -117,12 +118,12 @@ class SudoersTs(KaitaiStruct):
             _on = self.version
             if _on == 1:
                 self._raw_payload = self._io.read_bytes((self.len_record - 4))
-                io = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.RecordV1(io, self, self._root)
+                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = SudoersTs.RecordV1(_io__raw_payload, self, self._root)
             elif _on == 2:
                 self._raw_payload = self._io.read_bytes((self.len_record - 4))
-                io = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.RecordV2(io, self, self._root)
+                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = SudoersTs.RecordV2(_io__raw_payload, self, self._root)
             else:
                 self.payload = self._io.read_bytes((self.len_record - 4))
 

@@ -39,11 +39,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.EnsureFixedContents(new byte[] { 208, 207, 17, 224, 161, 177, 26, 225 });
-                _clsid = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                _signature = m_io.ReadBytes(8);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 208, 207, 17, 224, 161, 177, 26, 225 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 208, 207, 17, 224, 161, 177, 26, 225 }, Signature, M_Io, "/types/cfb_header/seq/0");
+                }
+                _clsid = m_io.ReadBytes(16);
+                if (!((KaitaiStream.ByteArrayCompare(Clsid, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Clsid, M_Io, "/types/cfb_header/seq/1");
+                }
                 _versionMinor = m_io.ReadU2le();
                 _versionMajor = m_io.ReadU2le();
-                _byteOrder = m_io.EnsureFixedContents(new byte[] { 254, 255 });
+                _byteOrder = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(ByteOrder, new byte[] { 254, 255 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 254, 255 }, ByteOrder, M_Io, "/types/cfb_header/seq/4");
+                }
                 _sectorShift = m_io.ReadU2le();
                 _miniSectorShift = m_io.ReadU2le();
                 _reserved1 = m_io.ReadBytes(6);
@@ -243,8 +255,8 @@ namespace Kaitai
                         io.Seek(((Ofs + 1) * M_Root.SectorSize));
                         _miniStream = io.ReadBytes(Size);
                         io.Seek(_pos);
+                        f_miniStream = true;
                     }
-                    f_miniStream = true;
                     return _miniStream;
                 }
             }
@@ -262,8 +274,8 @@ namespace Kaitai
                         io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (ChildId * 128)));
                         _child = new DirEntry(io, this, m_root);
                         io.Seek(_pos);
+                        f_child = true;
                     }
-                    f_child = true;
                     return _child;
                 }
             }
@@ -281,8 +293,8 @@ namespace Kaitai
                         io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (LeftSiblingId * 128)));
                         _leftSibling = new DirEntry(io, this, m_root);
                         io.Seek(_pos);
+                        f_leftSibling = true;
                     }
-                    f_leftSibling = true;
                     return _leftSibling;
                 }
             }
@@ -300,8 +312,8 @@ namespace Kaitai
                         io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (RightSiblingId * 128)));
                         _rightSibling = new DirEntry(io, this, m_root);
                         io.Seek(_pos);
+                        f_rightSibling = true;
                     }
-                    f_rightSibling = true;
                     return _rightSibling;
                 }
             }

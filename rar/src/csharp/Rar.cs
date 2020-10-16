@@ -349,10 +349,18 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic1 = m_io.EnsureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
+                _magic1 = m_io.ReadBytes(6);
+                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 97, 114, 33, 26, 7 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, Magic1, M_Io, "/types/magic_signature/seq/0");
+                }
                 _version = m_io.ReadU1();
                 if (Version == 1) {
-                    _magic3 = m_io.EnsureFixedContents(new byte[] { 0 });
+                    _magic3 = m_io.ReadBytes(1);
+                    if (!((KaitaiStream.ByteArrayCompare(Magic3, new byte[] { 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0 }, Magic3, M_Io, "/types/magic_signature/seq/2");
+                    }
                 }
             }
             private byte[] _magic1;

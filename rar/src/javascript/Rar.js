@@ -280,10 +280,16 @@ var Rar = (function() {
       this._read();
     }
     MagicSignature.prototype._read = function() {
-      this.magic1 = this._io.ensureFixedContents([82, 97, 114, 33, 26, 7]);
+      this.magic1 = this._io.readBytes(6);
+      if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 97, 114, 33, 26, 7]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([82, 97, 114, 33, 26, 7], this.magic1, this._io, "/types/magic_signature/seq/0");
+      }
       this.version = this._io.readU1();
       if (this.version == 1) {
-        this.magic3 = this._io.ensureFixedContents([0]);
+        this.magic3 = this._io.readBytes(1);
+        if (!((KaitaiStream.byteArrayCompare(this.magic3, [0]) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError([0], this.magic3, this._io, "/types/magic_signature/seq/2");
+        }
       }
     }
 

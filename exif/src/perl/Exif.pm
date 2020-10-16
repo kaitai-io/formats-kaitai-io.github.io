@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Exif;
@@ -756,7 +756,7 @@ sub _read_be {
 sub type_byte_length {
     my ($self) = @_;
     return $self->{type_byte_length} if ($self->{type_byte_length});
-    $self->{type_byte_length} = ($self->field_type() == $FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $FIELD_TYPE_ENUM_DWORD ? 4 : 1));
+    $self->{type_byte_length} = ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_DWORD ? 4 : 1));
     return $self->{type_byte_length};
 }
 

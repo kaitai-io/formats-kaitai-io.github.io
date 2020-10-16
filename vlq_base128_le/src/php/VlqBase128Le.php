@@ -23,80 +23,82 @@
  * This particular implementation supports serialized values to up 8 bytes long.
  */
 
-class VlqBase128Le extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Le $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
+namespace {
+    class VlqBase128Le extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Le $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-    private function _read() {
-        $this->_m_groups = [];
-        $i = 0;
-        do {
-            $_ = new \VlqBase128Le\Group($this->_io, $this, $this->_root);
-            $this->_m_groups[] = $_;
-            $i++;
-        } while (!(!($_->hasNext())));
-    }
-    protected $_m_len;
-    public function len() {
-        if ($this->_m_len !== null)
+        private function _read() {
+            $this->_m_groups = [];
+            $i = 0;
+            do {
+                $_ = new \VlqBase128Le\Group($this->_io, $this, $this->_root);
+                $this->_m_groups[] = $_;
+                $i++;
+            } while (!(!($_->hasNext())));
+        }
+        protected $_m_len;
+        public function len() {
+            if ($this->_m_len !== null)
+                return $this->_m_len;
+            $this->_m_len = count($this->groups());
             return $this->_m_len;
-        $this->_m_len = count($this->groups());
-        return $this->_m_len;
-    }
-    protected $_m_value;
+        }
+        protected $_m_value;
 
-    /**
-     * Resulting value as normal integer
-     */
-    public function value() {
-        if ($this->_m_value !== null)
+        /**
+         * Resulting value as normal integer
+         */
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ((((((($this->groups()[0]->value() + ($this->len() >= 2 ? ($this->groups()[1]->value() << 7) : 0)) + ($this->len() >= 3 ? ($this->groups()[2]->value() << 14) : 0)) + ($this->len() >= 4 ? ($this->groups()[3]->value() << 21) : 0)) + ($this->len() >= 5 ? ($this->groups()[4]->value() << 28) : 0)) + ($this->len() >= 6 ? ($this->groups()[5]->value() << 35) : 0)) + ($this->len() >= 7 ? ($this->groups()[6]->value() << 42) : 0)) + ($this->len() >= 8 ? ($this->groups()[7]->value() << 49) : 0));
             return $this->_m_value;
-        $this->_m_value = ((((((($this->groups()[0]->value() + ($this->len() >= 2 ? ($this->groups()[1]->value() << 7) : 0)) + ($this->len() >= 3 ? ($this->groups()[2]->value() << 14) : 0)) + ($this->len() >= 4 ? ($this->groups()[3]->value() << 21) : 0)) + ($this->len() >= 5 ? ($this->groups()[4]->value() << 28) : 0)) + ($this->len() >= 6 ? ($this->groups()[5]->value() << 35) : 0)) + ($this->len() >= 7 ? ($this->groups()[6]->value() << 42) : 0)) + ($this->len() >= 8 ? ($this->groups()[7]->value() << 49) : 0));
-        return $this->_m_value;
+        }
+        protected $_m_groups;
+        public function groups() { return $this->_m_groups; }
     }
-    protected $_m_groups;
-    public function groups() { return $this->_m_groups; }
 }
 
 /**
  * One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
  */
 
-namespace \VlqBase128Le;
+namespace VlqBase128Le {
+    class Group extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \VlqBase128Le $_parent = null, \VlqBase128Le $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-class Group extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \VlqBase128Le $_parent = null, \VlqBase128Le $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
+        private function _read() {
+            $this->_m_b = $this->_io->readU1();
+        }
+        protected $_m_hasNext;
 
-    private function _read() {
-        $this->_m_b = $this->_io->readU1();
-    }
-    protected $_m_hasNext;
-
-    /**
-     * If true, then we have more bytes to read
-     */
-    public function hasNext() {
-        if ($this->_m_hasNext !== null)
+        /**
+         * If true, then we have more bytes to read
+         */
+        public function hasNext() {
+            if ($this->_m_hasNext !== null)
+                return $this->_m_hasNext;
+            $this->_m_hasNext = ($this->b() & 128) != 0;
             return $this->_m_hasNext;
-        $this->_m_hasNext = ($this->b() & 128) != 0;
-        return $this->_m_hasNext;
-    }
-    protected $_m_value;
+        }
+        protected $_m_value;
 
-    /**
-     * The 7-bit (base128) numeric value chunk of this group
-     */
-    public function value() {
-        if ($this->_m_value !== null)
+        /**
+         * The 7-bit (base128) numeric value chunk of this group
+         */
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ($this->b() & 127);
             return $this->_m_value;
-        $this->_m_value = ($this->b() & 127);
-        return $this->_m_value;
+        }
+        protected $_m_b;
+        public function b() { return $this->_m_b; }
     }
-    protected $_m_b;
-    public function b() { return $this->_m_b; }
 }

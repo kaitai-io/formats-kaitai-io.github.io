@@ -83,7 +83,10 @@ var Swf = (function() {
   }
   Swf.prototype._read = function() {
     this.compression = this._io.readU1();
-    this.signature = this._io.ensureFixedContents([87, 83]);
+    this.signature = this._io.readBytes(2);
+    if (!((KaitaiStream.byteArrayCompare(this.signature, [87, 83]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([87, 83], this.signature, this._io, "/seq/1");
+    }
     this.version = this._io.readU1();
     this.lenFile = this._io.readU4le();
     if (this.compression == Swf.Compressions.NONE) {
@@ -202,6 +205,11 @@ var Swf = (function() {
     Tag.prototype._read = function() {
       this.recordHeader = new RecordHeader(this._io, this, this._root);
       switch (this.recordHeader.tagType) {
+      case Swf.TagType.DEFINE_SOUND:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        break;
       case Swf.TagType.SET_BACKGROUND_COLOR:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
@@ -212,10 +220,10 @@ var Swf = (function() {
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
         this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, this._root);
         break;
-      case Swf.TagType.DEFINE_SOUND:
+      case Swf.TagType.DO_ABC:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
         break;
       case Swf.TagType.EXPORT_ASSETS:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
@@ -226,11 +234,6 @@ var Swf = (function() {
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
         this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.DO_ABC:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
         break;
       default:
         this.tagBody = this._io.readBytes(this.recordHeader.len);
@@ -314,10 +317,10 @@ var Swf = (function() {
     }
     DefineSoundBody.prototype._read = function() {
       this.id = this._io.readU2le();
-      this.format = this._io.readBitsInt(4);
-      this.samplingRate = this._io.readBitsInt(2);
-      this.bitsPerSample = this._io.readBitsInt(1);
-      this.numChannels = this._io.readBitsInt(1);
+      this.format = this._io.readBitsIntBe(4);
+      this.samplingRate = this._io.readBitsIntBe(2);
+      this.bitsPerSample = this._io.readBitsIntBe(1);
+      this.numChannels = this._io.readBitsIntBe(1);
       this._io.alignToByte();
       this.numSamples = this._io.readU4le();
     }

@@ -56,7 +56,7 @@ namespace Kaitai
             {
                 switch (BitsPerDigit) {
                 case 4: {
-                    _digits.Add(m_io.ReadBitsInt(4));
+                    _digits.Add(m_io.ReadBitsIntBe(4));
                     break;
                 }
                 case 8: {

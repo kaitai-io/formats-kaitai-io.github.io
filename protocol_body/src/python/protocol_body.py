@@ -1,18 +1,19 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from icmp_packet import IcmpPacket
-from tcp_segment import TcpSegment
-from ipv4_packet import Ipv4Packet
-from udp_datagram import UdpDatagram
-from ipv6_packet import Ipv6Packet
+import icmp_packet
+import udp_datagram
+import ipv4_packet
+import ipv6_packet
+import tcp_segment
 class ProtocolBody(KaitaiStruct):
     """Protocol body represents particular payload on transport level (OSI
     layer 4).
@@ -185,20 +186,20 @@ class ProtocolBody(KaitaiStruct):
 
     def _read(self):
         _on = self.protocol
-        if _on == self._root.ProtocolEnum.tcp:
-            self.body = TcpSegment(self._io)
-        elif _on == self._root.ProtocolEnum.ipv6_nonxt:
-            self.body = self._root.NoNextHeader(self._io, self, self._root)
-        elif _on == self._root.ProtocolEnum.icmp:
-            self.body = IcmpPacket(self._io)
-        elif _on == self._root.ProtocolEnum.udp:
-            self.body = UdpDatagram(self._io)
-        elif _on == self._root.ProtocolEnum.hopopt:
-            self.body = self._root.OptionHopByHop(self._io, self, self._root)
-        elif _on == self._root.ProtocolEnum.ipv6:
-            self.body = Ipv6Packet(self._io)
-        elif _on == self._root.ProtocolEnum.ipv4:
-            self.body = Ipv4Packet(self._io)
+        if _on == ProtocolBody.ProtocolEnum.ipv6_nonxt:
+            self.body = ProtocolBody.NoNextHeader(self._io, self, self._root)
+        elif _on == ProtocolBody.ProtocolEnum.ipv4:
+            self.body = ipv4_packet.Ipv4Packet(self._io)
+        elif _on == ProtocolBody.ProtocolEnum.udp:
+            self.body = udp_datagram.UdpDatagram(self._io)
+        elif _on == ProtocolBody.ProtocolEnum.icmp:
+            self.body = icmp_packet.IcmpPacket(self._io)
+        elif _on == ProtocolBody.ProtocolEnum.hopopt:
+            self.body = ProtocolBody.OptionHopByHop(self._io, self, self._root)
+        elif _on == ProtocolBody.ProtocolEnum.ipv6:
+            self.body = ipv6_packet.Ipv6Packet(self._io)
+        elif _on == ProtocolBody.ProtocolEnum.tcp:
+            self.body = tcp_segment.TcpSegment(self._io)
 
     class NoNextHeader(KaitaiStruct):
         """Dummy type for IPv6 "no next header" type, which signifies end of headers chain."""
@@ -231,7 +232,7 @@ class ProtocolBody(KaitaiStruct):
         if hasattr(self, '_m_protocol'):
             return self._m_protocol if hasattr(self, '_m_protocol') else None
 
-        self._m_protocol = self._root.ProtocolEnum(self.protocol_num)
+        self._m_protocol = KaitaiStream.resolve_enum(ProtocolBody.ProtocolEnum, self.protocol_num)
         return self._m_protocol if hasattr(self, '_m_protocol') else None
 
 

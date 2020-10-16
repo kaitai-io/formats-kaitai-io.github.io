@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -54,8 +54,8 @@ class Lzh < Kaitai::Struct::Struct
 
     def _read
       @_raw_header = @_io.read_bytes((_parent.header_len - 1))
-      io = Kaitai::Struct::Stream.new(@_raw_header)
-      @header = Header.new(io, self, @_root)
+      _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+      @header = Header.new(_io__raw_header, self, @_root)
       if header.header1.lha_level == 0
         @file_uncompr_crc16 = @_io.read_u2le
       end

@@ -161,11 +161,6 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                 <a href="index.html" title="RTP (Real-time Transport Protocol) parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="RTP (Real-time Transport Protocol) parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="RTP (Real-time Transport Protocol) parsing C# library">C#</a></li>
@@ -336,12 +331,12 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
-            <span class="n">_hasPadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-            <span class="n">_hasExtension</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-            <span class="n">_csrcCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-            <span class="n">_marker</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-            <span class="n">_payloadType</span> <span class="p">=</span> <span class="p">((</span><span class="n">PayloadTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
+            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+            <span class="n">_hasPadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_hasExtension</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_csrcCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="n">_marker</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_payloadType</span> <span class="p">=</span> <span class="p">((</span><span class="n">PayloadTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
             <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
             <span class="n">_sequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
             <span class="n">_timestamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
@@ -397,8 +392,8 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
                     <span class="n">_lenPaddingIfExists</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_lenPaddingIfExists</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="n">f_lenPaddingIfExists</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">_lenPaddingIfExists</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>

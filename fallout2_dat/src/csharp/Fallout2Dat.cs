@@ -124,6 +124,8 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_contentsRaw = false;
+                f_contentsZlib = false;
                 f_contents = false;
                 _read();
             }
@@ -135,6 +137,45 @@ namespace Kaitai
                 _sizePacked = m_io.ReadU4le();
                 _offset = m_io.ReadU4le();
             }
+            private bool f_contentsRaw;
+            private byte[] _contentsRaw;
+            public byte[] ContentsRaw
+            {
+                get
+                {
+                    if (f_contentsRaw)
+                        return _contentsRaw;
+                    if (Flags == Fallout2Dat.Compression.None) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(Offset);
+                        _contentsRaw = io.ReadBytes(SizeUnpacked);
+                        io.Seek(_pos);
+                        f_contentsRaw = true;
+                    }
+                    return _contentsRaw;
+                }
+            }
+            private bool f_contentsZlib;
+            private byte[] _contentsZlib;
+            public byte[] ContentsZlib
+            {
+                get
+                {
+                    if (f_contentsZlib)
+                        return _contentsZlib;
+                    if (Flags == Fallout2Dat.Compression.Zlib) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(Offset);
+                        __raw_contentsZlib = io.ReadBytes(SizePacked);
+                        _contentsZlib = m_io.ProcessZlib(__raw_contentsZlib);
+                        io.Seek(_pos);
+                        f_contentsZlib = true;
+                    }
+                    return _contentsZlib;
+                }
+            }
             private bool f_contents;
             private byte[] _contents;
             public byte[] Contents
@@ -143,13 +184,8 @@ namespace Kaitai
                 {
                     if (f_contents)
                         return _contents;
-                    if (Flags == Fallout2Dat.Compression.Zlib) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(Offset);
-                        __raw_contents = io.ReadBytes(SizePacked);
-                        _contents = m_io.ProcessZlib(__raw_contents);
-                        io.Seek(_pos);
+                    if ( ((Flags == Fallout2Dat.Compression.Zlib) || (Flags == Fallout2Dat.Compression.None)) ) {
+                        _contents = (byte[]) ((Flags == Fallout2Dat.Compression.Zlib ? ContentsZlib : ContentsRaw));
                     }
                     f_contents = true;
                     return _contents;
@@ -162,7 +198,7 @@ namespace Kaitai
             private uint _offset;
             private Fallout2Dat m_root;
             private Fallout2Dat.Index m_parent;
-            private byte[] __raw_contents;
+            private byte[] __raw_contentsZlib;
             public Pstr Name { get { return _name; } }
             public Compression Flags { get { return _flags; } }
             public uint SizeUnpacked { get { return _sizeUnpacked; } }
@@ -170,7 +206,7 @@ namespace Kaitai
             public uint Offset { get { return _offset; } }
             public Fallout2Dat M_Root { get { return m_root; } }
             public Fallout2Dat.Index M_Parent { get { return m_parent; } }
-            public byte[] M_RawContents { get { return __raw_contents; } }
+            public byte[] M_RawContentsZlib { get { return __raw_contentsZlib; } }
         }
         private bool f_footer;
         private Footer _footer;

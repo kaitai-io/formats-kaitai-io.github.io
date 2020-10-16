@@ -123,11 +123,6 @@ section#format-index .row {
                 <a href="index.html" title="exif parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="exif parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="exif parsing C# library">C#</a></li>
@@ -280,7 +275,7 @@ section#format-index .row {
                 <span class="p">}</span>
 
                 <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="p">(</span><span class="s">&quot;Unable to decide on endianness&quot;</span><span class="p">);</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
                 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
                     <span class="n">_readLE</span><span class="p">();</span>
                 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -317,7 +312,7 @@ section#format-index .row {
                 <span class="p">{</span>
 
                     <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="p">(</span><span class="s">&quot;Unable to decide on endianness&quot;</span><span class="p">);</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
                     <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
                         <span class="n">_readLE</span><span class="p">();</span>
                     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -361,8 +356,8 @@ section#format-index .row {
                                 <span class="n">_nextIfd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ifd</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                             <span class="p">}</span>
                             <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_nextIfd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="p">}</span>
-                        <span class="n">f_nextIfd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="k">return</span> <span class="n">_nextIfd</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
@@ -874,7 +869,7 @@ section#format-index .row {
                 <span class="p">{</span>
 
                     <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="p">(</span><span class="s">&quot;Unable to decide on endianness&quot;</span><span class="p">);</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
                     <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
                         <span class="n">_readLE</span><span class="p">();</span>
                     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -952,8 +947,8 @@ section#format-index .row {
                                 <span class="n">_data</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">ByteLength</span><span class="p">);</span>
                             <span class="p">}</span>
                             <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_data</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="p">}</span>
-                        <span class="n">f_data</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="k">return</span> <span class="n">_data</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class GranTurismoVol < Kaitai::Struct::Struct
@@ -13,10 +13,12 @@ class GranTurismoVol < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([71, 84, 70, 83, 0, 0, 0, 0].pack('C*'))
+    @magic = @_io.read_bytes(8)
+    raise Kaitai::Struct::ValidationNotEqualError.new([71, 84, 70, 83, 0, 0, 0, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [71, 84, 70, 83, 0, 0, 0, 0].pack('C*')
     @num_files = @_io.read_u2le
     @num_entries = @_io.read_u2le
-    @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
+    @reserved = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), reserved, _io, "/seq/3") if not reserved == [0, 0, 0, 0].pack('C*')
     @offsets = Array.new(num_files)
     (num_files).times { |i|
       @offsets[i] = @_io.read_u4le

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Edid < Kaitai::Struct::Struct
@@ -13,7 +13,8 @@ class Edid < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'))
+    @magic = @_io.read_bytes(8)
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 255, 255, 255, 255, 255, 255, 0].pack('C*')
     @mfg_bytes = @_io.read_u2le
     @product_code = @_io.read_u2le
     @serial = @_io.read_u4le
@@ -46,14 +47,14 @@ class Edid < Kaitai::Struct::Struct
     end
 
     def _read
-      @red_x_1_0 = @_io.read_bits_int(2)
-      @red_y_1_0 = @_io.read_bits_int(2)
-      @green_x_1_0 = @_io.read_bits_int(2)
-      @green_y_1_0 = @_io.read_bits_int(2)
-      @blue_x_1_0 = @_io.read_bits_int(2)
-      @blue_y_1_0 = @_io.read_bits_int(2)
-      @white_x_1_0 = @_io.read_bits_int(2)
-      @white_y_1_0 = @_io.read_bits_int(2)
+      @red_x_1_0 = @_io.read_bits_int_be(2)
+      @red_y_1_0 = @_io.read_bits_int_be(2)
+      @green_x_1_0 = @_io.read_bits_int_be(2)
+      @green_y_1_0 = @_io.read_bits_int_be(2)
+      @blue_x_1_0 = @_io.read_bits_int_be(2)
+      @blue_y_1_0 = @_io.read_bits_int_be(2)
+      @white_x_1_0 = @_io.read_bits_int_be(2)
+      @white_y_1_0 = @_io.read_bits_int_be(2)
       @_io.align_to_byte
       @red_x_9_2 = @_io.read_u1
       @red_y_9_2 = @_io.read_u1
@@ -241,24 +242,24 @@ class Edid < Kaitai::Struct::Struct
     end
 
     def _read
-      @can_720_400_70 = @_io.read_bits_int(1) != 0
-      @can_720_400_88 = @_io.read_bits_int(1) != 0
-      @can_640_480_60 = @_io.read_bits_int(1) != 0
-      @can_640_480_67 = @_io.read_bits_int(1) != 0
-      @can_640_480_72 = @_io.read_bits_int(1) != 0
-      @can_640_480_75 = @_io.read_bits_int(1) != 0
-      @can_800_600_56 = @_io.read_bits_int(1) != 0
-      @can_800_600_60 = @_io.read_bits_int(1) != 0
-      @can_800_600_72 = @_io.read_bits_int(1) != 0
-      @can_800_600_75 = @_io.read_bits_int(1) != 0
-      @can_832_624_75 = @_io.read_bits_int(1) != 0
-      @can_1024_768_87_i = @_io.read_bits_int(1) != 0
-      @can_1024_768_60 = @_io.read_bits_int(1) != 0
-      @can_1024_768_70 = @_io.read_bits_int(1) != 0
-      @can_1024_768_75 = @_io.read_bits_int(1) != 0
-      @can_1280_1024_75 = @_io.read_bits_int(1) != 0
-      @can_1152_870_75 = @_io.read_bits_int(1) != 0
-      @reserved = @_io.read_bits_int(7)
+      @can_720_400_70 = @_io.read_bits_int_be(1) != 0
+      @can_720_400_88 = @_io.read_bits_int_be(1) != 0
+      @can_640_480_60 = @_io.read_bits_int_be(1) != 0
+      @can_640_480_67 = @_io.read_bits_int_be(1) != 0
+      @can_640_480_72 = @_io.read_bits_int_be(1) != 0
+      @can_640_480_75 = @_io.read_bits_int_be(1) != 0
+      @can_800_600_56 = @_io.read_bits_int_be(1) != 0
+      @can_800_600_60 = @_io.read_bits_int_be(1) != 0
+      @can_800_600_72 = @_io.read_bits_int_be(1) != 0
+      @can_800_600_75 = @_io.read_bits_int_be(1) != 0
+      @can_832_624_75 = @_io.read_bits_int_be(1) != 0
+      @can_1024_768_87_i = @_io.read_bits_int_be(1) != 0
+      @can_1024_768_60 = @_io.read_bits_int_be(1) != 0
+      @can_1024_768_70 = @_io.read_bits_int_be(1) != 0
+      @can_1024_768_75 = @_io.read_bits_int_be(1) != 0
+      @can_1280_1024_75 = @_io.read_bits_int_be(1) != 0
+      @can_1152_870_75 = @_io.read_bits_int_be(1) != 0
+      @reserved = @_io.read_bits_int_be(7)
       self
     end
 
@@ -347,8 +348,8 @@ class Edid < Kaitai::Struct::Struct
 
     def _read
       @horiz_active_pixels_mod = @_io.read_u1
-      @aspect_ratio = Kaitai::Struct::Stream::resolve_enum(ASPECT_RATIOS, @_io.read_bits_int(2))
-      @refresh_rate_mod = @_io.read_bits_int(5)
+      @aspect_ratio = Kaitai::Struct::Stream::resolve_enum(ASPECT_RATIOS, @_io.read_bits_int_be(2))
+      @refresh_rate_mod = @_io.read_bits_int_be(5)
       self
     end
 

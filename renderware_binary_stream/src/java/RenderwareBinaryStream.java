@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -215,47 +216,54 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         this.code = Sections.byId(this._io.readU4le());
         this.size = this._io.readU4le();
         this.libraryIdStamp = this._io.readU4le();
-        switch (code()) {
-        case TEXTURE_DICTIONARY: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        case GEOMETRY_LIST: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        case CLUMP: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        case TEXTURE_NATIVE: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        case FRAME_LIST: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        case GEOMETRY: {
-            this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new ListWithHeader(_io__raw_body, this, _root);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytes(size());
-            break;
-        }
+        {
+            Sections on = code();
+            if (on != null) {
+                switch (code()) {
+                case GEOMETRY: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                case TEXTURE_DICTIONARY: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                case GEOMETRY_LIST: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                case TEXTURE_NATIVE: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                case CLUMP: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                case FRAME_LIST: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytes(size());
+                    break;
+                }
+                }
+            } else {
+                this.body = this._io.readBytes(size());
+            }
         }
     }
 
@@ -335,7 +343,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             if (!(isNative())) {
                 this.geometry = new GeometryNonNative(this._io, this, _root);
             }
-            morphTargets = new ArrayList<MorphTarget>((int) (numMorphTargets()));
+            morphTargets = new ArrayList<MorphTarget>(((Number) (numMorphTargets())).intValue());
             for (int i = 0; i < numMorphTargets(); i++) {
                 this.morphTargets.add(new MorphTarget(this._io, this, _root));
             }
@@ -412,18 +420,18 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
         private void _read() {
             if (_parent().isPrelit()) {
-                prelitColors = new ArrayList<Rgba>((int) (_parent().numVertices()));
+                prelitColors = new ArrayList<Rgba>(((Number) (_parent().numVertices())).intValue());
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.prelitColors.add(new Rgba(this._io, this, _root));
                 }
             }
             if ( ((_parent().isTextured()) || (_parent().isTextured2())) ) {
-                texCoords = new ArrayList<TexCoord>((int) (_parent().numVertices()));
+                texCoords = new ArrayList<TexCoord>(((Number) (_parent().numVertices())).intValue());
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.texCoords.add(new TexCoord(this._io, this, _root));
                 }
             }
-            triangles = new ArrayList<Triangle>((int) (_parent().numTriangles()));
+            triangles = new ArrayList<Triangle>(((Number) (_parent().numTriangles())).intValue());
             for (int i = 0; i < _parent().numTriangles(); i++) {
                 this.triangles.add(new Triangle(this._io, this, _root));
             }
@@ -572,13 +580,13 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             this.hasVertices = this._io.readU4le();
             this.hasNormals = this._io.readU4le();
             if (hasVertices() != 0) {
-                vertices = new ArrayList<Vector3d>((int) (_parent().numVertices()));
+                vertices = new ArrayList<Vector3d>(((Number) (_parent().numVertices())).intValue());
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.vertices.add(new Vector3d(this._io, this, _root));
                 }
             }
             if (hasNormals() != 0) {
-                normals = new ArrayList<Vector3d>((int) (_parent().numVertices()));
+                normals = new ArrayList<Vector3d>(((Number) (_parent().numVertices())).intValue());
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.normals.add(new Vector3d(this._io, this, _root));
                 }
@@ -663,7 +671,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
         private void _read() {
             this.numFrames = this._io.readU4le();
-            frames = new ArrayList<Frame>((int) (numFrames()));
+            frames = new ArrayList<Frame>(((Number) (numFrames())).intValue());
             for (int i = 0; i < numFrames(); i++) {
                 this.frames.add(new Frame(this._io, this, _root));
             }
@@ -701,7 +709,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            entries = new ArrayList<Vector3d>((int) (3));
+            entries = new ArrayList<Vector3d>(((Number) (3)).intValue());
             for (int i = 0; i < 3; i++) {
                 this.entries.add(new Vector3d(this._io, this, _root));
             }
@@ -781,44 +789,54 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.code = this._io.ensureFixedContents(new byte[] { 1, 0, 0, 0 });
+            this.code = this._io.readBytes(4);
+            if (!(Arrays.equals(code(), new byte[] { 1, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 1, 0, 0, 0 }, code(), _io(), "/types/list_with_header/seq/0");
+            }
             this.headerSize = this._io.readU4le();
             this.libraryIdStamp = this._io.readU4le();
-            switch (_parent().code()) {
-            case TEXTURE_DICTIONARY: {
-                this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new StructTextureDictionary(_io__raw_header, this, _root);
-                break;
-            }
-            case GEOMETRY_LIST: {
-                this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new StructGeometryList(_io__raw_header, this, _root);
-                break;
-            }
-            case CLUMP: {
-                this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new StructClump(_io__raw_header, this, _root);
-                break;
-            }
-            case FRAME_LIST: {
-                this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new StructFrameList(_io__raw_header, this, _root);
-                break;
-            }
-            case GEOMETRY: {
-                this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new StructGeometry(_io__raw_header, this, _root);
-                break;
-            }
-            default: {
-                this.header = this._io.readBytes(headerSize());
-                break;
-            }
+            {
+                Sections on = _parent().code();
+                if (on != null) {
+                    switch (_parent().code()) {
+                    case GEOMETRY: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructGeometry(_io__raw_header, this, _root);
+                        break;
+                    }
+                    case TEXTURE_DICTIONARY: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructTextureDictionary(_io__raw_header, this, _root);
+                        break;
+                    }
+                    case GEOMETRY_LIST: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructGeometryList(_io__raw_header, this, _root);
+                        break;
+                    }
+                    case CLUMP: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructClump(_io__raw_header, this, _root);
+                        break;
+                    }
+                    case FRAME_LIST: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructFrameList(_io__raw_header, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.header = this._io.readBytes(headerSize());
+                        break;
+                    }
+                    }
+                } else {
+                    this.header = this._io.readBytes(headerSize());
+                }
             }
             this.entries = new ArrayList<RenderwareBinaryStream>();
             {

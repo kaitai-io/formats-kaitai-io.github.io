@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -142,17 +142,17 @@ class PacketPpi < Kaitai::Struct::Struct
   def _read
     @header = PacketPpiHeader.new(@_io, self, @_root)
     @_raw_fields = @_io.read_bytes((header.pph_len - 8))
-    io = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = PacketPpiFields.new(io, self, @_root)
+    _io__raw_fields = Kaitai::Struct::Stream.new(@_raw_fields)
+    @fields = PacketPpiFields.new(_io__raw_fields, self, @_root)
     case header.pph_dlt
     when :linktype_ppi
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PacketPpi.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = PacketPpi.new(_io__raw_body)
     when :linktype_ethernet
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = EthernetFrame.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = EthernetFrame.new(_io__raw_body)
     else
       @body = @_io.read_bytes_full
     end
@@ -203,14 +203,14 @@ class PacketPpi < Kaitai::Struct::Struct
     end
 
     def _read
-      @unused1 = @_io.read_bits_int(1) != 0
-      @aggregate_delimiter = @_io.read_bits_int(1) != 0
-      @more_aggregates = @_io.read_bits_int(1) != 0
-      @aggregate = @_io.read_bits_int(1) != 0
-      @dup_rx = @_io.read_bits_int(1) != 0
-      @rx_short_guard = @_io.read_bits_int(1) != 0
-      @is_ht_40 = @_io.read_bits_int(1) != 0
-      @greenfield = @_io.read_bits_int(1) != 0
+      @unused1 = @_io.read_bits_int_be(1) != 0
+      @aggregate_delimiter = @_io.read_bits_int_be(1) != 0
+      @more_aggregates = @_io.read_bits_int_be(1) != 0
+      @aggregate = @_io.read_bits_int_be(1) != 0
+      @dup_rx = @_io.read_bits_int_be(1) != 0
+      @rx_short_guard = @_io.read_bits_int_be(1) != 0
+      @is_ht_40 = @_io.read_bits_int_be(1) != 0
+      @greenfield = @_io.read_bits_int_be(1) != 0
       @_io.align_to_byte
       @unused2 = @_io.read_bytes(3)
       self
@@ -259,7 +259,7 @@ class PacketPpi < Kaitai::Struct::Struct
       @pph_version = @_io.read_u1
       @pph_flags = @_io.read_u1
       @pph_len = @_io.read_u2le
-      @pph_dlt = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
+      @pph_dlt = Kaitai::Struct::Stream::resolve_enum(PacketPpi::LINKTYPE, @_io.read_u4le)
       self
     end
     attr_reader :pph_version
@@ -308,21 +308,21 @@ class PacketPpi < Kaitai::Struct::Struct
     end
 
     def _read
-      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PFH_TYPE, @_io.read_u2le)
+      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PacketPpi::PFH_TYPE, @_io.read_u2le)
       @pfh_datalen = @_io.read_u2le
       case pfh_type
       when :pfh_type_radio_802_11_common
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211CommonBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211CommonBody.new(_io__raw_body, self, @_root)
       when :pfh_type_radio_802_11n_mac_ext
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacExtBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacExtBody.new(_io__raw_body, self, @_root)
       when :pfh_type_radio_802_11n_mac_phy_ext
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacPhyExtBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacPhyExtBody.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(pfh_datalen)
       end
@@ -376,15 +376,15 @@ class PacketPpi < Kaitai::Struct::Struct
       end
 
       def _read
-        @spectrum_2ghz = @_io.read_bits_int(1) != 0
-        @ofdm = @_io.read_bits_int(1) != 0
-        @cck = @_io.read_bits_int(1) != 0
-        @turbo = @_io.read_bits_int(1) != 0
-        @unused = @_io.read_bits_int(8)
-        @gfsk = @_io.read_bits_int(1) != 0
-        @dyn_cck_ofdm = @_io.read_bits_int(1) != 0
-        @only_passive_scan = @_io.read_bits_int(1) != 0
-        @spectrum_5ghz = @_io.read_bits_int(1) != 0
+        @spectrum_2ghz = @_io.read_bits_int_be(1) != 0
+        @ofdm = @_io.read_bits_int_be(1) != 0
+        @cck = @_io.read_bits_int_be(1) != 0
+        @turbo = @_io.read_bits_int_be(1) != 0
+        @unused = @_io.read_bits_int_be(8)
+        @gfsk = @_io.read_bits_int_be(1) != 0
+        @dyn_cck_ofdm = @_io.read_bits_int_be(1) != 0
+        @only_passive_scan = @_io.read_bits_int_be(1) != 0
+        @spectrum_5ghz = @_io.read_bits_int_be(1) != 0
         self
       end
 

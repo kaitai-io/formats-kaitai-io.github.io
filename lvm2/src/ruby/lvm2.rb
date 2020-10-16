@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -58,7 +58,8 @@ class Lvm2 < Kaitai::Struct::Struct
         end
 
         def _read
-          @signature = @_io.ensure_fixed_contents([76, 65, 66, 69, 76, 79, 78, 69].pack('C*'))
+          @signature = @_io.read_bytes(8)
+          raise Kaitai::Struct::ValidationNotEqualError.new([76, 65, 66, 69, 76, 79, 78, 69].pack('C*'), signature, _io, "/types/physical_volume/types/label/types/label_header/seq/0") if not signature == [76, 65, 66, 69, 76, 79, 78, 69].pack('C*')
           @sector_number = @_io.read_u8le
           @checksum = @_io.read_u4le
           @label_header_ = LabelHeader.new(@_io, self, @_root)
@@ -72,7 +73,8 @@ class Lvm2 < Kaitai::Struct::Struct
 
           def _read
             @data_offset = @_io.read_u4le
-            @type_indicator = @_io.ensure_fixed_contents([76, 86, 77, 50, 32, 48, 48, 49].pack('C*'))
+            @type_indicator = @_io.read_bytes(8)
+            raise Kaitai::Struct::ValidationNotEqualError.new([76, 86, 77, 50, 32, 48, 48, 49].pack('C*'), type_indicator, _io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1") if not type_indicator == [76, 86, 77, 50, 32, 48, 48, 49].pack('C*')
             self
           end
 
@@ -164,8 +166,8 @@ class Lvm2 < Kaitai::Struct::Struct
               _pos = @_io.pos
               @_io.seek(offset)
               @_raw_data = @_io.read_bytes(size)
-              io = Kaitai::Struct::Stream.new(@_raw_data)
-              @data = MetadataArea.new(io, self, @_root)
+              _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+              @data = MetadataArea.new(_io__raw_data, self, @_root)
               @_io.seek(_pos)
             end
             @data
@@ -201,7 +203,8 @@ class Lvm2 < Kaitai::Struct::Struct
 
             def _read
               @checksum = MetadataAreaHeader.new(@_io, self, @_root)
-              @signature = @_io.ensure_fixed_contents([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*'))
+              @signature = @_io.read_bytes(16)
+              raise Kaitai::Struct::ValidationNotEqualError.new([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*'), signature, _io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1") if not signature == [32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*')
               @version = @_io.read_u4le
               @metadata_area_offset = @_io.read_u8le
               @metadata_area_size = @_io.read_u8le

@@ -103,8 +103,8 @@ namespace Kaitai
             private void _read()
             {
                 _numSsrc = m_io.ReadU1();
-                _brExp = m_io.ReadBitsInt(6);
-                _brMantissa = m_io.ReadBitsInt(18);
+                _brExp = m_io.ReadBitsIntBe(6);
+                _brMantissa = m_io.ReadBitsIntBe(18);
                 m_io.AlignToByte();
                 _ssrcList = new List<uint>((int) (NumSsrc));
                 for (var i = 0; i < NumSsrc; i++)
@@ -244,17 +244,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _version = m_io.ReadBitsInt(2);
-                _padding = m_io.ReadBitsInt(1) != 0;
-                _subtype = m_io.ReadBitsInt(5);
+                _version = m_io.ReadBitsIntBe(2);
+                _padding = m_io.ReadBitsIntBe(1) != 0;
+                _subtype = m_io.ReadBitsIntBe(5);
                 m_io.AlignToByte();
                 _payloadType = ((RtcpPayload.PayloadType) m_io.ReadU1());
                 _length = m_io.ReadU2be();
                 switch (PayloadType) {
-                case RtcpPayload.PayloadType.Sdes: {
+                case RtcpPayload.PayloadType.Sr: {
                     __raw_body = m_io.ReadBytes((4 * Length));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SdesPacket(io___raw_body, this, m_root);
+                    _body = new SrPacket(io___raw_body, this, m_root);
+                    break;
+                }
+                case RtcpPayload.PayloadType.Psfb: {
+                    __raw_body = m_io.ReadBytes((4 * Length));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new PsfbPacket(io___raw_body, this, m_root);
                     break;
                 }
                 case RtcpPayload.PayloadType.Rr: {
@@ -269,16 +275,10 @@ namespace Kaitai
                     _body = new RtpfbPacket(io___raw_body, this, m_root);
                     break;
                 }
-                case RtcpPayload.PayloadType.Psfb: {
+                case RtcpPayload.PayloadType.Sdes: {
                     __raw_body = m_io.ReadBytes((4 * Length));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new PsfbPacket(io___raw_body, this, m_root);
-                    break;
-                }
-                case RtcpPayload.PayloadType.Sr: {
-                    __raw_body = m_io.ReadBytes((4 * Length));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SrPacket(io___raw_body, this, m_root);
+                    _body = new SdesPacket(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -702,18 +702,18 @@ namespace Kaitai
             }
             private void _read()
             {
-                _t = m_io.ReadBitsInt(1) != 0;
+                _t = m_io.ReadBitsIntBe(1) != 0;
                 if ((T ? 1 : 0) == 0) {
-                    _s2 = m_io.ReadBitsInt(2);
+                    _s2 = m_io.ReadBitsIntBe(2);
                 }
                 if ((T ? 1 : 0) == 1) {
-                    _s1 = m_io.ReadBitsInt(1) != 0;
+                    _s1 = m_io.ReadBitsIntBe(1) != 0;
                 }
                 if ((T ? 1 : 0) == 0) {
-                    _rle = m_io.ReadBitsInt(13);
+                    _rle = m_io.ReadBitsIntBe(13);
                 }
                 if ((T ? 1 : 0) == 1) {
-                    _symbolList = m_io.ReadBitsInt(14);
+                    _symbolList = m_io.ReadBitsIntBe(14);
                 }
             }
             private bool f_s;

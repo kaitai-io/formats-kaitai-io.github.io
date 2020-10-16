@@ -50,10 +50,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 72, 67, 80, 88 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 72, 67, 80, 88 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, Magic, M_Io, "/types/hccapx_record/seq/0");
+                }
                 _version = m_io.ReadU4le();
-                _ignoreReplayCounter = m_io.ReadBitsInt(1) != 0;
-                _messagePair = m_io.ReadBitsInt(7);
+                _ignoreReplayCounter = m_io.ReadBitsIntBe(1) != 0;
+                _messagePair = m_io.ReadBitsIntBe(7);
                 m_io.AlignToByte();
                 _lenEssid = m_io.ReadU1();
                 _essid = m_io.ReadBytes(LenEssid);

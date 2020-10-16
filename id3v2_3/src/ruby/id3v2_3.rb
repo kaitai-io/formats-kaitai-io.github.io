@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Id3v23 < Kaitai::Struct::Struct
@@ -23,8 +23,8 @@ class Id3v23 < Kaitai::Struct::Struct
     end
 
     def _read
-      @padding = @_io.read_bits_int(1) != 0
-      @value = @_io.read_bits_int(7)
+      @padding = @_io.read_bits_int_be(1) != 0
+      @value = @_io.read_bits_int_be(7)
       self
     end
     attr_reader :padding
@@ -116,14 +116,14 @@ class Id3v23 < Kaitai::Struct::Struct
       end
 
       def _read
-        @flag_discard_alter_tag = @_io.read_bits_int(1) != 0
-        @flag_discard_alter_file = @_io.read_bits_int(1) != 0
-        @flag_read_only = @_io.read_bits_int(1) != 0
-        @reserved1 = @_io.read_bits_int(5)
-        @flag_compressed = @_io.read_bits_int(1) != 0
-        @flag_encrypted = @_io.read_bits_int(1) != 0
-        @flag_grouping = @_io.read_bits_int(1) != 0
-        @reserved2 = @_io.read_bits_int(5)
+        @flag_discard_alter_tag = @_io.read_bits_int_be(1) != 0
+        @flag_discard_alter_file = @_io.read_bits_int_be(1) != 0
+        @flag_read_only = @_io.read_bits_int_be(1) != 0
+        @reserved1 = @_io.read_bits_int_be(5)
+        @flag_compressed = @_io.read_bits_int_be(1) != 0
+        @flag_encrypted = @_io.read_bits_int_be(1) != 0
+        @flag_grouping = @_io.read_bits_int_be(1) != 0
+        @reserved2 = @_io.read_bits_int_be(5)
         self
       end
       attr_reader :flag_discard_alter_tag
@@ -171,8 +171,8 @@ class Id3v23 < Kaitai::Struct::Struct
       end
 
       def _read
-        @flag_crc = @_io.read_bits_int(1) != 0
-        @reserved = @_io.read_bits_int(15)
+        @flag_crc = @_io.read_bits_int_be(1) != 0
+        @reserved = @_io.read_bits_int_be(15)
         self
       end
       attr_reader :flag_crc
@@ -194,7 +194,8 @@ class Id3v23 < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([73, 68, 51].pack('C*'))
+      @magic = @_io.read_bytes(3)
+      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 51].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [73, 68, 51].pack('C*')
       @version_major = @_io.read_u1
       @version_revision = @_io.read_u1
       @flags = Flags.new(@_io, self, @_root)
@@ -208,10 +209,10 @@ class Id3v23 < Kaitai::Struct::Struct
       end
 
       def _read
-        @flag_unsynchronization = @_io.read_bits_int(1) != 0
-        @flag_headerex = @_io.read_bits_int(1) != 0
-        @flag_experimental = @_io.read_bits_int(1) != 0
-        @reserved = @_io.read_bits_int(5)
+        @flag_unsynchronization = @_io.read_bits_int_be(1) != 0
+        @flag_headerex = @_io.read_bits_int_be(1) != 0
+        @flag_experimental = @_io.read_bits_int_be(1) != 0
+        @reserved = @_io.read_bits_int_be(5)
         self
       end
       attr_reader :flag_unsynchronization

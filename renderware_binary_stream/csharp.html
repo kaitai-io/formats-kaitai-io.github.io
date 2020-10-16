@@ -130,11 +130,6 @@ section#format-index .row {
                 <a href="index.html" title="RenderWare binary stream parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="RenderWare binary stream parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="RenderWare binary stream parsing C# library">C#</a></li>
@@ -434,6 +429,12 @@ section#format-index .row {
             <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="n">_libraryIdStamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
             <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">TextureDictionary</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -446,25 +447,19 @@ section#format-index .row {
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Clump</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
-                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
             <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">TextureNative</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">FrameList</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Clump</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">FrameList</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -972,10 +967,20 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_code</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Code</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">},</span> <span class="n">Code</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/list_with_header/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_headerSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_libraryIdStamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructGeometry</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">TextureDictionary</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
@@ -998,12 +1003,6 @@ section#format-index .row {
                     <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
                     <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructFrameList</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
-                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
-                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructGeometry</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>

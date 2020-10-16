@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -86,7 +87,10 @@ public class CreativeVoiceFile extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 });
+        this.magic = this._io.readBytes(20);
+        if (!(Arrays.equals(magic(), new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }, magic(), _io(), "/seq/0");
+        }
         this.headerSize = this._io.readU2le();
         this.version = this._io.readU2le();
         this.checksum = this._io.readU2le();
@@ -276,47 +280,54 @@ public class CreativeVoiceFile extends KaitaiStruct {
                 this.bodySize2 = this._io.readU1();
             }
             if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-                switch (blockType()) {
-                case SILENCE: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockSilence(_io__raw_body, this, _root);
-                    break;
-                }
-                case SOUND_DATA: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockSoundData(_io__raw_body, this, _root);
-                    break;
-                }
-                case MARKER: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockMarker(_io__raw_body, this, _root);
-                    break;
-                }
-                case SOUND_DATA_NEW: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockSoundDataNew(_io__raw_body, this, _root);
-                    break;
-                }
-                case REPEAT_START: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockRepeatStart(_io__raw_body, this, _root);
-                    break;
-                }
-                case EXTRA_INFO: {
-                    this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BlockExtraInfo(_io__raw_body, this, _root);
-                    break;
-                }
-                default: {
-                    this.body = this._io.readBytes(bodySize());
-                    break;
-                }
+                {
+                    BlockTypes on = blockType();
+                    if (on != null) {
+                        switch (blockType()) {
+                        case SOUND_DATA_NEW: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockSoundDataNew(_io__raw_body, this, _root);
+                            break;
+                        }
+                        case REPEAT_START: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockRepeatStart(_io__raw_body, this, _root);
+                            break;
+                        }
+                        case MARKER: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockMarker(_io__raw_body, this, _root);
+                            break;
+                        }
+                        case SOUND_DATA: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockSoundData(_io__raw_body, this, _root);
+                            break;
+                        }
+                        case EXTRA_INFO: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockExtraInfo(_io__raw_body, this, _root);
+                            break;
+                        }
+                        case SILENCE: {
+                            this._raw_body = this._io.readBytes(bodySize());
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                            this.body = new BlockSilence(_io__raw_body, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.body = this._io.readBytes(bodySize());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.body = this._io.readBytes(bodySize());
+                    }
                 }
             }
         }

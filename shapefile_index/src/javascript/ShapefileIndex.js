@@ -68,14 +68,35 @@ var ShapefileIndex = (function() {
       this._read();
     }
     FileHeader.prototype._read = function() {
-      this.fileCode = this._io.ensureFixedContents([0, 0, 39, 10]);
-      this.unusedField1 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField2 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField3 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField4 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField5 = this._io.ensureFixedContents([0, 0, 0, 0]);
+      this.fileCode = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.fileCode, [0, 0, 39, 10]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 39, 10], this.fileCode, this._io, "/types/file_header/seq/0");
+      }
+      this.unusedField1 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField1, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField1, this._io, "/types/file_header/seq/1");
+      }
+      this.unusedField2 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField2, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField2, this._io, "/types/file_header/seq/2");
+      }
+      this.unusedField3 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField3, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField3, this._io, "/types/file_header/seq/3");
+      }
+      this.unusedField4 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField4, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField4, this._io, "/types/file_header/seq/4");
+      }
+      this.unusedField5 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField5, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField5, this._io, "/types/file_header/seq/5");
+      }
       this.fileLength = this._io.readS4be();
-      this.version = this._io.ensureFixedContents([232, 3, 0, 0]);
+      this.version = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.version, [232, 3, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([232, 3, 0, 0], this.version, this._io, "/types/file_header/seq/7");
+      }
       this.shapeType = this._io.readS4le();
       this.boundingBox = new BoundingBoxXYZM(this._io, this, this._root);
     }

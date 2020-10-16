@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Uimage(KaitaiStruct):
     """The new uImage format allows more flexibility in handling images of various
@@ -88,7 +89,7 @@ class Uimage(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Uheader(self._io, self, self._root)
+        self.header = Uimage.Uheader(self._io, self, self._root)
         self.data = self._io.read_bytes(self.header.len_image)
 
     class Uheader(KaitaiStruct):
@@ -99,17 +100,19 @@ class Uimage(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x27\x05\x19\x56")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x27\x05\x19\x56":
+                raise kaitaistruct.ValidationNotEqualError(b"\x27\x05\x19\x56", self.magic, self._io, u"/types/uheader/seq/0")
             self.header_crc = self._io.read_u4be()
             self.timestamp = self._io.read_u4be()
             self.len_image = self._io.read_u4be()
             self.load_address = self._io.read_u4be()
             self.entry_address = self._io.read_u4be()
             self.data_crc = self._io.read_u4be()
-            self.os_type = self._root.UimageOs(self._io.read_u1())
-            self.architecture = self._root.UimageArch(self._io.read_u1())
-            self.image_type = self._root.UimageType(self._io.read_u1())
-            self.compression_type = self._root.UimageComp(self._io.read_u1())
+            self.os_type = KaitaiStream.resolve_enum(Uimage.UimageOs, self._io.read_u1())
+            self.architecture = KaitaiStream.resolve_enum(Uimage.UimageArch, self._io.read_u1())
+            self.image_type = KaitaiStream.resolve_enum(Uimage.UimageType, self._io.read_u1())
+            self.compression_type = KaitaiStream.resolve_enum(Uimage.UimageComp, self._io.read_u1())
             self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"UTF-8")
 
 

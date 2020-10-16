@@ -339,41 +339,6 @@ var DnsPacket = (function() {
       this.ttl = this._io.readS4be();
       this.rdlength = this._io.readU2be();
       switch (this.type) {
-      case DnsPacket.TypeType.MX:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new MxInfo(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.PTR:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new DomainName(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.SOA:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new AuthorityInfo(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.CNAME:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new DomainName(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.AAAA:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new AddressV6(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.TXT:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new TxtBody(_io__raw_payload, this, this._root);
-        break;
-      case DnsPacket.TypeType.NS:
-        this._raw_payload = this._io.readBytes(this.rdlength);
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new DomainName(_io__raw_payload, this, this._root);
-        break;
       case DnsPacket.TypeType.SRV:
         this._raw_payload = this._io.readBytes(this.rdlength);
         var _io__raw_payload = new KaitaiStream(this._raw_payload);
@@ -383,6 +348,41 @@ var DnsPacket = (function() {
         this._raw_payload = this._io.readBytes(this.rdlength);
         var _io__raw_payload = new KaitaiStream(this._raw_payload);
         this.payload = new Address(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.CNAME:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new DomainName(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.NS:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new DomainName(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.SOA:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new AuthorityInfo(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.MX:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new MxInfo(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.TXT:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new TxtBody(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.PTR:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new DomainName(_io__raw_payload, this, this._root);
+        break;
+      case DnsPacket.TypeType.AAAA:
+        this._raw_payload = this._io.readBytes(this.rdlength);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new AddressV6(_io__raw_payload, this, this._root);
         break;
       default:
         this.payload = this._io.readBytes(this.rdlength);

@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -91,9 +92,15 @@ public class Avi extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic1 = this._io.ensureFixedContents(new byte[] { 82, 73, 70, 70 });
+        this.magic1 = this._io.readBytes(4);
+        if (!(Arrays.equals(magic1(), new byte[] { 82, 73, 70, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, magic1(), _io(), "/seq/0");
+        }
         this.fileSize = this._io.readU4le();
-        this.magic2 = this._io.ensureFixedContents(new byte[] { 65, 86, 73, 32 });
+        this.magic2 = this._io.readBytes(4);
+        if (!(Arrays.equals(magic2(), new byte[] { 65, 86, 73, 32 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, magic2(), _io(), "/seq/2");
+        }
         this._raw_data = this._io.readBytes((fileSize() - 4));
         KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
         this.data = new Blocks(_io__raw_data, this, _root);
@@ -290,29 +297,36 @@ public class Avi extends KaitaiStruct {
         private void _read() {
             this.fourCc = Avi.ChunkType.byId(this._io.readU4le());
             this.blockSize = this._io.readU4le();
-            switch (fourCc()) {
-            case LIST: {
-                this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ListBody(_io__raw_data, this, _root);
-                break;
-            }
-            case AVIH: {
-                this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new AvihBody(_io__raw_data, this, _root);
-                break;
-            }
-            case STRH: {
-                this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new StrhBody(_io__raw_data, this, _root);
-                break;
-            }
-            default: {
-                this.data = this._io.readBytes(blockSize());
-                break;
-            }
+            {
+                ChunkType on = fourCc();
+                if (on != null) {
+                    switch (fourCc()) {
+                    case LIST: {
+                        this._raw_data = this._io.readBytes(blockSize());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new ListBody(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case AVIH: {
+                        this._raw_data = this._io.readBytes(blockSize());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new AvihBody(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case STRH: {
+                        this._raw_data = this._io.readBytes(blockSize());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new StrhBody(_io__raw_data, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.data = this._io.readBytes(blockSize());
+                        break;
+                    }
+                    }
+                } else {
+                    this.data = this._io.readBytes(blockSize());
+                }
             }
         }
         private ChunkType fourCc;

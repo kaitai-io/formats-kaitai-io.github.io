@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -83,7 +83,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (22, 209, 22, 209)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version} = $self->{_io}->read_u1();
 }
 

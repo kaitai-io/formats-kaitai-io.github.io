@@ -47,7 +47,10 @@ var Ines = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([78, 69, 83, 26]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [78, 69, 83, 26]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([78, 69, 83, 26], this.magic, this._io, "/types/header/seq/0");
+      }
       this.lenPrgRom = this._io.readU1();
       this.lenChrRom = this._io.readU1();
       this._raw_f6 = this._io.readBytes(1);
@@ -63,7 +66,10 @@ var Ines = (function() {
       this._raw_f10 = this._io.readBytes(1);
       var _io__raw_f10 = new KaitaiStream(this._raw_f10);
       this.f10 = new F10(_io__raw_f10, this, this._root);
-      this.reserved = this._io.ensureFixedContents([0, 0, 0, 0, 0]);
+      this.reserved = this._io.readBytes(5);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0], this.reserved, this._io, "/types/header/seq/8");
+      }
     }
 
     /**
@@ -87,11 +93,11 @@ var Ines = (function() {
         this._read();
       }
       F6.prototype._read = function() {
-        this.lowerMapper = this._io.readBitsInt(4);
-        this.fourScreen = this._io.readBitsInt(1) != 0;
-        this.trainer = this._io.readBitsInt(1) != 0;
-        this.hasBatteryRam = this._io.readBitsInt(1) != 0;
-        this.mirroring = this._io.readBitsInt(1);
+        this.lowerMapper = this._io.readBitsIntBe(4);
+        this.fourScreen = this._io.readBitsIntBe(1) != 0;
+        this.trainer = this._io.readBitsIntBe(1) != 0;
+        this.hasBatteryRam = this._io.readBitsIntBe(1) != 0;
+        this.mirroring = this._io.readBitsIntBe(1);
       }
 
       /**
@@ -130,10 +136,10 @@ var Ines = (function() {
         this._read();
       }
       F7.prototype._read = function() {
-        this.upperMapper = this._io.readBitsInt(4);
-        this.format = this._io.readBitsInt(2);
-        this.playchoice10 = this._io.readBitsInt(1) != 0;
-        this.vsUnisystem = this._io.readBitsInt(1) != 0;
+        this.upperMapper = this._io.readBitsIntBe(4);
+        this.format = this._io.readBitsIntBe(2);
+        this.playchoice10 = this._io.readBitsIntBe(1) != 0;
+        this.vsUnisystem = this._io.readBitsIntBe(1) != 0;
       }
 
       /**
@@ -176,8 +182,8 @@ var Ines = (function() {
         this._read();
       }
       F9.prototype._read = function() {
-        this.reserved = this._io.readBitsInt(7);
-        this.tvSystem = this._io.readBitsInt(1);
+        this.reserved = this._io.readBitsIntBe(7);
+        this.tvSystem = this._io.readBitsIntBe(1);
       }
 
       /**
@@ -212,11 +218,11 @@ var Ines = (function() {
         this._read();
       }
       F10.prototype._read = function() {
-        this.reserved1 = this._io.readBitsInt(2);
-        this.busConflict = this._io.readBitsInt(1) != 0;
-        this.prgRam = this._io.readBitsInt(1) != 0;
-        this.reserved2 = this._io.readBitsInt(2);
-        this.tvSystem = this._io.readBitsInt(2);
+        this.reserved1 = this._io.readBitsIntBe(2);
+        this.busConflict = this._io.readBitsIntBe(1) != 0;
+        this.prgRam = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(2);
+        this.tvSystem = this._io.readBitsIntBe(2);
       }
 
       /**

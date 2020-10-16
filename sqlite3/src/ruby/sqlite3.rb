@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -42,7 +42,8 @@ class Sqlite3 < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*'))
+    @magic = @_io.read_bytes(16)
+    raise Kaitai::Struct::ValidationNotEqualError.new([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*')
     @len_page_mod = @_io.read_u2be
     @write_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
     @read_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
@@ -138,8 +139,8 @@ class Sqlite3 < Kaitai::Struct::Struct
     def _read
       @len_payload = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
+      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(_io__raw_payload, self, @_root)
       self
     end
     attr_reader :len_payload
@@ -176,8 +177,8 @@ class Sqlite3 < Kaitai::Struct::Struct
       @len_payload = VlqBase128Be.new(@_io)
       @row_id = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
+      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(_io__raw_payload, self, @_root)
       self
     end
     attr_reader :len_payload
@@ -197,8 +198,8 @@ class Sqlite3 < Kaitai::Struct::Struct
     def _read
       @len_header_and_len = VlqBase128Be.new(@_io)
       @_raw_column_serials = @_io.read_bytes((len_header_and_len.value - 1))
-      io = Kaitai::Struct::Stream.new(@_raw_column_serials)
-      @column_serials = Serials.new(io, self, @_root)
+      _io__raw_column_serials = Kaitai::Struct::Stream.new(@_raw_column_serials)
+      @column_serials = Serials.new(_io__raw_column_serials, self, @_root)
       @column_contents = Array.new(column_serials.entries.length)
       (column_serials.entries.length).times { |i|
         @column_contents[i] = ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
@@ -240,8 +241,8 @@ class Sqlite3 < Kaitai::Struct::Struct
       @left_child_page = @_io.read_u4be
       @len_payload = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
+      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(_io__raw_payload, self, @_root)
       self
     end
     attr_reader :left_child_page
@@ -266,9 +267,9 @@ class Sqlite3 < Kaitai::Struct::Struct
         when 1
           @as_int = @_io.read_u1
         when 3
-          @as_int = @_io.read_bits_int(24)
+          @as_int = @_io.read_bits_int_be(24)
         when 5
-          @as_int = @_io.read_bits_int(48)
+          @as_int = @_io.read_bits_int_be(48)
         when 2
           @as_int = @_io.read_u2be
         end

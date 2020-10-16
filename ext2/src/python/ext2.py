@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Ext2(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -50,9 +51,11 @@ class Ext2(KaitaiStruct):
             self.wtime = self._io.read_u4le()
             self.mnt_count = self._io.read_u2le()
             self.max_mnt_count = self._io.read_u2le()
-            self.magic = self._io.ensure_fixed_contents(b"\x53\xEF")
-            self.state = self._root.SuperBlockStruct.StateEnum(self._io.read_u2le())
-            self.errors = self._root.SuperBlockStruct.ErrorsEnum(self._io.read_u2le())
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x53\xEF":
+                raise kaitaistruct.ValidationNotEqualError(b"\x53\xEF", self.magic, self._io, u"/types/super_block_struct/seq/15")
+            self.state = KaitaiStream.resolve_enum(Ext2.SuperBlockStruct.StateEnum, self._io.read_u2le())
+            self.errors = KaitaiStream.resolve_enum(Ext2.SuperBlockStruct.ErrorsEnum, self._io.read_u2le())
             self.minor_rev_level = self._io.read_u2le()
             self.lastcheck = self._io.read_u4le()
             self.checkinterval = self._io.read_u4le()
@@ -121,7 +124,7 @@ class Ext2(KaitaiStruct):
             self.inode_ptr = self._io.read_u4le()
             self.rec_len = self._io.read_u2le()
             self.name_len = self._io.read_u1()
-            self.file_type = self._root.DirEntry.FileTypeEnum(self._io.read_u1())
+            self.file_type = KaitaiStream.resolve_enum(Ext2.DirEntry.FileTypeEnum, self._io.read_u1())
             self.name = (self._io.read_bytes(self.name_len)).decode(u"UTF-8")
             self.padding = self._io.read_bytes(((self.rec_len - self.name_len) - 8))
 
@@ -156,7 +159,7 @@ class Ext2(KaitaiStruct):
             self.osd1 = self._io.read_u4le()
             self.block = [None] * (15)
             for i in range(15):
-                self.block[i] = self._root.BlockPtr(self._io, self, self._root)
+                self.block[i] = Ext2.BlockPtr(self._io, self, self._root)
 
             self.generation = self._io.read_u4le()
             self.file_acl = self._io.read_u4le()
@@ -172,7 +175,7 @@ class Ext2(KaitaiStruct):
             io = self.block[0].body._io
             _pos = io.pos()
             io.seek(0)
-            self._m_as_dir = self._root.Dir(io, self, self._root)
+            self._m_as_dir = Ext2.Dir(io, self, self._root)
             io.seek(_pos)
             return self._m_as_dir if hasattr(self, '_m_as_dir') else None
 
@@ -195,8 +198,8 @@ class Ext2(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek((self.ptr * self._root.bg1.super_block.block_size))
             self._raw__m_body = self._io.read_bytes(self._root.bg1.super_block.block_size)
-            io = KaitaiStream(BytesIO(self._raw__m_body))
-            self._m_body = self._root.RawBlock(io, self, self._root)
+            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+            self._m_body = Ext2.RawBlock(_io__raw__m_body, self, self._root)
             self._io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
 
@@ -212,7 +215,7 @@ class Ext2(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.DirEntry(self._io, self, self._root))
+                self.entries.append(Ext2.DirEntry(self._io, self, self._root))
                 i += 1
 
 
@@ -226,11 +229,11 @@ class Ext2(KaitaiStruct):
 
         def _read(self):
             self._raw_super_block = self._io.read_bytes(1024)
-            io = KaitaiStream(BytesIO(self._raw_super_block))
-            self.super_block = self._root.SuperBlockStruct(io, self, self._root)
+            _io__raw_super_block = KaitaiStream(BytesIO(self._raw_super_block))
+            self.super_block = Ext2.SuperBlockStruct(_io__raw_super_block, self, self._root)
             self.block_groups = [None] * (self.super_block.block_group_count)
             for i in range(self.super_block.block_group_count):
-                self.block_groups[i] = self._root.Bgd(self._io, self, self._root)
+                self.block_groups[i] = Ext2.Bgd(self._io, self, self._root)
 
 
 
@@ -281,7 +284,7 @@ class Ext2(KaitaiStruct):
             self._io.seek((self.inode_table_block * self._root.bg1.super_block.block_size))
             self._m_inodes = [None] * (self._root.bg1.super_block.inodes_per_group)
             for i in range(self._root.bg1.super_block.inodes_per_group):
-                self._m_inodes[i] = self._root.Inode(self._io, self, self._root)
+                self._m_inodes[i] = Ext2.Inode(self._io, self, self._root)
 
             self._io.seek(_pos)
             return self._m_inodes if hasattr(self, '_m_inodes') else None
@@ -305,7 +308,7 @@ class Ext2(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(1024)
-        self._m_bg1 = self._root.BlockGroup(self._io, self, self._root)
+        self._m_bg1 = Ext2.BlockGroup(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_bg1 if hasattr(self, '_m_bg1') else None
 

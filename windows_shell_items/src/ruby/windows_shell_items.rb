@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -73,8 +73,8 @@ class WindowsShellItems < Kaitai::Struct::Struct
       @len_data = @_io.read_u2le
       if len_data >= 2
         @_raw_data = @_io.read_bytes((len_data - 2))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ShellItemData.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ShellItemData.new(_io__raw_data, self, @_root)
       end
       self
     end

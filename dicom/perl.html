@@ -151,11 +151,6 @@ subtypes to force parsing in particular transfer syntax.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C# library">C#</a></li>
                 
                 
@@ -230,7 +225,7 @@ subtypes to force parsing in particular transfer syntax.</p>
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
@@ -4335,7 +4330,7 @@ subtypes to force parsing in particular transfer syntax.</p>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">preamble</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">68</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">77</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">preamble</span> <span class="p">{</span>
@@ -4647,7 +4642,7 @@ subtypes to force parsing in particular transfer syntax.</p>
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_group</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">254</span><span class="p">,</span> <span class="mi">255</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_group</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_elem</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value_len</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value_len</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4294967295</span><span class="p">)</span> <span class="p">{</span>

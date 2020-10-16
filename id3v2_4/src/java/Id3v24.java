@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class Id3v24 extends KaitaiStruct {
     public static Id3v24 fromFile(String fileName) throws IOException {
@@ -49,8 +50,8 @@ public class Id3v24 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.padding = this._io.readBitsInt(1) != 0;
-            this.value = this._io.readBitsInt(7);
+            this.padding = this._io.readBitsIntBe(1) != 0;
+            this.value = this._io.readBitsIntBe(7);
         }
         private boolean padding;
         private long value;
@@ -243,11 +244,11 @@ public class Id3v24 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.readBitsInt(1) != 0;
-                this.flagDiscardAlterTag = this._io.readBitsInt(1) != 0;
-                this.flagDiscardAlterFile = this._io.readBitsInt(1) != 0;
-                this.flagReadOnly = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(4);
+                this.reserved1 = this._io.readBitsIntBe(1) != 0;
+                this.flagDiscardAlterTag = this._io.readBitsIntBe(1) != 0;
+                this.flagDiscardAlterFile = this._io.readBitsIntBe(1) != 0;
+                this.flagReadOnly = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(4);
             }
             private boolean reserved1;
             private boolean flagDiscardAlterTag;
@@ -284,13 +285,13 @@ public class Id3v24 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.readBitsInt(1) != 0;
-                this.flagGrouping = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(2);
-                this.flagCompressed = this._io.readBitsInt(1) != 0;
-                this.flagEncrypted = this._io.readBitsInt(1) != 0;
-                this.flagUnsynchronisated = this._io.readBitsInt(1) != 0;
-                this.flagIndicator = this._io.readBitsInt(1) != 0;
+                this.reserved1 = this._io.readBitsIntBe(1) != 0;
+                this.flagGrouping = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(2);
+                this.flagCompressed = this._io.readBitsIntBe(1) != 0;
+                this.flagEncrypted = this._io.readBitsIntBe(1) != 0;
+                this.flagUnsynchronisated = this._io.readBitsIntBe(1) != 0;
+                this.flagIndicator = this._io.readBitsIntBe(1) != 0;
             }
             private boolean reserved1;
             private boolean flagGrouping;
@@ -378,11 +379,11 @@ public class Id3v24 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.readBitsInt(1) != 0;
-                this.flagUpdate = this._io.readBitsInt(1) != 0;
-                this.flagCrc = this._io.readBitsInt(1) != 0;
-                this.flagRestrictions = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(4);
+                this.reserved1 = this._io.readBitsIntBe(1) != 0;
+                this.flagUpdate = this._io.readBitsIntBe(1) != 0;
+                this.flagCrc = this._io.readBitsIntBe(1) != 0;
+                this.flagRestrictions = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(4);
             }
             private boolean reserved1;
             private boolean flagUpdate;
@@ -430,7 +431,10 @@ public class Id3v24 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 73, 68, 51 });
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(magic(), new byte[] { 73, 68, 51 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 51 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.versionMajor = this._io.readU1();
             this.versionRevision = this._io.readU1();
             this.flags = new Flags(this._io, this, _root);
@@ -456,11 +460,11 @@ public class Id3v24 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flagUnsynchronization = this._io.readBitsInt(1) != 0;
-                this.flagHeaderex = this._io.readBitsInt(1) != 0;
-                this.flagExperimental = this._io.readBitsInt(1) != 0;
-                this.flagFooter = this._io.readBitsInt(1) != 0;
-                this.reserved = this._io.readBitsInt(4);
+                this.flagUnsynchronization = this._io.readBitsIntBe(1) != 0;
+                this.flagHeaderex = this._io.readBitsIntBe(1) != 0;
+                this.flagExperimental = this._io.readBitsIntBe(1) != 0;
+                this.flagFooter = this._io.readBitsIntBe(1) != 0;
+                this.reserved = this._io.readBitsIntBe(4);
             }
             private boolean flagUnsynchronization;
             private boolean flagHeaderex;
@@ -541,7 +545,10 @@ public class Id3v24 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 51, 68, 73 });
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(magic(), new byte[] { 51, 68, 73 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 51, 68, 73 }, magic(), _io(), "/types/footer/seq/0");
+            }
             this.versionMajor = this._io.readU1();
             this.versionRevision = this._io.readU1();
             this.flags = new Flags(this._io, this, _root);
@@ -567,11 +574,11 @@ public class Id3v24 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flagUnsynchronization = this._io.readBitsInt(1) != 0;
-                this.flagHeaderex = this._io.readBitsInt(1) != 0;
-                this.flagExperimental = this._io.readBitsInt(1) != 0;
-                this.flagFooter = this._io.readBitsInt(1) != 0;
-                this.reserved = this._io.readBitsInt(4);
+                this.flagUnsynchronization = this._io.readBitsIntBe(1) != 0;
+                this.flagHeaderex = this._io.readBitsIntBe(1) != 0;
+                this.flagExperimental = this._io.readBitsIntBe(1) != 0;
+                this.flagFooter = this._io.readBitsIntBe(1) != 0;
+                this.reserved = this._io.readBitsIntBe(4);
             }
             private boolean flagUnsynchronization;
             private boolean flagHeaderex;

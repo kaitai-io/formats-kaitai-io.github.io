@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Pcx < Kaitai::Struct::Struct
@@ -28,8 +28,8 @@ class Pcx < Kaitai::Struct::Struct
 
   def _read
     @_raw_hdr = @_io.read_bytes(128)
-    io = Kaitai::Struct::Stream.new(@_raw_hdr)
-    @hdr = Header.new(io, self, @_root)
+    _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
+    @hdr = Header.new(_io__raw_hdr, self, @_root)
     self
   end
 
@@ -42,9 +42,10 @@ class Pcx < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([10].pack('C*'))
-      @version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
-      @encoding = Kaitai::Struct::Stream::resolve_enum(ENCODINGS, @_io.read_u1)
+      @magic = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([10].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [10].pack('C*')
+      @version = Kaitai::Struct::Stream::resolve_enum(Pcx::VERSIONS, @_io.read_u1)
+      @encoding = Kaitai::Struct::Stream::resolve_enum(Pcx::ENCODINGS, @_io.read_u1)
       @bits_per_pixel = @_io.read_u1
       @img_x_min = @_io.read_u2le
       @img_y_min = @_io.read_u2le
@@ -53,7 +54,8 @@ class Pcx < Kaitai::Struct::Struct
       @hdpi = @_io.read_u2le
       @vdpi = @_io.read_u2le
       @palette_16 = @_io.read_bytes(48)
-      @reserved = @_io.ensure_fixed_contents([0].pack('C*'))
+      @reserved = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved, _io, "/types/header/seq/11") if not reserved == [0].pack('C*')
       @num_planes = @_io.read_u1
       @bytes_per_line = @_io.read_u2le
       @palette_info = @_io.read_u2le
@@ -93,7 +95,8 @@ class Pcx < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([12].pack('C*'))
+      @magic = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([12].pack('C*'), magic, _io, "/types/t_palette_256/seq/0") if not magic == [12].pack('C*')
       @colors = Array.new(256)
       (256).times { |i|
         @colors[i] = Rgb.new(@_io, self, @_root)

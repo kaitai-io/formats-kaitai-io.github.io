@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -20,7 +20,8 @@ class Ico < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([0, 0, 1, 0].pack('C*'))
+    @magic = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 1, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 0, 1, 0].pack('C*')
     @num_images = @_io.read_u2le
     @images = Array.new(num_images)
     (num_images).times { |i|
@@ -38,7 +39,8 @@ class Ico < Kaitai::Struct::Struct
       @width = @_io.read_u1
       @height = @_io.read_u1
       @num_colors = @_io.read_u1
-      @reserved = @_io.ensure_fixed_contents([0].pack('C*'))
+      @reserved = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved, _io, "/types/icon_dir_entry/seq/3") if not reserved == [0].pack('C*')
       @num_planes = @_io.read_u2le
       @bpp = @_io.read_u2le
       @len_img = @_io.read_u4le

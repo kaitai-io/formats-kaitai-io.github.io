@@ -98,11 +98,11 @@ public class Websocket extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.finished = this._io.readBitsInt(1) != 0;
-            this.reserved = this._io.readBitsInt(3);
-            this.opcode = Websocket.Opcode.byId(this._io.readBitsInt(4));
-            this.isMasked = this._io.readBitsInt(1) != 0;
-            this.lenPayloadPrimary = this._io.readBitsInt(7);
+            this.finished = this._io.readBitsIntBe(1) != 0;
+            this.reserved = this._io.readBitsIntBe(3);
+            this.opcode = Websocket.Opcode.byId(this._io.readBitsIntBe(4));
+            this.isMasked = this._io.readBitsIntBe(1) != 0;
+            this.lenPayloadPrimary = this._io.readBitsIntBe(7);
             this._io.alignToByte();
             if (lenPayloadPrimary() == 126) {
                 this.lenPayloadExtended1 = this._io.readU2be();

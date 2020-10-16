@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -32,8 +32,8 @@ class SystemdJournal < Kaitai::Struct::Struct
 
   def _read
     @_raw_header = @_io.read_bytes(len_header)
-    io = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(io, self, @_root)
+    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+    @header = Header.new(_io__raw_header, self, @_root)
     @objects = Array.new(header.num_objects)
     (header.num_objects).times { |i|
       @objects[i] = JournalObject.new(@_io, self, @_root)
@@ -47,10 +47,11 @@ class SystemdJournal < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.ensure_fixed_contents([76, 80, 75, 83, 72, 72, 82, 72].pack('C*'))
+      @signature = @_io.read_bytes(8)
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 80, 75, 83, 72, 72, 82, 72].pack('C*'), signature, _io, "/types/header/seq/0") if not signature == [76, 80, 75, 83, 72, 72, 82, 72].pack('C*')
       @compatible_flags = @_io.read_u4le
       @incompatible_flags = @_io.read_u4le
-      @state = Kaitai::Struct::Stream::resolve_enum(STATE, @_io.read_u1)
+      @state = Kaitai::Struct::Stream::resolve_enum(SystemdJournal::STATE, @_io.read_u1)
       @reserved = @_io.read_bytes(7)
       @file_id = @_io.read_bytes(16)
       @machine_id = @_io.read_bytes(16)
@@ -144,8 +145,8 @@ class SystemdJournal < Kaitai::Struct::Struct
       case object_type
       when :object_types_data
         @_raw_payload = @_io.read_bytes((len_object - 16))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DataObject.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = DataObject.new(_io__raw_payload, self, @_root)
       else
         @payload = @_io.read_bytes((len_object - 16))
       end

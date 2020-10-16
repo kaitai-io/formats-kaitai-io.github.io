@@ -42,8 +42,14 @@ var Rtpdump = (function() {
       this._read();
     }
     HeaderT.prototype._read = function() {
-      this.shebang = this._io.ensureFixedContents([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48]);
-      this.space = this._io.ensureFixedContents([32]);
+      this.shebang = this._io.readBytes(12);
+      if (!((KaitaiStream.byteArrayCompare(this.shebang, [35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48], this.shebang, this._io, "/types/header_t/seq/0");
+      }
+      this.space = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.space, [32]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([32], this.space, this._io, "/types/header_t/seq/1");
+      }
       this.ip = KaitaiStream.bytesToStr(this._io.readBytesTerm(47, false, true, true), "ascii");
       this.port = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), "ascii");
       this.startSec = this._io.readU4be();

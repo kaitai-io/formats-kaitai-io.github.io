@@ -66,7 +66,10 @@ var WindowsEvtLog = (function() {
     }
     Header.prototype._read = function() {
       this.lenHeader = this._io.readU4le();
-      this.magic = this._io.ensureFixedContents([76, 102, 76, 101]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [76, 102, 76, 101]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([76, 102, 76, 101], this.magic, this._io, "/types/header/seq/1");
+      }
       this.versionMajor = this._io.readU4le();
       this.versionMinor = this._io.readU4le();
       this.ofsStart = this._io.readU4le();
@@ -88,11 +91,11 @@ var WindowsEvtLog = (function() {
         this._read();
       }
       Flags.prototype._read = function() {
-        this.reserved = this._io.readBitsInt(28);
-        this.archive = this._io.readBitsInt(1) != 0;
-        this.logFull = this._io.readBitsInt(1) != 0;
-        this.wrap = this._io.readBitsInt(1) != 0;
-        this.dirty = this._io.readBitsInt(1) != 0;
+        this.reserved = this._io.readBitsIntBe(28);
+        this.archive = this._io.readBitsIntBe(1) != 0;
+        this.logFull = this._io.readBitsIntBe(1) != 0;
+        this.wrap = this._io.readBitsIntBe(1) != 0;
+        this.dirty = this._io.readBitsIntBe(1) != 0;
       }
 
       /**
@@ -317,7 +320,10 @@ var WindowsEvtLog = (function() {
       this._read();
     }
     CursorRecordBody.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68]);
+      this.magic = this._io.readBytes(12);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68], this.magic, this._io, "/types/cursor_record_body/seq/0");
+      }
       this.ofsFirstRecord = this._io.readU4le();
       this.ofsNextRecord = this._io.readU4le();
       this.idxNextRecord = this._io.readU4le();

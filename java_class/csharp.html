@@ -164,11 +164,6 @@ section#format-index .row {
                 <a href="index.html" title=".class file format parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title=".class file format parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title=".class file format parsing C# library">C#</a></li>
@@ -287,7 +282,11 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">202</span><span class="p">,</span> <span class="m">254</span><span class="p">,</span> <span class="m">186</span><span class="p">,</span> <span class="m">190</span> <span class="p">});</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">202</span><span class="p">,</span> <span class="m">254</span><span class="p">,</span> <span class="m">186</span><span class="p">,</span> <span class="m">190</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">202</span><span class="p">,</span> <span class="m">254</span><span class="p">,</span> <span class="m">186</span><span class="p">,</span> <span class="m">190</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="n">_versionMinor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
             <span class="n">_versionMajor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
             <span class="n">_constantPoolCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
@@ -588,7 +587,7 @@ section#format-index .row {
                         <span class="p">{</span>
                             <span class="k">if</span> <span class="p">(</span><span class="n">f_asInfo</span><span class="p">)</span>
                                 <span class="k">return</span> <span class="n">_asInfo</span><span class="p">;</span>
-                            <span class="n">_asInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">Index</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                            <span class="n">_asInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">Index</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                             <span class="n">f_asInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                             <span class="k">return</span> <span class="n">_asInfo</span><span class="p">;</span>
                         <span class="p">}</span>
@@ -652,7 +651,7 @@ section#format-index .row {
                     <span class="p">{</span>
                         <span class="k">if</span> <span class="p">(</span><span class="n">f_sourcefileAsStr</span><span class="p">)</span>
                             <span class="k">return</span> <span class="n">_sourcefileAsStr</span><span class="p">;</span>
-                        <span class="n">_sourcefileAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">SourcefileIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
+                        <span class="n">_sourcefileAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">SourcefileIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
                         <span class="n">f_sourcefileAsStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="k">return</span> <span class="n">_sourcefileAsStr</span><span class="p">;</span>
                     <span class="p">}</span>
@@ -734,7 +733,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAsStr</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
-                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
+                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
                     <span class="n">f_nameAsStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -784,7 +783,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_classAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
-                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_classAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -797,7 +796,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAndTypeAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
-                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -849,7 +848,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAsStr</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
-                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
+                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
                     <span class="n">f_nameAsStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1034,7 +1033,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAsInfo</span><span class="p">;</span>
-                    <span class="n">_nameAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_nameAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_nameAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1060,7 +1059,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_descriptorAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_descriptorAsInfo</span><span class="p">;</span>
-                    <span class="n">_descriptorAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">DescriptorIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_descriptorAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">DescriptorIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_descriptorAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_descriptorAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1206,7 +1205,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_classAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
-                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_classAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1219,7 +1218,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAndTypeAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
-                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1264,7 +1263,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAsInfo</span><span class="p">;</span>
-                    <span class="n">_nameAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_nameAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_nameAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1328,8 +1327,40 @@ section#format-index .row {
             <span class="p">{</span>
                 <span class="n">_tag</span> <span class="p">=</span> <span class="p">((</span><span class="n">TagEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">Tag</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InterfaceMethodRef</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">ClassType</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Utf8</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodType</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Integer</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodRef</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
@@ -1340,48 +1371,16 @@ section#format-index .row {
                     <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InvokeDynamicCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodHandle</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">ClassType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodRef</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">NameAndType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InterfaceMethodRef</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Integer</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Utf8</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">FieldRef</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodHandle</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">NameAndType</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="p">}</span>
@@ -1433,7 +1432,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAsStr</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
-                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
+                    <span class="n">_nameAsStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)).</span><span class="n">Value</span><span class="p">);</span>
                     <span class="n">f_nameAsStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAsStr</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1513,7 +1512,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_classAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
-                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_classAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">ClassIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_classAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_classAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1526,7 +1525,7 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_nameAndTypeAsInfo</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
-                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
+                    <span class="n">_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="p">(</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(((</span><span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">ConstantPool</span><span class="p">[(</span><span class="n">NameAndTypeIndex</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">CpInfo</span><span class="p">)));</span>
                     <span class="n">f_nameAndTypeAsInfo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_nameAndTypeAsInfo</span><span class="p">;</span>
                 <span class="p">}</span>

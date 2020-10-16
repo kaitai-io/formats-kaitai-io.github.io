@@ -52,7 +52,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 });
+            _magic = m_io.ReadBytes(16);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, Magic, M_Io, "/seq/0");
+            }
             _lenPageMod = m_io.ReadU2be();
             _writeVersion = ((Versions) m_io.ReadU1());
             _readVersion = ((Versions) m_io.ReadU1());
@@ -435,11 +439,11 @@ namespace Kaitai
                         break;
                     }
                     case 3: {
-                        _asInt = m_io.ReadBitsInt(24);
+                        _asInt = m_io.ReadBitsIntBe(24);
                         break;
                     }
                     case 5: {
-                        _asInt = m_io.ReadBitsInt(48);
+                        _asInt = m_io.ReadBitsIntBe(48);
                         break;
                     }
                     case 2: {
@@ -464,7 +468,7 @@ namespace Kaitai
                 {
                     if (f_serialType)
                         return _serialType;
-                    _serialType = (Sqlite3.Serial) (((Serial) (Ser)));
+                    _serialType = (Sqlite3.Serial) (((Sqlite3.Serial) (Ser)));
                     f_serialType = true;
                     return _serialType;
                 }

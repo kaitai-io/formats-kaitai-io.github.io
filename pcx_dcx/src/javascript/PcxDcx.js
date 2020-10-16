@@ -25,7 +25,10 @@ var PcxDcx = (function() {
     this._read();
   }
   PcxDcx.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([177, 104, 222, 58]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [177, 104, 222, 58]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([177, 104, 222, 58], this.magic, this._io, "/seq/0");
+    }
     this.files = []
     var i = 0;
     do {

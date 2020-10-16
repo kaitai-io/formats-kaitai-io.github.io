@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -116,7 +116,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (78, 69, 83, 26)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{len_prg_rom} = $self->{_io}->read_u1();
     $self->{len_chr_rom} = $self->{_io}->read_u1();
     $self->{_raw_f6} = $self->{_io}->read_bytes(1);
@@ -132,7 +132,7 @@ sub _read {
     $self->{_raw_f10} = $self->{_io}->read_bytes(1);
     my $io__raw_f10 = IO::KaitaiStruct::Stream->new($self->{_raw_f10});
     $self->{f10} = Ines::Header::F10->new($io__raw_f10, $self, $self->{_root});
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(5);
 }
 
 sub mapper {
@@ -240,11 +240,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{lower_mapper} = $self->{_io}->read_bits_int(4);
-    $self->{four_screen} = $self->{_io}->read_bits_int(1);
-    $self->{trainer} = $self->{_io}->read_bits_int(1);
-    $self->{has_battery_ram} = $self->{_io}->read_bits_int(1);
-    $self->{mirroring} = $self->{_io}->read_bits_int(1);
+    $self->{lower_mapper} = $self->{_io}->read_bits_int_be(4);
+    $self->{four_screen} = $self->{_io}->read_bits_int_be(1);
+    $self->{trainer} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_battery_ram} = $self->{_io}->read_bits_int_be(1);
+    $self->{mirroring} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub lower_mapper {
@@ -302,10 +302,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{upper_mapper} = $self->{_io}->read_bits_int(4);
-    $self->{format} = $self->{_io}->read_bits_int(2);
-    $self->{playchoice10} = $self->{_io}->read_bits_int(1);
-    $self->{vs_unisystem} = $self->{_io}->read_bits_int(1);
+    $self->{upper_mapper} = $self->{_io}->read_bits_int_be(4);
+    $self->{format} = $self->{_io}->read_bits_int_be(2);
+    $self->{playchoice10} = $self->{_io}->read_bits_int_be(1);
+    $self->{vs_unisystem} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub upper_mapper {
@@ -361,8 +361,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->read_bits_int(7);
-    $self->{tv_system} = $self->{_io}->read_bits_int(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(7);
+    $self->{tv_system} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub reserved {
@@ -410,11 +410,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->read_bits_int(2);
-    $self->{bus_conflict} = $self->{_io}->read_bits_int(1);
-    $self->{prg_ram} = $self->{_io}->read_bits_int(1);
-    $self->{reserved2} = $self->{_io}->read_bits_int(2);
-    $self->{tv_system} = $self->{_io}->read_bits_int(2);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(2);
+    $self->{bus_conflict} = $self->{_io}->read_bits_int_be(1);
+    $self->{prg_ram} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved2} = $self->{_io}->read_bits_int_be(2);
+    $self->{tv_system} = $self->{_io}->read_bits_int_be(2);
 }
 
 sub reserved1 {

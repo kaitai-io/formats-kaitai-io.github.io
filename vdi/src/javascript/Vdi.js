@@ -53,7 +53,10 @@ var Vdi = (function() {
     }
     Header.prototype._read = function() {
       this.text = KaitaiStream.bytesToStr(this._io.readBytes(64), "utf-8");
-      this.signature = this._io.ensureFixedContents([127, 16, 218, 190]);
+      this.signature = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [127, 16, 218, 190]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([127, 16, 218, 190], this.signature, this._io, "/types/header/seq/1");
+      }
       this.version = new Version(this._io, this, this._root);
       if (this.subheaderSizeIsDynamic) {
         this.headerSizeOptional = this._io.readU4le();
@@ -161,12 +164,12 @@ var Vdi = (function() {
           this._read();
         }
         Flags.prototype._read = function() {
-          this.reserved0 = this._io.readBitsInt(15);
-          this.zeroExpand = this._io.readBitsInt(1) != 0;
-          this.reserved1 = this._io.readBitsInt(6);
-          this.diff = this._io.readBitsInt(1) != 0;
-          this.fixed = this._io.readBitsInt(1) != 0;
-          this.reserved2 = this._io.readBitsInt(8);
+          this.reserved0 = this._io.readBitsIntBe(15);
+          this.zeroExpand = this._io.readBitsIntBe(1) != 0;
+          this.reserved1 = this._io.readBitsIntBe(6);
+          this.diff = this._io.readBitsIntBe(1) != 0;
+          this.fixed = this._io.readBitsIntBe(1) != 0;
+          this.reserved2 = this._io.readBitsIntBe(8);
         }
 
         return Flags;

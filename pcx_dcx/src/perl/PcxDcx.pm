@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Pcx;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (177, 104, 222, 58)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{files} = ();
     do {
         $_ = PcxDcx::PcxOffset->new($self->{_io}, $self, $self->{_root});

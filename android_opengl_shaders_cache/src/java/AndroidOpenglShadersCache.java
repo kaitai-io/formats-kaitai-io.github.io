@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -33,7 +34,10 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 69, 71, 76, 36 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 69, 71, 76, 36 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, magic(), _io(), "/seq/0");
+        }
         this.crc32 = this._io.readU4le();
         this._raw_contents = this._io.readBytesFull();
         KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
@@ -131,14 +135,17 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 36, 98, 66, 95 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 36, 98, 66, 95 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, magic(), _io(), "/types/cache/seq/0");
+            }
             this.version = this._io.readU4le();
             this.deviceVersion = this._io.readU4le();
             this.numEntries = this._io.readU4le();
             if (version() >= 3) {
                 this.buildId = new PrefixedString(this._io, this, _root);
             }
-            entries = new ArrayList<Entry>((int) (numEntries()));
+            entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
             for (int i = 0; i < numEntries(); i++) {
                 this.entries.add(new Entry(this._io, this, _root));
             }

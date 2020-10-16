@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package TrDosImage;
@@ -91,14 +91,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{catalog_end} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{catalog_end} = $self->{_io}->read_bytes(1);
     $self->{unused} = $self->{_io}->read_bytes(224);
     $self->{first_free_sector_sector} = $self->{_io}->read_u1();
     $self->{first_free_sector_track} = $self->{_io}->read_u1();
     $self->{disk_type} = $self->{_io}->read_u1();
     $self->{num_files} = $self->{_io}->read_u1();
     $self->{num_free_sectors} = $self->{_io}->read_u2le();
-    $self->{tr_dos_id} = $self->{_io}->ensure_fixed_contents(pack('C*', (16)));
+    $self->{tr_dos_id} = $self->{_io}->read_bytes(1);
     $self->{unused_2} = $self->{_io}->read_bytes(2);
     $self->{password} = $self->{_io}->read_bytes(9);
     $self->{unused_3} = $self->{_io}->read_bytes(1);

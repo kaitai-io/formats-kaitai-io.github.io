@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -39,7 +39,7 @@ sub _read {
     $self->{_raw_fields} = $self->{_io}->read_bytes(($self->len() - 5));
     my $io__raw_fields = IO::KaitaiStruct::Stream->new($self->{_raw_fields});
     $self->{fields} = Bson::ElementsList->new($io__raw_fields, $self, $self->{_root});
-    $self->{terminator} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{terminator} = $self->{_io}->read_bytes(1);
 }
 
 sub len {
@@ -147,7 +147,7 @@ sub _read {
     $self->{len} = $self->{_io}->read_s4le();
     $self->{subtype} = $self->{_io}->read_u1();
     my $_on = $self->subtype();
-    if ($_on == $SUBTYPE_BYTE_ARRAY_DEPRECATED) {
+    if ($_on == $Bson::BinData::SUBTYPE_BYTE_ARRAY_DEPRECATED) {
         $self->{_raw_content} = $self->{_io}->read_bytes($self->len());
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = Bson::BinData::ByteArrayDeprecated->new($io__raw_content, $self, $self->{_root});
@@ -332,7 +332,7 @@ sub _read {
 
     $self->{len} = $self->{_io}->read_s4le();
     $self->{str} = Encode::decode("UTF-8", $self->{_io}->read_bytes(($self->len() - 1)));
-    $self->{terminator} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{terminator} = $self->{_io}->read_bytes(1);
 }
 
 sub len {
@@ -406,56 +406,56 @@ sub _read {
     $self->{type_byte} = $self->{_io}->read_u1();
     $self->{name} = Bson::Cstring->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->type_byte();
-    if ($_on == $BSON_TYPE_NUMBER_DOUBLE) {
-        $self->{content} = $self->{_io}->read_f8le();
-    }
-    elsif ($_on == $BSON_TYPE_CODE_WITH_SCOPE) {
+    if ($_on == $Bson::Element::BSON_TYPE_CODE_WITH_SCOPE) {
         $self->{content} = Bson::CodeWithScope->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $BSON_TYPE_OBJECT_ID) {
-        $self->{content} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $BSON_TYPE_STRING) {
-        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $BSON_TYPE_REG_EX) {
+    elsif ($_on == $Bson::Element::BSON_TYPE_REG_EX) {
         $self->{content} = Bson::RegEx->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $BSON_TYPE_NUMBER_DECIMAL) {
-        $self->{content} = Bson::F16->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DOUBLE) {
+        $self->{content} = $self->{_io}->read_f8le();
     }
-    elsif ($_on == $BSON_TYPE_UTC_DATETIME) {
-        $self->{content} = $self->{_io}->read_s8le();
+    elsif ($_on == $Bson::Element::BSON_TYPE_SYMBOL) {
+        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $BSON_TYPE_NUMBER_LONG) {
-        $self->{content} = $self->{_io}->read_s8le();
-    }
-    elsif ($_on == $BSON_TYPE_TIMESTAMP) {
+    elsif ($_on == $Bson::Element::BSON_TYPE_TIMESTAMP) {
         $self->{content} = Bson::Timestamp->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $BSON_TYPE_DB_POINTER) {
-        $self->{content} = Bson::DbPointer->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $BSON_TYPE_ARRAY) {
-        $self->{content} = Bson->new($self->{_io});
-    }
-    elsif ($_on == $BSON_TYPE_JAVASCRIPT) {
-        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $BSON_TYPE_BOOLEAN) {
-        $self->{content} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $BSON_TYPE_DOCUMENT) {
-        $self->{content} = Bson->new($self->{_io});
-    }
-    elsif ($_on == $BSON_TYPE_SYMBOL) {
-        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $BSON_TYPE_NUMBER_INT) {
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_INT) {
         $self->{content} = $self->{_io}->read_s4le();
     }
-    elsif ($_on == $BSON_TYPE_BIN_DATA) {
+    elsif ($_on == $Bson::Element::BSON_TYPE_DOCUMENT) {
+        $self->{content} = Bson->new($self->{_io});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_OBJECT_ID) {
+        $self->{content} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_JAVASCRIPT) {
+        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_UTC_DATETIME) {
+        $self->{content} = $self->{_io}->read_s8le();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_BOOLEAN) {
+        $self->{content} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_LONG) {
+        $self->{content} = $self->{_io}->read_s8le();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_BIN_DATA) {
         $self->{content} = Bson::BinData->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_STRING) {
+        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_DB_POINTER) {
+        $self->{content} = Bson::DbPointer->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_ARRAY) {
+        $self->{content} = Bson->new($self->{_io});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DECIMAL) {
+        $self->{content} = Bson::F16->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -655,9 +655,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{str} = $self->{_io}->read_bits_int(1);
-    $self->{exponent} = $self->{_io}->read_bits_int(15);
-    $self->{significand_hi} = $self->{_io}->read_bits_int(49);
+    $self->{str} = $self->{_io}->read_bits_int_be(1);
+    $self->{exponent} = $self->{_io}->read_bits_int_be(15);
+    $self->{significand_hi} = $self->{_io}->read_bits_int_be(49);
     $self->{_io}->align_to_byte();
     $self->{significand_lo} = $self->{_io}->read_u8le();
 }

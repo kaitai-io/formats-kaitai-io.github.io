@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Avi;
@@ -57,9 +57,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic1} = $self->{_io}->ensure_fixed_contents(pack('C*', (82, 73, 70, 70)));
+    $self->{magic1} = $self->{_io}->read_bytes(4);
     $self->{file_size} = $self->{_io}->read_u4le();
-    $self->{magic2} = $self->{_io}->ensure_fixed_contents(pack('C*', (65, 86, 73, 32)));
+    $self->{magic2} = $self->{_io}->read_bytes(4);
     $self->{_raw_data} = $self->{_io}->read_bytes(($self->file_size() - 4));
     my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
     $self->{data} = Avi::Blocks->new($io__raw_data, $self, $self->{_root});
@@ -362,17 +362,17 @@ sub _read {
     $self->{four_cc} = $self->{_io}->read_u4le();
     $self->{block_size} = $self->{_io}->read_u4le();
     my $_on = $self->four_cc();
-    if ($_on == $CHUNK_TYPE_LIST) {
+    if ($_on == $Avi::CHUNK_TYPE_LIST) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::ListBody->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $CHUNK_TYPE_AVIH) {
+    elsif ($_on == $Avi::CHUNK_TYPE_AVIH) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::AvihBody->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $CHUNK_TYPE_STRH) {
+    elsif ($_on == $Avi::CHUNK_TYPE_STRH) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::StrhBody->new($io__raw_data, $self, $self->{_root});

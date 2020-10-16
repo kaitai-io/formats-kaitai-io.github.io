@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -179,17 +180,24 @@ public class Rar extends KaitaiStruct {
             if (hasAdd()) {
                 this.addSize = this._io.readU4le();
             }
-            switch (blockType()) {
-            case FILE_HEADER: {
-                this._raw_body = this._io.readBytes(bodySize());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new BlockFileHeader(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(bodySize());
-                break;
-            }
+            {
+                BlockTypes on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case FILE_HEADER: {
+                        this._raw_body = this._io.readBytes(bodySize());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new BlockFileHeader(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(bodySize());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(bodySize());
+                }
             }
             if (hasAdd()) {
                 this.addBody = this._io.readBytes(addSize());
@@ -385,10 +393,16 @@ public class Rar extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic1 = this._io.ensureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
+            this.magic1 = this._io.readBytes(6);
+            if (!(Arrays.equals(magic1(), new byte[] { 82, 97, 114, 33, 26, 7 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, magic1(), _io(), "/types/magic_signature/seq/0");
+            }
             this.version = this._io.readU1();
             if (version() == 1) {
-                this.magic3 = this._io.ensureFixedContents(new byte[] { 0 });
+                this.magic3 = this._io.readBytes(1);
+                if (!(Arrays.equals(magic3(), new byte[] { 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, magic3(), _io(), "/types/magic_signature/seq/2");
+                }
             }
         }
         private byte[] magic1;

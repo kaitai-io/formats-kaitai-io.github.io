@@ -62,7 +62,10 @@ var Ext2 = (function() {
       this.wtime = this._io.readU4le();
       this.mntCount = this._io.readU2le();
       this.maxMntCount = this._io.readU2le();
-      this.magic = this._io.ensureFixedContents([83, 239]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 239]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([83, 239], this.magic, this._io, "/types/super_block_struct/seq/15");
+      }
       this.state = this._io.readU2le();
       this.errors = this._io.readU2le();
       this.minorRevLevel = this._io.readU2le();

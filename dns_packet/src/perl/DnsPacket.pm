@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -652,50 +652,50 @@ sub _read {
     $self->{ttl} = $self->{_io}->read_s4be();
     $self->{rdlength} = $self->{_io}->read_u2be();
     my $_on = $self->type();
-    if ($_on == $TYPE_TYPE_MX) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::MxInfo->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_PTR) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_SOA) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::AuthorityInfo->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_CNAME) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_AAAA) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::AddressV6->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_TXT) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::TxtBody->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_NS) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
-        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TYPE_SRV) {
+    if ($_on == $DnsPacket::TYPE_TYPE_SRV) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = DnsPacket::Service->new($io__raw_payload, $self, $self->{_root});
     }
-    elsif ($_on == $TYPE_TYPE_A) {
+    elsif ($_on == $DnsPacket::TYPE_TYPE_A) {
         $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = DnsPacket::Address->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_CNAME) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_NS) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_SOA) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::AuthorityInfo->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_MX) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::MxInfo->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_TXT) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::TxtBody->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_PTR) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::DomainName->new($io__raw_payload, $self, $self->{_root});
+    }
+    elsif ($_on == $DnsPacket::TYPE_TYPE_AAAA) {
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->rdlength());
+        my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+        $self->{payload} = DnsPacket::AddressV6->new($io__raw_payload, $self, $self->{_root});
     }
     else {
         $self->{payload} = $self->{_io}->read_bytes($self->rdlength());

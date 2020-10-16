@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SystemdJournal(KaitaiStruct):
     """systemd, a popular user-space system/service management suite on Linux,
@@ -34,11 +35,11 @@ class SystemdJournal(KaitaiStruct):
 
     def _read(self):
         self._raw_header = self._io.read_bytes(self.len_header)
-        io = KaitaiStream(BytesIO(self._raw_header))
-        self.header = self._root.Header(io, self, self._root)
+        _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+        self.header = SystemdJournal.Header(_io__raw_header, self, self._root)
         self.objects = [None] * (self.header.num_objects)
         for i in range(self.header.num_objects):
-            self.objects[i] = self._root.JournalObject(self._io, self, self._root)
+            self.objects[i] = SystemdJournal.JournalObject(self._io, self, self._root)
 
 
     class Header(KaitaiStruct):
@@ -49,10 +50,12 @@ class SystemdJournal(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.ensure_fixed_contents(b"\x4C\x50\x4B\x53\x48\x48\x52\x48")
+            self.signature = self._io.read_bytes(8)
+            if not self.signature == b"\x4C\x50\x4B\x53\x48\x48\x52\x48":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4C\x50\x4B\x53\x48\x48\x52\x48", self.signature, self._io, u"/types/header/seq/0")
             self.compatible_flags = self._io.read_u4le()
             self.incompatible_flags = self._io.read_u4le()
-            self.state = self._root.State(self._io.read_u1())
+            self.state = KaitaiStream.resolve_enum(SystemdJournal.State, self._io.read_u1())
             self.reserved = self._io.read_bytes(7)
             self.file_id = self._io.read_bytes(16)
             self.machine_id = self._io.read_bytes(16)
@@ -110,15 +113,15 @@ class SystemdJournal(KaitaiStruct):
 
         def _read(self):
             self.padding = self._io.read_bytes(((8 - self._io.pos()) % 8))
-            self.object_type = self._root.JournalObject.ObjectTypes(self._io.read_u1())
+            self.object_type = KaitaiStream.resolve_enum(SystemdJournal.JournalObject.ObjectTypes, self._io.read_u1())
             self.flags = self._io.read_u1()
             self.reserved = self._io.read_bytes(6)
             self.len_object = self._io.read_u8le()
             _on = self.object_type
-            if _on == self._root.JournalObject.ObjectTypes.data:
+            if _on == SystemdJournal.JournalObject.ObjectTypes.data:
                 self._raw_payload = self._io.read_bytes((self.len_object - 16))
-                io = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.DataObject(io, self, self._root)
+                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = SystemdJournal.DataObject(_io__raw_payload, self, self._root)
             else:
                 self.payload = self._io.read_bytes((self.len_object - 16))
 
@@ -154,7 +157,7 @@ class SystemdJournal(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self.ofs_next_hash)
-                self._m_next_hash = self._root.JournalObject(io, self, self._root)
+                self._m_next_hash = SystemdJournal.JournalObject(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_next_hash if hasattr(self, '_m_next_hash') else None
@@ -168,7 +171,7 @@ class SystemdJournal(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self.ofs_head_field)
-                self._m_head_field = self._root.JournalObject(io, self, self._root)
+                self._m_head_field = SystemdJournal.JournalObject(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_head_field if hasattr(self, '_m_head_field') else None
@@ -182,7 +185,7 @@ class SystemdJournal(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self.ofs_entry)
-                self._m_entry = self._root.JournalObject(io, self, self._root)
+                self._m_entry = SystemdJournal.JournalObject(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_entry if hasattr(self, '_m_entry') else None
@@ -196,7 +199,7 @@ class SystemdJournal(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self.ofs_entry_array)
-                self._m_entry_array = self._root.JournalObject(io, self, self._root)
+                self._m_entry_array = SystemdJournal.JournalObject(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_entry_array if hasattr(self, '_m_entry_array') else None

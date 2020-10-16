@@ -24,7 +24,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 80, 65, 67, 75 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 65, 67, 75 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 80, 65, 67, 75 }, Magic, M_Io, "/seq/0");
+            }
             _ofsIndex = m_io.ReadU4le();
             _lenIndex = m_io.ReadU4le();
         }

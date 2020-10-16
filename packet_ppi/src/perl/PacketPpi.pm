@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use EthernetFrame;
 
 ########################################################################
@@ -152,12 +152,12 @@ sub _read {
     my $io__raw_fields = IO::KaitaiStruct::Stream->new($self->{_raw_fields});
     $self->{fields} = PacketPpi::PacketPpiFields->new($io__raw_fields, $self, $self->{_root});
     my $_on = $self->header()->pph_dlt();
-    if ($_on == $LINKTYPE_PPI) {
+    if ($_on == $PacketPpi::LINKTYPE_PPI) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi->new($io__raw_body);
     }
-    elsif ($_on == $LINKTYPE_ETHERNET) {
+    elsif ($_on == $PacketPpi::LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);
@@ -319,14 +319,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{unused1} = $self->{_io}->read_bits_int(1);
-    $self->{aggregate_delimiter} = $self->{_io}->read_bits_int(1);
-    $self->{more_aggregates} = $self->{_io}->read_bits_int(1);
-    $self->{aggregate} = $self->{_io}->read_bits_int(1);
-    $self->{dup_rx} = $self->{_io}->read_bits_int(1);
-    $self->{rx_short_guard} = $self->{_io}->read_bits_int(1);
-    $self->{is_ht_40} = $self->{_io}->read_bits_int(1);
-    $self->{greenfield} = $self->{_io}->read_bits_int(1);
+    $self->{unused1} = $self->{_io}->read_bits_int_be(1);
+    $self->{aggregate_delimiter} = $self->{_io}->read_bits_int_be(1);
+    $self->{more_aggregates} = $self->{_io}->read_bits_int_be(1);
+    $self->{aggregate} = $self->{_io}->read_bits_int_be(1);
+    $self->{dup_rx} = $self->{_io}->read_bits_int_be(1);
+    $self->{rx_short_guard} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_ht_40} = $self->{_io}->read_bits_int_be(1);
+    $self->{greenfield} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{unused2} = $self->{_io}->read_bytes(3);
 }
@@ -551,17 +551,17 @@ sub _read {
     $self->{pfh_type} = $self->{_io}->read_u2le();
     $self->{pfh_datalen} = $self->{_io}->read_u2le();
     my $_on = $self->pfh_type();
-    if ($_on == $PFH_TYPE_RADIO_802_11_COMMON) {
+    if ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11_COMMON) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211CommonBody->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_EXT) {
+    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_EXT) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211nMacExtBody->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
+    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211nMacPhyExtBody->new($io__raw_body, $self, $self->{_root});
@@ -741,15 +741,15 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{spectrum_2ghz} = $self->{_io}->read_bits_int(1);
-    $self->{ofdm} = $self->{_io}->read_bits_int(1);
-    $self->{cck} = $self->{_io}->read_bits_int(1);
-    $self->{turbo} = $self->{_io}->read_bits_int(1);
-    $self->{unused} = $self->{_io}->read_bits_int(8);
-    $self->{gfsk} = $self->{_io}->read_bits_int(1);
-    $self->{dyn_cck_ofdm} = $self->{_io}->read_bits_int(1);
-    $self->{only_passive_scan} = $self->{_io}->read_bits_int(1);
-    $self->{spectrum_5ghz} = $self->{_io}->read_bits_int(1);
+    $self->{spectrum_2ghz} = $self->{_io}->read_bits_int_be(1);
+    $self->{ofdm} = $self->{_io}->read_bits_int_be(1);
+    $self->{cck} = $self->{_io}->read_bits_int_be(1);
+    $self->{turbo} = $self->{_io}->read_bits_int_be(1);
+    $self->{unused} = $self->{_io}->read_bits_int_be(8);
+    $self->{gfsk} = $self->{_io}->read_bits_int_be(1);
+    $self->{dyn_cck_ofdm} = $self->{_io}->read_bits_int_be(1);
+    $self->{only_passive_scan} = $self->{_io}->read_bits_int_be(1);
+    $self->{spectrum_5ghz} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub spectrum_2ghz {

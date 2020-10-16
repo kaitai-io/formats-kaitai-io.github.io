@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GlibcUtmp(KaitaiStruct):
 
@@ -33,8 +34,8 @@ class GlibcUtmp(KaitaiStruct):
         i = 0
         while not self._io.is_eof():
             self._raw_records.append(self._io.read_bytes(384))
-            io = KaitaiStream(BytesIO(self._raw_records[-1]))
-            self.records.append(self._root.Record(io, self, self._root))
+            _io__raw_records = KaitaiStream(BytesIO(self._raw_records[-1]))
+            self.records.append(GlibcUtmp.Record(_io__raw_records, self, self._root))
             i += 1
 
 
@@ -46,7 +47,7 @@ class GlibcUtmp(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ut_type = self._root.EntryType(self._io.read_s4le())
+            self.ut_type = KaitaiStream.resolve_enum(GlibcUtmp.EntryType, self._io.read_s4le())
             self.pid = self._io.read_u4le()
             self.line = (self._io.read_bytes(32)).decode(u"UTF-8")
             self.id = (self._io.read_bytes(4)).decode(u"UTF-8")
@@ -54,7 +55,7 @@ class GlibcUtmp(KaitaiStruct):
             self.host = (self._io.read_bytes(256)).decode(u"UTF-8")
             self.exit = self._io.read_u4le()
             self.session = self._io.read_s4le()
-            self.tv = self._root.Timeval(self._io, self, self._root)
+            self.tv = GlibcUtmp.Timeval(self._io, self, self._root)
             self.addr_v6 = self._io.read_bytes(16)
             self.reserved = self._io.read_bytes(20)
 

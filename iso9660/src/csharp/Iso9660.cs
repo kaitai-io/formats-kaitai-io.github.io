@@ -54,12 +54,24 @@ namespace Kaitai
             }
             private void _read()
             {
-                _unused1 = m_io.EnsureFixedContents(new byte[] { 0 });
+                _unused1 = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Unused1, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Unused1, M_Io, "/types/vol_desc_primary/seq/0");
+                }
                 _systemId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
                 _volumeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
-                _unused2 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+                _unused2 = m_io.ReadBytes(8);
+                if (!((KaitaiStream.ByteArrayCompare(Unused2, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 }, Unused2, M_Io, "/types/vol_desc_primary/seq/3");
+                }
                 _volSpaceSize = new U4bi(m_io, this, m_root);
-                _unused3 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                _unused3 = m_io.ReadBytes(32);
+                if (!((KaitaiStream.ByteArrayCompare(Unused3, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Unused3, M_Io, "/types/vol_desc_primary/seq/5");
+                }
                 _volSetSize = new U2bi(m_io, this, m_root);
                 _volSeqNum = new U2bi(m_io, this, m_root);
                 _logicalBlockSize = new U2bi(m_io, this, m_root);
@@ -289,7 +301,11 @@ namespace Kaitai
             private void _read()
             {
                 _type = m_io.ReadU1();
-                _magic = m_io.EnsureFixedContents(new byte[] { 67, 68, 48, 48, 49 });
+                _magic = m_io.ReadBytes(5);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 67, 68, 48, 48, 49 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 67, 68, 48, 48, 49 }, Magic, M_Io, "/types/vol_desc/seq/1");
+                }
                 _version = m_io.ReadU1();
                 if (Type == 0) {
                     _volDescBootRecord = new VolDescBootRecord(m_io, this, m_root);
@@ -573,8 +589,8 @@ namespace Kaitai
                         var io___raw_extentAsDir = new KaitaiStream(__raw_extentAsDir);
                         _extentAsDir = new DirEntries(io___raw_extentAsDir, this, m_root);
                         io.Seek(_pos);
+                        f_extentAsDir = true;
                     }
-                    f_extentAsDir = true;
                     return _extentAsDir;
                 }
             }
@@ -592,8 +608,8 @@ namespace Kaitai
                         io.Seek((LbaExtent.Le * M_Root.SectorSize));
                         _extentAsFile = io.ReadBytes(SizeExtent.Le);
                         io.Seek(_pos);
+                        f_extentAsFile = true;
                     }
-                    f_extentAsFile = true;
                     return _extentAsFile;
                 }
             }

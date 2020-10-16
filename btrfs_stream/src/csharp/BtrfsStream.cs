@@ -115,7 +115,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 });
+                _magic = m_io.ReadBytes(13);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }, Magic, M_Io, "/types/send_stream_header/seq/0");
+                }
                 _version = m_io.ReadU4le();
             }
             private byte[] _magic;
@@ -167,7 +171,21 @@ namespace Kaitai
                     _type = ((BtrfsStream.Attribute) m_io.ReadU2le());
                     _length = m_io.ReadU2le();
                     switch (Type) {
+                    case BtrfsStream.Attribute.Ctransid: {
+                        _value = m_io.ReadU8le();
+                        break;
+                    }
                     case BtrfsStream.Attribute.Size: {
+                        _value = m_io.ReadU8le();
+                        break;
+                    }
+                    case BtrfsStream.Attribute.CloneUuid: {
+                        __raw_value = m_io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Uuid(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case BtrfsStream.Attribute.FileOffset: {
                         _value = m_io.ReadU8le();
                         break;
                     }
@@ -177,20 +195,8 @@ namespace Kaitai
                         _value = new Timespec(io___raw_value, this, m_root);
                         break;
                     }
-                    case BtrfsStream.Attribute.Mode: {
+                    case BtrfsStream.Attribute.Uid: {
                         _value = m_io.ReadU8le();
-                        break;
-                    }
-                    case BtrfsStream.Attribute.Uuid: {
-                        __raw_value = m_io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Uuid(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case BtrfsStream.Attribute.CloneUuid: {
-                        __raw_value = m_io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Uuid(io___raw_value, this, m_root);
                         break;
                     }
                     case BtrfsStream.Attribute.Atime: {
@@ -199,29 +205,33 @@ namespace Kaitai
                         _value = new Timespec(io___raw_value, this, m_root);
                         break;
                     }
-                    case BtrfsStream.Attribute.Gid: {
+                    case BtrfsStream.Attribute.Ctime: {
+                        __raw_value = m_io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Timespec(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case BtrfsStream.Attribute.Uuid: {
+                        __raw_value = m_io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Uuid(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case BtrfsStream.Attribute.CloneLen: {
                         _value = m_io.ReadU8le();
                         break;
                     }
-                    case BtrfsStream.Attribute.Uid: {
-                        _value = m_io.ReadU8le();
+                    case BtrfsStream.Attribute.XattrName: {
+                        __raw_value = m_io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new String(io___raw_value, this, m_root);
                         break;
                     }
                     case BtrfsStream.Attribute.CloneCtransid: {
                         _value = m_io.ReadU8le();
                         break;
                     }
-                    case BtrfsStream.Attribute.PathTo: {
-                        __raw_value = m_io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new String(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case BtrfsStream.Attribute.Ctransid: {
-                        _value = m_io.ReadU8le();
-                        break;
-                    }
-                    case BtrfsStream.Attribute.CloneLen: {
+                    case BtrfsStream.Attribute.Mode: {
                         _value = m_io.ReadU8le();
                         break;
                     }
@@ -229,10 +239,6 @@ namespace Kaitai
                         __raw_value = m_io.ReadBytes(Length);
                         var io___raw_value = new KaitaiStream(__raw_value);
                         _value = new Timespec(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case BtrfsStream.Attribute.FileOffset: {
-                        _value = m_io.ReadU8le();
                         break;
                     }
                     case BtrfsStream.Attribute.PathLink: {
@@ -245,19 +251,7 @@ namespace Kaitai
                         _value = m_io.ReadU8le();
                         break;
                     }
-                    case BtrfsStream.Attribute.Ctime: {
-                        __raw_value = m_io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Timespec(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case BtrfsStream.Attribute.ClonePath: {
-                        __raw_value = m_io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new String(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case BtrfsStream.Attribute.XattrName: {
+                    case BtrfsStream.Attribute.PathTo: {
                         __raw_value = m_io.ReadBytes(Length);
                         var io___raw_value = new KaitaiStream(__raw_value);
                         _value = new String(io___raw_value, this, m_root);
@@ -271,6 +265,16 @@ namespace Kaitai
                     }
                     case BtrfsStream.Attribute.CloneOffset: {
                         _value = m_io.ReadU8le();
+                        break;
+                    }
+                    case BtrfsStream.Attribute.Gid: {
+                        _value = m_io.ReadU8le();
+                        break;
+                    }
+                    case BtrfsStream.Attribute.ClonePath: {
+                        __raw_value = m_io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new String(io___raw_value, this, m_root);
                         break;
                     }
                     default: {

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -216,7 +216,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (127, 69, 76, 70)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{bits} = $self->{_io}->read_u1();
     $self->{endian} = $self->{_io}->read_u1();
     $self->{ei_version} = $self->{_io}->read_u1();
@@ -730,10 +730,10 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self->_root()->endian();
-    if ($_on == $ENDIAN_LE) {
+    if ($_on == $Elf::ENDIAN_LE) {
         $self->{_is_le} = 1;
     }
-    elsif ($_on == $ENDIAN_BE) {
+    elsif ($_on == $Elf::ENDIAN_BE) {
         $self->{_is_le} = 0;
     }
     if (!(defined $self->{_is_le})) {
@@ -752,24 +752,24 @@ sub _read_le {
     $self->{machine} = $self->{_io}->read_u2le();
     $self->{e_version} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{entry_point} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{entry_point} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{program_header_offset} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{program_header_offset} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{section_header_offset} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{section_header_offset} = $self->{_io}->read_u8le();
     }
     $self->{flags} = $self->{_io}->read_bytes(4);
@@ -788,24 +788,24 @@ sub _read_be {
     $self->{machine} = $self->{_io}->read_u2be();
     $self->{e_version} = $self->{_io}->read_u4be();
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{entry_point} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{entry_point} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{program_header_offset} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{program_header_offset} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{section_header_offset} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{section_header_offset} = $self->{_io}->read_u8be();
     }
     $self->{flags} = $self->{_io}->read_bytes(4);
@@ -1107,52 +1107,52 @@ sub _read_le {
     my ($self) = @_;
 
     $self->{type} = $self->{_io}->read_u4le();
-    if ($self->_root()->bits() == $BITS_B64) {
+    if ($self->_root()->bits() == $Elf::BITS_B64) {
         $self->{flags64} = $self->{_io}->read_u4le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{offset} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{offset} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{vaddr} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{vaddr} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{paddr} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{paddr} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{filesz} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{filesz} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{memsz} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{memsz} = $self->{_io}->read_u8le();
     }
-    if ($self->_root()->bits() == $BITS_B32) {
+    if ($self->_root()->bits() == $Elf::BITS_B32) {
         $self->{flags32} = $self->{_io}->read_u4le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{align} = $self->{_io}->read_u8le();
     }
 }
@@ -1161,52 +1161,52 @@ sub _read_be {
     my ($self) = @_;
 
     $self->{type} = $self->{_io}->read_u4be();
-    if ($self->_root()->bits() == $BITS_B64) {
+    if ($self->_root()->bits() == $Elf::BITS_B64) {
         $self->{flags64} = $self->{_io}->read_u4be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{offset} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{offset} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{vaddr} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{vaddr} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{paddr} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{paddr} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{filesz} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{filesz} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{memsz} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{memsz} = $self->{_io}->read_u8be();
     }
-    if ($self->_root()->bits() == $BITS_B32) {
+    if ($self->_root()->bits() == $Elf::BITS_B32) {
         $self->{flags32} = $self->{_io}->read_u4be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{align} = $self->{_io}->read_u8be();
     }
 }
@@ -1214,7 +1214,7 @@ sub _read_be {
 sub dynamic {
     my ($self) = @_;
     return $self->{dynamic} if ($self->{dynamic});
-    if ($self->type() == $PH_TYPE_DYNAMIC) {
+    if ($self->type() == $Elf::PH_TYPE_DYNAMIC) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
         $io->seek($self->offset());
@@ -1337,17 +1337,17 @@ sub _read_le {
     my ($self) = @_;
 
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{tag} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{tag} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{value_or_ptr} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{value_or_ptr} = $self->{_io}->read_u8le();
     }
 }
@@ -1356,17 +1356,17 @@ sub _read_be {
     my ($self) = @_;
 
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{tag} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{tag} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{value_or_ptr} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{value_or_ptr} = $self->{_io}->read_u8be();
     }
 }
@@ -1381,7 +1381,7 @@ sub tag_enum {
 sub flag_1_values {
     my ($self) = @_;
     return $self->{flag_1_values} if ($self->{flag_1_values});
-    if ($self->tag_enum() == $DYNAMIC_ARRAY_TAGS_FLAGS_1) {
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS_1) {
         if ($self->{_is_le}) {
             $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
         } else {
@@ -1447,47 +1447,47 @@ sub _read_le {
     $self->{ofs_name} = $self->{_io}->read_u4le();
     $self->{type} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{flags} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{flags} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{addr} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{addr} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{ofs_body} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{ofs_body} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{len_body} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{len_body} = $self->{_io}->read_u8le();
     }
     $self->{linked_section_idx} = $self->{_io}->read_u4le();
     $self->{info} = $self->{_io}->read_bytes(4);
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{align} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{entry_size} = $self->{_io}->read_u4le();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{entry_size} = $self->{_io}->read_u8le();
     }
 }
@@ -1498,47 +1498,47 @@ sub _read_be {
     $self->{ofs_name} = $self->{_io}->read_u4be();
     $self->{type} = $self->{_io}->read_u4be();
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{flags} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{flags} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{addr} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{addr} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{ofs_body} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{ofs_body} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{len_body} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{len_body} = $self->{_io}->read_u8be();
     }
     $self->{linked_section_idx} = $self->{_io}->read_u4be();
     $self->{info} = $self->{_io}->read_bytes(4);
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{align} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
-    if ($_on == $BITS_B32) {
+    if ($_on == $Elf::BITS_B32) {
         $self->{entry_size} = $self->{_io}->read_u4be();
     }
-    elsif ($_on == $BITS_B64) {
+    elsif ($_on == $Elf::BITS_B64) {
         $self->{entry_size} = $self->{_io}->read_u8be();
     }
 }
@@ -1551,50 +1551,50 @@ sub body {
     $io->seek($self->ofs_body());
     if ($self->{_is_le}) {
         my $_on = $self->type();
-        if ($_on == $SH_TYPE_DYNAMIC) {
+        if ($_on == $Elf::SH_TYPE_STRTAB) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $SH_TYPE_STRTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $SH_TYPE_DYNSTR) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $SH_TYPE_DYNSYM) {
+        elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_DYNSTR) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
         else {
             $self->{body} = $io->read_bytes($self->len_body());
         }
     } else {
         my $_on = $self->type();
-        if ($_on == $SH_TYPE_DYNAMIC) {
+        if ($_on == $Elf::SH_TYPE_STRTAB) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $SH_TYPE_STRTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $SH_TYPE_DYNSTR) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $SH_TYPE_DYNSYM) {
+        elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_DYNSTR) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
         else {
             $self->{body} = $io->read_bytes($self->len_body());
@@ -1794,10 +1794,10 @@ sub _read_le {
     $self->{entries} = ();
     while (!$self->{_io}->is_eof()) {
         my $_on = $self->_root()->bits();
-        if ($_on == $BITS_B32) {
+        if ($_on == $Elf::BITS_B32) {
             push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry32->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $BITS_B64) {
+        elsif ($_on == $Elf::BITS_B64) {
             push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry64->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
         }
     }
@@ -1809,10 +1809,10 @@ sub _read_be {
     $self->{entries} = ();
     while (!$self->{_io}->is_eof()) {
         my $_on = $self->_root()->bits();
-        if ($_on == $BITS_B32) {
+        if ($_on == $Elf::BITS_B32) {
             push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry32->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $BITS_B64) {
+        elsif ($_on == $Elf::BITS_B64) {
             push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry64->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
         }
     }

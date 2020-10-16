@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -44,12 +44,12 @@ class EthernetFrame < Kaitai::Struct::Struct
     case ether_type
     when :ether_type_enum_ipv4
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = Ipv4Packet.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = Ipv4Packet.new(_io__raw_body)
     when :ether_type_enum_ipv6
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = Ipv6Packet.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = Ipv6Packet.new(_io__raw_body)
     else
       @body = @_io.read_bytes_full
     end
@@ -66,9 +66,9 @@ class EthernetFrame < Kaitai::Struct::Struct
     end
 
     def _read
-      @priority = @_io.read_bits_int(3)
-      @drop_eligible = @_io.read_bits_int(1) != 0
-      @vlan_id = @_io.read_bits_int(12)
+      @priority = @_io.read_bits_int_be(3)
+      @drop_eligible = @_io.read_bits_int_be(1) != 0
+      @vlan_id = @_io.read_bits_int_be(12)
       self
     end
 

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Gzip;
@@ -52,12 +52,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (31, 139)));
+    $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{compression_method} = $self->{_io}->read_u1();
     $self->{flags} = Gzip::Flags->new($self->{_io}, $self, $self->{_root});
     $self->{mod_time} = $self->{_io}->read_u4le();
     my $_on = $self->compression_method();
-    if ($_on == $COMPRESSION_METHODS_DEFLATE) {
+    if ($_on == $Gzip::COMPRESSION_METHODS_DEFLATE) {
         $self->{extra_flags} = Gzip::ExtraFlagsDeflate->new($self->{_io}, $self, $self->{_root});
     }
     $self->{os} = $self->{_io}->read_u1();
@@ -173,12 +173,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->read_bits_int(3);
-    $self->{has_comment} = $self->{_io}->read_bits_int(1);
-    $self->{has_name} = $self->{_io}->read_bits_int(1);
-    $self->{has_extra} = $self->{_io}->read_bits_int(1);
-    $self->{has_header_crc} = $self->{_io}->read_bits_int(1);
-    $self->{is_text} = $self->{_io}->read_bits_int(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(3);
+    $self->{has_comment} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_name} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_extra} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_header_crc} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_text} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub reserved1 {

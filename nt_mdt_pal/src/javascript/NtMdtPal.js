@@ -22,7 +22,10 @@ var NtMdtPal = (function() {
     this._read();
   }
   NtMdtPal.prototype._read = function() {
-    this.signature = this._io.ensureFixedContents([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33]);
+    this.signature = this._io.readBytes(26);
+    if (!((KaitaiStream.byteArrayCompare(this.signature, [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33], this.signature, this._io, "/seq/0");
+    }
     this.count = this._io.readU4be();
     this.meta = new Array(this.count);
     for (var i = 0; i < this.count; i++) {

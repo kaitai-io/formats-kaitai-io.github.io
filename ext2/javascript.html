@@ -135,11 +135,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ext2 filesystem parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ext2 filesystem parsing C# library">C#</a></li>
                 
                 
@@ -296,7 +291,10 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">wtime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">mntCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxMntCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">83</span><span class="p">,</span> <span class="mi">239</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="p">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">239</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">83</span><span class="p">,</span> <span class="mi">239</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/super_block_struct/seq/15&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">errors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">minorRevLevel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>

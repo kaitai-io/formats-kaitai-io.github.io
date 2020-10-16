@@ -53,7 +53,10 @@ var GptPartitionTable = (function() {
       this._read();
     }
     PartitionHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([69, 70, 73, 32, 80, 65, 82, 84]);
+      this.signature = this._io.readBytes(8);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [69, 70, 73, 32, 80, 65, 82, 84]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([69, 70, 73, 32, 80, 65, 82, 84], this.signature, this._io, "/types/partition_header/seq/0");
+      }
       this.revision = this._io.readU4le();
       this.headerSize = this._io.readU4le();
       this.crc32Header = this._io.readU4le();

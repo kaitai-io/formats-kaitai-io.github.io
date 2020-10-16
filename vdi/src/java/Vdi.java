@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -79,7 +80,10 @@ public class Vdi extends KaitaiStruct {
         }
         private void _read() {
             this.text = new String(this._io.readBytes(64), Charset.forName("utf-8"));
-            this.signature = this._io.ensureFixedContents(new byte[] { 127, 16, -38, -66 });
+            this.signature = this._io.readBytes(4);
+            if (!(Arrays.equals(signature(), new byte[] { 127, 16, -38, -66 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 16, -38, -66 }, signature(), _io(), "/types/header/seq/1");
+            }
             this.version = new Version(this._io, this, _root);
             if (subheaderSizeIsDynamic()) {
                 this.headerSizeOptional = this._io.readU4le();
@@ -257,12 +261,12 @@ public class Vdi extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.reserved0 = this._io.readBitsInt(15);
-                    this.zeroExpand = this._io.readBitsInt(1) != 0;
-                    this.reserved1 = this._io.readBitsInt(6);
-                    this.diff = this._io.readBitsInt(1) != 0;
-                    this.fixed = this._io.readBitsInt(1) != 0;
-                    this.reserved2 = this._io.readBitsInt(8);
+                    this.reserved0 = this._io.readBitsIntBe(15);
+                    this.zeroExpand = this._io.readBitsIntBe(1) != 0;
+                    this.reserved1 = this._io.readBitsIntBe(6);
+                    this.diff = this._io.readBitsIntBe(1) != 0;
+                    this.fixed = this._io.readBitsIntBe(1) != 0;
+                    this.reserved2 = this._io.readBitsIntBe(8);
                 }
                 private long reserved0;
                 private boolean zeroExpand;
@@ -409,7 +413,7 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            index = new ArrayList<BlockIndex>((int) (_root.header().headerMain().blocksInImage()));
+            index = new ArrayList<BlockIndex>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
             for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
                 this.index.add(new BlockIndex(this._io, this, _root));
             }
@@ -487,7 +491,7 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blocks = new ArrayList<Block>((int) (_root.header().headerMain().blocksInImage()));
+            blocks = new ArrayList<Block>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
             for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
                 this.blocks.add(new Block(this._io, this, _root));
             }

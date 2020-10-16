@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -478,12 +479,15 @@ public class MicrosoftPe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.peSignature = this._io.ensureFixedContents(new byte[] { 80, 69, 0, 0 });
+            this.peSignature = this._io.readBytes(4);
+            if (!(Arrays.equals(peSignature(), new byte[] { 80, 69, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 69, 0, 0 }, peSignature(), _io(), "/types/pe_header/seq/0");
+            }
             this.coffHdr = new CoffHeader(this._io, this, _root);
             this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
             KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
             this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
-            sections = new ArrayList<Section>((int) (coffHdr().numberOfSections()));
+            sections = new ArrayList<Section>(((Number) (coffHdr().numberOfSections())).intValue());
             for (int i = 0; i < coffHdr().numberOfSections(); i++) {
                 this.sections.add(new Section(this._io, this, _root));
             }
@@ -676,7 +680,10 @@ public class MicrosoftPe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 77, 90 });
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(magic(), new byte[] { 77, 90 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 90 }, magic(), _io(), "/types/mz_placeholder/seq/0");
+            }
             this.data1 = this._io.readBytes(58);
             this.ofsPe = this._io.readU4le();
         }
@@ -853,7 +860,7 @@ public class MicrosoftPe extends KaitaiStruct {
                 return this.symbolTable;
             long _pos = this._io.pos();
             this._io.seek(pointerToSymbolTable());
-            symbolTable = new ArrayList<CoffSymbol>((int) (numberOfSymbols()));
+            symbolTable = new ArrayList<CoffSymbol>(((Number) (numberOfSymbols())).intValue());
             for (int i = 0; i < numberOfSymbols(); i++) {
                 this.symbolTable.add(new CoffSymbol(this._io, this, _root));
             }

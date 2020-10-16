@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class GlibcUtmp < Kaitai::Struct::Struct
@@ -32,8 +32,8 @@ class GlibcUtmp < Kaitai::Struct::Struct
     i = 0
     while not @_io.eof?
       @_raw_records << @_io.read_bytes(384)
-      io = Kaitai::Struct::Stream.new(@_raw_records.last)
-      @records << Record.new(io, self, @_root)
+      _io__raw_records = Kaitai::Struct::Stream.new(@_raw_records.last)
+      @records << Record.new(_io__raw_records, self, @_root)
       i += 1
     end
     self
@@ -45,7 +45,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
     end
 
     def _read
-      @ut_type = Kaitai::Struct::Stream::resolve_enum(ENTRY_TYPE, @_io.read_s4le)
+      @ut_type = Kaitai::Struct::Stream::resolve_enum(GlibcUtmp::ENTRY_TYPE, @_io.read_s4le)
       @pid = @_io.read_u4le
       @line = (@_io.read_bytes(32)).force_encoding("UTF-8")
       @id = (@_io.read_bytes(4)).force_encoding("UTF-8")

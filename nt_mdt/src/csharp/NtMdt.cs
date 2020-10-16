@@ -200,7 +200,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _signature = m_io.EnsureFixedContents(new byte[] { 1, 176, 147, 255 });
+            _signature = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 1, 176, 147, 255 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 1, 176, 147, 255 }, Signature, M_Io, "/seq/0");
+            }
             _size = m_io.ReadU4le();
             _reserved0 = m_io.ReadBytes(4);
             _lastFrame = m_io.ReadU2le();
@@ -488,10 +492,10 @@ namespace Kaitai
                     _dateTime = new DateTime(m_io, this, m_root);
                     _varSize = m_io.ReadU2le();
                     switch (Type) {
-                    case NtMdt.Frame.FrameType.Scanned: {
+                    case NtMdt.Frame.FrameType.Mda: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
+                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
                         break;
                     }
                     case NtMdt.Frame.FrameType.CurvesNew: {
@@ -500,10 +504,10 @@ namespace Kaitai
                         _frameData = new FdCurvesNew(io___raw_frameData, this, m_root);
                         break;
                     }
-                    case NtMdt.Frame.FrameType.Mda: {
+                    case NtMdt.Frame.FrameType.Curves: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
+                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
                         break;
                     }
                     case NtMdt.Frame.FrameType.Spectroscopy: {
@@ -512,10 +516,10 @@ namespace Kaitai
                         _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
                         break;
                     }
-                    case NtMdt.Frame.FrameType.Curves: {
+                    case NtMdt.Frame.FrameType.Scanned: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
+                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
                         break;
                     }
                     default: {
@@ -718,32 +722,20 @@ namespace Kaitai
                             for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
                             {
                                 switch (M_Parent.M_Parent.Mesurands[i].DataType) {
-                                case NtMdt.DataType.Uint8: {
-                                    _items.Add(m_io.ReadU1());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int8: {
-                                    _items.Add(m_io.ReadS1());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int16: {
-                                    _items.Add(m_io.ReadS2le());
-                                    break;
-                                }
                                 case NtMdt.DataType.Uint64: {
                                     _items.Add(m_io.ReadU8le());
                                     break;
                                 }
-                                case NtMdt.DataType.Float64: {
-                                    _items.Add(m_io.ReadF8le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int32: {
-                                    _items.Add(m_io.ReadS4le());
+                                case NtMdt.DataType.Uint8: {
+                                    _items.Add(m_io.ReadU1());
                                     break;
                                 }
                                 case NtMdt.DataType.Float32: {
                                     _items.Add(m_io.ReadF4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int8: {
+                                    _items.Add(m_io.ReadS1());
                                     break;
                                 }
                                 case NtMdt.DataType.Uint16: {
@@ -756,6 +748,18 @@ namespace Kaitai
                                 }
                                 case NtMdt.DataType.Uint32: {
                                     _items.Add(m_io.ReadU4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float64: {
+                                    _items.Add(m_io.ReadF8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int16: {
+                                    _items.Add(m_io.ReadS2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int32: {
+                                    _items.Add(m_io.ReadS4le());
                                     break;
                                 }
                                 }
@@ -1504,11 +1508,11 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _unkn = m_io.ReadBitsInt(4);
-                        _doublePass = m_io.ReadBitsInt(1) != 0;
-                        _bottom = m_io.ReadBitsInt(1) != 0;
-                        _left = m_io.ReadBitsInt(1) != 0;
-                        _horizontal = m_io.ReadBitsInt(1) != 0;
+                        _unkn = m_io.ReadBitsIntBe(4);
+                        _doublePass = m_io.ReadBitsIntBe(1) != 0;
+                        _bottom = m_io.ReadBitsIntBe(1) != 0;
+                        _left = m_io.ReadBitsIntBe(1) != 0;
+                        _horizontal = m_io.ReadBitsIntBe(1) != 0;
                     }
                     private ulong _unkn;
                     private bool _doublePass;

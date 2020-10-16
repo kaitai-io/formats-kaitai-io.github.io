@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Xwd(KaitaiStruct):
     """xwd is a file format written by eponymous X11 screen capture
@@ -45,14 +46,14 @@ class Xwd(KaitaiStruct):
     def _read(self):
         self.len_header = self._io.read_u4be()
         self._raw_hdr = self._io.read_bytes((self.len_header - 4))
-        io = KaitaiStream(BytesIO(self._raw_hdr))
-        self.hdr = self._root.Header(io, self, self._root)
+        _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
+        self.hdr = Xwd.Header(_io__raw_hdr, self, self._root)
         self._raw_color_map = [None] * (self.hdr.color_map_entries)
         self.color_map = [None] * (self.hdr.color_map_entries)
         for i in range(self.hdr.color_map_entries):
             self._raw_color_map[i] = self._io.read_bytes(12)
-            io = KaitaiStream(BytesIO(self._raw_color_map[i]))
-            self.color_map[i] = self._root.ColorMapEntry(io, self, self._root)
+            _io__raw_color_map = KaitaiStream(BytesIO(self._raw_color_map[i]))
+            self.color_map[i] = Xwd.ColorMapEntry(_io__raw_color_map, self, self._root)
 
 
     class Header(KaitaiStruct):
@@ -64,18 +65,18 @@ class Xwd(KaitaiStruct):
 
         def _read(self):
             self.file_version = self._io.read_u4be()
-            self.pixmap_format = self._root.PixmapFormat(self._io.read_u4be())
+            self.pixmap_format = KaitaiStream.resolve_enum(Xwd.PixmapFormat, self._io.read_u4be())
             self.pixmap_depth = self._io.read_u4be()
             self.pixmap_width = self._io.read_u4be()
             self.pixmap_height = self._io.read_u4be()
             self.x_offset = self._io.read_u4be()
-            self.byte_order = self._root.ByteOrder(self._io.read_u4be())
+            self.byte_order = KaitaiStream.resolve_enum(Xwd.ByteOrder, self._io.read_u4be())
             self.bitmap_unit = self._io.read_u4be()
             self.bitmap_bit_order = self._io.read_u4be()
             self.bitmap_pad = self._io.read_u4be()
             self.bits_per_pixel = self._io.read_u4be()
             self.bytes_per_line = self._io.read_u4be()
-            self.visual_class = self._root.VisualClass(self._io.read_u4be())
+            self.visual_class = KaitaiStream.resolve_enum(Xwd.VisualClass, self._io.read_u4be())
             self.red_mask = self._io.read_u4be()
             self.green_mask = self._io.read_u4be()
             self.blue_mask = self._io.read_u4be()

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class PythonPyc27(KaitaiStruct):
     """Python interpreter runs .py files in 2 step process: first, it
@@ -51,10 +52,10 @@ class PythonPyc27(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.version_magic = self._root.Version(self._io.read_u2le())
+        self.version_magic = KaitaiStream.resolve_enum(PythonPyc27.Version, self._io.read_u2le())
         self.crlf = self._io.read_u2le()
         self.modification_timestamp = self._io.read_u4le()
-        self.body = self._root.PyObject(self._io, self, self._root)
+        self.body = PythonPyc27.PyObject(self._io, self, self._root)
 
     class CodeObject(KaitaiStruct):
 
@@ -72,17 +73,17 @@ class PythonPyc27(KaitaiStruct):
             self.arg_count = self._io.read_u4le()
             self.local_count = self._io.read_u4le()
             self.stack_size = self._io.read_u4le()
-            self.flags = self._root.CodeObject.FlagsEnum(self._io.read_u4le())
-            self.code = self._root.Assembly(self._io, self, self._root)
-            self.consts = self._root.PyObject(self._io, self, self._root)
-            self.names = self._root.PyObject(self._io, self, self._root)
-            self.var_names = self._root.PyObject(self._io, self, self._root)
-            self.free_vars = self._root.PyObject(self._io, self, self._root)
-            self.cell_vars = self._root.PyObject(self._io, self, self._root)
-            self.filename = self._root.PyObject(self._io, self, self._root)
-            self.name = self._root.PyObject(self._io, self, self._root)
+            self.flags = KaitaiStream.resolve_enum(PythonPyc27.CodeObject.FlagsEnum, self._io.read_u4le())
+            self.code = PythonPyc27.Assembly(self._io, self, self._root)
+            self.consts = PythonPyc27.PyObject(self._io, self, self._root)
+            self.names = PythonPyc27.PyObject(self._io, self, self._root)
+            self.var_names = PythonPyc27.PyObject(self._io, self, self._root)
+            self.free_vars = PythonPyc27.PyObject(self._io, self, self._root)
+            self.cell_vars = PythonPyc27.PyObject(self._io, self, self._root)
+            self.filename = PythonPyc27.PyObject(self._io, self, self._root)
+            self.name = PythonPyc27.PyObject(self._io, self, self._root)
             self.first_line_no = self._io.read_u4le()
-            self.lnotab = self._root.PyObject(self._io, self, self._root)
+            self.lnotab = PythonPyc27.PyObject(self._io, self, self._root)
 
 
     class Assembly(KaitaiStruct):
@@ -93,11 +94,13 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.string_magic = self._io.ensure_fixed_contents(b"\x73")
+            self.string_magic = self._io.read_bytes(1)
+            if not self.string_magic == b"\x73":
+                raise kaitaistruct.ValidationNotEqualError(b"\x73", self.string_magic, self._io, u"/types/assembly/seq/0")
             self.length = self._io.read_u4le()
             self._raw_items = self._io.read_bytes(self.length)
-            io = KaitaiStream(BytesIO(self._raw_items))
-            self.items = self._root.OpArgs(io, self, self._root)
+            _io__raw_items = KaitaiStream(BytesIO(self._raw_items))
+            self.items = PythonPyc27.OpArgs(_io__raw_items, self, self._root)
 
 
     class OpArg(KaitaiStruct):
@@ -229,8 +232,8 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.op_code = self._root.OpArg.OpCodeEnum(self._io.read_u1())
-            if self.op_code.value >= self._root.OpArg.OpCodeEnum.store_name.value:
+            self.op_code = KaitaiStream.resolve_enum(PythonPyc27.OpArg.OpCodeEnum, self._io.read_u1())
+            if self.op_code.value >= PythonPyc27.OpArg.OpCodeEnum.store_name.value:
                 self.arg = self._io.read_u2le()
 
 
@@ -255,26 +258,26 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.PyObject.ObjectType(self._io.read_u1())
+            self.type = KaitaiStream.resolve_enum(PythonPyc27.PyObject.ObjectType, self._io.read_u1())
             _on = self.type
-            if _on == self._root.PyObject.ObjectType.none:
-                self.value = self._root.PyObject.PyNone(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.code_object:
-                self.value = self._root.CodeObject(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.int:
+            if _on == PythonPyc27.PyObject.ObjectType.string:
+                self.value = PythonPyc27.PyObject.PyString(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.tuple:
+                self.value = PythonPyc27.PyObject.Tuple(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.int:
                 self.value = self._io.read_u4le()
-            elif _on == self._root.PyObject.ObjectType.string_ref:
-                self.value = self._root.PyObject.StringRef(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.string:
-                self.value = self._root.PyObject.PyString(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.py_false:
-                self.value = self._root.PyObject.PyFalse(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.interned:
-                self.value = self._root.PyObject.InternedString(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.tuple:
-                self.value = self._root.PyObject.Tuple(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.py_true:
-                self.value = self._root.PyObject.PyTrue(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.py_true:
+                self.value = PythonPyc27.PyObject.PyTrue(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.py_false:
+                self.value = PythonPyc27.PyObject.PyFalse(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.none:
+                self.value = PythonPyc27.PyObject.PyNone(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.string_ref:
+                self.value = PythonPyc27.PyObject.StringRef(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.code_object:
+                self.value = PythonPyc27.CodeObject(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.interned:
+                self.value = PythonPyc27.PyObject.InternedString(self._io, self, self._root)
 
         class PyNone(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -331,7 +334,7 @@ class PythonPyc27(KaitaiStruct):
                 self.count = self._io.read_u4le()
                 self.items = [None] * (self.count)
                 for i in range(self.count):
-                    self.items[i] = self._root.PyObject(self._io, self, self._root)
+                    self.items[i] = PythonPyc27.PyObject(self._io, self, self._root)
 
 
 
@@ -383,7 +386,7 @@ class PythonPyc27(KaitaiStruct):
             self.items = []
             i = 0
             while not self._io.is_eof():
-                self.items.append(self._root.OpArg(self._io, self, self._root))
+                self.items.append(PythonPyc27.OpArg(self._io, self, self._root))
                 i += 1
 
 

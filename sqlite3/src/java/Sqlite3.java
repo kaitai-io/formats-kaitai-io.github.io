@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -77,7 +78,10 @@ public class Sqlite3 extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 });
+        this.magic = this._io.readBytes(16);
+        if (!(Arrays.equals(magic(), new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, magic(), _io(), "/seq/0");
+        }
         this.lenPageMod = this._io.readU2be();
         this.writeVersion = Versions.byId(this._io.readU1());
         this.readVersion = Versions.byId(this._io.readU1());
@@ -185,7 +189,7 @@ public class Sqlite3 extends KaitaiStruct {
             if ( ((pageType() == 2) || (pageType() == 5)) ) {
                 this.rightPtr = this._io.readU4be();
             }
-            cells = new ArrayList<RefCell>((int) (numCells()));
+            cells = new ArrayList<RefCell>(((Number) (numCells())).intValue());
             for (int i = 0; i < numCells(); i++) {
                 this.cells.add(new RefCell(this._io, this, _root));
             }
@@ -356,7 +360,7 @@ public class Sqlite3 extends KaitaiStruct {
             this._raw_columnSerials = this._io.readBytes((lenHeaderAndLen().value() - 1));
             KaitaiStream _io__raw_columnSerials = new ByteBufferKaitaiStream(_raw_columnSerials);
             this.columnSerials = new Serials(_io__raw_columnSerials, this, _root);
-            columnContents = new ArrayList<ColumnContent>((int) (columnSerials().entries().size()));
+            columnContents = new ArrayList<ColumnContent>(((Number) (columnSerials().entries().size())).intValue());
             for (int i = 0; i < columnSerials().entries().size(); i++) {
                 this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get((int) i)));
             }
@@ -486,11 +490,11 @@ public class Sqlite3 extends KaitaiStruct {
                     break;
                 }
                 case 3: {
-                    this.asInt = (int) (this._io.readBitsInt(24));
+                    this.asInt = (int) (this._io.readBitsIntBe(24));
                     break;
                 }
                 case 5: {
-                    this.asInt = (int) (this._io.readBitsInt(48));
+                    this.asInt = (int) (this._io.readBitsIntBe(48));
                     break;
                 }
                 case 2: {
@@ -507,12 +511,11 @@ public class Sqlite3 extends KaitaiStruct {
             }
             this.asStr = new String(this._io.readBytes(serialType().lenContent()), Charset.forName("UTF-8"));
         }
-        private Serial serialType;
-        public Serial serialType() {
+        private Sqlite3.Serial serialType;
+        public Sqlite3.Serial serialType() {
             if (this.serialType != null)
                 return this.serialType;
-            Sqlite3.Serial _tmp = (Sqlite3.Serial) (((Serial) (ser())));
-            this.serialType = _tmp;
+            this.serialType = ((Sqlite3.Serial) (ser()));
             return this.serialType;
         }
         private Integer asInt;

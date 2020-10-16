@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 
 /**
@@ -46,7 +47,10 @@ public class VmwareVmdk extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 75, 68, 77, 86 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 75, 68, 77, 86 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, magic(), _io(), "/seq/0");
+        }
         this.version = this._io.readS4le();
         this.flags = new HeaderFlags(this._io, this, _root);
         this.sizeMax = this._io.readS8le();
@@ -85,15 +89,15 @@ public class VmwareVmdk extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved1 = this._io.readBitsInt(5);
-            this.zeroedGrainTableEntry = this._io.readBitsInt(1) != 0;
-            this.useSecondaryGrainDir = this._io.readBitsInt(1) != 0;
-            this.validNewLineDetectionTest = this._io.readBitsInt(1) != 0;
+            this.reserved1 = this._io.readBitsIntBe(5);
+            this.zeroedGrainTableEntry = this._io.readBitsIntBe(1) != 0;
+            this.useSecondaryGrainDir = this._io.readBitsIntBe(1) != 0;
+            this.validNewLineDetectionTest = this._io.readBitsIntBe(1) != 0;
             this._io.alignToByte();
             this.reserved2 = this._io.readU1();
-            this.reserved3 = this._io.readBitsInt(6);
-            this.hasMetadata = this._io.readBitsInt(1) != 0;
-            this.hasCompressedGrain = this._io.readBitsInt(1) != 0;
+            this.reserved3 = this._io.readBitsIntBe(6);
+            this.hasMetadata = this._io.readBitsIntBe(1) != 0;
+            this.hasCompressedGrain = this._io.readBitsIntBe(1) != 0;
             this._io.alignToByte();
             this.reserved4 = this._io.readU1();
         }

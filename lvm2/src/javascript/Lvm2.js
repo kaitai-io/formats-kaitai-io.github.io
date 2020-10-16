@@ -70,7 +70,10 @@ var Lvm2 = (function() {
           this._read();
         }
         LabelHeader.prototype._read = function() {
-          this.signature = this._io.ensureFixedContents([76, 65, 66, 69, 76, 79, 78, 69]);
+          this.signature = this._io.readBytes(8);
+          if (!((KaitaiStream.byteArrayCompare(this.signature, [76, 65, 66, 69, 76, 79, 78, 69]) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError([76, 65, 66, 69, 76, 79, 78, 69], this.signature, this._io, "/types/physical_volume/types/label/types/label_header/seq/0");
+          }
           this.sectorNumber = this._io.readU8le();
           this.checksum = this._io.readU4le();
           this.labelHeader = new LabelHeader(this._io, this, this._root);
@@ -86,7 +89,10 @@ var Lvm2 = (function() {
           }
           LabelHeader.prototype._read = function() {
             this.dataOffset = this._io.readU4le();
-            this.typeIndicator = this._io.ensureFixedContents([76, 86, 77, 50, 32, 48, 48, 49]);
+            this.typeIndicator = this._io.readBytes(8);
+            if (!((KaitaiStream.byteArrayCompare(this.typeIndicator, [76, 86, 77, 50, 32, 48, 48, 49]) == 0))) {
+              throw new KaitaiStream.ValidationNotEqualError([76, 86, 77, 50, 32, 48, 48, 49], this.typeIndicator, this._io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+            }
           }
 
           /**
@@ -236,7 +242,10 @@ var Lvm2 = (function() {
             }
             MetadataAreaHeader.prototype._read = function() {
               this.checksum = new MetadataAreaHeader(this._io, this, this._root);
-              this.signature = this._io.ensureFixedContents([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62]);
+              this.signature = this._io.readBytes(16);
+              if (!((KaitaiStream.byteArrayCompare(this.signature, [32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62]) == 0))) {
+                throw new KaitaiStream.ValidationNotEqualError([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62], this.signature, this._io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+              }
               this.version = this._io.readU4le();
               this.metadataAreaOffset = this._io.readU8le();
               this.metadataAreaSize = this._io.readU8le();

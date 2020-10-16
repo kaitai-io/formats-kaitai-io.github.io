@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -167,7 +168,10 @@ public class Uimage extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 39, 5, 25, 86 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 39, 5, 25, 86 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, magic(), _io(), "/types/uheader/seq/0");
+            }
             this.headerCrc = this._io.readU4be();
             this.timestamp = this._io.readU4be();
             this.lenImage = this._io.readU4be();

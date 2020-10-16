@@ -12,100 +12,102 @@
  * added support for relocations.
  */
 
-class DosMz extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DosMz $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_hdr = new \DosMz\MzHeader($this->_io, $this, $this->_root);
-        $this->_m_mzHeader2 = $this->_io->readBytes(($this->hdr()->ofsRelocations() - 28));
-        $this->_m_relocations = [];
-        $n = $this->hdr()->numRelocations();
-        for ($i = 0; $i < $n; $i++) {
-            $this->_m_relocations[] = new \DosMz\Relocation($this->_io, $this, $this->_root);
+namespace {
+    class DosMz extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DosMz $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
         }
-        $this->_m_body = $this->_io->readBytesFull();
+
+        private function _read() {
+            $this->_m_hdr = new \DosMz\MzHeader($this->_io, $this, $this->_root);
+            $this->_m_mzHeader2 = $this->_io->readBytes(($this->hdr()->ofsRelocations() - 28));
+            $this->_m_relocations = [];
+            $n = $this->hdr()->numRelocations();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_relocations[] = new \DosMz\Relocation($this->_io, $this, $this->_root);
+            }
+            $this->_m_body = $this->_io->readBytesFull();
+        }
+        protected $_m_hdr;
+        protected $_m_mzHeader2;
+        protected $_m_relocations;
+        protected $_m_body;
+        public function hdr() { return $this->_m_hdr; }
+        public function mzHeader2() { return $this->_m_mzHeader2; }
+        public function relocations() { return $this->_m_relocations; }
+        public function body() { return $this->_m_body; }
     }
-    protected $_m_hdr;
-    protected $_m_mzHeader2;
-    protected $_m_relocations;
-    protected $_m_body;
-    public function hdr() { return $this->_m_hdr; }
-    public function mzHeader2() { return $this->_m_mzHeader2; }
-    public function relocations() { return $this->_m_relocations; }
-    public function body() { return $this->_m_body; }
 }
 
-namespace \DosMz;
+namespace DosMz {
+    class MzHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-class MzHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(2);
+            $this->_m_lastPageExtraBytes = $this->_io->readU2le();
+            $this->_m_numPages = $this->_io->readU2le();
+            $this->_m_numRelocations = $this->_io->readU2le();
+            $this->_m_headerSize = $this->_io->readU2le();
+            $this->_m_minAllocation = $this->_io->readU2le();
+            $this->_m_maxAllocation = $this->_io->readU2le();
+            $this->_m_initialSs = $this->_io->readU2le();
+            $this->_m_initialSp = $this->_io->readU2le();
+            $this->_m_checksum = $this->_io->readU2le();
+            $this->_m_initialIp = $this->_io->readU2le();
+            $this->_m_initialCs = $this->_io->readU2le();
+            $this->_m_ofsRelocations = $this->_io->readU2le();
+            $this->_m_overlayId = $this->_io->readU2le();
+        }
+        protected $_m_magic;
+        protected $_m_lastPageExtraBytes;
+        protected $_m_numPages;
+        protected $_m_numRelocations;
+        protected $_m_headerSize;
+        protected $_m_minAllocation;
+        protected $_m_maxAllocation;
+        protected $_m_initialSs;
+        protected $_m_initialSp;
+        protected $_m_checksum;
+        protected $_m_initialIp;
+        protected $_m_initialCs;
+        protected $_m_ofsRelocations;
+        protected $_m_overlayId;
+        public function magic() { return $this->_m_magic; }
+        public function lastPageExtraBytes() { return $this->_m_lastPageExtraBytes; }
+        public function numPages() { return $this->_m_numPages; }
+        public function numRelocations() { return $this->_m_numRelocations; }
+        public function headerSize() { return $this->_m_headerSize; }
+        public function minAllocation() { return $this->_m_minAllocation; }
+        public function maxAllocation() { return $this->_m_maxAllocation; }
+        public function initialSs() { return $this->_m_initialSs; }
+        public function initialSp() { return $this->_m_initialSp; }
+        public function checksum() { return $this->_m_checksum; }
+        public function initialIp() { return $this->_m_initialIp; }
+        public function initialCs() { return $this->_m_initialCs; }
+        public function ofsRelocations() { return $this->_m_ofsRelocations; }
+        public function overlayId() { return $this->_m_overlayId; }
     }
-
-    private function _read() {
-        $this->_m_magic = $this->_io->readBytes(2);
-        $this->_m_lastPageExtraBytes = $this->_io->readU2le();
-        $this->_m_numPages = $this->_io->readU2le();
-        $this->_m_numRelocations = $this->_io->readU2le();
-        $this->_m_headerSize = $this->_io->readU2le();
-        $this->_m_minAllocation = $this->_io->readU2le();
-        $this->_m_maxAllocation = $this->_io->readU2le();
-        $this->_m_initialSs = $this->_io->readU2le();
-        $this->_m_initialSp = $this->_io->readU2le();
-        $this->_m_checksum = $this->_io->readU2le();
-        $this->_m_initialIp = $this->_io->readU2le();
-        $this->_m_initialCs = $this->_io->readU2le();
-        $this->_m_ofsRelocations = $this->_io->readU2le();
-        $this->_m_overlayId = $this->_io->readU2le();
-    }
-    protected $_m_magic;
-    protected $_m_lastPageExtraBytes;
-    protected $_m_numPages;
-    protected $_m_numRelocations;
-    protected $_m_headerSize;
-    protected $_m_minAllocation;
-    protected $_m_maxAllocation;
-    protected $_m_initialSs;
-    protected $_m_initialSp;
-    protected $_m_checksum;
-    protected $_m_initialIp;
-    protected $_m_initialCs;
-    protected $_m_ofsRelocations;
-    protected $_m_overlayId;
-    public function magic() { return $this->_m_magic; }
-    public function lastPageExtraBytes() { return $this->_m_lastPageExtraBytes; }
-    public function numPages() { return $this->_m_numPages; }
-    public function numRelocations() { return $this->_m_numRelocations; }
-    public function headerSize() { return $this->_m_headerSize; }
-    public function minAllocation() { return $this->_m_minAllocation; }
-    public function maxAllocation() { return $this->_m_maxAllocation; }
-    public function initialSs() { return $this->_m_initialSs; }
-    public function initialSp() { return $this->_m_initialSp; }
-    public function checksum() { return $this->_m_checksum; }
-    public function initialIp() { return $this->_m_initialIp; }
-    public function initialCs() { return $this->_m_initialCs; }
-    public function ofsRelocations() { return $this->_m_ofsRelocations; }
-    public function overlayId() { return $this->_m_overlayId; }
 }
 
-namespace \DosMz;
+namespace DosMz {
+    class Relocation extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-class Relocation extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
+        private function _read() {
+            $this->_m_ofs = $this->_io->readU2le();
+            $this->_m_seg = $this->_io->readU2le();
+        }
+        protected $_m_ofs;
+        protected $_m_seg;
+        public function ofs() { return $this->_m_ofs; }
+        public function seg() { return $this->_m_seg; }
     }
-
-    private function _read() {
-        $this->_m_ofs = $this->_io->readU2le();
-        $this->_m_seg = $this->_io->readU2le();
-    }
-    protected $_m_ofs;
-    protected $_m_seg;
-    public function ofs() { return $this->_m_ofs; }
-    public function seg() { return $this->_m_seg; }
 }

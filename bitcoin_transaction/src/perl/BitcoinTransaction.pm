@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package BitcoinTransaction;
@@ -116,7 +116,7 @@ sub _read {
     $self->{_raw_script_sig} = $self->{_io}->read_bytes($self->len_script());
     my $io__raw_script_sig = IO::KaitaiStruct::Stream->new($self->{_raw_script_sig});
     $self->{script_sig} = BitcoinTransaction::Vin::ScriptSignature->new($io__raw_script_sig, $self, $self->{_root});
-    $self->{end_of_vin} = $self->{_io}->ensure_fixed_contents(pack('C*', (255, 255, 255, 255)));
+    $self->{end_of_vin} = $self->{_io}->read_bytes(4);
 }
 
 sub txid {
@@ -246,12 +246,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sequence} = $self->{_io}->ensure_fixed_contents(pack('C*', (48)));
+    $self->{sequence} = $self->{_io}->read_bytes(1);
     $self->{len_sig} = $self->{_io}->read_u1();
-    $self->{sep_1} = $self->{_io}->ensure_fixed_contents(pack('C*', (2)));
+    $self->{sep_1} = $self->{_io}->read_bytes(1);
     $self->{len_sig_r} = $self->{_io}->read_u1();
     $self->{sig_r} = $self->{_io}->read_bytes($self->len_sig_r());
-    $self->{sep_2} = $self->{_io}->ensure_fixed_contents(pack('C*', (2)));
+    $self->{sep_2} = $self->{_io}->read_bytes(1);
     $self->{len_sig_s} = $self->{_io}->read_u1();
     $self->{sig_s} = $self->{_io}->read_bytes($self->len_sig_s());
 }

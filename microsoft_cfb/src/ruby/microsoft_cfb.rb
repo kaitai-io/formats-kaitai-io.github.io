@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class MicrosoftCfb < Kaitai::Struct::Struct
@@ -23,11 +23,14 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.ensure_fixed_contents([208, 207, 17, 224, 161, 177, 26, 225].pack('C*'))
-      @clsid = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
+      @signature = @_io.read_bytes(8)
+      raise Kaitai::Struct::ValidationNotEqualError.new([208, 207, 17, 224, 161, 177, 26, 225].pack('C*'), signature, _io, "/types/cfb_header/seq/0") if not signature == [208, 207, 17, 224, 161, 177, 26, 225].pack('C*')
+      @clsid = @_io.read_bytes(16)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), clsid, _io, "/types/cfb_header/seq/1") if not clsid == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       @version_minor = @_io.read_u2le
       @version_major = @_io.read_u2le
-      @byte_order = @_io.ensure_fixed_contents([254, 255].pack('C*'))
+      @byte_order = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), byte_order, _io, "/types/cfb_header/seq/4") if not byte_order == [254, 255].pack('C*')
       @sector_shift = @_io.read_u2le
       @mini_sector_shift = @_io.read_u2le
       @reserved1 = @_io.read_bytes(6)
@@ -237,8 +240,8 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(sector_size)
     @_raw_fat = @_io.read_bytes((header.size_fat * sector_size))
-    io = Kaitai::Struct::Stream.new(@_raw_fat)
-    @fat = FatEntries.new(io, self, @_root)
+    _io__raw_fat = Kaitai::Struct::Stream.new(@_raw_fat)
+    @fat = FatEntries.new(_io__raw_fat, self, @_root)
     @_io.seek(_pos)
     @fat
   end

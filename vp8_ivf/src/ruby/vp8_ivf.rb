@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -21,10 +21,12 @@ class Vp8Ivf < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic1 = @_io.ensure_fixed_contents([68, 75, 73, 70].pack('C*'))
+    @magic1 = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([68, 75, 73, 70].pack('C*'), magic1, _io, "/seq/0") if not magic1 == [68, 75, 73, 70].pack('C*')
     @version = @_io.read_u2le
     @len_header = @_io.read_u2le
-    @codec = @_io.ensure_fixed_contents([86, 80, 56, 48].pack('C*'))
+    @codec = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([86, 80, 56, 48].pack('C*'), codec, _io, "/seq/3") if not codec == [86, 80, 56, 48].pack('C*')
     @width = @_io.read_u2le
     @height = @_io.read_u2le
     @framerate = @_io.read_u4le

@@ -3,8 +3,8 @@
 require 'kaitai/struct/struct'
 require 'zlib'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Fallout2Dat < Kaitai::Struct::Struct
@@ -75,21 +75,39 @@ class Fallout2Dat < Kaitai::Struct::Struct
 
     def _read
       @name = Pstr.new(@_io, self, @_root)
-      @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u1)
+      @flags = Kaitai::Struct::Stream::resolve_enum(Fallout2Dat::COMPRESSION, @_io.read_u1)
       @size_unpacked = @_io.read_u4le
       @size_packed = @_io.read_u4le
       @offset = @_io.read_u4le
       self
     end
-    def contents
-      return @contents unless @contents.nil?
+    def contents_raw
+      return @contents_raw unless @contents_raw.nil?
+      if flags == :compression_none
+        io = _root._io
+        _pos = io.pos
+        io.seek(offset)
+        @contents_raw = io.read_bytes(size_unpacked)
+        io.seek(_pos)
+      end
+      @contents_raw
+    end
+    def contents_zlib
+      return @contents_zlib unless @contents_zlib.nil?
       if flags == :compression_zlib
         io = _root._io
         _pos = io.pos
         io.seek(offset)
-        @_raw_contents = io.read_bytes(size_packed)
-        @contents = Zlib::Inflate.inflate(@_raw_contents)
+        @_raw_contents_zlib = io.read_bytes(size_packed)
+        @contents_zlib = Zlib::Inflate.inflate(@_raw_contents_zlib)
         io.seek(_pos)
+      end
+      @contents_zlib
+    end
+    def contents
+      return @contents unless @contents.nil?
+      if  ((flags == :compression_zlib) || (flags == :compression_none)) 
+        @contents = (flags == :compression_zlib ? contents_zlib : contents_raw)
       end
       @contents
     end
@@ -98,7 +116,7 @@ class Fallout2Dat < Kaitai::Struct::Struct
     attr_reader :size_unpacked
     attr_reader :size_packed
     attr_reader :offset
-    attr_reader :_raw_contents
+    attr_reader :_raw_contents_zlib
   end
   def footer
     return @footer unless @footer.nil?

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class HeapsPak(KaitaiStruct):
     """
@@ -19,7 +20,7 @@ class HeapsPak(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
+        self.header = HeapsPak.Header(self._io, self, self._root)
 
     class Header(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -29,14 +30,18 @@ class HeapsPak(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.ensure_fixed_contents(b"\x50\x41\x4B")
+            self.magic1 = self._io.read_bytes(3)
+            if not self.magic1 == b"\x50\x41\x4B":
+                raise kaitaistruct.ValidationNotEqualError(b"\x50\x41\x4B", self.magic1, self._io, u"/types/header/seq/0")
             self.version = self._io.read_u1()
             self.len_header = self._io.read_u4le()
             self.len_data = self._io.read_u4le()
             self._raw_root_entry = self._io.read_bytes((self.len_header - 16))
-            io = KaitaiStream(BytesIO(self._raw_root_entry))
-            self.root_entry = self._root.Header.Entry(io, self, self._root)
-            self.magic2 = self._io.ensure_fixed_contents(b"\x44\x41\x54\x41")
+            _io__raw_root_entry = KaitaiStream(BytesIO(self._raw_root_entry))
+            self.root_entry = HeapsPak.Header.Entry(_io__raw_root_entry, self, self._root)
+            self.magic2 = self._io.read_bytes(4)
+            if not self.magic2 == b"\x44\x41\x54\x41":
+                raise kaitaistruct.ValidationNotEqualError(b"\x44\x41\x54\x41", self.magic2, self._io, u"/types/header/seq/5")
 
         class Entry(KaitaiStruct):
             """
@@ -52,12 +57,12 @@ class HeapsPak(KaitaiStruct):
             def _read(self):
                 self.len_name = self._io.read_u1()
                 self.name = (self._io.read_bytes(self.len_name)).decode(u"UTF-8")
-                self.flags = self._root.Header.Entry.Flags(self._io, self, self._root)
+                self.flags = HeapsPak.Header.Entry.Flags(self._io, self, self._root)
                 _on = self.flags.is_dir
                 if _on == True:
-                    self.body = self._root.Header.Dir(self._io, self, self._root)
+                    self.body = HeapsPak.Header.Dir(self._io, self, self._root)
                 elif _on == False:
-                    self.body = self._root.Header.File(self._io, self, self._root)
+                    self.body = HeapsPak.Header.File(self._io, self, self._root)
 
             class Flags(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -67,8 +72,8 @@ class HeapsPak(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.unused = self._io.read_bits_int(7)
-                    self.is_dir = self._io.read_bits_int(1) != 0
+                    self.unused = self._io.read_bits_int_be(7)
+                    self.is_dir = self._io.read_bits_int_be(1) != 0
 
 
 
@@ -108,7 +113,7 @@ class HeapsPak(KaitaiStruct):
                 self.num_entries = self._io.read_u4le()
                 self.entries = [None] * (self.num_entries)
                 for i in range(self.num_entries):
-                    self.entries[i] = self._root.Header.Entry(self._io, self, self._root)
+                    self.entries[i] = HeapsPak.Header.Entry(self._io, self, self._root)
 
 
 

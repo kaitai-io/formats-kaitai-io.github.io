@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ZxSpectrumTap(KaitaiStruct):
     """TAP files are used by emulators of ZX Spectrum computer (released in
@@ -39,7 +40,7 @@ class ZxSpectrumTap(KaitaiStruct):
         self.blocks = []
         i = 0
         while not self._io.is_eof():
-            self.blocks.append(self._root.Block(self._io, self, self._root))
+            self.blocks.append(ZxSpectrumTap.Block(self._io, self, self._root))
             i += 1
 
 
@@ -52,14 +53,14 @@ class ZxSpectrumTap(KaitaiStruct):
 
         def _read(self):
             self.len_block = self._io.read_u2le()
-            self.flag = self._root.FlagEnum(self._io.read_u1())
-            if  ((self.len_block == 19) and (self.flag == self._root.FlagEnum.header)) :
-                self.header = self._root.Header(self._io, self, self._root)
+            self.flag = KaitaiStream.resolve_enum(ZxSpectrumTap.FlagEnum, self._io.read_u1())
+            if  ((self.len_block == 19) and (self.flag == ZxSpectrumTap.FlagEnum.header)) :
+                self.header = ZxSpectrumTap.Header(self._io, self, self._root)
 
             if self.len_block == 19:
                 self.data = self._io.read_bytes((self.header.len_data + 4))
 
-            if self.flag == self._root.FlagEnum.data:
+            if self.flag == ZxSpectrumTap.FlagEnum.data:
                 self.headerless_data = self._io.read_bytes((self.len_block - 1))
 
 
@@ -96,18 +97,18 @@ class ZxSpectrumTap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header_type = self._root.HeaderTypeEnum(self._io.read_u1())
+            self.header_type = KaitaiStream.resolve_enum(ZxSpectrumTap.HeaderTypeEnum, self._io.read_u1())
             self.filename = KaitaiStream.bytes_strip_right(self._io.read_bytes(10), 32)
             self.len_data = self._io.read_u2le()
             _on = self.header_type
-            if _on == self._root.HeaderTypeEnum.program:
-                self.params = self._root.ProgramParams(self._io, self, self._root)
-            elif _on == self._root.HeaderTypeEnum.num_array:
-                self.params = self._root.ArrayParams(self._io, self, self._root)
-            elif _on == self._root.HeaderTypeEnum.char_array:
-                self.params = self._root.ArrayParams(self._io, self, self._root)
-            elif _on == self._root.HeaderTypeEnum.bytes:
-                self.params = self._root.BytesParams(self._io, self, self._root)
+            if _on == ZxSpectrumTap.HeaderTypeEnum.program:
+                self.params = ZxSpectrumTap.ProgramParams(self._io, self, self._root)
+            elif _on == ZxSpectrumTap.HeaderTypeEnum.num_array:
+                self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
+            elif _on == ZxSpectrumTap.HeaderTypeEnum.char_array:
+                self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
+            elif _on == ZxSpectrumTap.HeaderTypeEnum.bytes:
+                self.params = ZxSpectrumTap.BytesParams(self._io, self, self._root)
             self.checksum = self._io.read_u1()
 
 
@@ -121,7 +122,9 @@ class ZxSpectrumTap(KaitaiStruct):
         def _read(self):
             self.reserved = self._io.read_u1()
             self.var_name = self._io.read_u1()
-            self.reserved1 = self._io.ensure_fixed_contents(b"\x00\x80")
+            self.reserved1 = self._io.read_bytes(2)
+            if not self.reserved1 == b"\x00\x80":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x80", self.reserved1, self._io, u"/types/array_params/seq/2")
 
 
 

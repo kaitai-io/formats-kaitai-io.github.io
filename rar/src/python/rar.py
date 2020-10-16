@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Rar(KaitaiStruct):
     """RAR is a archive format used by popular proprietary RAR archiver,
@@ -56,15 +57,15 @@ class Rar(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._root.MagicSignature(self._io, self, self._root)
+        self.magic = Rar.MagicSignature(self._io, self, self._root)
         self.blocks = []
         i = 0
         while not self._io.is_eof():
             _on = self.magic.version
             if _on == 0:
-                self.blocks.append(self._root.Block(self._io, self, self._root))
+                self.blocks.append(Rar.Block(self._io, self, self._root))
             elif _on == 1:
-                self.blocks.append(self._root.BlockV5(self._io, self, self._root))
+                self.blocks.append(Rar.BlockV5(self._io, self, self._root))
             i += 1
 
 
@@ -92,17 +93,17 @@ class Rar(KaitaiStruct):
 
         def _read(self):
             self.crc16 = self._io.read_u2le()
-            self.block_type = self._root.BlockTypes(self._io.read_u1())
+            self.block_type = KaitaiStream.resolve_enum(Rar.BlockTypes, self._io.read_u1())
             self.flags = self._io.read_u2le()
             self.block_size = self._io.read_u2le()
             if self.has_add:
                 self.add_size = self._io.read_u4le()
 
             _on = self.block_type
-            if _on == self._root.BlockTypes.file_header:
+            if _on == Rar.BlockTypes.file_header:
                 self._raw_body = self._io.read_bytes(self.body_size)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.BlockFileHeader(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Rar.BlockFileHeader(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.body_size)
             if self.has_add:
@@ -144,11 +145,11 @@ class Rar(KaitaiStruct):
 
         def _read(self):
             self.low_unp_size = self._io.read_u4le()
-            self.host_os = self._root.Oses(self._io.read_u1())
+            self.host_os = KaitaiStream.resolve_enum(Rar.Oses, self._io.read_u1())
             self.file_crc32 = self._io.read_u4le()
-            self.file_time = self._root.DosTime(self._io, self, self._root)
+            self.file_time = Rar.DosTime(self._io, self, self._root)
             self.rar_version = self._io.read_u1()
-            self.method = self._root.Methods(self._io.read_u1())
+            self.method = KaitaiStream.resolve_enum(Rar.Methods, self._io.read_u1())
             self.name_size = self._io.read_u2le()
             self.attr = self._io.read_u4le()
             if (self._parent.flags & 256) != 0:
@@ -176,10 +177,14 @@ class Rar(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.ensure_fixed_contents(b"\x52\x61\x72\x21\x1A\x07")
+            self.magic1 = self._io.read_bytes(6)
+            if not self.magic1 == b"\x52\x61\x72\x21\x1A\x07":
+                raise kaitaistruct.ValidationNotEqualError(b"\x52\x61\x72\x21\x1A\x07", self.magic1, self._io, u"/types/magic_signature/seq/0")
             self.version = self._io.read_u1()
             if self.version == 1:
-                self.magic3 = self._io.ensure_fixed_contents(b"\x00")
+                self.magic3 = self._io.read_bytes(1)
+                if not self.magic3 == b"\x00":
+                    raise kaitaistruct.ValidationNotEqualError(b"\x00", self.magic3, self._io, u"/types/magic_signature/seq/2")
 
 
 

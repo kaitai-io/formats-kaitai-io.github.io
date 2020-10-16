@@ -199,6 +199,12 @@ namespace Kaitai
             _size = m_io.ReadU4le();
             _libraryIdStamp = m_io.ReadU4le();
             switch (Code) {
+            case Sections.Geometry: {
+                __raw_body = m_io.ReadBytes(Size);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new ListWithHeader(io___raw_body, this, m_root);
+                break;
+            }
             case Sections.TextureDictionary: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -211,25 +217,19 @@ namespace Kaitai
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
-            case Sections.Clump: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
             case Sections.TextureNative: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
-            case Sections.FrameList: {
+            case Sections.Clump: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
-            case Sections.Geometry: {
+            case Sections.FrameList: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
@@ -737,10 +737,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _code = m_io.EnsureFixedContents(new byte[] { 1, 0, 0, 0 });
+                _code = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Code, new byte[] { 1, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 1, 0, 0, 0 }, Code, M_Io, "/types/list_with_header/seq/0");
+                }
                 _headerSize = m_io.ReadU4le();
                 _libraryIdStamp = m_io.ReadU4le();
                 switch (M_Parent.Code) {
+                case RenderwareBinaryStream.Sections.Geometry: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructGeometry(io___raw_header, this, m_root);
+                    break;
+                }
                 case RenderwareBinaryStream.Sections.TextureDictionary: {
                     __raw_header = m_io.ReadBytes(HeaderSize);
                     var io___raw_header = new KaitaiStream(__raw_header);
@@ -763,12 +773,6 @@ namespace Kaitai
                     __raw_header = m_io.ReadBytes(HeaderSize);
                     var io___raw_header = new KaitaiStream(__raw_header);
                     _header = new StructFrameList(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.Geometry: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructGeometry(io___raw_header, this, m_root);
                     break;
                 }
                 default: {

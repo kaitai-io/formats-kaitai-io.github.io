@@ -38,7 +38,10 @@ var S3m = (function() {
   }
   S3m.prototype._read = function() {
     this.songName = KaitaiStream.bytesTerminate(this._io.readBytes(28), 0, false);
-    this.magic1 = this._io.ensureFixedContents([26]);
+    this.magic1 = this._io.readBytes(1);
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, [26]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([26], this.magic1, this._io, "/seq/1");
+    }
     this.fileType = this._io.readU1();
     this.reserved1 = this._io.readBytes(2);
     this.numOrders = this._io.readU2le();
@@ -47,12 +50,15 @@ var S3m = (function() {
     this.flags = this._io.readU2le();
     this.version = this._io.readU2le();
     this.samplesFormat = this._io.readU2le();
-    this.magic2 = this._io.ensureFixedContents([83, 67, 82, 77]);
+    this.magic2 = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, [83, 67, 82, 77]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([83, 67, 82, 77], this.magic2, this._io, "/seq/10");
+    }
     this.globalVolume = this._io.readU1();
     this.initialSpeed = this._io.readU1();
     this.initialTempo = this._io.readU1();
-    this.isStereo = this._io.readBitsInt(1) != 0;
-    this.masterVolume = this._io.readBitsInt(7);
+    this.isStereo = this._io.readBitsIntBe(1) != 0;
+    this.masterVolume = this._io.readBitsIntBe(7);
     this._io.alignToByte();
     this.ultraClickRemoval = this._io.readU1();
     this.hasCustomPan = this._io.readU1();
@@ -88,10 +94,10 @@ var S3m = (function() {
       this._read();
     }
     ChannelPan.prototype._read = function() {
-      this.reserved1 = this._io.readBitsInt(2);
-      this.hasCustomPan = this._io.readBitsInt(1) != 0;
-      this.reserved2 = this._io.readBitsInt(1) != 0;
-      this.pan = this._io.readBitsInt(4);
+      this.reserved1 = this._io.readBitsIntBe(2);
+      this.hasCustomPan = this._io.readBitsIntBe(1) != 0;
+      this.reserved2 = this._io.readBitsIntBe(1) != 0;
+      this.pan = this._io.readBitsIntBe(4);
     }
 
     /**
@@ -112,10 +118,10 @@ var S3m = (function() {
       this._read();
     }
     PatternCell.prototype._read = function() {
-      this.hasFx = this._io.readBitsInt(1) != 0;
-      this.hasVolume = this._io.readBitsInt(1) != 0;
-      this.hasNoteAndInstrument = this._io.readBitsInt(1) != 0;
-      this.channelNum = this._io.readBitsInt(5);
+      this.hasFx = this._io.readBitsIntBe(1) != 0;
+      this.hasVolume = this._io.readBitsIntBe(1) != 0;
+      this.hasNoteAndInstrument = this._io.readBitsIntBe(1) != 0;
+      this.channelNum = this._io.readBitsIntBe(5);
       this._io.alignToByte();
       if (this.hasNoteAndInstrument) {
         this.note = this._io.readU1();
@@ -166,8 +172,8 @@ var S3m = (function() {
       this._read();
     }
     Channel.prototype._read = function() {
-      this.isDisabled = this._io.readBitsInt(1) != 0;
-      this.chType = this._io.readBitsInt(7);
+      this.isDisabled = this._io.readBitsIntBe(1) != 0;
+      this.chType = this._io.readBitsIntBe(7);
     }
 
     /**
@@ -315,7 +321,10 @@ var S3m = (function() {
       this.tuningHz = this._io.readU4le();
       this.reserved2 = this._io.readBytes(12);
       this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), 0, false);
-      this.magic = this._io.ensureFixedContents([83, 67, 82, 83]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 67, 82, 83]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([83, 67, 82, 83], this.magic, this._io, "/types/instrument/seq/6");
+      }
     }
 
     var Sampled = Instrument.Sampled = (function() {
@@ -368,7 +377,10 @@ var S3m = (function() {
         this._read();
       }
       Adlib.prototype._read = function() {
-        this.reserved1 = this._io.ensureFixedContents([0, 0, 0]);
+        this.reserved1 = this._io.readBytes(3);
+        if (!((KaitaiStream.byteArrayCompare(this.reserved1, [0, 0, 0]) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError([0, 0, 0], this.reserved1, this._io, "/types/instrument/types/adlib/seq/0");
+        }
         this._unnamed1 = this._io.readBytes(16);
       }
 

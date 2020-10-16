@@ -138,11 +138,6 @@ section#format-index .row {
                 <a href="index.html" title="rtcp network payload (single udp packet) parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="rtcp network payload (single udp packet) parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="rtcp network payload (single udp packet) parsing C# library">C#</a></li>
@@ -346,8 +341,8 @@ section#format-index .row {
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_numSsrc</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_brExp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
-                <span class="n">_brMantissa</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">18</span><span class="p">);</span>
+                <span class="n">_brExp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
+                <span class="n">_brMantissa</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">18</span><span class="p">);</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="n">_ssrcList</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumSsrc</span><span class="p">));</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumSsrc</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
@@ -487,17 +482,23 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
-                <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_subtype</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+                <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_subtype</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="n">_payloadType</span> <span class="p">=</span> <span class="p">((</span><span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">PayloadType</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Sdes</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Sr</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">4</span> <span class="p">*</span> <span class="n">Length</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SdesPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SrPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Psfb</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">4</span> <span class="p">*</span> <span class="n">Length</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PsfbPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Rr</span><span class="p">:</span> <span class="p">{</span>
@@ -512,16 +513,10 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RtpfbPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Psfb</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Sdes</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">4</span> <span class="p">*</span> <span class="n">Length</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PsfbPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">RtcpPayload</span><span class="p">.</span><span class="n">PayloadType</span><span class="p">.</span><span class="n">Sr</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">4</span> <span class="p">*</span> <span class="n">Length</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SrPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SdesPacket</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -945,18 +940,18 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_t</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_t</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">T</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_s2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                    <span class="n">_s2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">T</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_s1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="n">_s1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">T</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_rle</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">13</span><span class="p">);</span>
+                    <span class="n">_rle</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">13</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">T</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_symbolList</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">14</span><span class="p">);</span>
+                    <span class="n">_symbolList</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">14</span><span class="p">);</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_s</span><span class="p">;</span>

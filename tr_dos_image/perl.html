@@ -156,11 +156,6 @@ empty (contain no file data) they can be omitted.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="TR-DOS flat-file disk image parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="TR-DOS flat-file disk image parsing C# library">C#</a></li>
                 
                 
@@ -235,7 +230,7 @@ empty (contain no file data) they can be omitted.</p>
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
 <span class="k">package</span> <span class="nn">TrDosImage</span><span class="p">;</span>
@@ -324,14 +319,14 @@ empty (contain no file data) they can be omitted.</p>
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">catalog_end</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">catalog_end</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">unused</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">224</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">first_free_sector_sector</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">first_free_sector_track</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disk_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_files</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_free_sectors</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tr_dos_id</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">16</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tr_dos_id</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">unused_2</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">password</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">unused_3</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>

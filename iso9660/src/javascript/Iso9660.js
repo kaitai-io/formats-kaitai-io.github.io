@@ -45,12 +45,21 @@ var Iso9660 = (function() {
       this._read();
     }
     VolDescPrimary.prototype._read = function() {
-      this.unused1 = this._io.ensureFixedContents([0]);
+      this.unused1 = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.unused1, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.unused1, this._io, "/types/vol_desc_primary/seq/0");
+      }
       this.systemId = KaitaiStream.bytesToStr(this._io.readBytes(32), "UTF-8");
       this.volumeId = KaitaiStream.bytesToStr(this._io.readBytes(32), "UTF-8");
-      this.unused2 = this._io.ensureFixedContents([0, 0, 0, 0, 0, 0, 0, 0]);
+      this.unused2 = this._io.readBytes(8);
+      if (!((KaitaiStream.byteArrayCompare(this.unused2, [0, 0, 0, 0, 0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0], this.unused2, this._io, "/types/vol_desc_primary/seq/3");
+      }
       this.volSpaceSize = new U4bi(this._io, this, this._root);
-      this.unused3 = this._io.ensureFixedContents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      this.unused3 = this._io.readBytes(32);
+      if (!((KaitaiStream.byteArrayCompare(this.unused3, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], this.unused3, this._io, "/types/vol_desc_primary/seq/5");
+      }
       this.volSetSize = new U2bi(this._io, this, this._root);
       this.volSeqNum = new U2bi(this._io, this, this._root);
       this.logicalBlockSize = new U2bi(this._io, this, this._root);
@@ -161,7 +170,10 @@ var Iso9660 = (function() {
     }
     VolDesc.prototype._read = function() {
       this.type = this._io.readU1();
-      this.magic = this._io.ensureFixedContents([67, 68, 48, 48, 49]);
+      this.magic = this._io.readBytes(5);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [67, 68, 48, 48, 49]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([67, 68, 48, 48, 49], this.magic, this._io, "/types/vol_desc/seq/1");
+      }
       this.version = this._io.readU1();
       if (this.type == 0) {
         this.volDescBootRecord = new VolDescBootRecord(this._io, this, this._root);

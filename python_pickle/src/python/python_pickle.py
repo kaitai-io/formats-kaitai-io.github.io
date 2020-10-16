@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class PythonPickle(KaitaiStruct):
     """Python Pickle format serializes Python objects to a byte stream, as a sequence
@@ -118,9 +119,9 @@ class PythonPickle(KaitaiStruct):
         self.ops = []
         i = 0
         while True:
-            _ = self._root.Op(self._io, self, self._root)
+            _ = PythonPickle.Op(self._io, self, self._root)
             self.ops.append(_)
-            if _.code == self._root.Opcode.stop:
+            if _.code == PythonPickle.Opcode.stop:
                 break
             i += 1
 
@@ -374,8 +375,8 @@ class PythonPickle(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.val1 = self._root.StringnlNoescape(self._io, self, self._root)
-            self.val2 = self._root.StringnlNoescape(self._io, self, self._root)
+            self.val1 = PythonPickle.StringnlNoescape(self._io, self, self._root)
+            self.val2 = PythonPickle.StringnlNoescape(self._io, self, self._root)
 
 
     class String4(KaitaiStruct):
@@ -409,144 +410,144 @@ class PythonPickle(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._root.Opcode(self._io.read_u1())
+            self.code = KaitaiStream.resolve_enum(PythonPickle.Opcode, self._io.read_u1())
             _on = self.code
-            if _on == self._root.Opcode.list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext2:
+            if _on == PythonPickle.Opcode.ext4:
+                self.arg = self._io.read_u4le()
+            elif _on == PythonPickle.Opcode.tuple1:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.setitem:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.readonly_buffer:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.stop:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.ext2:
                 self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.readonly_buffer:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.stop:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binunicode:
-                self.arg = self._root.Unicodestring4(self._io, self, self._root)
-            elif _on == self._root.Opcode.put:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.newfalse:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long1:
-                self.arg = self._root.Long1(self._io, self, self._root)
-            elif _on == self._root.Opcode.unicode:
-                self.arg = self._root.Unicodestringnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.mark:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.persid:
-                self.arg = self._root.StringnlNoescape(self._io, self, self._root)
-            elif _on == self._root.Opcode.stack_global:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binint:
-                self.arg = self._io.read_s4le()
-            elif _on == self._root.Opcode.binput:
+            elif _on == PythonPickle.Opcode.empty_tuple:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.newtrue:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.long:
+                self.arg = PythonPickle.DecimalnlLong(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.newobj:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.bytearray8:
+                self.arg = PythonPickle.Bytearray8(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.put:
+                self.arg = PythonPickle.DecimalnlShort(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.stack_global:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.pop_mark:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.append:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.newfalse:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binpersid:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.build:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.empty_dict:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.tuple2:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.long4:
+                self.arg = PythonPickle.Long4(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.next_buffer:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.appends:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binbytes:
+                self.arg = PythonPickle.Bytes4(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.dup:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.list:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.proto:
                 self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.binint1:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.binint2:
-                self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.tuple:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binstring:
-                self.arg = self._root.String1(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_set:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.string:
-                self.arg = self._root.Stringnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binget:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.append:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.pop_mark:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.get:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.newobj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.reduce:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binbytes:
-                self.arg = self._root.Bytes4(self._io, self, self._root)
-            elif _on == self._root.Opcode.next_buffer:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binbytes8:
-                self.arg = self._root.Bytes8(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitem:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.frame:
+            elif _on == PythonPickle.Opcode.pop:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.frame:
                 self.arg = self._io.read_u8le()
-            elif _on == self._root.Opcode.float:
-                self.arg = self._root.Floatnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.binunicode8:
-                self.arg = self._root.Unicodestring8(self._io, self, self._root)
-            elif _on == self._root.Opcode.int:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.long_binput:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.empty_tuple:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long:
-                self.arg = self._root.DecimalnlLong(self._io, self, self._root)
-            elif _on == self._root.Opcode.frozenset:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.global:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.obj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.additems:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple1:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitems:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.none:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.build:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext4:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.newobj_ex:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binfloat:
+            elif _on == PythonPickle.Opcode.string:
+                self.arg = PythonPickle.Stringnl(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binunicode:
+                self.arg = PythonPickle.Unicodestring4(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.float:
+                self.arg = PythonPickle.Floatnl(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.reduce:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binput:
+                self.arg = self._io.read_u1()
+            elif _on == PythonPickle.Opcode.memoize:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.persid:
+                self.arg = PythonPickle.StringnlNoescape(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.ext1:
+                self.arg = self._io.read_u1()
+            elif _on == PythonPickle.Opcode.none:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.short_binunicode:
+                self.arg = PythonPickle.Unicodestring1(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.obj:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binfloat:
                 self.arg = self._io.read_f8be()
-            elif _on == self._root.Opcode.dup:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.bytearray8:
-                self.arg = self._root.Bytearray8(self._io, self, self._root)
-            elif _on == self._root.Opcode.long4:
-                self.arg = self._root.Long4(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binunicode:
-                self.arg = self._root.Unicodestring1(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple3:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binbytes:
-                self.arg = self._root.Bytes1(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext1:
+            elif _on == PythonPickle.Opcode.newobj_ex:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.empty_list:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.tuple:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binunicode8:
+                self.arg = PythonPickle.Unicodestring8(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binget:
                 self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.appends:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.inst:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.binpersid:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.memoize:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.proto:
+            elif _on == PythonPickle.Opcode.global:
+                self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.dict:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binstring:
+                self.arg = PythonPickle.String4(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.setitems:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binint2:
+                self.arg = self._io.read_u2le()
+            elif _on == PythonPickle.Opcode.binbytes8:
+                self.arg = PythonPickle.Bytes8(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binint1:
                 self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.newtrue:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binstring:
-                self.arg = self._root.String4(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple2:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.pop:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long_binget:
+            elif _on == PythonPickle.Opcode.inst:
+                self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.long_binget:
                 self.arg = self._io.read_u4le()
+            elif _on == PythonPickle.Opcode.long_binput:
+                self.arg = self._io.read_u4le()
+            elif _on == PythonPickle.Opcode.int:
+                self.arg = PythonPickle.DecimalnlShort(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.binint:
+                self.arg = self._io.read_s4le()
+            elif _on == PythonPickle.Opcode.unicode:
+                self.arg = PythonPickle.Unicodestringnl(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.long1:
+                self.arg = PythonPickle.Long1(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.short_binstring:
+                self.arg = PythonPickle.String1(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.mark:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.frozenset:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.tuple3:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.additems:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.get:
+                self.arg = PythonPickle.DecimalnlShort(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.empty_set:
+                self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.short_binbytes:
+                self.arg = PythonPickle.Bytes1(self._io, self, self._root)
 
 
     class Floatnl(KaitaiStruct):

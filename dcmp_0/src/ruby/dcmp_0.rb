@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -82,16 +82,16 @@ class Dcmp0 < Kaitai::Struct::Struct
     def _read
       @tag = @_io.read_u1
       case ( ((tag >= 0) && (tag <= 31))  ? :tag_kind_literal : ( ((tag >= 32) && (tag <= 74))  ? :tag_kind_backreference : ( ((tag >= 75) && (tag <= 253))  ? :tag_kind_table_lookup : (tag == 254 ? :tag_kind_extended : (tag == 255 ? :tag_kind_end : :tag_kind_invalid)))))
-      when :tag_kind_end
-        @body = EndBody.new(@_io, self, @_root)
-      when :tag_kind_literal
-        @body = LiteralBody.new(@_io, self, @_root, tag)
-      when :tag_kind_backreference
-        @body = BackreferenceBody.new(@_io, self, @_root, tag)
-      when :tag_kind_table_lookup
-        @body = TableLookupBody.new(@_io, self, @_root, tag)
       when :tag_kind_extended
         @body = ExtendedBody.new(@_io, self, @_root)
+      when :tag_kind_literal
+        @body = LiteralBody.new(@_io, self, @_root, tag)
+      when :tag_kind_end
+        @body = EndBody.new(@_io, self, @_root)
+      when :tag_kind_table_lookup
+        @body = TableLookupBody.new(@_io, self, @_root, tag)
+      when :tag_kind_backreference
+        @body = BackreferenceBody.new(@_io, self, @_root, tag)
       end
       self
     end

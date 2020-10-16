@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -19,7 +19,8 @@ class PcxDcx < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([177, 104, 222, 58].pack('C*'))
+    @magic = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([177, 104, 222, 58].pack('C*'), magic, _io, "/seq/0") if not magic == [177, 104, 222, 58].pack('C*')
     @files = []
     i = 0
     begin

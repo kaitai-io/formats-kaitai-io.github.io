@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -77,8 +77,10 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic1 = @_io.ensure_fixed_contents([77, 68, 77, 80].pack('C*'))
-    @magic2 = @_io.ensure_fixed_contents([147, 167].pack('C*'))
+    @magic1 = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([77, 68, 77, 80].pack('C*'), magic1, _io, "/seq/0") if not magic1 == [77, 68, 77, 80].pack('C*')
+    @magic2 = @_io.read_bytes(2)
+    raise Kaitai::Struct::ValidationNotEqualError.new([147, 167].pack('C*'), magic2, _io, "/seq/1") if not magic2 == [147, 167].pack('C*')
     @version = @_io.read_u2le
     @num_streams = @_io.read_u4le
     @ofs_streams = @_io.read_u4le
@@ -297,7 +299,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
     end
 
     def _read
-      @stream_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPES, @_io.read_u4le)
+      @stream_type = Kaitai::Struct::Stream::resolve_enum(WindowsMinidump::STREAM_TYPES, @_io.read_u4le)
       @len_data = @_io.read_u4le
       @ofs_data = @_io.read_u4le
       self
@@ -307,26 +309,26 @@ class WindowsMinidump < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(ofs_data)
       case stream_type
-      when :stream_types_misc_info
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MiscInfo.new(io, self, @_root)
-      when :stream_types_exception
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ExceptionStream.new(io, self, @_root)
       when :stream_types_memory_list
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MemoryList.new(io, self, @_root)
-      when :stream_types_system_info
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = MemoryList.new(_io__raw_data, self, @_root)
+      when :stream_types_misc_info
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SystemInfo.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = MiscInfo.new(_io__raw_data, self, @_root)
       when :stream_types_thread_list
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ThreadList.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ThreadList.new(_io__raw_data, self, @_root)
+      when :stream_types_exception
+        @_raw_data = @_io.read_bytes(len_data)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ExceptionStream.new(_io__raw_data, self, @_root)
+      when :stream_types_system_info
+        @_raw_data = @_io.read_bytes(len_data)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SystemInfo.new(_io__raw_data, self, @_root)
       else
         @data = @_io.read_bytes(len_data)
       end

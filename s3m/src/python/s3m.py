@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class S3m(KaitaiStruct):
     """Scream Tracker 3 module is a tracker music file format that, as all
@@ -36,7 +37,9 @@ class S3m(KaitaiStruct):
 
     def _read(self):
         self.song_name = KaitaiStream.bytes_terminate(self._io.read_bytes(28), 0, False)
-        self.magic1 = self._io.ensure_fixed_contents(b"\x1A")
+        self.magic1 = self._io.read_bytes(1)
+        if not self.magic1 == b"\x1A":
+            raise kaitaistruct.ValidationNotEqualError(b"\x1A", self.magic1, self._io, u"/seq/1")
         self.file_type = self._io.read_u1()
         self.reserved1 = self._io.read_bytes(2)
         self.num_orders = self._io.read_u2le()
@@ -45,12 +48,14 @@ class S3m(KaitaiStruct):
         self.flags = self._io.read_u2le()
         self.version = self._io.read_u2le()
         self.samples_format = self._io.read_u2le()
-        self.magic2 = self._io.ensure_fixed_contents(b"\x53\x43\x52\x4D")
+        self.magic2 = self._io.read_bytes(4)
+        if not self.magic2 == b"\x53\x43\x52\x4D":
+            raise kaitaistruct.ValidationNotEqualError(b"\x53\x43\x52\x4D", self.magic2, self._io, u"/seq/10")
         self.global_volume = self._io.read_u1()
         self.initial_speed = self._io.read_u1()
         self.initial_tempo = self._io.read_u1()
-        self.is_stereo = self._io.read_bits_int(1) != 0
-        self.master_volume = self._io.read_bits_int(7)
+        self.is_stereo = self._io.read_bits_int_be(1) != 0
+        self.master_volume = self._io.read_bits_int_be(7)
         self._io.align_to_byte()
         self.ultra_click_removal = self._io.read_u1()
         self.has_custom_pan = self._io.read_u1()
@@ -58,21 +63,21 @@ class S3m(KaitaiStruct):
         self.ofs_special = self._io.read_u2le()
         self.channels = [None] * (32)
         for i in range(32):
-            self.channels[i] = self._root.Channel(self._io, self, self._root)
+            self.channels[i] = S3m.Channel(self._io, self, self._root)
 
         self.orders = self._io.read_bytes(self.num_orders)
         self.instruments = [None] * (self.num_instruments)
         for i in range(self.num_instruments):
-            self.instruments[i] = self._root.InstrumentPtr(self._io, self, self._root)
+            self.instruments[i] = S3m.InstrumentPtr(self._io, self, self._root)
 
         self.patterns = [None] * (self.num_patterns)
         for i in range(self.num_patterns):
-            self.patterns[i] = self._root.PatternPtr(self._io, self, self._root)
+            self.patterns[i] = S3m.PatternPtr(self._io, self, self._root)
 
         if self.has_custom_pan == 252:
             self.channel_pans = [None] * (32)
             for i in range(32):
-                self.channel_pans[i] = self._root.ChannelPan(self._io, self, self._root)
+                self.channel_pans[i] = S3m.ChannelPan(self._io, self, self._root)
 
 
 
@@ -84,10 +89,10 @@ class S3m(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved1 = self._io.read_bits_int(2)
-            self.has_custom_pan = self._io.read_bits_int(1) != 0
-            self.reserved2 = self._io.read_bits_int(1) != 0
-            self.pan = self._io.read_bits_int(4)
+            self.reserved1 = self._io.read_bits_int_be(2)
+            self.has_custom_pan = self._io.read_bits_int_be(1) != 0
+            self.reserved2 = self._io.read_bits_int_be(1) != 0
+            self.pan = self._io.read_bits_int_be(4)
 
 
     class PatternCell(KaitaiStruct):
@@ -98,10 +103,10 @@ class S3m(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.has_fx = self._io.read_bits_int(1) != 0
-            self.has_volume = self._io.read_bits_int(1) != 0
-            self.has_note_and_instrument = self._io.read_bits_int(1) != 0
-            self.channel_num = self._io.read_bits_int(5)
+            self.has_fx = self._io.read_bits_int_be(1) != 0
+            self.has_volume = self._io.read_bits_int_be(1) != 0
+            self.has_note_and_instrument = self._io.read_bits_int_be(1) != 0
+            self.channel_num = self._io.read_bits_int_be(5)
             self._io.align_to_byte()
             if self.has_note_and_instrument:
                 self.note = self._io.read_u1()
@@ -131,7 +136,7 @@ class S3m(KaitaiStruct):
             self.cells = []
             i = 0
             while not self._io.is_eof():
-                self.cells.append(self._root.PatternCell(self._io, self, self._root))
+                self.cells.append(S3m.PatternCell(self._io, self, self._root))
                 i += 1
 
 
@@ -144,8 +149,8 @@ class S3m(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.is_disabled = self._io.read_bits_int(1) != 0
-            self.ch_type = self._io.read_bits_int(7)
+            self.is_disabled = self._io.read_bits_int_be(1) != 0
+            self.ch_type = self._io.read_bits_int_be(7)
 
 
     class SwappedU3(KaitaiStruct):
@@ -179,8 +184,8 @@ class S3m(KaitaiStruct):
         def _read(self):
             self.size = self._io.read_u2le()
             self._raw_body = self._io.read_bytes((self.size - 2))
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.PatternCells(io, self, self._root)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = S3m.PatternCells(_io__raw_body, self, self._root)
 
 
     class PatternPtr(KaitaiStruct):
@@ -200,7 +205,7 @@ class S3m(KaitaiStruct):
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
-            self._m_body = self._root.Pattern(self._io, self, self._root)
+            self._m_body = S3m.Pattern(self._io, self, self._root)
             self._io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
 
@@ -222,7 +227,7 @@ class S3m(KaitaiStruct):
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
-            self._m_body = self._root.Instrument(self._io, self, self._root)
+            self._m_body = S3m.Instrument(self._io, self, self._root)
             self._io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
 
@@ -244,17 +249,19 @@ class S3m(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.Instrument.InstTypes(self._io.read_u1())
+            self.type = KaitaiStream.resolve_enum(S3m.Instrument.InstTypes, self._io.read_u1())
             self.filename = KaitaiStream.bytes_terminate(self._io.read_bytes(12), 0, False)
             _on = self.type
-            if _on == self._root.Instrument.InstTypes.sample:
-                self.body = self._root.Instrument.Sampled(self._io, self, self._root)
+            if _on == S3m.Instrument.InstTypes.sample:
+                self.body = S3m.Instrument.Sampled(self._io, self, self._root)
             else:
-                self.body = self._root.Instrument.Adlib(self._io, self, self._root)
+                self.body = S3m.Instrument.Adlib(self._io, self, self._root)
             self.tuning_hz = self._io.read_u4le()
             self.reserved2 = self._io.read_bytes(12)
             self.sample_name = KaitaiStream.bytes_terminate(self._io.read_bytes(28), 0, False)
-            self.magic = self._io.ensure_fixed_contents(b"\x53\x43\x52\x53")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x53\x43\x52\x53":
+                raise kaitaistruct.ValidationNotEqualError(b"\x53\x43\x52\x53", self.magic, self._io, u"/types/instrument/seq/6")
 
         class Sampled(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -264,7 +271,7 @@ class S3m(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.paraptr_sample = self._root.SwappedU3(self._io, self, self._root)
+                self.paraptr_sample = S3m.SwappedU3(self._io, self, self._root)
                 self.len_sample = self._io.read_u4le()
                 self.loop_begin = self._io.read_u4le()
                 self.loop_end = self._io.read_u4le()
@@ -293,7 +300,9 @@ class S3m(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.ensure_fixed_contents(b"\x00\x00\x00")
+                self.reserved1 = self._io.read_bytes(3)
+                if not self.reserved1 == b"\x00\x00\x00":
+                    raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00", self.reserved1, self._io, u"/types/instrument/types/adlib/seq/0")
                 self._unnamed1 = self._io.read_bytes(16)
 
 

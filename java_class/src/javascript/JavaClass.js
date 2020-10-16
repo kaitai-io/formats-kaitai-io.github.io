@@ -22,7 +22,10 @@ var JavaClass = (function() {
     this._read();
   }
   JavaClass.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([202, 254, 186, 190]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [202, 254, 186, 190]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([202, 254, 186, 190], this.magic, this._io, "/seq/0");
+    }
     this.versionMinor = this._io.readU2be();
     this.versionMajor = this._io.readU2be();
     this.constantPoolCount = this._io.readU2be();
@@ -729,8 +732,32 @@ var JavaClass = (function() {
     ConstantPoolEntry.prototype._read = function() {
       this.tag = this._io.readU1();
       switch (this.tag) {
+      case JavaClass.ConstantPoolEntry.TagEnum.INTERFACE_METHOD_REF:
+        this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.CLASS_TYPE:
+        this.cpInfo = new ClassCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.UTF8:
+        this.cpInfo = new Utf8CpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_TYPE:
+        this.cpInfo = new MethodTypeCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.INTEGER:
+        this.cpInfo = new IntegerCpInfo(this._io, this, this._root);
+        break;
       case JavaClass.ConstantPoolEntry.TagEnum.STRING:
         this.cpInfo = new StringCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.FLOAT:
+        this.cpInfo = new FloatCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.LONG:
+        this.cpInfo = new LongCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_REF:
+        this.cpInfo = new MethodRefCpInfo(this._io, this, this._root);
         break;
       case JavaClass.ConstantPoolEntry.TagEnum.DOUBLE:
         this.cpInfo = new DoubleCpInfo(this._io, this, this._root);
@@ -738,38 +765,14 @@ var JavaClass = (function() {
       case JavaClass.ConstantPoolEntry.TagEnum.INVOKE_DYNAMIC:
         this.cpInfo = new InvokeDynamicCpInfo(this._io, this, this._root);
         break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_HANDLE:
-        this.cpInfo = new MethodHandleCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.CLASS_TYPE:
-        this.cpInfo = new ClassCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_REF:
-        this.cpInfo = new MethodRefCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.LONG:
-        this.cpInfo = new LongCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.NAME_AND_TYPE:
-        this.cpInfo = new NameAndTypeCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.FLOAT:
-        this.cpInfo = new FloatCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.INTERFACE_METHOD_REF:
-        this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.INTEGER:
-        this.cpInfo = new IntegerCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.UTF8:
-        this.cpInfo = new Utf8CpInfo(this._io, this, this._root);
-        break;
       case JavaClass.ConstantPoolEntry.TagEnum.FIELD_REF:
         this.cpInfo = new FieldRefCpInfo(this._io, this, this._root);
         break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_TYPE:
-        this.cpInfo = new MethodTypeCpInfo(this._io, this, this._root);
+      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_HANDLE:
+        this.cpInfo = new MethodHandleCpInfo(this._io, this, this._root);
+        break;
+      case JavaClass.ConstantPoolEntry.TagEnum.NAME_AND_TYPE:
+        this.cpInfo = new NameAndTypeCpInfo(this._io, this, this._root);
         break;
       }
     }

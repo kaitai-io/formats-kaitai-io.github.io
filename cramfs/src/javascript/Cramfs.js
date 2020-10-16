@@ -30,11 +30,17 @@ var Cramfs = (function() {
       this._read();
     }
     SuperBlockStruct.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([69, 61, 205, 40]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [69, 61, 205, 40]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([69, 61, 205, 40], this.magic, this._io, "/types/super_block_struct/seq/0");
+      }
       this.size = this._io.readU4le();
       this.flags = this._io.readU4le();
       this.future = this._io.readU4le();
-      this.signature = this._io.ensureFixedContents([67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83]);
+      this.signature = this._io.readBytes(16);
+      if (!((KaitaiStream.byteArrayCompare(this.signature, [67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83], this.signature, this._io, "/types/super_block_struct/seq/4");
+      }
       this.fsid = new Info(this._io, this, this._root);
       this.name = KaitaiStream.bytesToStr(this._io.readBytes(16), "ASCII");
       this.root = new Inode(this._io, this, this._root);

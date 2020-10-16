@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -310,7 +311,10 @@ public class Elf extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 127, 69, 76, 70 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 127, 69, 76, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 69, 76, 70 }, magic(), _io(), "/seq/0");
+        }
         this.bits = Bits.byId(this._io.readU1());
         this.endian = Endian.byId(this._io.readU1());
         this.eiVersion = this._io.readU1();
@@ -926,17 +930,22 @@ public class Elf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            switch (_root.endian()) {
-            case LE: {
-                boolean _tmp = (boolean) (true);
-                this._is_le = _tmp;
-                break;
-            }
-            case BE: {
-                boolean _tmp = (boolean) (false);
-                this._is_le = _tmp;
-                break;
-            }
+            {
+                Endian on = _root.endian();
+                if (on != null) {
+                    switch (_root.endian()) {
+                    case LE: {
+                        boolean _tmp = (boolean) (true);
+                        this._is_le = _tmp;
+                        break;
+                    }
+                    case BE: {
+                        boolean _tmp = (boolean) (false);
+                        this._is_le = _tmp;
+                        break;
+                    }
+                    }
+                }
             }
 
             if (_is_le == null) {
@@ -951,35 +960,50 @@ public class Elf extends KaitaiStruct {
             this.eType = Elf.ObjType.byId(this._io.readU2le());
             this.machine = Elf.Machine.byId(this._io.readU2le());
             this.eVersion = this._io.readU4le();
-            switch (_root.bits()) {
-            case B32: {
-                this.entryPoint = (long) (this._io.readU4le());
-                break;
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.entryPoint = (long) (this._io.readU4le());
+                        break;
+                    }
+                    case B64: {
+                        this.entryPoint = this._io.readU8le();
+                        break;
+                    }
+                    }
+                }
             }
-            case B64: {
-                this.entryPoint = this._io.readU8le();
-                break;
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.programHeaderOffset = (long) (this._io.readU4le());
+                        break;
+                    }
+                    case B64: {
+                        this.programHeaderOffset = this._io.readU8le();
+                        break;
+                    }
+                    }
+                }
             }
-            }
-            switch (_root.bits()) {
-            case B32: {
-                this.programHeaderOffset = (long) (this._io.readU4le());
-                break;
-            }
-            case B64: {
-                this.programHeaderOffset = this._io.readU8le();
-                break;
-            }
-            }
-            switch (_root.bits()) {
-            case B32: {
-                this.sectionHeaderOffset = (long) (this._io.readU4le());
-                break;
-            }
-            case B64: {
-                this.sectionHeaderOffset = this._io.readU8le();
-                break;
-            }
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.sectionHeaderOffset = (long) (this._io.readU4le());
+                        break;
+                    }
+                    case B64: {
+                        this.sectionHeaderOffset = this._io.readU8le();
+                        break;
+                    }
+                    }
+                }
             }
             this.flags = this._io.readBytes(4);
             this.eEhsize = this._io.readU2le();
@@ -993,35 +1017,50 @@ public class Elf extends KaitaiStruct {
             this.eType = Elf.ObjType.byId(this._io.readU2be());
             this.machine = Elf.Machine.byId(this._io.readU2be());
             this.eVersion = this._io.readU4be();
-            switch (_root.bits()) {
-            case B32: {
-                this.entryPoint = (long) (this._io.readU4be());
-                break;
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.entryPoint = (long) (this._io.readU4be());
+                        break;
+                    }
+                    case B64: {
+                        this.entryPoint = this._io.readU8be();
+                        break;
+                    }
+                    }
+                }
             }
-            case B64: {
-                this.entryPoint = this._io.readU8be();
-                break;
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.programHeaderOffset = (long) (this._io.readU4be());
+                        break;
+                    }
+                    case B64: {
+                        this.programHeaderOffset = this._io.readU8be();
+                        break;
+                    }
+                    }
+                }
             }
-            }
-            switch (_root.bits()) {
-            case B32: {
-                this.programHeaderOffset = (long) (this._io.readU4be());
-                break;
-            }
-            case B64: {
-                this.programHeaderOffset = this._io.readU8be();
-                break;
-            }
-            }
-            switch (_root.bits()) {
-            case B32: {
-                this.sectionHeaderOffset = (long) (this._io.readU4be());
-                break;
-            }
-            case B64: {
-                this.sectionHeaderOffset = this._io.readU8be();
-                break;
-            }
+            {
+                Bits on = _root.bits();
+                if (on != null) {
+                    switch (_root.bits()) {
+                    case B32: {
+                        this.sectionHeaderOffset = (long) (this._io.readU4be());
+                        break;
+                    }
+                    case B64: {
+                        this.sectionHeaderOffset = this._io.readU8be();
+                        break;
+                    }
+                    }
+                }
             }
             this.flags = this._io.readBytes(4);
             this.eEhsize = this._io.readU2be();
@@ -1109,68 +1148,98 @@ public class Elf extends KaitaiStruct {
                 if (_root.bits() == Elf.Bits.B64) {
                     this.flags64 = this._io.readU4le();
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.offset = (long) (this._io.readU4le());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.offset = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.offset = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.offset = this._io.readU8le();
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.vaddr = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.vaddr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.paddr = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.paddr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.vaddr = (long) (this._io.readU4le());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.filesz = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.filesz = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.vaddr = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.paddr = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.paddr = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.filesz = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.filesz = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.memsz = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.memsz = this._io.readU8le();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.memsz = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.memsz = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
                 if (_root.bits() == Elf.Bits.B32) {
                     this.flags32 = this._io.readU4le();
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.align = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.align = this._io.readU8le();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.align = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private void _readBE() {
@@ -1178,68 +1247,98 @@ public class Elf extends KaitaiStruct {
                 if (_root.bits() == Elf.Bits.B64) {
                     this.flags64 = this._io.readU4be();
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.offset = (long) (this._io.readU4be());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.offset = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.offset = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.offset = this._io.readU8be();
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.vaddr = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.vaddr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.paddr = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.paddr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.vaddr = (long) (this._io.readU4be());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.filesz = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.filesz = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.vaddr = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.paddr = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.paddr = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.filesz = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.filesz = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.memsz = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.memsz = this._io.readU8be();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.memsz = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.memsz = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
                 if (_root.bits() == Elf.Bits.B32) {
                     this.flags32 = this._io.readU4be();
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.align = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.align = this._io.readU8be();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.align = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private DynamicSection dynamic;
@@ -1320,47 +1419,67 @@ public class Elf extends KaitaiStruct {
                 }
             }
             private void _readLE() {
-                switch (_root.bits()) {
-                case B32: {
-                    this.tag = (long) (this._io.readU4le());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.tag = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.tag = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.valueOrPtr = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.valueOrPtr = this._io.readU8le();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.valueOrPtr = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private void _readBE() {
-                switch (_root.bits()) {
-                case B32: {
-                    this.tag = (long) (this._io.readU4be());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.tag = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.tag = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.valueOrPtr = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.valueOrPtr = this._io.readU8be();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.valueOrPtr = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private DynamicArrayTags tagEnum;
@@ -1415,133 +1534,193 @@ public class Elf extends KaitaiStruct {
             private void _readLE() {
                 this.ofsName = this._io.readU4le();
                 this.type = Elf.ShType.byId(this._io.readU4le());
-                switch (_root.bits()) {
-                case B32: {
-                    this.flags = (long) (this._io.readU4le());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.flags = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.flags = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.flags = this._io.readU8le();
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.addr = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.addr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.ofsBody = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.ofsBody = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.addr = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.addr = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.ofsBody = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.ofsBody = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.lenBody = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.lenBody = this._io.readU8le();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.lenBody = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.lenBody = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
                 this.linkedSectionIdx = this._io.readU4le();
                 this.info = this._io.readBytes(4);
-                switch (_root.bits()) {
-                case B32: {
-                    this.align = (long) (this._io.readU4le());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.align = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.align = this._io.readU8le();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.entrySize = (long) (this._io.readU4le());
-                    break;
-                }
-                case B64: {
-                    this.entrySize = this._io.readU8le();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.entrySize = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.entrySize = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private void _readBE() {
                 this.ofsName = this._io.readU4be();
                 this.type = Elf.ShType.byId(this._io.readU4be());
-                switch (_root.bits()) {
-                case B32: {
-                    this.flags = (long) (this._io.readU4be());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.flags = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.flags = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.flags = this._io.readU8be();
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.addr = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.addr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.ofsBody = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.ofsBody = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                switch (_root.bits()) {
-                case B32: {
-                    this.addr = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.addr = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.ofsBody = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.ofsBody = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.lenBody = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.lenBody = this._io.readU8be();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.lenBody = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.lenBody = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
                 this.linkedSectionIdx = this._io.readU4be();
                 this.info = this._io.readBytes(4);
-                switch (_root.bits()) {
-                case B32: {
-                    this.align = (long) (this._io.readU4be());
-                    break;
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.align = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                case B64: {
-                    this.align = this._io.readU8be();
-                    break;
-                }
-                }
-                switch (_root.bits()) {
-                case B32: {
-                    this.entrySize = (long) (this._io.readU4be());
-                    break;
-                }
-                case B64: {
-                    this.entrySize = this._io.readU8be();
-                    break;
-                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.entrySize = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.entrySize = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private Object body;
@@ -1552,66 +1731,80 @@ public class Elf extends KaitaiStruct {
                 long _pos = io.pos();
                 io.seek(ofsBody());
                 if (_is_le) {
-                    switch (type()) {
-                    case DYNAMIC: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case STRTAB: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case DYNSTR: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case DYNSYM: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    default: {
-                        this.body = io.readBytes(lenBody());
-                        break;
-                    }
+                    {
+                        ShType on = type();
+                        if (on != null) {
+                            switch (type()) {
+                            case STRTAB: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNAMIC: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNSYM: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNSTR: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            default: {
+                                this.body = io.readBytes(lenBody());
+                                break;
+                            }
+                            }
+                        } else {
+                            this.body = io.readBytes(lenBody());
+                        }
                     }
                 } else {
-                    switch (type()) {
-                    case DYNAMIC: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case STRTAB: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case DYNSTR: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    case DYNSYM: {
-                        this._raw_body = io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                        break;
-                    }
-                    default: {
-                        this.body = io.readBytes(lenBody());
-                        break;
-                    }
+                    {
+                        ShType on = type();
+                        if (on != null) {
+                            switch (type()) {
+                            case STRTAB: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNAMIC: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNSYM: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case DYNSTR: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            default: {
+                                this.body = io.readBytes(lenBody());
+                                break;
+                            }
+                            }
+                        } else {
+                            this.body = io.readBytes(lenBody());
+                        }
                     }
                 }
                 io.seek(_pos);
@@ -1742,15 +1935,20 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        switch (_root.bits()) {
-                        case B32: {
-                            this.entries.add(new DynsymSectionEntry32(this._io, this, _root, _is_le));
-                            break;
-                        }
-                        case B64: {
-                            this.entries.add(new DynsymSectionEntry64(this._io, this, _root, _is_le));
-                            break;
-                        }
+                        {
+                            Bits on = _root.bits();
+                            if (on != null) {
+                                switch (_root.bits()) {
+                                case B32: {
+                                    this.entries.add(new DynsymSectionEntry32(this._io, this, _root, _is_le));
+                                    break;
+                                }
+                                case B64: {
+                                    this.entries.add(new DynsymSectionEntry64(this._io, this, _root, _is_le));
+                                    break;
+                                }
+                                }
+                            }
                         }
                         i++;
                     }
@@ -1761,15 +1959,20 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        switch (_root.bits()) {
-                        case B32: {
-                            this.entries.add(new DynsymSectionEntry32(this._io, this, _root, _is_le));
-                            break;
-                        }
-                        case B64: {
-                            this.entries.add(new DynsymSectionEntry64(this._io, this, _root, _is_le));
-                            break;
-                        }
+                        {
+                            Bits on = _root.bits();
+                            if (on != null) {
+                                switch (_root.bits()) {
+                                case B32: {
+                                    this.entries.add(new DynsymSectionEntry32(this._io, this, _root, _is_le));
+                                    break;
+                                }
+                                case B64: {
+                                    this.entries.add(new DynsymSectionEntry64(this._io, this, _root, _is_le));
+                                    break;
+                                }
+                                }
+                            }
                         }
                         i++;
                     }
@@ -1889,16 +2092,16 @@ public class Elf extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(programHeaderOffset());
             if (_is_le) {
-                this._raw_programHeaders = new ArrayList<byte[]>((int) (qtyProgramHeader()));
-                programHeaders = new ArrayList<ProgramHeader>((int) (qtyProgramHeader()));
+                this._raw_programHeaders = new ArrayList<byte[]>(((Number) (qtyProgramHeader())).intValue());
+                programHeaders = new ArrayList<ProgramHeader>(((Number) (qtyProgramHeader())).intValue());
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_programHeaders = new ArrayList<byte[]>((int) (qtyProgramHeader()));
-                programHeaders = new ArrayList<ProgramHeader>((int) (qtyProgramHeader()));
+                this._raw_programHeaders = new ArrayList<byte[]>(((Number) (qtyProgramHeader())).intValue());
+                programHeaders = new ArrayList<ProgramHeader>(((Number) (qtyProgramHeader())).intValue());
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
@@ -1915,16 +2118,16 @@ public class Elf extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(sectionHeaderOffset());
             if (_is_le) {
-                this._raw_sectionHeaders = new ArrayList<byte[]>((int) (qtySectionHeader()));
-                sectionHeaders = new ArrayList<SectionHeader>((int) (qtySectionHeader()));
+                this._raw_sectionHeaders = new ArrayList<byte[]>(((Number) (qtySectionHeader())).intValue());
+                sectionHeaders = new ArrayList<SectionHeader>(((Number) (qtySectionHeader())).intValue());
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_sectionHeaders = new ArrayList<byte[]>((int) (qtySectionHeader()));
-                sectionHeaders = new ArrayList<SectionHeader>((int) (qtySectionHeader()));
+                this._raw_sectionHeaders = new ArrayList<byte[]>(((Number) (qtySectionHeader())).intValue());
+                sectionHeaders = new ArrayList<SectionHeader>(((Number) (qtySectionHeader())).intValue());
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));

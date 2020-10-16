@@ -186,11 +186,6 @@ features got limited support in v1.3).</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Warcraft II map files parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Warcraft II map files parsing C# library">C#</a></li>
                 
                 
@@ -278,98 +273,100 @@ features got limited support in v1.3).</p>
 <span class="sd"> * File consists of a sequence of typed sections.</span>
 <span class="sd"> */</span>
 
-<span class="k">class</span> <span class="nc">Warcraft2Pud</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\Section</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Warcraft2Pud</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\Section</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_sections</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">sections</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_sections</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">sections</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sections</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">SectionStartingResource</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionStartingResource</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_resourcesByPlayer</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">resourcesByPlayer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_resourcesByPlayer</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">resourcesByPlayer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resourcesByPlayer</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
 <span class="sd"> * Section that specifies terrain type for this map.</span>
 <span class="sd"> */</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionEra</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">SectionEra</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terrain</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_terrain</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">terrain</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terrain</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terrain</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_terrain</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">terrain</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terrain</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
 <span class="sd"> * Section that specifies format version.</span>
 <span class="sd"> */</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionVer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">SectionVer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionDim</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">SectionDim</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
@@ -379,320 +376,323 @@ features got limited support in v1.3).</p>
 <span class="sd"> * map.</span>
 <span class="sd"> */</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">SectionType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magic</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magic</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/types/section_type/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idTag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_unused</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_idTag</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * unused (always set to $0a and $ff by editor, but can be anything for the game)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">unused</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * id tag (for consistency check in multiplayer)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">idTag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idTag</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idTag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_unused</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_idTag</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * unused (always set to $0a and $ff by editor, but can be anything for the game)</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * id tag (for consistency check in multiplayer)</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">idTag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idTag</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">SectionUnit</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\Unit</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionUnit</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\Unit</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_units</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">units</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_units</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">units</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Section</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="s2">&quot;SLBR&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;ERAX&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionEra</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;OWNR&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionOwnr</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;ERA &quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionEra</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;SGLD&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;VER &quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionVer</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;SOIL&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;UNIT&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionUnit</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;DIM &quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionDim</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="s2">&quot;TYPE&quot;</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">default</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Section</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="s2">&quot;SLBR&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;ERAX&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionEra</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;OWNR&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionOwnr</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;ERA &quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionEra</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;SGLD&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;VER &quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionVer</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;SOIL&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionStartingResource</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;UNIT&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionUnit</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;DIM &quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionDim</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;TYPE&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Warcraft2Pud\SectionType</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">default</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_size</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_size</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
 <span class="sd"> * Section that specifies who controls each player.</span>
 <span class="sd"> */</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">SectionOwnr</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionOwnr</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\Section</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_controllerByPlayer</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">controllerByPlayer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_controllerByPlayer</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">controllerByPlayer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controllerByPlayer</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Unit</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\SectionUnit</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">Unit</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Warcraft2Pud\SectionUnit</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Warcraft2Pud</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_owner</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_resource</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">resource</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_owner</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_resource</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">resource</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">GOLD_MINE</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">HUMAN_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">ORC_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">OIL_PATCH</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">options</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">GOLD_MINE</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">HUMAN_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">ORC_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">uType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Warcraft2Pud\UnitType</span><span class="o">::</span><span class="na">OIL_PATCH</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">options</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">);</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_resource</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_uType</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_owner</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_options</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">uType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">owner</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_owner</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">options</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_uType</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_owner</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_options</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">uType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uType</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">owner</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_owner</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">options</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Controller</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="no">COMPUTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PASSIVE_COMPUTER</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NOBODY</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">COMPUTER</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RESCUE_PASSIVE</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RESCUE_ACTIVE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Controller</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">COMPUTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PASSIVE_COMPUTER</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NOBODY</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">COMPUTER</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RESCUE_PASSIVE</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RESCUE_ACTIVE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">TerrainType</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="no">FOREST</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">WINTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">WASTELAND</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SWAMP</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TerrainType</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">FOREST</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">WINTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">WASTELAND</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SWAMP</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Warcraft2Pud</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">UnitType</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="no">INFANTRY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GRUNT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PEASANT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PEON</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BALLISTA</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CATAPULT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">KNIGHT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">OGRE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ARCHER</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">AXETHROWER</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DEATH_KNIGHT</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PALADIN</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">OGRE_MAGE</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DWARVES</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GOBLIN_SAPPER</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ATTACK_PEASANT</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ATTACK_PEON</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RANGER</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BERSERKER</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ALLERIA</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TERON_GOREFIEND</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">KURDAN_AND_SKY_REE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DENTARG</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">KHADGAR</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GROM_HELLSCREAM</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_TANKER</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_TANKER</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_TRANSPORT</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_TRANSPORT</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ELVEN_DESTROYER</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TROLL_DESTROYER</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BATTLESHIP</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">JUGGERNAUGHT</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DEATHWING</span> <span class="o">=</span> <span class="mi">35</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GNOMISH_SUBMARINE</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GIANT_TURTLE</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GNOMISH_FLYING_MACHINE</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GOBLIN_ZEPPLIN</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GRYPHON_RIDER</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DRAGON</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TURALYON</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">EYE_OF_KILROGG</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DANATH</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">KHORGATH_BLADEFIST</span> <span class="o">=</span> <span class="mi">47</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CHO_GALL</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LOTHAR</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GUL_DAN</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">UTHER_LIGHTBRINGER</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ZULJIN</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SKELETON</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DAEMON</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CRITTER</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FARM</span> <span class="o">=</span> <span class="mi">58</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PIG_FARM</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_BARRACKS</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_BARRACKS</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CHURCH</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ALTAR_OF_STORMS</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">STABLES</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">OGRE_MOUND</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GNOMISH_INVENTOR</span> <span class="o">=</span> <span class="mi">68</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GOBLIN_ALCHEMIST</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GRYPHON_AVIARY</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DRAGON_ROOST</span> <span class="o">=</span> <span class="mi">71</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_SHIPYARD</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_SHIPYARD</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TOWN_HALL</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GREAT_HALL</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ELVEN_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TROLL_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_FOUNDRY</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_FOUNDRY</span> <span class="o">=</span> <span class="mi">79</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MAGE_TOWER</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">TEMPLE_OF_THE_DAMNED</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_BLACKSMITH</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_BLACKSMITH</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_REFINERY</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_REFINERY</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_OIL_WELL</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_OIL_WELL</span> <span class="o">=</span> <span class="mi">87</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">KEEP</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">STRONGHOLD</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CASTLE</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FORTRESS</span> <span class="o">=</span> <span class="mi">91</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GOLD_MINE</span> <span class="o">=</span> <span class="mi">92</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">OIL_PATCH</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_START</span> <span class="o">=</span> <span class="mi">94</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_START</span> <span class="o">=</span> <span class="mi">95</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CIRCLE_OF_POWER</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DARK_PORTAL</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RUNESTONE</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">HUMAN_WALL</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ORC_WALL</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Warcraft2Pud</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">UnitType</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">INFANTRY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GRUNT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PEASANT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PEON</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BALLISTA</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CATAPULT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">KNIGHT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">OGRE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ARCHER</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AXETHROWER</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DEATH_KNIGHT</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PALADIN</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">OGRE_MAGE</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DWARVES</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GOBLIN_SAPPER</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ATTACK_PEASANT</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ATTACK_PEON</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RANGER</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BERSERKER</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ALLERIA</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TERON_GOREFIEND</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">KURDAN_AND_SKY_REE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DENTARG</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">KHADGAR</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GROM_HELLSCREAM</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_TANKER</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_TANKER</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_TRANSPORT</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_TRANSPORT</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ELVEN_DESTROYER</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TROLL_DESTROYER</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BATTLESHIP</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">JUGGERNAUGHT</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DEATHWING</span> <span class="o">=</span> <span class="mi">35</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GNOMISH_SUBMARINE</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GIANT_TURTLE</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GNOMISH_FLYING_MACHINE</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GOBLIN_ZEPPLIN</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GRYPHON_RIDER</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DRAGON</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TURALYON</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">EYE_OF_KILROGG</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DANATH</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">KHORGATH_BLADEFIST</span> <span class="o">=</span> <span class="mi">47</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CHO_GALL</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LOTHAR</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GUL_DAN</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">UTHER_LIGHTBRINGER</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ZULJIN</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SKELETON</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DAEMON</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CRITTER</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FARM</span> <span class="o">=</span> <span class="mi">58</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PIG_FARM</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_BARRACKS</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_BARRACKS</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CHURCH</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ALTAR_OF_STORMS</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">STABLES</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">OGRE_MOUND</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GNOMISH_INVENTOR</span> <span class="o">=</span> <span class="mi">68</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GOBLIN_ALCHEMIST</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GRYPHON_AVIARY</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DRAGON_ROOST</span> <span class="o">=</span> <span class="mi">71</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_SHIPYARD</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_SHIPYARD</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TOWN_HALL</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GREAT_HALL</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ELVEN_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TROLL_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_FOUNDRY</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_FOUNDRY</span> <span class="o">=</span> <span class="mi">79</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MAGE_TOWER</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">TEMPLE_OF_THE_DAMNED</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_BLACKSMITH</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_BLACKSMITH</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_REFINERY</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_REFINERY</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_OIL_WELL</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_OIL_WELL</span> <span class="o">=</span> <span class="mi">87</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">KEEP</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">STRONGHOLD</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CASTLE</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FORTRESS</span> <span class="o">=</span> <span class="mi">91</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GOLD_MINE</span> <span class="o">=</span> <span class="mi">92</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">OIL_PATCH</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_START</span> <span class="o">=</span> <span class="mi">94</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_START</span> <span class="o">=</span> <span class="mi">95</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CIRCLE_OF_POWER</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DARK_PORTAL</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RUNESTONE</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">HUMAN_WALL</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ORC_WALL</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

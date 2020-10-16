@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Edid(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -16,7 +17,9 @@ class Edid(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00")
+        self.magic = self._io.read_bytes(8)
+        if not self.magic == b"\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00":
+            raise kaitaistruct.ValidationNotEqualError(b"\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00", self.magic, self._io, u"/seq/0")
         self.mfg_bytes = self._io.read_u2le()
         self.product_code = self._io.read_u2le()
         self.serial = self._io.read_u4le()
@@ -29,11 +32,11 @@ class Edid(KaitaiStruct):
         self.screen_size_v = self._io.read_u1()
         self.gamma_mod = self._io.read_u1()
         self.features_flags = self._io.read_u1()
-        self.chromacity = self._root.ChromacityInfo(self._io, self, self._root)
-        self.est_timings = self._root.EstTimingsInfo(self._io, self, self._root)
+        self.chromacity = Edid.ChromacityInfo(self._io, self, self._root)
+        self.est_timings = Edid.EstTimingsInfo(self._io, self, self._root)
         self.std_timings = [None] * (8)
         for i in range(8):
-            self.std_timings[i] = self._root.StdTiming(self._io, self, self._root)
+            self.std_timings[i] = Edid.StdTiming(self._io, self, self._root)
 
 
     class ChromacityInfo(KaitaiStruct):
@@ -48,14 +51,14 @@ class Edid(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.red_x_1_0 = self._io.read_bits_int(2)
-            self.red_y_1_0 = self._io.read_bits_int(2)
-            self.green_x_1_0 = self._io.read_bits_int(2)
-            self.green_y_1_0 = self._io.read_bits_int(2)
-            self.blue_x_1_0 = self._io.read_bits_int(2)
-            self.blue_y_1_0 = self._io.read_bits_int(2)
-            self.white_x_1_0 = self._io.read_bits_int(2)
-            self.white_y_1_0 = self._io.read_bits_int(2)
+            self.red_x_1_0 = self._io.read_bits_int_be(2)
+            self.red_y_1_0 = self._io.read_bits_int_be(2)
+            self.green_x_1_0 = self._io.read_bits_int_be(2)
+            self.green_y_1_0 = self._io.read_bits_int_be(2)
+            self.blue_x_1_0 = self._io.read_bits_int_be(2)
+            self.blue_y_1_0 = self._io.read_bits_int_be(2)
+            self.white_x_1_0 = self._io.read_bits_int_be(2)
+            self.white_y_1_0 = self._io.read_bits_int_be(2)
             self._io.align_to_byte()
             self.red_x_9_2 = self._io.read_u1()
             self.red_y_9_2 = self._io.read_u1()
@@ -211,24 +214,24 @@ class Edid(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.can_720_400_70 = self._io.read_bits_int(1) != 0
-            self.can_720_400_88 = self._io.read_bits_int(1) != 0
-            self.can_640_480_60 = self._io.read_bits_int(1) != 0
-            self.can_640_480_67 = self._io.read_bits_int(1) != 0
-            self.can_640_480_72 = self._io.read_bits_int(1) != 0
-            self.can_640_480_75 = self._io.read_bits_int(1) != 0
-            self.can_800_600_56 = self._io.read_bits_int(1) != 0
-            self.can_800_600_60 = self._io.read_bits_int(1) != 0
-            self.can_800_600_72 = self._io.read_bits_int(1) != 0
-            self.can_800_600_75 = self._io.read_bits_int(1) != 0
-            self.can_832_624_75 = self._io.read_bits_int(1) != 0
-            self.can_1024_768_87_i = self._io.read_bits_int(1) != 0
-            self.can_1024_768_60 = self._io.read_bits_int(1) != 0
-            self.can_1024_768_70 = self._io.read_bits_int(1) != 0
-            self.can_1024_768_75 = self._io.read_bits_int(1) != 0
-            self.can_1280_1024_75 = self._io.read_bits_int(1) != 0
-            self.can_1152_870_75 = self._io.read_bits_int(1) != 0
-            self.reserved = self._io.read_bits_int(7)
+            self.can_720_400_70 = self._io.read_bits_int_be(1) != 0
+            self.can_720_400_88 = self._io.read_bits_int_be(1) != 0
+            self.can_640_480_60 = self._io.read_bits_int_be(1) != 0
+            self.can_640_480_67 = self._io.read_bits_int_be(1) != 0
+            self.can_640_480_72 = self._io.read_bits_int_be(1) != 0
+            self.can_640_480_75 = self._io.read_bits_int_be(1) != 0
+            self.can_800_600_56 = self._io.read_bits_int_be(1) != 0
+            self.can_800_600_60 = self._io.read_bits_int_be(1) != 0
+            self.can_800_600_72 = self._io.read_bits_int_be(1) != 0
+            self.can_800_600_75 = self._io.read_bits_int_be(1) != 0
+            self.can_832_624_75 = self._io.read_bits_int_be(1) != 0
+            self.can_1024_768_87_i = self._io.read_bits_int_be(1) != 0
+            self.can_1024_768_60 = self._io.read_bits_int_be(1) != 0
+            self.can_1024_768_70 = self._io.read_bits_int_be(1) != 0
+            self.can_1024_768_75 = self._io.read_bits_int_be(1) != 0
+            self.can_1280_1024_75 = self._io.read_bits_int_be(1) != 0
+            self.can_1152_870_75 = self._io.read_bits_int_be(1) != 0
+            self.reserved = self._io.read_bits_int_be(7)
 
 
     class StdTiming(KaitaiStruct):
@@ -246,8 +249,8 @@ class Edid(KaitaiStruct):
 
         def _read(self):
             self.horiz_active_pixels_mod = self._io.read_u1()
-            self.aspect_ratio = self._root.StdTiming.AspectRatios(self._io.read_bits_int(2))
-            self.refresh_rate_mod = self._io.read_bits_int(5)
+            self.aspect_ratio = KaitaiStream.resolve_enum(Edid.StdTiming.AspectRatios, self._io.read_bits_int_be(2))
+            self.refresh_rate_mod = self._io.read_bits_int_be(5)
 
         @property
         def horiz_active_pixels(self):

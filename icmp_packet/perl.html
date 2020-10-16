@@ -159,11 +159,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ICMP network packet parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ICMP network packet parsing C# library">C#</a></li>
                 
                 
@@ -238,7 +233,7 @@ section#format-index .row {
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
 <span class="k">package</span> <span class="nn">IcmpPacket</span><span class="p">;</span>
@@ -278,13 +273,13 @@ section#format-index .row {
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">icmp_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">IcmpPacket::</span><span class="nv">ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">destination_unreachable</span><span class="p">}</span> <span class="o">=</span> <span class="nn">IcmpPacket::DestinationUnreachableMsg</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$ICMP_TYPE_ENUM_TIME_EXCEEDED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">IcmpPacket::</span><span class="nv">ICMP_TYPE_ENUM_TIME_EXCEEDED</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">time_exceeded</span><span class="p">}</span> <span class="o">=</span> <span class="nn">IcmpPacket::TimeExceededMsg</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$ICMP_TYPE_ENUM_ECHO</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$ICMP_TYPE_ENUM_ECHO_REPLY</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">IcmpPacket::</span><span class="nv">ICMP_TYPE_ENUM_ECHO</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">icmp_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">IcmpPacket::</span><span class="nv">ICMP_TYPE_ENUM_ECHO_REPLY</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">echo</span><span class="p">}</span> <span class="o">=</span> <span class="nn">IcmpPacket::EchoMsg</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -447,7 +442,7 @@ section#format-index .row {
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">code</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">code</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">checksum</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">identifier</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">seq_num</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>

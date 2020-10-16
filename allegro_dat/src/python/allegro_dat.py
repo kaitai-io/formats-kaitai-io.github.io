@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AllegroDat(KaitaiStruct):
     """Allegro library for C (mostly used for game and multimedia apps
@@ -34,12 +35,14 @@ class AllegroDat(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.pack_magic = self._root.PackEnum(self._io.read_u4be())
-        self.dat_magic = self._io.ensure_fixed_contents(b"\x41\x4C\x4C\x2E")
+        self.pack_magic = KaitaiStream.resolve_enum(AllegroDat.PackEnum, self._io.read_u4be())
+        self.dat_magic = self._io.read_bytes(4)
+        if not self.dat_magic == b"\x41\x4C\x4C\x2E":
+            raise kaitaistruct.ValidationNotEqualError(b"\x41\x4C\x4C\x2E", self.dat_magic, self._io, u"/seq/1")
         self.num_objects = self._io.read_u4be()
         self.objects = [None] * (self.num_objects)
         for i in range(self.num_objects):
-            self.objects[i] = self._root.DatObject(self._io, self, self._root)
+            self.objects[i] = AllegroDat.DatObject(self._io, self, self._root)
 
 
     class DatFont16(KaitaiStruct):
@@ -84,11 +87,11 @@ class AllegroDat(KaitaiStruct):
             self.font_size = self._io.read_s2be()
             _on = self.font_size
             if _on == 8:
-                self.body = self._root.DatFont8(self._io, self, self._root)
+                self.body = AllegroDat.DatFont8(self._io, self, self._root)
             elif _on == 16:
-                self.body = self._root.DatFont16(self._io, self, self._root)
+                self.body = AllegroDat.DatFont16(self._io, self, self._root)
             elif _on == 0:
-                self.body = self._root.DatFont39(self._io, self, self._root)
+                self.body = AllegroDat.DatFont39(self._io, self, self._root)
 
 
     class DatFont8(KaitaiStruct):
@@ -119,7 +122,7 @@ class AllegroDat(KaitaiStruct):
             self.properties = []
             i = 0
             while True:
-                _ = self._root.Property(self._io, self, self._root)
+                _ = AllegroDat.Property(self._io, self, self._root)
                 self.properties.append(_)
                 if not (_.is_valid):
                     break
@@ -129,16 +132,16 @@ class AllegroDat(KaitaiStruct):
             _on = self.type
             if _on == u"BMP ":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatBitmap(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = AllegroDat.DatBitmap(_io__raw_body, self, self._root)
             elif _on == u"RLE ":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatRleSprite(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = AllegroDat.DatRleSprite(_io__raw_body, self, self._root)
             elif _on == u"FONT":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatFont(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = AllegroDat.DatFont(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len_compressed)
 
@@ -166,7 +169,7 @@ class AllegroDat(KaitaiStruct):
             self.num_ranges = self._io.read_s2be()
             self.ranges = [None] * (self.num_ranges)
             for i in range(self.num_ranges):
-                self.ranges[i] = self._root.DatFont39.Range(self._io, self, self._root)
+                self.ranges[i] = AllegroDat.DatFont39.Range(self._io, self, self._root)
 
 
         class Range(KaitaiStruct):
@@ -182,7 +185,7 @@ class AllegroDat(KaitaiStruct):
                 self.end_char = self._io.read_u4be()
                 self.chars = [None] * (((self.end_char - self.start_char) + 1))
                 for i in range(((self.end_char - self.start_char) + 1)):
-                    self.chars[i] = self._root.DatFont39.FontChar(self._io, self, self._root)
+                    self.chars[i] = AllegroDat.DatFont39.FontChar(self._io, self, self._root)
 
 
 

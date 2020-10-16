@@ -21,10 +21,18 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 });
+            _magic = m_io.ReadBytes(8);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }, Magic, M_Io, "/seq/0");
+            }
             _numFiles = m_io.ReadU2le();
             _numEntries = m_io.ReadU2le();
-            _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
+            _reserved = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, Reserved, M_Io, "/seq/3");
+            }
             _offsets = new List<uint>((int) (NumFiles));
             for (var i = 0; i < NumFiles; i++)
             {
@@ -81,8 +89,8 @@ namespace Kaitai
                         m_io.Seek((M_Root.Offsets[OffsetIdx] & 4294965248));
                         _body = m_io.ReadBytes(Size);
                         m_io.Seek(_pos);
+                        f_body = true;
                     }
-                    f_body = true;
                     return _body;
                 }
             }

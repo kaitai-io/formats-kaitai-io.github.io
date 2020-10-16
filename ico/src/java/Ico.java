@@ -4,8 +4,8 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 
 /**
@@ -35,9 +35,12 @@ public class Ico extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 0, 0, 1, 0 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 0, 0, 1, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, magic(), _io(), "/seq/0");
+        }
         this.numImages = this._io.readU2le();
-        images = new ArrayList<IconDirEntry>((int) (numImages()));
+        images = new ArrayList<IconDirEntry>(((Number) (numImages())).intValue());
         for (int i = 0; i < numImages(); i++) {
             this.images.add(new IconDirEntry(this._io, this, _root));
         }
@@ -65,7 +68,10 @@ public class Ico extends KaitaiStruct {
             this.width = this._io.readU1();
             this.height = this._io.readU1();
             this.numColors = this._io.readU1();
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0 });
+            this.reserved = this._io.readBytes(1);
+            if (!(Arrays.equals(reserved(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, reserved(), _io(), "/types/icon_dir_entry/seq/3");
+            }
             this.numPlanes = this._io.readU2le();
             this.bpp = this._io.readU2le();
             this.lenImg = this._io.readU4le();

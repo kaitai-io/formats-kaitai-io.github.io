@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -211,8 +211,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{ident} = $self->{_io}->ensure_fixed_contents(pack('C*', (73, 68, 80, 79)));
-    $self->{version_must_be_6} = $self->{_io}->ensure_fixed_contents(pack('C*', (6, 0, 0, 0)));
+    $self->{ident} = $self->{_io}->read_bytes(4);
+    $self->{version_must_be_6} = $self->{_io}->read_bytes(4);
     $self->{scale} = QuakeMdl::Vec3->new($self->{_io}, $self, $self->{_root});
     $self->{origin} = QuakeMdl::Vec3->new($self->{_io}, $self, $self->{_root});
     $self->{radius} = $self->{_io}->read_f4le();

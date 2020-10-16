@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -82,15 +83,23 @@ public class Gzip extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 31, -117 });
+        this.magic = this._io.readBytes(2);
+        if (!(Arrays.equals(magic(), new byte[] { 31, -117 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 31, -117 }, magic(), _io(), "/seq/0");
+        }
         this.compressionMethod = CompressionMethods.byId(this._io.readU1());
         this.flags = new Flags(this._io, this, _root);
         this.modTime = this._io.readU4le();
-        switch (compressionMethod()) {
-        case DEFLATE: {
-            this.extraFlags = new ExtraFlagsDeflate(this._io, this, _root);
-            break;
-        }
+        {
+            CompressionMethods on = compressionMethod();
+            if (on != null) {
+                switch (compressionMethod()) {
+                case DEFLATE: {
+                    this.extraFlags = new ExtraFlagsDeflate(this._io, this, _root);
+                    break;
+                }
+                }
+            }
         }
         this.os = Oses.byId(this._io.readU1());
         if (flags().hasExtra()) {
@@ -129,12 +138,12 @@ public class Gzip extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved1 = this._io.readBitsInt(3);
-            this.hasComment = this._io.readBitsInt(1) != 0;
-            this.hasName = this._io.readBitsInt(1) != 0;
-            this.hasExtra = this._io.readBitsInt(1) != 0;
-            this.hasHeaderCrc = this._io.readBitsInt(1) != 0;
-            this.isText = this._io.readBitsInt(1) != 0;
+            this.reserved1 = this._io.readBitsIntBe(3);
+            this.hasComment = this._io.readBitsIntBe(1) != 0;
+            this.hasName = this._io.readBitsIntBe(1) != 0;
+            this.hasExtra = this._io.readBitsIntBe(1) != 0;
+            this.hasHeaderCrc = this._io.readBitsIntBe(1) != 0;
+            this.isText = this._io.readBitsIntBe(1) != 0;
         }
         private long reserved1;
         private boolean hasComment;

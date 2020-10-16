@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -313,7 +313,7 @@ sub _read {
 
     $self->{representation} = Encode::decode("UTF-8", $self->{_io}->read_bytes(2));
     $self->{subcategory} = Encode::decode("UTF-8", $self->{_io}->read_bytes(6));
-    $self->{img_filter_condition} = $self->{_io}->ensure_fixed_contents(pack('C*', (78)));
+    $self->{img_filter_condition} = $self->{_io}->read_bytes(1);
     $self->{img_filter_code} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{num_luts} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
     if ($self->num_luts() != 0) {
@@ -506,12 +506,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_part_type_sy} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 89)));
+    $self->{file_part_type_sy} = $self->{_io}->read_bytes(2);
     $self->{graphic_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(10));
     $self->{graphic_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes(20));
     $self->{graphic_classification} = Nitf::Clasnfo->new($self->{_io}, $self, $self->{_root});
     $self->{encryption} = Nitf::Encrypt->new($self->{_io}, $self, $self->{_root});
-    $self->{graphic_type} = $self->{_io}->ensure_fixed_contents(pack('C*', (67)));
+    $self->{graphic_type} = $self->{_io}->read_bytes(1);
     $self->{reserved1} = Encode::decode("UTF-8", $self->{_io}->read_bytes(13));
     $self->{graphic_display_level} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{graphic_attachment_level} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
@@ -1223,7 +1223,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_part_type} = $self->{_io}->ensure_fixed_contents(pack('C*', (73, 77)));
+    $self->{file_part_type} = $self->{_io}->read_bytes(2);
     $self->{image_id_1} = Encode::decode("UTF-8", $self->{_io}->read_bytes(10));
     $self->{image_date_time} = Nitf::DateTime->new($self->{_io}, $self, $self->{_root});
     $self->{target_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(17));
@@ -1507,7 +1507,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_part_type_re} = $self->{_io}->ensure_fixed_contents(pack('C*', (82, 69)));
+    $self->{file_part_type_re} = $self->{_io}->read_bytes(2);
     $self->{res_type_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(25));
     $self->{res_version} = Encode::decode("UTF-8", $self->{_io}->read_bytes(2));
     $self->{reclasnfo} = Nitf::Clasnfo->new($self->{_io}, $self, $self->{_root});
@@ -1581,7 +1581,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_part_type_de} = $self->{_io}->ensure_fixed_contents(pack('C*', (68, 69)));
+    $self->{file_part_type_de} = $self->{_io}->read_bytes(2);
     $self->{desid} = Encode::decode("UTF-8", $self->{_io}->read_bytes(25));
     $self->{data_definition_version} = Encode::decode("UTF-8", $self->{_io}->read_bytes(2));
     $self->{declasnfo} = Nitf::Clasnfo->new($self->{_io}, $self, $self->{_root});
@@ -1743,10 +1743,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_profile_name} = $self->{_io}->ensure_fixed_contents(pack('C*', (78, 73, 84, 70)));
-    $self->{file_version} = $self->{_io}->ensure_fixed_contents(pack('C*', (48, 50, 46, 49, 48)));
+    $self->{file_profile_name} = $self->{_io}->read_bytes(4);
+    $self->{file_version} = $self->{_io}->read_bytes(5);
     $self->{complexity_level} = $self->{_io}->read_bytes(2);
-    $self->{standard_type} = $self->{_io}->ensure_fixed_contents(pack('C*', (66, 70, 48, 49)));
+    $self->{standard_type} = $self->{_io}->read_bytes(4);
     $self->{originating_station_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(10));
     $self->{file_date_time} = Nitf::DateTime->new($self->{_io}, $self, $self->{_root});
     $self->{file_title} = Encode::decode("UTF-8", $self->{_io}->read_bytes(80));

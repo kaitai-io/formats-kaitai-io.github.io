@@ -26,7 +26,10 @@ var Ico = (function() {
     this._read();
   }
   Ico.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([0, 0, 1, 0]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [0, 0, 1, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 0, 1, 0], this.magic, this._io, "/seq/0");
+    }
     this.numImages = this._io.readU2le();
     this.images = new Array(this.numImages);
     for (var i = 0; i < this.numImages; i++) {
@@ -46,7 +49,10 @@ var Ico = (function() {
       this.width = this._io.readU1();
       this.height = this._io.readU1();
       this.numColors = this._io.readU1();
-      this.reserved = this._io.ensureFixedContents([0]);
+      this.reserved = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved, this._io, "/types/icon_dir_entry/seq/3");
+      }
       this.numPlanes = this._io.readU2le();
       this.bpp = this._io.readU2le();
       this.lenImg = this._io.readU4le();

@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -28,7 +29,10 @@ public class Edid extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 });
+        this.magic = this._io.readBytes(8);
+        if (!(Arrays.equals(magic(), new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }, magic(), _io(), "/seq/0");
+        }
         this.mfgBytes = this._io.readU2le();
         this.productCode = this._io.readU2le();
         this.serial = this._io.readU4le();
@@ -43,7 +47,7 @@ public class Edid extends KaitaiStruct {
         this.featuresFlags = this._io.readU1();
         this.chromacity = new ChromacityInfo(this._io, this, _root);
         this.estTimings = new EstTimingsInfo(this._io, this, _root);
-        stdTimings = new ArrayList<StdTiming>((int) (8));
+        stdTimings = new ArrayList<StdTiming>(((Number) (8)).intValue());
         for (int i = 0; i < 8; i++) {
             this.stdTimings.add(new StdTiming(this._io, this, _root));
         }
@@ -74,14 +78,14 @@ public class Edid extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.redX10 = this._io.readBitsInt(2);
-            this.redY10 = this._io.readBitsInt(2);
-            this.greenX10 = this._io.readBitsInt(2);
-            this.greenY10 = this._io.readBitsInt(2);
-            this.blueX10 = this._io.readBitsInt(2);
-            this.blueY10 = this._io.readBitsInt(2);
-            this.whiteX10 = this._io.readBitsInt(2);
-            this.whiteY10 = this._io.readBitsInt(2);
+            this.redX10 = this._io.readBitsIntBe(2);
+            this.redY10 = this._io.readBitsIntBe(2);
+            this.greenX10 = this._io.readBitsIntBe(2);
+            this.greenY10 = this._io.readBitsIntBe(2);
+            this.blueX10 = this._io.readBitsIntBe(2);
+            this.blueY10 = this._io.readBitsIntBe(2);
+            this.whiteX10 = this._io.readBitsIntBe(2);
+            this.whiteY10 = this._io.readBitsIntBe(2);
             this._io.alignToByte();
             this.redX92 = this._io.readU1();
             this.redY92 = this._io.readU1();
@@ -373,24 +377,24 @@ public class Edid extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.can72040070 = this._io.readBitsInt(1) != 0;
-            this.can72040088 = this._io.readBitsInt(1) != 0;
-            this.can64048060 = this._io.readBitsInt(1) != 0;
-            this.can64048067 = this._io.readBitsInt(1) != 0;
-            this.can64048072 = this._io.readBitsInt(1) != 0;
-            this.can64048075 = this._io.readBitsInt(1) != 0;
-            this.can80060056 = this._io.readBitsInt(1) != 0;
-            this.can80060060 = this._io.readBitsInt(1) != 0;
-            this.can80060072 = this._io.readBitsInt(1) != 0;
-            this.can80060075 = this._io.readBitsInt(1) != 0;
-            this.can83262475 = this._io.readBitsInt(1) != 0;
-            this.can102476887I = this._io.readBitsInt(1) != 0;
-            this.can102476860 = this._io.readBitsInt(1) != 0;
-            this.can102476870 = this._io.readBitsInt(1) != 0;
-            this.can102476875 = this._io.readBitsInt(1) != 0;
-            this.can1280102475 = this._io.readBitsInt(1) != 0;
-            this.can115287075 = this._io.readBitsInt(1) != 0;
-            this.reserved = this._io.readBitsInt(7);
+            this.can72040070 = this._io.readBitsIntBe(1) != 0;
+            this.can72040088 = this._io.readBitsIntBe(1) != 0;
+            this.can64048060 = this._io.readBitsIntBe(1) != 0;
+            this.can64048067 = this._io.readBitsIntBe(1) != 0;
+            this.can64048072 = this._io.readBitsIntBe(1) != 0;
+            this.can64048075 = this._io.readBitsIntBe(1) != 0;
+            this.can80060056 = this._io.readBitsIntBe(1) != 0;
+            this.can80060060 = this._io.readBitsIntBe(1) != 0;
+            this.can80060072 = this._io.readBitsIntBe(1) != 0;
+            this.can80060075 = this._io.readBitsIntBe(1) != 0;
+            this.can83262475 = this._io.readBitsIntBe(1) != 0;
+            this.can102476887I = this._io.readBitsIntBe(1) != 0;
+            this.can102476860 = this._io.readBitsIntBe(1) != 0;
+            this.can102476870 = this._io.readBitsIntBe(1) != 0;
+            this.can102476875 = this._io.readBitsIntBe(1) != 0;
+            this.can1280102475 = this._io.readBitsIntBe(1) != 0;
+            this.can115287075 = this._io.readBitsIntBe(1) != 0;
+            this.reserved = this._io.readBitsIntBe(7);
         }
         private boolean can72040070;
         private boolean can72040088;
@@ -539,8 +543,8 @@ public class Edid extends KaitaiStruct {
         }
         private void _read() {
             this.horizActivePixelsMod = this._io.readU1();
-            this.aspectRatio = AspectRatios.byId(this._io.readBitsInt(2));
-            this.refreshRateMod = this._io.readBitsInt(5);
+            this.aspectRatio = AspectRatios.byId(this._io.readBitsIntBe(2));
+            this.refreshRateMod = this._io.readBitsIntBe(5);
         }
         private Integer horizActivePixels;
 

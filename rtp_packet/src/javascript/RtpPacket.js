@@ -101,12 +101,12 @@ var RtpPacket = (function() {
     this._read();
   }
   RtpPacket.prototype._read = function() {
-    this.version = this._io.readBitsInt(2);
-    this.hasPadding = this._io.readBitsInt(1) != 0;
-    this.hasExtension = this._io.readBitsInt(1) != 0;
-    this.csrcCount = this._io.readBitsInt(4);
-    this.marker = this._io.readBitsInt(1) != 0;
-    this.payloadType = this._io.readBitsInt(7);
+    this.version = this._io.readBitsIntBe(2);
+    this.hasPadding = this._io.readBitsIntBe(1) != 0;
+    this.hasExtension = this._io.readBitsIntBe(1) != 0;
+    this.csrcCount = this._io.readBitsIntBe(4);
+    this.marker = this._io.readBitsIntBe(1) != 0;
+    this.payloadType = this._io.readBitsIntBe(7);
     this._io.alignToByte();
     this.sequenceNumber = this._io.readU2be();
     this.timestamp = this._io.readU4be();

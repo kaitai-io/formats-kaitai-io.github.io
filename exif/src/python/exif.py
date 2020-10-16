@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Exif(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -17,7 +18,7 @@ class Exif(KaitaiStruct):
 
     def _read(self):
         self.endianness = self._io.read_u2le()
-        self.body = self._root.ExifBody(self._io, self, self._root)
+        self.body = Exif.ExifBody(self._io, self, self._root)
 
     class ExifBody(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -32,13 +33,12 @@ class Exif(KaitaiStruct):
                 self._is_le = True
             elif _on == 19789:
                 self._is_le = False
-
-            if self._is_le == True:
+            if not hasattr(self, '_is_le'):
+                raise kaitaistruct.UndecidedEndiannessError("/types/exif_body")
+            elif self._is_le == True:
                 self._read_le()
             elif self._is_le == False:
                 self._read_be()
-            else:
-                raise Exception("Unable to decide endianness")
 
         def _read_le(self):
             self.version = self._io.read_u2le()
@@ -57,19 +57,18 @@ class Exif(KaitaiStruct):
                 self._read()
 
             def _read(self):
-
-                if self._is_le == True:
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/exif_body/types/ifd")
+                elif self._is_le == True:
                     self._read_le()
                 elif self._is_le == False:
                     self._read_be()
-                else:
-                    raise Exception("Unable to decide endianness")
 
             def _read_le(self):
                 self.num_fields = self._io.read_u2le()
                 self.fields = [None] * (self.num_fields)
                 for i in range(self.num_fields):
-                    self.fields[i] = self._root.ExifBody.IfdField(self._io, self, self._root, self._is_le)
+                    self.fields[i] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
 
                 self.next_ifd_ofs = self._io.read_u4le()
 
@@ -77,7 +76,7 @@ class Exif(KaitaiStruct):
                 self.num_fields = self._io.read_u2be()
                 self.fields = [None] * (self.num_fields)
                 for i in range(self.num_fields):
-                    self.fields[i] = self._root.ExifBody.IfdField(self._io, self, self._root, self._is_le)
+                    self.fields[i] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
 
                 self.next_ifd_ofs = self._io.read_u4be()
 
@@ -90,9 +89,9 @@ class Exif(KaitaiStruct):
                     _pos = self._io.pos()
                     self._io.seek(self.next_ifd_ofs)
                     if self._is_le:
-                        self._m_next_ifd = self._root.ExifBody.Ifd(self._io, self, self._root, self._is_le)
+                        self._m_next_ifd = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
                     else:
-                        self._m_next_ifd = self._root.ExifBody.Ifd(self._io, self, self._root, self._is_le)
+                        self._m_next_ifd = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
                     self._io.seek(_pos)
 
                 return self._m_next_ifd if hasattr(self, '_m_next_ifd') else None
@@ -577,23 +576,22 @@ class Exif(KaitaiStruct):
                 self._read()
 
             def _read(self):
-
-                if self._is_le == True:
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/exif_body/types/ifd_field")
+                elif self._is_le == True:
                     self._read_le()
                 elif self._is_le == False:
                     self._read_be()
-                else:
-                    raise Exception("Unable to decide endianness")
 
             def _read_le(self):
-                self.tag = self._root.ExifBody.IfdField.TagEnum(self._io.read_u2le())
-                self.field_type = self._root.ExifBody.IfdField.FieldTypeEnum(self._io.read_u2le())
+                self.tag = KaitaiStream.resolve_enum(Exif.ExifBody.IfdField.TagEnum, self._io.read_u2le())
+                self.field_type = KaitaiStream.resolve_enum(Exif.ExifBody.IfdField.FieldTypeEnum, self._io.read_u2le())
                 self.length = self._io.read_u4le()
                 self.ofs_or_data = self._io.read_u4le()
 
             def _read_be(self):
-                self.tag = self._root.ExifBody.IfdField.TagEnum(self._io.read_u2be())
-                self.field_type = self._root.ExifBody.IfdField.FieldTypeEnum(self._io.read_u2be())
+                self.tag = KaitaiStream.resolve_enum(Exif.ExifBody.IfdField.TagEnum, self._io.read_u2be())
+                self.field_type = KaitaiStream.resolve_enum(Exif.ExifBody.IfdField.FieldTypeEnum, self._io.read_u2be())
                 self.length = self._io.read_u4be()
                 self.ofs_or_data = self._io.read_u4be()
 
@@ -602,7 +600,7 @@ class Exif(KaitaiStruct):
                 if hasattr(self, '_m_type_byte_length'):
                     return self._m_type_byte_length if hasattr(self, '_m_type_byte_length') else None
 
-                self._m_type_byte_length = (2 if self.field_type == self._root.ExifBody.IfdField.FieldTypeEnum.word else (4 if self.field_type == self._root.ExifBody.IfdField.FieldTypeEnum.dword else 1))
+                self._m_type_byte_length = (2 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word else (4 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword else 1))
                 return self._m_type_byte_length if hasattr(self, '_m_type_byte_length') else None
 
             @property
@@ -647,9 +645,9 @@ class Exif(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.ifd0_ofs)
             if self._is_le:
-                self._m_ifd0 = self._root.ExifBody.Ifd(self._io, self, self._root, self._is_le)
+                self._m_ifd0 = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
             else:
-                self._m_ifd0 = self._root.ExifBody.Ifd(self._io, self, self._root, self._is_le)
+                self._m_ifd0 = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
             self._io.seek(_pos)
             return self._m_ifd0 if hasattr(self, '_m_ifd0') else None
 

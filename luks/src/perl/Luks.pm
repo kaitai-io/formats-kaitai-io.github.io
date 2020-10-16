@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -83,8 +83,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 85, 75, 83, 186, 190)));
-    $self->{version} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 1)));
+    $self->{magic} = $self->{_io}->read_bytes(6);
+    $self->{version} = $self->{_io}->read_bytes(2);
     $self->{cipher_name_specification} = Encode::decode("ASCII", $self->{_io}->read_bytes(32));
     $self->{cipher_mode_specification} = Encode::decode("ASCII", $self->{_io}->read_bytes(32));
     $self->{hash_specification} = Encode::decode("ASCII", $self->{_io}->read_bytes(32));

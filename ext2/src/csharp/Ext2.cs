@@ -67,7 +67,11 @@ namespace Kaitai
                 _wtime = m_io.ReadU4le();
                 _mntCount = m_io.ReadU2le();
                 _maxMntCount = m_io.ReadU2le();
-                _magic = m_io.EnsureFixedContents(new byte[] { 83, 239 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 83, 239 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 239 }, Magic, M_Io, "/types/super_block_struct/seq/15");
+                }
                 _state = ((StateEnum) m_io.ReadU2le());
                 _errors = ((ErrorsEnum) m_io.ReadU2le());
                 _minorRevLevel = m_io.ReadU2le();

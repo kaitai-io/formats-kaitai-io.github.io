@@ -45,13 +45,25 @@ namespace Kaitai
             {
                 _header = new FileHeader(m_io, this, m_root);
                 _pathName = m_io.ReadBytes((Header.PathNameSize - 1));
-                _stringTerminator = m_io.EnsureFixedContents(new byte[] { 0 });
+                _stringTerminator = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(StringTerminator, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, StringTerminator, M_Io, "/types/file/seq/2");
+                }
                 if (KaitaiStream.Mod(Header.PathNameSize, 2) == 1) {
-                    _pathNamePadding = m_io.EnsureFixedContents(new byte[] { 0 });
+                    _pathNamePadding = m_io.ReadBytes(1);
+                    if (!((KaitaiStream.ByteArrayCompare(PathNamePadding, new byte[] { 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0 }, PathNamePadding, M_Io, "/types/file/seq/3");
+                    }
                 }
                 _fileData = m_io.ReadBytes(Header.FileSize.Value);
                 if (KaitaiStream.Mod(Header.FileSize.Value, 2) == 1) {
-                    _fileDataPadding = m_io.EnsureFixedContents(new byte[] { 0 });
+                    _fileDataPadding = m_io.ReadBytes(1);
+                    if (!((KaitaiStream.ByteArrayCompare(FileDataPadding, new byte[] { 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0 }, FileDataPadding, M_Io, "/types/file/seq/5");
+                    }
                 }
                 if ( (((KaitaiStream.ByteArrayCompare(PathName, new byte[] { 84, 82, 65, 73, 76, 69, 82, 33, 33, 33 }) == 0)) && (Header.FileSize.Value == 0)) ) {
                     _endOfFilePadding = m_io.ReadBytesFull();
@@ -91,7 +103,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 199, 113 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 199, 113 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 199, 113 }, Magic, M_Io, "/types/file_header/seq/0");
+                }
                 _deviceNumber = m_io.ReadU2le();
                 _inodeNumber = m_io.ReadU2le();
                 _mode = m_io.ReadU2le();

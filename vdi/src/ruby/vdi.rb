@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -41,14 +41,15 @@ class Vdi < Kaitai::Struct::Struct
 
     def _read
       @text = (@_io.read_bytes(64)).force_encoding("utf-8")
-      @signature = @_io.ensure_fixed_contents([127, 16, 218, 190].pack('C*'))
+      @signature = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([127, 16, 218, 190].pack('C*'), signature, _io, "/types/header/seq/1") if not signature == [127, 16, 218, 190].pack('C*')
       @version = Version.new(@_io, self, @_root)
       if subheader_size_is_dynamic
         @header_size_optional = @_io.read_u4le
       end
       @_raw_header_main = @_io.read_bytes(header_size)
-      io = Kaitai::Struct::Stream.new(@_raw_header_main)
-      @header_main = HeaderMain.new(io, self, @_root)
+      _io__raw_header_main = Kaitai::Struct::Stream.new(@_raw_header_main)
+      @header_main = HeaderMain.new(_io__raw_header_main, self, @_root)
       self
     end
     class Uuid < Kaitai::Struct::Struct
@@ -84,7 +85,7 @@ class Vdi < Kaitai::Struct::Struct
       end
 
       def _read
-        @image_type = Kaitai::Struct::Stream::resolve_enum(IMAGE_TYPE, @_io.read_u4le)
+        @image_type = Kaitai::Struct::Stream::resolve_enum(Vdi::IMAGE_TYPE, @_io.read_u4le)
         @image_flags = Flags.new(@_io, self, @_root)
         @description = (@_io.read_bytes(256)).force_encoding("utf-8")
         if _parent.version.major >= 1
@@ -140,12 +141,12 @@ class Vdi < Kaitai::Struct::Struct
         end
 
         def _read
-          @reserved0 = @_io.read_bits_int(15)
-          @zero_expand = @_io.read_bits_int(1) != 0
-          @reserved1 = @_io.read_bits_int(6)
-          @diff = @_io.read_bits_int(1) != 0
-          @fixed = @_io.read_bits_int(1) != 0
-          @reserved2 = @_io.read_bits_int(8)
+          @reserved0 = @_io.read_bits_int_be(15)
+          @zero_expand = @_io.read_bits_int_be(1) != 0
+          @reserved1 = @_io.read_bits_int_be(6)
+          @diff = @_io.read_bits_int_be(1) != 0
+          @fixed = @_io.read_bits_int_be(1) != 0
+          @reserved2 = @_io.read_bits_int_be(8)
           self
         end
         attr_reader :reserved0
@@ -278,8 +279,8 @@ class Vdi < Kaitai::Struct::Struct
         i = 0
         while not @_io.eof?
           @_raw_data << @_io.read_bytes(_root.header.header_main.block_data_size)
-          io = Kaitai::Struct::Stream.new(@_raw_data.last)
-          @data << Sector.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data.last)
+          @data << Sector.new(_io__raw_data, self, @_root)
           i += 1
         end
         self
@@ -321,8 +322,8 @@ class Vdi < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(header.blocks_map_offset)
     @_raw_blocks_map = @_io.read_bytes(header.blocks_map_size)
-    io = Kaitai::Struct::Stream.new(@_raw_blocks_map)
-    @blocks_map = BlocksMap.new(io, self, @_root)
+    _io__raw_blocks_map = Kaitai::Struct::Stream.new(@_raw_blocks_map)
+    @blocks_map = BlocksMap.new(_io__raw_blocks_map, self, @_root)
     @_io.seek(_pos)
     @blocks_map
   end

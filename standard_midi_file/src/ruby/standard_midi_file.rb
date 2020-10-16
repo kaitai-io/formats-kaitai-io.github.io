@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -175,11 +175,12 @@ class StandardMidiFile < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([77, 84, 114, 107].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([77, 84, 114, 107].pack('C*'), magic, _io, "/types/track/seq/0") if not magic == [77, 84, 114, 107].pack('C*')
       @len_events = @_io.read_u4be
       @_raw_events = @_io.read_bytes(len_events)
-      io = Kaitai::Struct::Stream.new(@_raw_events)
-      @events = TrackEvents.new(io, self, @_root)
+      _io__raw_events = Kaitai::Struct::Stream.new(@_raw_events)
+      @events = TrackEvents.new(_io__raw_events, self, @_root)
       self
     end
     attr_reader :magic
@@ -243,7 +244,8 @@ class StandardMidiFile < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([77, 84, 104, 100].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([77, 84, 104, 100].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [77, 84, 104, 100].pack('C*')
       @len_header = @_io.read_u4be
       @format = @_io.read_u2be
       @num_tracks = @_io.read_u2be

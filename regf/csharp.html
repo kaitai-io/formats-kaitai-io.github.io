@@ -157,11 +157,6 @@ filesystem with a running Windows OS.</p>
                 <a href="index.html" title="Windows registry database parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="Windows registry database parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="Windows registry database parsing C# library">C#</a></li>
@@ -388,7 +383,11 @@ filesystem with a running Windows OS.</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">104</span><span class="p">,</span> <span class="m">98</span><span class="p">,</span> <span class="m">105</span><span class="p">,</span> <span class="m">110</span> <span class="p">});</span>
+                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">104</span><span class="p">,</span> <span class="m">98</span><span class="p">,</span> <span class="m">105</span><span class="p">,</span> <span class="m">110</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">104</span><span class="p">,</span> <span class="m">98</span><span class="p">,</span> <span class="m">105</span><span class="p">,</span> <span class="m">110</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/hive_bin_header/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_offset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_unknown1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
@@ -936,7 +935,11 @@ filesystem with a running Windows OS.</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">114</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">103</span><span class="p">,</span> <span class="m">102</span> <span class="p">});</span>
+                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">114</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">103</span><span class="p">,</span> <span class="m">102</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">114</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">103</span><span class="p">,</span> <span class="m">102</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/file_header/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_primarySequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_secondarySequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_lastModificationDateAndTime</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Filetime</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>

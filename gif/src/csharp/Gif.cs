@@ -394,7 +394,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 71, 73, 70 });
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 71, 73, 70 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 71, 73, 70 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _version = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(3));
             }
             private byte[] _magic;
@@ -427,11 +431,19 @@ namespace Kaitai
             }
             private void _read()
             {
-                _blockSize = m_io.EnsureFixedContents(new byte[] { 4 });
+                _blockSize = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(BlockSize, new byte[] { 4 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 4 }, BlockSize, M_Io, "/types/ext_graphic_control/seq/0");
+                }
                 _flags = m_io.ReadU1();
                 _delayTime = m_io.ReadU2le();
                 _transparentIdx = m_io.ReadU1();
-                _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
+                _terminator = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Terminator, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Terminator, M_Io, "/types/ext_graphic_control/seq/4");
+                }
             }
             private bool f_transparentColorFlag;
             private bool _transparentColorFlag;

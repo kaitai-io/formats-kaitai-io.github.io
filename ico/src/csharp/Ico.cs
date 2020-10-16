@@ -29,7 +29,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 0, 0, 1, 0 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 0, 0, 1, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, Magic, M_Io, "/seq/0");
+            }
             _numImages = m_io.ReadU2le();
             _images = new List<IconDirEntry>((int) (NumImages));
             for (var i = 0; i < NumImages; i++)
@@ -58,7 +62,11 @@ namespace Kaitai
                 _width = m_io.ReadU1();
                 _height = m_io.ReadU1();
                 _numColors = m_io.ReadU1();
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0 });
+                _reserved = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Reserved, M_Io, "/types/icon_dir_entry/seq/3");
+                }
                 _numPlanes = m_io.ReadU2le();
                 _bpp = m_io.ReadU2le();
                 _lenImg = m_io.ReadU4le();

@@ -67,7 +67,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.EnsureFixedContents(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 });
+                _signature = m_io.ReadBytes(8);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }, Signature, M_Io, "/types/header/seq/0");
+                }
                 _compatibleFlags = m_io.ReadU4le();
                 _incompatibleFlags = m_io.ReadU4le();
                 _state = ((SystemdJournal.State) m_io.ReadU1());
@@ -282,8 +286,8 @@ namespace Kaitai
                         io.Seek(OfsNextHash);
                         _nextHash = new JournalObject(io, this, m_root);
                         io.Seek(_pos);
+                        f_nextHash = true;
                     }
-                    f_nextHash = true;
                     return _nextHash;
                 }
             }
@@ -301,8 +305,8 @@ namespace Kaitai
                         io.Seek(OfsHeadField);
                         _headField = new JournalObject(io, this, m_root);
                         io.Seek(_pos);
+                        f_headField = true;
                     }
-                    f_headField = true;
                     return _headField;
                 }
             }
@@ -320,8 +324,8 @@ namespace Kaitai
                         io.Seek(OfsEntry);
                         _entry = new JournalObject(io, this, m_root);
                         io.Seek(_pos);
+                        f_entry = true;
                     }
-                    f_entry = true;
                     return _entry;
                 }
             }
@@ -339,8 +343,8 @@ namespace Kaitai
                         io.Seek(OfsEntryArray);
                         _entryArray = new JournalObject(io, this, m_root);
                         io.Seek(_pos);
+                        f_entryArray = true;
                     }
-                    f_entryArray = true;
                     return _entryArray;
                 }
             }

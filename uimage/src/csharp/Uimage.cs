@@ -119,7 +119,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 39, 5, 25, 86 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 39, 5, 25, 86 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, Magic, M_Io, "/types/uheader/seq/0");
+                }
                 _headerCrc = m_io.ReadU4be();
                 _timestamp = m_io.ReadU4be();
                 _lenImage = m_io.ReadU4be();

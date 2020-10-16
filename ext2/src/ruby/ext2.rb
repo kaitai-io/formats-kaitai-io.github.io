@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Ext2 < Kaitai::Struct::Struct
@@ -50,7 +50,8 @@ class Ext2 < Kaitai::Struct::Struct
       @wtime = @_io.read_u4le
       @mnt_count = @_io.read_u2le
       @max_mnt_count = @_io.read_u2le
-      @magic = @_io.ensure_fixed_contents([83, 239].pack('C*'))
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 239].pack('C*'), magic, _io, "/types/super_block_struct/seq/15") if not magic == [83, 239].pack('C*')
       @state = Kaitai::Struct::Stream::resolve_enum(STATE_ENUM, @_io.read_u2le)
       @errors = Kaitai::Struct::Stream::resolve_enum(ERRORS_ENUM, @_io.read_u2le)
       @minor_rev_level = @_io.read_u2le
@@ -251,8 +252,8 @@ class Ext2 < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek((ptr * _root.bg1.super_block.block_size))
       @_raw_body = @_io.read_bytes(_root.bg1.super_block.block_size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = RawBlock.new(io, self, @_root)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = RawBlock.new(_io__raw_body, self, @_root)
       @_io.seek(_pos)
       @body
     end
@@ -284,8 +285,8 @@ class Ext2 < Kaitai::Struct::Struct
 
     def _read
       @_raw_super_block = @_io.read_bytes(1024)
-      io = Kaitai::Struct::Stream.new(@_raw_super_block)
-      @super_block = SuperBlockStruct.new(io, self, @_root)
+      _io__raw_super_block = Kaitai::Struct::Stream.new(@_raw_super_block)
+      @super_block = SuperBlockStruct.new(_io__raw_super_block, self, @_root)
       @block_groups = Array.new(super_block.block_group_count)
       (super_block.block_group_count).times { |i|
         @block_groups[i] = Bgd.new(@_io, self, @_root)

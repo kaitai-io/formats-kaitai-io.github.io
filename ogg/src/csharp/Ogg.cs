@@ -60,12 +60,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _syncCode = m_io.EnsureFixedContents(new byte[] { 79, 103, 103, 83 });
-                _version = m_io.EnsureFixedContents(new byte[] { 0 });
-                _reserved1 = m_io.ReadBitsInt(5);
-                _isEndOfStream = m_io.ReadBitsInt(1) != 0;
-                _isBeginningOfStream = m_io.ReadBitsInt(1) != 0;
-                _isContinuation = m_io.ReadBitsInt(1) != 0;
+                _syncCode = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(SyncCode, new byte[] { 79, 103, 103, 83 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, SyncCode, M_Io, "/types/page/seq/0");
+                }
+                _version = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Version, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Version, M_Io, "/types/page/seq/1");
+                }
+                _reserved1 = m_io.ReadBitsIntBe(5);
+                _isEndOfStream = m_io.ReadBitsIntBe(1) != 0;
+                _isBeginningOfStream = m_io.ReadBitsIntBe(1) != 0;
+                _isContinuation = m_io.ReadBitsIntBe(1) != 0;
                 m_io.AlignToByte();
                 _granulePos = m_io.ReadU8le();
                 _bitstreamSerial = m_io.ReadU4le();

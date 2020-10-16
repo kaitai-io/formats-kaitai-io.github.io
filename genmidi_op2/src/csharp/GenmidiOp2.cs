@@ -34,7 +34,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 });
+            _magic = m_io.ReadBytes(8);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, Magic, M_Io, "/seq/0");
+            }
             _instruments = new List<InstrumentEntry>((int) (175));
             for (var i = 0; i < 175; i++)
             {

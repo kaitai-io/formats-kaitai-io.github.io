@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 public class Pcx extends KaitaiStruct {
@@ -88,7 +89,10 @@ public class Pcx extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 10 });
+            this.magic = this._io.readBytes(1);
+            if (!(Arrays.equals(magic(), new byte[] { 10 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 10 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.version = Pcx.Versions.byId(this._io.readU1());
             this.encoding = Pcx.Encodings.byId(this._io.readU1());
             this.bitsPerPixel = this._io.readU1();
@@ -99,7 +103,10 @@ public class Pcx extends KaitaiStruct {
             this.hdpi = this._io.readU2le();
             this.vdpi = this._io.readU2le();
             this.palette16 = this._io.readBytes(48);
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0 });
+            this.reserved = this._io.readBytes(1);
+            if (!(Arrays.equals(reserved(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, reserved(), _io(), "/types/header/seq/11");
+            }
             this.numPlanes = this._io.readU1();
             this.bytesPerLine = this._io.readU2le();
             this.paletteInfo = this._io.readU2le();
@@ -173,8 +180,11 @@ public class Pcx extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 12 });
-            colors = new ArrayList<Rgb>((int) (256));
+            this.magic = this._io.readBytes(1);
+            if (!(Arrays.equals(magic(), new byte[] { 12 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 12 }, magic(), _io(), "/types/t_palette_256/seq/0");
+            }
+            colors = new ArrayList<Rgb>(((Number) (256)).intValue());
             for (int i = 0; i < 256; i++) {
                 this.colors.add(new Rgb(this._io, this, _root));
             }

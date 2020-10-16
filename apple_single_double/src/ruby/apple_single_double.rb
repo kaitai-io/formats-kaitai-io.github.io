@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -88,8 +88,8 @@ class AppleSingleDouble < Kaitai::Struct::Struct
       case type
       when :types_finder_info
         @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FinderInfo.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = FinderInfo.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end

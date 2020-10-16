@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class NtMdtPal(KaitaiStruct):
     """It is a color scheme for visualising SPM scans."""
@@ -16,16 +17,18 @@ class NtMdtPal(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.signature = self._io.ensure_fixed_contents(b"\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21")
+        self.signature = self._io.read_bytes(26)
+        if not self.signature == b"\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21":
+            raise kaitaistruct.ValidationNotEqualError(b"\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21", self.signature, self._io, u"/seq/0")
         self.count = self._io.read_u4be()
         self.meta = [None] * (self.count)
         for i in range(self.count):
-            self.meta[i] = self._root.Meta(self._io, self, self._root)
+            self.meta[i] = NtMdtPal.Meta(self._io, self, self._root)
 
         self.something2 = self._io.read_bytes(1)
         self.tables = [None] * (self.count)
         for i in range(self.count):
-            self.tables[i] = self._root.ColTable(i, self._io, self, self._root)
+            self.tables[i] = NtMdtPal.ColTable(i, self._io, self, self._root)
 
 
     class Meta(KaitaiStruct):
@@ -76,7 +79,7 @@ class NtMdtPal(KaitaiStruct):
             self.unkn1 = self._io.read_u2be()
             self.colors = [None] * ((self._root.meta[self.index].colors_count - 1))
             for i in range((self._root.meta[self.index].colors_count - 1)):
-                self.colors[i] = self._root.Color(self._io, self, self._root)
+                self.colors[i] = NtMdtPal.Color(self._io, self, self._root)
 
 
 

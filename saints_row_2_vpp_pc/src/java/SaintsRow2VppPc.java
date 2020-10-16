@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -27,7 +28,10 @@ public class SaintsRow2VppPc extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { -50, 10, -119, 81, 4 });
+        this.magic = this._io.readBytes(5);
+        if (!(Arrays.equals(magic(), new byte[] { -50, 10, -119, 81, 4 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -50, 10, -119, 81, 4 }, magic(), _io(), "/seq/0");
+        }
         this.pad1 = this._io.readBytes(335);
         this.numFiles = this._io.readS4le();
         this.containerSize = this._io.readS4le();

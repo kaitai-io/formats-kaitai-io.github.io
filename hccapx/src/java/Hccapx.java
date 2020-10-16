@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -60,10 +61,13 @@ public class Hccapx extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 72, 67, 80, 88 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 72, 67, 80, 88 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, magic(), _io(), "/types/hccapx_record/seq/0");
+            }
             this.version = this._io.readU4le();
-            this.ignoreReplayCounter = this._io.readBitsInt(1) != 0;
-            this.messagePair = this._io.readBitsInt(7);
+            this.ignoreReplayCounter = this._io.readBitsIntBe(1) != 0;
+            this.messagePair = this._io.readBitsIntBe(7);
             this._io.alignToByte();
             this.lenEssid = this._io.readU1();
             this.essid = this._io.readBytes(lenEssid());

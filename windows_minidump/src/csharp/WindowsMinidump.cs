@@ -87,8 +87,16 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic1 = m_io.EnsureFixedContents(new byte[] { 77, 68, 77, 80 });
-            _magic2 = m_io.EnsureFixedContents(new byte[] { 147, 167 });
+            _magic1 = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 77, 68, 77, 80 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 77, 68, 77, 80 }, Magic1, M_Io, "/seq/0");
+            }
+            _magic2 = m_io.ReadBytes(2);
+            if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 147, 167 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 147, 167 }, Magic2, M_Io, "/seq/1");
+            }
             _version = m_io.ReadU2le();
             _numStreams = m_io.ReadU4le();
             _ofsStreams = m_io.ReadU4le();
@@ -275,8 +283,8 @@ namespace Kaitai
                         io.Seek(OfsServicePack);
                         _servicePack = new MinidumpString(io, this, m_root);
                         io.Seek(_pos);
+                        f_servicePack = true;
                     }
-                    f_servicePack = true;
                     return _servicePack;
                 }
             }
@@ -465,10 +473,22 @@ namespace Kaitai
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsData);
                     switch (StreamType) {
+                    case WindowsMinidump.StreamTypes.MemoryList: {
+                        __raw_data = m_io.ReadBytes(LenData);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new MemoryList(io___raw_data, this, m_root);
+                        break;
+                    }
                     case WindowsMinidump.StreamTypes.MiscInfo: {
                         __raw_data = m_io.ReadBytes(LenData);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new MiscInfo(io___raw_data, this, m_root);
+                        break;
+                    }
+                    case WindowsMinidump.StreamTypes.ThreadList: {
+                        __raw_data = m_io.ReadBytes(LenData);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new ThreadList(io___raw_data, this, m_root);
                         break;
                     }
                     case WindowsMinidump.StreamTypes.Exception: {
@@ -477,22 +497,10 @@ namespace Kaitai
                         _data = new ExceptionStream(io___raw_data, this, m_root);
                         break;
                     }
-                    case WindowsMinidump.StreamTypes.MemoryList: {
-                        __raw_data = m_io.ReadBytes(LenData);
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new MemoryList(io___raw_data, this, m_root);
-                        break;
-                    }
                     case WindowsMinidump.StreamTypes.SystemInfo: {
                         __raw_data = m_io.ReadBytes(LenData);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SystemInfo(io___raw_data, this, m_root);
-                        break;
-                    }
-                    case WindowsMinidump.StreamTypes.ThreadList: {
-                        __raw_data = m_io.ReadBytes(LenData);
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new ThreadList(io___raw_data, this, m_root);
                         break;
                     }
                     default: {

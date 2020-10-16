@@ -35,11 +35,14 @@ var Vfat = (function() {
     }
     ExtBiosParamBlockFat32.prototype._read = function() {
       this.lsPerFat = this._io.readU4le();
-      this.hasActiveFat = this._io.readBitsInt(1) != 0;
-      this.reserved1 = this._io.readBitsInt(3);
-      this.activeFatId = this._io.readBitsInt(4);
+      this.hasActiveFat = this._io.readBitsIntBe(1) != 0;
+      this.reserved1 = this._io.readBitsIntBe(3);
+      this.activeFatId = this._io.readBitsIntBe(4);
       this._io.alignToByte();
-      this.reserved2 = this._io.ensureFixedContents([0]);
+      this.reserved2 = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved2, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved2, this._io, "/types/ext_bios_param_block_fat32/seq/4");
+      }
       this.fatVersion = this._io.readU2le();
       this.rootDirStartClus = this._io.readU4le();
       this.lsFsInfo = this._io.readU2le();

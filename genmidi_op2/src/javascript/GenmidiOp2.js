@@ -31,7 +31,10 @@ var GenmidiOp2 = (function() {
     this._read();
   }
   GenmidiOp2.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([35, 79, 80, 76, 95, 73, 73, 35]);
+    this.magic = this._io.readBytes(8);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [35, 79, 80, 76, 95, 73, 73, 35]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([35, 79, 80, 76, 95, 73, 73, 35], this.magic, this._io, "/seq/0");
+    }
     this.instruments = new Array(175);
     for (var i = 0; i < 175; i++) {
       this.instruments[i] = new InstrumentEntry(this._io, this, this._root);

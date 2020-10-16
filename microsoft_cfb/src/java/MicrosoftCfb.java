@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -51,11 +52,20 @@ public class MicrosoftCfb extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 });
-            this.clsid = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            this.signature = this._io.readBytes(8);
+            if (!(Arrays.equals(signature(), new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }, signature(), _io(), "/types/cfb_header/seq/0");
+            }
+            this.clsid = this._io.readBytes(16);
+            if (!(Arrays.equals(clsid(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, clsid(), _io(), "/types/cfb_header/seq/1");
+            }
             this.versionMinor = this._io.readU2le();
             this.versionMajor = this._io.readU2le();
-            this.byteOrder = this._io.ensureFixedContents(new byte[] { -2, -1 });
+            this.byteOrder = this._io.readBytes(2);
+            if (!(Arrays.equals(byteOrder(), new byte[] { -2, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, byteOrder(), _io(), "/types/cfb_header/seq/4");
+            }
             this.sectorShift = this._io.readU2le();
             this.miniSectorShift = this._io.readU2le();
             this.reserved1 = this._io.readBytes(6);
@@ -68,7 +78,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             this.sizeMiniFat = this._io.readS4le();
             this.ofsDifat = this._io.readS4le();
             this.sizeDifat = this._io.readS4le();
-            difat = new ArrayList<Integer>((int) (109));
+            difat = new ArrayList<Integer>(((Number) (109)).intValue());
             for (int i = 0; i < 109; i++) {
                 this.difat.add(this._io.readS4le());
             }

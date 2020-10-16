@@ -140,10 +140,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved0 = m_io.ReadBitsInt(6);
-                _anyuid = m_io.ReadBitsInt(1) != 0;
-                _disabled = m_io.ReadBitsInt(1) != 0;
-                _reserved1 = m_io.ReadBitsInt(8);
+                _reserved0 = m_io.ReadBitsIntBe(6);
+                _anyuid = m_io.ReadBitsIntBe(1) != 0;
+                _disabled = m_io.ReadBitsIntBe(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(8);
             }
             private ulong _reserved0;
             private bool _anyuid;

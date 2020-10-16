@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 
 /**
@@ -388,10 +389,10 @@ public class WindowsLnkFile extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.readBitsInt(6);
-                this.hasCommonNetRelLink = this._io.readBitsInt(1) != 0;
-                this.hasVolumeIdAndLocalBasePath = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(24);
+                this.reserved1 = this._io.readBitsIntBe(6);
+                this.hasCommonNetRelLink = this._io.readBitsIntBe(1) != 0;
+                this.hasVolumeIdAndLocalBasePath = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(24);
             }
             private long reserved1;
             private boolean hasCommonNetRelLink;
@@ -496,18 +497,18 @@ public class WindowsLnkFile extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.isUnicode = this._io.readBitsInt(1) != 0;
-            this.hasIconLocation = this._io.readBitsInt(1) != 0;
-            this.hasArguments = this._io.readBitsInt(1) != 0;
-            this.hasWorkDir = this._io.readBitsInt(1) != 0;
-            this.hasRelPath = this._io.readBitsInt(1) != 0;
-            this.hasName = this._io.readBitsInt(1) != 0;
-            this.hasLinkInfo = this._io.readBitsInt(1) != 0;
-            this.hasLinkTargetIdList = this._io.readBitsInt(1) != 0;
-            this._unnamed8 = this._io.readBitsInt(16);
-            this.reserved = this._io.readBitsInt(5);
-            this.keepLocalIdListForUncTarget = this._io.readBitsInt(1) != 0;
-            this._unnamed11 = this._io.readBitsInt(2);
+            this.isUnicode = this._io.readBitsIntBe(1) != 0;
+            this.hasIconLocation = this._io.readBitsIntBe(1) != 0;
+            this.hasArguments = this._io.readBitsIntBe(1) != 0;
+            this.hasWorkDir = this._io.readBitsIntBe(1) != 0;
+            this.hasRelPath = this._io.readBitsIntBe(1) != 0;
+            this.hasName = this._io.readBitsIntBe(1) != 0;
+            this.hasLinkInfo = this._io.readBitsIntBe(1) != 0;
+            this.hasLinkTargetIdList = this._io.readBitsIntBe(1) != 0;
+            this._unnamed8 = this._io.readBitsIntBe(16);
+            this.reserved = this._io.readBitsIntBe(5);
+            this.keepLocalIdListForUncTarget = this._io.readBitsIntBe(1) != 0;
+            this._unnamed11 = this._io.readBitsIntBe(2);
         }
         private boolean isUnicode;
         private boolean hasIconLocation;
@@ -562,8 +563,14 @@ public class WindowsLnkFile extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.lenHeader = this._io.ensureFixedContents(new byte[] { 76, 0, 0, 0 });
-            this.linkClsid = this._io.ensureFixedContents(new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 });
+            this.lenHeader = this._io.readBytes(4);
+            if (!(Arrays.equals(lenHeader(), new byte[] { 76, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 0, 0, 0 }, lenHeader(), _io(), "/types/file_header/seq/0");
+            }
+            this.linkClsid = this._io.readBytes(16);
+            if (!(Arrays.equals(linkClsid(), new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 }, linkClsid(), _io(), "/types/file_header/seq/1");
+            }
             this._raw_flags = this._io.readBytes(4);
             KaitaiStream _io__raw_flags = new ByteBufferKaitaiStream(_raw_flags);
             this.flags = new LinkFlags(_io__raw_flags, this, _root);
@@ -575,7 +582,10 @@ public class WindowsLnkFile extends KaitaiStruct {
             this.iconIndex = this._io.readS4le();
             this.showCommand = WindowsLnkFile.WindowState.byId(this._io.readU4le());
             this.hotkey = this._io.readU2le();
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            this.reserved = this._io.readBytes(10);
+            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, reserved(), _io(), "/types/file_header/seq/11");
+            }
         }
         private byte[] lenHeader;
         private byte[] linkClsid;

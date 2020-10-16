@@ -70,7 +70,10 @@ var Gzip = (function() {
     this._read();
   }
   Gzip.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([31, 139]);
+    this.magic = this._io.readBytes(2);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [31, 139]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([31, 139], this.magic, this._io, "/seq/0");
+    }
     this.compressionMethod = this._io.readU1();
     this.flags = new Flags(this._io, this, this._root);
     this.modTime = this._io.readU4le();
@@ -106,12 +109,12 @@ var Gzip = (function() {
       this._read();
     }
     Flags.prototype._read = function() {
-      this.reserved1 = this._io.readBitsInt(3);
-      this.hasComment = this._io.readBitsInt(1) != 0;
-      this.hasName = this._io.readBitsInt(1) != 0;
-      this.hasExtra = this._io.readBitsInt(1) != 0;
-      this.hasHeaderCrc = this._io.readBitsInt(1) != 0;
-      this.isText = this._io.readBitsInt(1) != 0;
+      this.reserved1 = this._io.readBitsIntBe(3);
+      this.hasComment = this._io.readBitsIntBe(1) != 0;
+      this.hasName = this._io.readBitsIntBe(1) != 0;
+      this.hasExtra = this._io.readBitsIntBe(1) != 0;
+      this.hasHeaderCrc = this._io.readBitsIntBe(1) != 0;
+      this.isText = this._io.readBitsIntBe(1) != 0;
     }
 
     /**

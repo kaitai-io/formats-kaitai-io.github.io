@@ -27,10 +27,16 @@ var Vp8Ivf = (function() {
     this._read();
   }
   Vp8Ivf.prototype._read = function() {
-    this.magic1 = this._io.ensureFixedContents([68, 75, 73, 70]);
+    this.magic1 = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, [68, 75, 73, 70]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([68, 75, 73, 70], this.magic1, this._io, "/seq/0");
+    }
     this.version = this._io.readU2le();
     this.lenHeader = this._io.readU2le();
-    this.codec = this._io.ensureFixedContents([86, 80, 56, 48]);
+    this.codec = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.codec, [86, 80, 56, 48]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([86, 80, 56, 48], this.codec, this._io, "/seq/3");
+    }
     this.width = this._io.readU2le();
     this.height = this._io.readU2le();
     this.framerate = this._io.readU4le();

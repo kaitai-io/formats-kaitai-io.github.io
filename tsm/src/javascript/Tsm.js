@@ -41,7 +41,10 @@ var Tsm = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([22, 209, 22, 209]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [22, 209, 22, 209]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([22, 209, 22, 209], this.magic, this._io, "/types/header/seq/0");
+      }
       this.version = this._io.readU1();
     }
 

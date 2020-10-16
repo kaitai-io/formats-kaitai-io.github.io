@@ -23,7 +23,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _signature = m_io.EnsureFixedContents(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 });
+            _signature = m_io.ReadBytes(26);
+            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, Signature, M_Io, "/seq/0");
+            }
             _count = m_io.ReadU4be();
             _meta = new List<Meta>((int) (Count));
             for (var i = 0; i < Count; i++)

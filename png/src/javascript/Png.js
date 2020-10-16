@@ -46,9 +46,18 @@ var Png = (function() {
     this._read();
   }
   Png.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([137, 80, 78, 71, 13, 10, 26, 10]);
-    this.ihdrLen = this._io.ensureFixedContents([0, 0, 0, 13]);
-    this.ihdrType = this._io.ensureFixedContents([73, 72, 68, 82]);
+    this.magic = this._io.readBytes(8);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [137, 80, 78, 71, 13, 10, 26, 10]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([137, 80, 78, 71, 13, 10, 26, 10], this.magic, this._io, "/seq/0");
+    }
+    this.ihdrLen = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.ihdrLen, [0, 0, 0, 13]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 13], this.ihdrLen, this._io, "/seq/1");
+    }
+    this.ihdrType = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.ihdrType, [73, 72, 68, 82]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([73, 72, 68, 82], this.ihdrType, this._io, "/seq/2");
+    }
     this.ihdr = new IhdrChunk(this._io, this, this._root);
     this.ihdrCrc = this._io.readBytes(4);
     this.chunks = []
@@ -414,20 +423,20 @@ var Png = (function() {
     }
     BkgdChunk.prototype._read = function() {
       switch (this._root.ihdr.colorType) {
-      case Png.ColorType.GREYSCALE_ALPHA:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
-        break;
       case Png.ColorType.INDEXED:
         this.bkgd = new BkgdIndexed(this._io, this, this._root);
-        break;
-      case Png.ColorType.GREYSCALE:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
         break;
       case Png.ColorType.TRUECOLOR_ALPHA:
         this.bkgd = new BkgdTruecolor(this._io, this, this._root);
         break;
+      case Png.ColorType.GREYSCALE_ALPHA:
+        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
+        break;
       case Png.ColorType.TRUECOLOR:
         this.bkgd = new BkgdTruecolor(this._io, this, this._root);
+        break;
+      case Png.ColorType.GREYSCALE:
+        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
         break;
       }
     }

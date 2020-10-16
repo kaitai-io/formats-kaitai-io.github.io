@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -204,7 +204,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (84, 65, 71)));
+    $self->{magic} = $self->{_io}->read_bytes(3);
     $self->{title} = $self->{_io}->read_bytes(30);
     $self->{artist} = $self->{_io}->read_bytes(30);
     $self->{album} = $self->{_io}->read_bytes(30);

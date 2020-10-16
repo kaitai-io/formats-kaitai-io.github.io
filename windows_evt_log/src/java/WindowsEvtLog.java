@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -88,7 +89,10 @@ public class WindowsEvtLog extends KaitaiStruct {
         }
         private void _read() {
             this.lenHeader = this._io.readU4le();
-            this.magic = this._io.ensureFixedContents(new byte[] { 76, 102, 76, 101 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 76, 102, 76, 101 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, magic(), _io(), "/types/header/seq/1");
+            }
             this.versionMajor = this._io.readU4le();
             this.versionMinor = this._io.readU4le();
             this.ofsStart = this._io.readU4le();
@@ -120,11 +124,11 @@ public class WindowsEvtLog extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved = this._io.readBitsInt(28);
-                this.archive = this._io.readBitsInt(1) != 0;
-                this.logFull = this._io.readBitsInt(1) != 0;
-                this.wrap = this._io.readBitsInt(1) != 0;
-                this.dirty = this._io.readBitsInt(1) != 0;
+                this.reserved = this._io.readBitsIntBe(28);
+                this.archive = this._io.readBitsIntBe(1) != 0;
+                this.logFull = this._io.readBitsIntBe(1) != 0;
+                this.wrap = this._io.readBitsIntBe(1) != 0;
+                this.dirty = this._io.readBitsIntBe(1) != 0;
             }
             private long reserved;
             private boolean archive;
@@ -462,7 +466,10 @@ public class WindowsEvtLog extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 });
+            this.magic = this._io.readBytes(12);
+            if (!(Arrays.equals(magic(), new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, magic(), _io(), "/types/cursor_record_body/seq/0");
+            }
             this.ofsFirstRecord = this._io.readU4le();
             this.ofsNextRecord = this._io.readU4le();
             this.idxNextRecord = this._io.readU4le();

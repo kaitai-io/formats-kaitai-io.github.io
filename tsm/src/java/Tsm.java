@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -60,7 +61,10 @@ public class Tsm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 22, -47, 22, -47 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 22, -47, 22, -47 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 22, -47, 22, -47 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.version = this._io.readU1();
         }
         private byte[] magic;
@@ -118,7 +122,7 @@ public class Tsm extends KaitaiStruct {
                 this.key = new String(this._io.readBytes(keyLen()), Charset.forName("UTF-8"));
                 this.type = this._io.readU1();
                 this.entryCount = this._io.readU2be();
-                indexEntries = new ArrayList<IndexEntry>((int) (entryCount()));
+                indexEntries = new ArrayList<IndexEntry>(((Number) (entryCount())).intValue());
                 for (int i = 0; i < entryCount(); i++) {
                     this.indexEntries.add(new IndexEntry(this._io, this, _root));
                 }

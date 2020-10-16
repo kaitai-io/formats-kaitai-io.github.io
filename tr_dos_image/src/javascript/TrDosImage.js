@@ -69,14 +69,20 @@ var TrDosImage = (function() {
       this._read();
     }
     VolumeInfo.prototype._read = function() {
-      this.catalogEnd = this._io.ensureFixedContents([0]);
+      this.catalogEnd = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.catalogEnd, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.catalogEnd, this._io, "/types/volume_info/seq/0");
+      }
       this.unused = this._io.readBytes(224);
       this.firstFreeSectorSector = this._io.readU1();
       this.firstFreeSectorTrack = this._io.readU1();
       this.diskType = this._io.readU1();
       this.numFiles = this._io.readU1();
       this.numFreeSectors = this._io.readU2le();
-      this.trDosId = this._io.ensureFixedContents([16]);
+      this.trDosId = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.trDosId, [16]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([16], this.trDosId, this._io, "/types/volume_info/seq/7");
+      }
       this.unused2 = this._io.readBytes(2);
       this.password = this._io.readBytes(9);
       this.unused3 = this._io.readBytes(1);

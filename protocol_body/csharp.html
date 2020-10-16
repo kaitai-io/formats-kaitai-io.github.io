@@ -147,11 +147,6 @@ on that parameter.</p>
                 <a href="index.html" title="protocol_body parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
@@ -435,20 +430,20 @@ on that parameter.</p>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
             <span class="k">switch</span> <span class="p">(</span><span class="n">Protocol</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Tcp</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TcpSegment</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
             <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv6Nonxt</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoNextHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Icmp</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IcmpPacket</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv4</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Udp</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UdpDatagram</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Icmp</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IcmpPacket</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Hopopt</span><span class="p">:</span> <span class="p">{</span>
@@ -459,8 +454,8 @@ on that parameter.</p>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv4</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Tcp</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TcpSegment</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="p">}</span>

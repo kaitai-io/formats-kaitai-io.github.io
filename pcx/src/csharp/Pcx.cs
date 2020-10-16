@@ -57,7 +57,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 10 });
+                _magic = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 10 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 10 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _version = ((Pcx.Versions) m_io.ReadU1());
                 _encoding = ((Pcx.Encodings) m_io.ReadU1());
                 _bitsPerPixel = m_io.ReadU1();
@@ -68,7 +72,11 @@ namespace Kaitai
                 _hdpi = m_io.ReadU2le();
                 _vdpi = m_io.ReadU2le();
                 _palette16 = m_io.ReadBytes(48);
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0 });
+                _reserved = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Reserved, M_Io, "/types/header/seq/11");
+                }
                 _numPlanes = m_io.ReadU1();
                 _bytesPerLine = m_io.ReadU2le();
                 _paletteInfo = m_io.ReadU2le();
@@ -137,7 +145,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 12 });
+                _magic = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 12 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 12 }, Magic, M_Io, "/types/t_palette_256/seq/0");
+                }
                 _colors = new List<Rgb>((int) (256));
                 for (var i = 0; i < 256; i++)
                 {
@@ -200,8 +212,8 @@ namespace Kaitai
                     m_io.Seek((M_Io.Size - 769));
                     _palette256 = new TPalette256(m_io, this, m_root);
                     m_io.Seek(_pos);
+                    f_palette256 = true;
                 }
-                f_palette256 = true;
                 return _palette256;
             }
         }

@@ -130,11 +130,6 @@ section#format-index .row {
                 <a href="index.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C# library">C#</a></li>
@@ -324,23 +319,27 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">255</span> <span class="p">});</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">255</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">255</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/segment/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_marker</span> <span class="p">=</span> <span class="p">((</span><span class="n">MarkerEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Soi</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Eoi</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
                     <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Soi</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Eoi</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">Marker</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sos</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
-                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentSos</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">App1</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
                         <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentApp1</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">App0</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentApp0</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sof0</span><span class="p">:</span> <span class="p">{</span>
@@ -349,10 +348,10 @@ section#format-index .row {
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentSof0</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">App0</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sos</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
                         <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentApp0</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentSos</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -622,7 +621,11 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_extraZero</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_extraZero</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">ExtraZero</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">},</span> <span class="n">ExtraZero</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/exif_in_jpeg/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
                 <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
                 <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Exif</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">);</span>

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -47,7 +47,8 @@ class GptPartitionTable < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.ensure_fixed_contents([69, 70, 73, 32, 80, 65, 82, 84].pack('C*'))
+      @signature = @_io.read_bytes(8)
+      raise Kaitai::Struct::ValidationNotEqualError.new([69, 70, 73, 32, 80, 65, 82, 84].pack('C*'), signature, _io, "/types/partition_header/seq/0") if not signature == [69, 70, 73, 32, 80, 65, 82, 84].pack('C*')
       @revision = @_io.read_u4le
       @header_size = @_io.read_u4le
       @crc32_header = @_io.read_u4le
@@ -72,8 +73,8 @@ class GptPartitionTable < Kaitai::Struct::Struct
       @entries = Array.new(entries_count)
       (entries_count).times { |i|
         @_raw_entries[i] = io.read_bytes(entries_size)
-        io = Kaitai::Struct::Stream.new(@_raw_entries[i])
-        @entries[i] = PartitionEntry.new(io, self, @_root)
+        _io__raw_entries = Kaitai::Struct::Stream.new(@_raw_entries[i])
+        @entries[i] = PartitionEntry.new(_io__raw_entries, self, @_root)
       }
       io.seek(_pos)
       @entries

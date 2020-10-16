@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -78,7 +79,10 @@ public class RubyMarshal extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.version = this._io.ensureFixedContents(new byte[] { 4, 8 });
+        this.version = this._io.readBytes(2);
+        if (!(Arrays.equals(version(), new byte[] { 4, 8 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4, 8 }, version(), _io(), "/seq/0");
+        }
         this.records = new Record(this._io, this, _root);
     }
     public static class RubyArray extends KaitaiStruct {
@@ -102,7 +106,7 @@ public class RubyMarshal extends KaitaiStruct {
         }
         private void _read() {
             this.numElements = new PackedInt(this._io, this, _root);
-            elements = new ArrayList<Record>((int) (numElements().value()));
+            elements = new ArrayList<Record>(((Number) (numElements().value())).intValue());
             for (int i = 0; i < numElements().value(); i++) {
                 this.elements.add(new Record(this._io, this, _root));
             }
@@ -193,7 +197,7 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.name = new Record(this._io, this, _root);
             this.numMembers = new PackedInt(this._io, this, _root);
-            members = new ArrayList<Pair>((int) (numMembers().value()));
+            members = new ArrayList<Pair>(((Number) (numMembers().value())).intValue());
             for (int i = 0; i < numMembers().value(); i++) {
                 this.members.add(new Pair(this._io, this, _root));
             }
@@ -438,7 +442,7 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.obj = new Record(this._io, this, _root);
             this.numVars = new PackedInt(this._io, this, _root);
-            vars = new ArrayList<Pair>((int) (numVars().value()));
+            vars = new ArrayList<Pair>(((Number) (numVars().value())).intValue());
             for (int i = 0; i < numVars().value(); i++) {
                 this.vars.add(new Pair(this._io, this, _root));
             }
@@ -481,43 +485,48 @@ public class RubyMarshal extends KaitaiStruct {
         }
         private void _read() {
             this.code = RubyMarshal.Codes.byId(this._io.readU1());
-            switch (code()) {
-            case BIGNUM: {
-                this.body = new Bignum(this._io, this, _root);
-                break;
-            }
-            case RUBY_HASH: {
-                this.body = new RubyHash(this._io, this, _root);
-                break;
-            }
-            case RUBY_ARRAY: {
-                this.body = new RubyArray(this._io, this, _root);
-                break;
-            }
-            case RUBY_SYMBOL: {
-                this.body = new RubySymbol(this._io, this, _root);
-                break;
-            }
-            case INSTANCE_VAR: {
-                this.body = new InstanceVar(this._io, this, _root);
-                break;
-            }
-            case RUBY_STRING: {
-                this.body = new RubyString(this._io, this, _root);
-                break;
-            }
-            case PACKED_INT: {
-                this.body = new PackedInt(this._io, this, _root);
-                break;
-            }
-            case RUBY_STRUCT: {
-                this.body = new RubyStruct(this._io, this, _root);
-                break;
-            }
-            case RUBY_SYMBOL_LINK: {
-                this.body = new PackedInt(this._io, this, _root);
-                break;
-            }
+            {
+                Codes on = code();
+                if (on != null) {
+                    switch (code()) {
+                    case PACKED_INT: {
+                        this.body = new PackedInt(this._io, this, _root);
+                        break;
+                    }
+                    case BIGNUM: {
+                        this.body = new Bignum(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_ARRAY: {
+                        this.body = new RubyArray(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_SYMBOL_LINK: {
+                        this.body = new PackedInt(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_STRUCT: {
+                        this.body = new RubyStruct(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_STRING: {
+                        this.body = new RubyString(this._io, this, _root);
+                        break;
+                    }
+                    case INSTANCE_VAR: {
+                        this.body = new InstanceVar(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_HASH: {
+                        this.body = new RubyHash(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_SYMBOL: {
+                        this.body = new RubySymbol(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private Codes code;
@@ -554,7 +563,7 @@ public class RubyMarshal extends KaitaiStruct {
         }
         private void _read() {
             this.numPairs = new PackedInt(this._io, this, _root);
-            pairs = new ArrayList<Pair>((int) (numPairs().value()));
+            pairs = new ArrayList<Pair>(((Number) (numPairs().value())).intValue());
             for (int i = 0; i < numPairs().value(); i++) {
                 this.pairs.add(new Pair(this._io, this, _root));
             }

@@ -131,7 +131,10 @@ var IcmpPacket = (function() {
       this._read();
     }
     EchoMsg.prototype._read = function() {
-      this.code = this._io.ensureFixedContents([0]);
+      this.code = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.code, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.code, this._io, "/types/echo_msg/seq/0");
+      }
       this.checksum = this._io.readU2be();
       this.identifier = this._io.readU2be();
       this.seqNum = this._io.readU2be();

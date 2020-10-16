@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Cramfs < Kaitai::Struct::Struct
@@ -23,11 +23,13 @@ class Cramfs < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([69, 61, 205, 40].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([69, 61, 205, 40].pack('C*'), magic, _io, "/types/super_block_struct/seq/0") if not magic == [69, 61, 205, 40].pack('C*')
       @size = @_io.read_u4le
       @flags = @_io.read_u4le
       @future = @_io.read_u4le
-      @signature = @_io.ensure_fixed_contents([67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83].pack('C*'))
+      @signature = @_io.read_bytes(16)
+      raise Kaitai::Struct::ValidationNotEqualError.new([67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83].pack('C*'), signature, _io, "/types/super_block_struct/seq/4") if not signature == [67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83].pack('C*')
       @fsid = Info.new(@_io, self, @_root)
       @name = (@_io.read_bytes(16)).force_encoding("ASCII")
       @root = Inode.new(@_io, self, @_root)
@@ -168,8 +170,8 @@ class Cramfs < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(offset)
       @_raw_as_dir = io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_as_dir)
-      @as_dir = DirInode.new(io, self, @_root)
+      _io__raw_as_dir = Kaitai::Struct::Stream.new(@_raw_as_dir)
+      @as_dir = DirInode.new(_io__raw_as_dir, self, @_root)
       io.seek(_pos)
       @as_dir
     end

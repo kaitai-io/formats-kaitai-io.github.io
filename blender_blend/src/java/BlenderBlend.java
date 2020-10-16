@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 
 /**
@@ -111,7 +112,7 @@ public class BlenderBlend extends KaitaiStruct {
         private void _read() {
             this.idxType = this._io.readU2le();
             this.numFields = this._io.readU2le();
-            fields = new ArrayList<DnaField>((int) (numFields()));
+            fields = new ArrayList<DnaField>(((Number) (numFields())).intValue());
             for (int i = 0; i < numFields(); i++) {
                 this.fields.add(new DnaField(this._io, this, _root));
             }
@@ -255,30 +256,45 @@ public class BlenderBlend extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.id = this._io.ensureFixedContents(new byte[] { 83, 68, 78, 65 });
-            this.nameMagic = this._io.ensureFixedContents(new byte[] { 78, 65, 77, 69 });
+            this.id = this._io.readBytes(4);
+            if (!(Arrays.equals(id(), new byte[] { 83, 68, 78, 65 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 68, 78, 65 }, id(), _io(), "/types/dna1_body/seq/0");
+            }
+            this.nameMagic = this._io.readBytes(4);
+            if (!(Arrays.equals(nameMagic(), new byte[] { 78, 65, 77, 69 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 65, 77, 69 }, nameMagic(), _io(), "/types/dna1_body/seq/1");
+            }
             this.numNames = this._io.readU4le();
-            names = new ArrayList<String>((int) (numNames()));
+            names = new ArrayList<String>(((Number) (numNames())).intValue());
             for (int i = 0; i < numNames(); i++) {
                 this.names.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
             }
             this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.typeMagic = this._io.ensureFixedContents(new byte[] { 84, 89, 80, 69 });
+            this.typeMagic = this._io.readBytes(4);
+            if (!(Arrays.equals(typeMagic(), new byte[] { 84, 89, 80, 69 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 84, 89, 80, 69 }, typeMagic(), _io(), "/types/dna1_body/seq/5");
+            }
             this.numTypes = this._io.readU4le();
-            types = new ArrayList<String>((int) (numTypes()));
+            types = new ArrayList<String>(((Number) (numTypes())).intValue());
             for (int i = 0; i < numTypes(); i++) {
                 this.types.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
             }
             this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.tlenMagic = this._io.ensureFixedContents(new byte[] { 84, 76, 69, 78 });
-            lengths = new ArrayList<Integer>((int) (numTypes()));
+            this.tlenMagic = this._io.readBytes(4);
+            if (!(Arrays.equals(tlenMagic(), new byte[] { 84, 76, 69, 78 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 84, 76, 69, 78 }, tlenMagic(), _io(), "/types/dna1_body/seq/9");
+            }
+            lengths = new ArrayList<Integer>(((Number) (numTypes())).intValue());
             for (int i = 0; i < numTypes(); i++) {
                 this.lengths.add(this._io.readU2le());
             }
             this.padding3 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.strcMagic = this._io.ensureFixedContents(new byte[] { 83, 84, 82, 67 });
+            this.strcMagic = this._io.readBytes(4);
+            if (!(Arrays.equals(strcMagic(), new byte[] { 83, 84, 82, 67 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 84, 82, 67 }, strcMagic(), _io(), "/types/dna1_body/seq/12");
+            }
             this.numStructs = this._io.readU4le();
-            structs = new ArrayList<DnaStruct>((int) (numStructs()));
+            structs = new ArrayList<DnaStruct>(((Number) (numStructs())).intValue());
             for (int i = 0; i < numStructs(); i++) {
                 this.structs.add(new DnaStruct(this._io, this, _root));
             }
@@ -338,7 +354,10 @@ public class BlenderBlend extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 66, 76, 69, 78, 68, 69, 82 });
+            this.magic = this._io.readBytes(7);
+            if (!(Arrays.equals(magic(), new byte[] { 66, 76, 69, 78, 68, 69, 82 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 76, 69, 78, 68, 69, 82 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.ptrSizeId = BlenderBlend.PtrSize.byId(this._io.readU1());
             this.endian = BlenderBlend.Endian.byId(this._io.readU1());
             this.version = new String(this._io.readBytes(3), Charset.forName("ASCII"));
@@ -430,7 +449,7 @@ public class BlenderBlend extends KaitaiStruct {
     public ArrayList<DnaStruct> sdnaStructs() {
         if (this.sdnaStructs != null)
             return this.sdnaStructs;
-        this.sdnaStructs = ((Dna1Body) (blocks().get((int) (blocks().size() - 2)).body())).structs();
+        this.sdnaStructs = ((BlenderBlend.Dna1Body) (blocks().get((int) (blocks().size() - 2)).body())).structs();
         return this.sdnaStructs;
     }
     private Header hdr;

@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from dcmp_variable_length_integer import DcmpVariableLengthInteger
+import dcmp_variable_length_integer
 class Dcmp1(KaitaiStruct):
     """Compressed resource data in `'dcmp' (1)` format,
     as stored in compressed resources with header type `8` and decompressor ID `1`.
@@ -47,7 +48,7 @@ class Dcmp1(KaitaiStruct):
         self.chunks = []
         i = 0
         while True:
-            _ = self._root.Chunk(self._io, self, self._root)
+            _ = Dcmp1.Chunk(self._io, self, self._root)
             self.chunks.append(_)
             if _.tag == 255:
                 break
@@ -81,17 +82,17 @@ class Dcmp1(KaitaiStruct):
 
         def _read(self):
             self.tag = self._io.read_u1()
-            _on = (self._root.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (self._root.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (self._root.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (self._root.Chunk.TagKind.backreference if self.tag == 210 else (self._root.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (self._root.Chunk.TagKind.extended if self.tag == 254 else (self._root.Chunk.TagKind.end if self.tag == 255 else self._root.Chunk.TagKind.invalid)))))))
-            if _on == self._root.Chunk.TagKind.end:
-                self.body = self._root.Chunk.EndBody(self._io, self, self._root)
-            elif _on == self._root.Chunk.TagKind.literal:
-                self.body = self._root.Chunk.LiteralBody(self.tag, self._io, self, self._root)
-            elif _on == self._root.Chunk.TagKind.backreference:
-                self.body = self._root.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
-            elif _on == self._root.Chunk.TagKind.table_lookup:
-                self.body = self._root.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
-            elif _on == self._root.Chunk.TagKind.extended:
-                self.body = self._root.Chunk.ExtendedBody(self._io, self, self._root)
+            _on = (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (Dcmp1.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (Dcmp1.Chunk.TagKind.backreference if self.tag == 210 else (Dcmp1.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (Dcmp1.Chunk.TagKind.extended if self.tag == 254 else (Dcmp1.Chunk.TagKind.end if self.tag == 255 else Dcmp1.Chunk.TagKind.invalid)))))))
+            if _on == Dcmp1.Chunk.TagKind.extended:
+                self.body = Dcmp1.Chunk.ExtendedBody(self._io, self, self._root)
+            elif _on == Dcmp1.Chunk.TagKind.literal:
+                self.body = Dcmp1.Chunk.LiteralBody(self.tag, self._io, self, self._root)
+            elif _on == Dcmp1.Chunk.TagKind.end:
+                self.body = Dcmp1.Chunk.EndBody(self._io, self, self._root)
+            elif _on == Dcmp1.Chunk.TagKind.table_lookup:
+                self.body = Dcmp1.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
+            elif _on == Dcmp1.Chunk.TagKind.backreference:
+                self.body = Dcmp1.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
 
         class LiteralBody(KaitaiStruct):
             """The body of a literal data chunk.
@@ -316,7 +317,7 @@ class Dcmp1(KaitaiStruct):
                 self.tag = self._io.read_u1()
                 _on = self.tag
                 if _on == 2:
-                    self.body = self._root.Chunk.ExtendedBody.RepeatBody(self._io, self, self._root)
+                    self.body = Dcmp1.Chunk.ExtendedBody.RepeatBody(self._io, self, self._root)
 
             class RepeatBody(KaitaiStruct):
                 """The body of a repeat chunk.
@@ -331,8 +332,8 @@ class Dcmp1(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.to_repeat_raw = DcmpVariableLengthInteger(self._io)
-                    self.repeat_count_m1_raw = DcmpVariableLengthInteger(self._io)
+                    self.to_repeat_raw = dcmp_variable_length_integer.DcmpVariableLengthInteger(self._io)
+                    self.repeat_count_m1_raw = dcmp_variable_length_integer.DcmpVariableLengthInteger(self._io)
 
                 @property
                 def to_repeat(self):

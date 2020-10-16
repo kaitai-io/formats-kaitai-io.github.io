@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -173,7 +173,7 @@ class Wmf < Kaitai::Struct::Struct
     end
 
     def _read
-      @bk_mode = Kaitai::Struct::Stream::resolve_enum(MIX_MODE, @_io.read_u2le)
+      @bk_mode = Kaitai::Struct::Stream::resolve_enum(Wmf::MIX_MODE, @_io.read_u2le)
       self
     end
 
@@ -308,7 +308,7 @@ class Wmf < Kaitai::Struct::Struct
     end
 
     def _read
-      @draw_mode = Kaitai::Struct::Stream::resolve_enum(BIN_RASTER_OP, @_io.read_u2le)
+      @draw_mode = Kaitai::Struct::Stream::resolve_enum(Wmf::BIN_RASTER_OP, @_io.read_u2le)
       self
     end
 
@@ -326,7 +326,7 @@ class Wmf < Kaitai::Struct::Struct
     end
 
     def _read
-      @poly_fill_mode = Kaitai::Struct::Stream::resolve_enum(POLY_FILL_MODE, @_io.read_u2le)
+      @poly_fill_mode = Kaitai::Struct::Stream::resolve_enum(Wmf::POLY_FILL_MODE, @_io.read_u2le)
       self
     end
 
@@ -361,14 +361,17 @@ class Wmf < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([215, 205, 198, 154].pack('C*'))
-      @handle = @_io.ensure_fixed_contents([0, 0].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([215, 205, 198, 154].pack('C*'), magic, _io, "/types/special_header/seq/0") if not magic == [215, 205, 198, 154].pack('C*')
+      @handle = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0].pack('C*'), handle, _io, "/types/special_header/seq/1") if not handle == [0, 0].pack('C*')
       @left = @_io.read_s2le
       @top = @_io.read_s2le
       @right = @_io.read_s2le
       @bottom = @_io.read_s2le
       @inch = @_io.read_u2le
-      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
+      @reserved = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), reserved, _io, "/types/special_header/seq/7") if not reserved == [0, 0, 0, 0].pack('C*')
       @checksum = @_io.read_u2le
       self
     end
@@ -390,40 +393,40 @@ class Wmf < Kaitai::Struct::Struct
 
     def _read
       @size = @_io.read_u4le
-      @function = Kaitai::Struct::Stream::resolve_enum(FUNC, @_io.read_u2le)
+      @function = Kaitai::Struct::Stream::resolve_enum(Wmf::FUNC, @_io.read_u2le)
       case function
       when :func_setbkmode
         @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetbkmode.new(io, self, @_root)
-      when :func_setbkcolor
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ColorRef.new(io, self, @_root)
-      when :func_setrop2
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetrop2.new(io, self, @_root)
-      when :func_polyline
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsPolyline.new(io, self, @_root)
-      when :func_setwindoworg
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetwindoworg.new(io, self, @_root)
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetbkmode.new(_io__raw_params, self, @_root)
       when :func_polygon
         @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsPolygon.new(io, self, @_root)
-      when :func_setwindowext
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsPolygon.new(_io__raw_params, self, @_root)
+      when :func_setbkcolor
         @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetwindowext.new(io, self, @_root)
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ColorRef.new(_io__raw_params, self, @_root)
       when :func_setpolyfillmode
         @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetpolyfillmode.new(io, self, @_root)
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetpolyfillmode.new(_io__raw_params, self, @_root)
+      when :func_setwindoworg
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetwindoworg.new(_io__raw_params, self, @_root)
+      when :func_setrop2
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetrop2.new(_io__raw_params, self, @_root)
+      when :func_setwindowext
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetwindowext.new(_io__raw_params, self, @_root)
+      when :func_polyline
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        _io__raw_params = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsPolyline.new(_io__raw_params, self, @_root)
       else
         @params = @_io.read_bytes(((size - 3) * 2))
       end

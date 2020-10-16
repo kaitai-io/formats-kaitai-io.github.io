@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 
 /**
@@ -119,27 +120,32 @@ public class Dcmp1 extends KaitaiStruct {
         }
         private void _read() {
             this.tag = this._io.readU1();
-            switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 207))  ? TagKind.BACKREFERENCE : ( ((tag() >= 208) && (tag() <= 209))  ? TagKind.LITERAL : (tag() == 210 ? TagKind.BACKREFERENCE : ( ((tag() >= 213) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))))) {
-            case END: {
-                this.body = new EndBody(this._io, this, _root);
-                break;
-            }
-            case LITERAL: {
-                this.body = new LiteralBody(this._io, this, _root, tag());
-                break;
-            }
-            case BACKREFERENCE: {
-                this.body = new BackreferenceBody(this._io, this, _root, tag());
-                break;
-            }
-            case TABLE_LOOKUP: {
-                this.body = new TableLookupBody(this._io, this, _root, tag());
-                break;
-            }
-            case EXTENDED: {
-                this.body = new ExtendedBody(this._io, this, _root);
-                break;
-            }
+            {
+                TagKind on = ( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 207))  ? TagKind.BACKREFERENCE : ( ((tag() >= 208) && (tag() <= 209))  ? TagKind.LITERAL : (tag() == 210 ? TagKind.BACKREFERENCE : ( ((tag() >= 213) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))));
+                if (on != null) {
+                    switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 207))  ? TagKind.BACKREFERENCE : ( ((tag() >= 208) && (tag() <= 209))  ? TagKind.LITERAL : (tag() == 210 ? TagKind.BACKREFERENCE : ( ((tag() >= 213) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))))) {
+                    case EXTENDED: {
+                        this.body = new ExtendedBody(this._io, this, _root);
+                        break;
+                    }
+                    case LITERAL: {
+                        this.body = new LiteralBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    case END: {
+                        this.body = new EndBody(this._io, this, _root);
+                        break;
+                    }
+                    case TABLE_LOOKUP: {
+                        this.body = new TableLookupBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    case BACKREFERENCE: {
+                        this.body = new BackreferenceBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    }
+                }
             }
         }
 

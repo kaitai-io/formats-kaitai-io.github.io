@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -279,7 +279,7 @@ sub _read {
     $self->{color_space} = $self->{_io}->read_u4be();
     $self->{pcs} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
     $self->{creation_date_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{file_signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (97, 99, 115, 112)));
+    $self->{file_signature} = $self->{_io}->read_bytes(4);
     $self->{primary_platform} = $self->{_io}->read_u4be();
     $self->{profile_flags} = Icc4::ProfileHeader::ProfileFlags->new($self->{_io}, $self, $self->{_root});
     $self->{device_manufacturer} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
@@ -412,11 +412,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{major} = $self->{_io}->ensure_fixed_contents(pack('C*', (4)));
-    $self->{minor} = $self->{_io}->read_bits_int(4);
-    $self->{bug_fix_level} = $self->{_io}->read_bits_int(4);
+    $self->{major} = $self->{_io}->read_bytes(1);
+    $self->{minor} = $self->{_io}->read_bits_int_be(4);
+    $self->{bug_fix_level} = $self->{_io}->read_bits_int_be(4);
     $self->{_io}->align_to_byte();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(2);
 }
 
 sub major {
@@ -469,9 +469,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{embedded_profile} = $self->{_io}->read_bits_int(1);
-    $self->{profile_can_be_used_independently_of_embedded_colour_data} = $self->{_io}->read_bits_int(1);
-    $self->{other_flags} = $self->{_io}->read_bits_int(30);
+    $self->{embedded_profile} = $self->{_io}->read_bits_int_be(1);
+    $self->{profile_can_be_used_independently_of_embedded_colour_data} = $self->{_io}->read_bits_int_be(1);
+    $self->{other_flags} = $self->{_io}->read_bits_int_be(30);
 }
 
 sub embedded_profile {
@@ -638,7 +638,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{number} = $self->{_io}->read_u4be();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(2);
     $self->{measurement_value} = Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
 }
 
@@ -870,250 +870,250 @@ sub tag_data_element {
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->offset_to_data_element());
     my $_on = $self->tag_signature();
-    if ($_on == $TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_RED_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_PREVIEW_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_GREEN_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_D_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_COLORANT_TABLE_OUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableOutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_A_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_CALIBRATION_DATE_TIME) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CalibrationDateTimeTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_CHROMATIC_ADAPTATION) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticAdaptationTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_COLORANT_TABLE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_A_TO_B_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_D_TO_B_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_CHROMATICITY) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticityTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_BLUE_MATRIX_COLUMN) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_A_TO_B_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_D_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_A_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_MEDIA_WHITE_POINT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MediaWhitePointTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_D_TO_B_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_NAMED_COLOR_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::NamedColor2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_D_TO_B_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_RED_MATRIX_COLUMN) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_VIEWING_CONDITIONS) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingConditionsTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_A_TO_B_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_PREVIEW_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_GRAY_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GrayTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_DEVICE_MFG_DESC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_D_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_COLORANT_ORDER) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_ORDER) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
         $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantOrderTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_COPYRIGHT) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_2) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CopyrightTag->new($io__raw_tag_data_element, $self, $self->{_root});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_GAMUT) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEDIA_WHITE_POINT) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MediaWhitePointTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_CHAR_TARGET) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CharTargetTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_OUTPUT_RESPONSE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::OutputResponseTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_TECHNOLOGY) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::TechnologyTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_VIEWING_COND_DESC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingCondDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_PROFILE_DESCRIPTION) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileDescriptionTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_LUMINANCE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::LuminanceTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_D_TO_B_3) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_D_3) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_3) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
         $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_B_TO_A_0) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_PREVIEW_2) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_COND_DESC) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingCondDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_GREEN_MATRIX_COLUMN) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_1) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_PROFILE_SEQUENCE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_BLUE_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_SIGNATURES_DEVICE_MODEL_DESC) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MODEL_DESC) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
         $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceModelDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_SIGNATURES_MEASUREMENT) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATICITY) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticityTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COPYRIGHT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CopyrightTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATIC_ADAPTATION) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticAdaptationTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_OUTPUT_RESPONSE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::OutputResponseTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHAR_TARGET) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CharTargetTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MFG_DESC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEASUREMENT) {
         $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
         my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
         $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MeasurementTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_3) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_DESCRIPTION) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileDescriptionTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GRAY_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GrayTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CALIBRATION_DATE_TIME) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CalibrationDateTimeTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE_OUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableOutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_LUMINANCE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::LuminanceTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_NAMED_COLOR_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::NamedColor2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_CONDITIONS) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingConditionsTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_TECHNOLOGY) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::TechnologyTag->new($io__raw_tag_data_element, $self, $self->{_root});
     }
     else {
         $self->{tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
@@ -1174,7 +1174,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1221,7 +1221,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1266,7 +1266,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{vendor_specific_flag} = $self->{_io}->read_u4be();
     $self->{count_of_named_colours} = $self->{_io}->read_u4be();
     $self->{number_of_device_coordinates_for_each_named_colour} = $self->{_io}->read_u4be();
@@ -1274,13 +1274,13 @@ sub _read {
     $self->{prefix_for_each_colour_name_padding} = ();
     my $n_prefix_for_each_colour_name_padding = (32 - length($self->prefix_for_each_colour_name()));
     for (my $i = 0; $i < $n_prefix_for_each_colour_name_padding; $i++) {
-        $self->{prefix_for_each_colour_name_padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{prefix_for_each_colour_name_padding}[$i] = $self->{_io}->read_bytes(1);
     }
     $self->{suffix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     $self->{suffix_for_each_colour_name_padding} = ();
     my $n_suffix_for_each_colour_name_padding = (32 - length($self->suffix_for_each_colour_name()));
     for (my $i = 0; $i < $n_suffix_for_each_colour_name_padding; $i++) {
-        $self->{suffix_for_each_colour_name_padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{suffix_for_each_colour_name_padding}[$i] = $self->{_io}->read_bytes(1);
     }
     $self->{named_colour_definitions} = ();
     my $n_named_colour_definitions = $self->count_of_named_colours();
@@ -1368,7 +1368,7 @@ sub _read {
     $self->{root_name_padding} = ();
     my $n_root_name_padding = (32 - length($self->root_name()));
     for (my $i = 0; $i < $n_root_name_padding; $i++) {
-        $self->{root_name_padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{root_name_padding}[$i] = $self->{_io}->read_bytes(1);
     }
     $self->{pcs_coordinates} = $self->{_io}->read_bytes(6);
     if ($self->_parent()->number_of_device_coordinates_for_each_named_colour() > 0) {
@@ -1432,7 +1432,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ViewingConditionsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1479,10 +1479,10 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1527,7 +1527,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_channels} = $self->{_io}->read_u2be();
     $self->{count_of_measurement_types} = $self->{_io}->read_u2be();
     $self->{response_curve_structure_offsets} = ();
@@ -1593,7 +1593,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_entries} = $self->{_io}->read_u4be();
     if ($self->number_of_entries() > 1) {
         $self->{curve_values} = ();
@@ -1659,7 +1659,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1704,7 +1704,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
@@ -1751,11 +1751,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_input_channels} = $self->{_io}->read_u1();
     $self->{number_of_output_channels} = $self->{_io}->read_u1();
     $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{padding} = $self->{_io}->read_bytes(1);
     $self->{encoded_e_parameters} = ();
     my $n_encoded_e_parameters = 9;
     for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
@@ -1855,13 +1855,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -1906,10 +1906,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_input_channels} = $self->{_io}->read_u1();
     $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{padding} = $self->{_io}->read_bytes(2);
     $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
     $self->{offset_to_matrix} = $self->{_io}->read_u4be();
     $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
@@ -2000,13 +2000,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2053,7 +2053,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2098,11 +2098,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_input_channels} = $self->{_io}->read_u1();
     $self->{number_of_output_channels} = $self->{_io}->read_u1();
     $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{padding} = $self->{_io}->read_bytes(1);
     $self->{encoded_e_parameters} = ();
     my $n_encoded_e_parameters = 9;
     for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
@@ -2202,7 +2202,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2247,7 +2247,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, Icc4::U16Fixed16Number->new($self->{_io}, $self, $self->{_root});
@@ -2296,7 +2296,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2343,7 +2343,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MeasurementType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2390,7 +2390,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceDescType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2437,7 +2437,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2484,13 +2484,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2537,7 +2537,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2584,7 +2584,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ResponseCurveSet16Type->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2631,7 +2631,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2678,7 +2678,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2725,13 +2725,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2778,10 +2778,10 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2828,7 +2828,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2875,7 +2875,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2922,13 +2922,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2979,24 +2979,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{function_type} = $self->{_io}->read_u2be();
-    $self->{reserved_2} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{reserved_2} = $self->{_io}->read_bytes(2);
     my $_on = $self->function_type();
-    if ($_on == $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996) {
+    if ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996) {
         $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsCie1221996->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1) {
         $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec6196621->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C) {
         $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsObAxPlusBCbToPowerOfGPlusC->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -3332,7 +3332,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ChromaticityType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -3379,7 +3379,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::S15Fixed16ArrayType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -3435,7 +3435,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{standard_observer_encoding} = $self->{_io}->read_u4be();
     $self->{nciexyz_tristimulus_values_for_measurement_backing} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
     $self->{measurement_geometry_encoding} = $self->{_io}->read_u4be();
@@ -3503,7 +3503,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{value} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes_full(), 0, 0));
 }
 
@@ -3547,7 +3547,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_structures} = $self->{_io}->read_u4be();
     $self->{positions_table} = ();
     my $n_positions_table = $self->number_of_structures();
@@ -3655,7 +3655,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{count_of_colorants} = $self->{_io}->read_u4be();
     $self->{colorants} = ();
     my $n_colorants = $self->count_of_colorants();
@@ -3713,7 +3713,7 @@ sub _read {
     $self->{padding} = ();
     my $n_padding = (32 - length($self->name()));
     for (my $i = 0; $i < $n_padding; $i++) {
-        $self->{padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+        $self->{padding}[$i] = $self->{_io}->read_bytes(1);
     }
     $self->{pcs_values} = $self->{_io}->read_bytes(6);
 }
@@ -3763,7 +3763,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{signature} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
 }
 
@@ -3809,7 +3809,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -3856,16 +3856,16 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -3910,7 +3910,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{date_and_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
 }
 
@@ -3956,7 +3956,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4003,13 +4003,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4056,7 +4056,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4101,7 +4101,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_input_channels} = $self->{_io}->read_u2be();
     $self->{number_of_output_channels} = $self->{_io}->read_u2be();
     $self->{number_of_processing_elements} = $self->{_io}->read_u4be();
@@ -4173,7 +4173,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, $self->{_io}->read_u2be();
@@ -4222,7 +4222,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantOrderType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4314,7 +4314,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_device_channels} = $self->{_io}->read_u2be();
     $self->{colorant_and_phosphor_encoding} = $self->{_io}->read_u2be();
     $self->{ciexy_coordinates_per_channel} = ();
@@ -4420,7 +4420,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4465,7 +4465,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
@@ -4512,7 +4512,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_records} = $self->{_io}->read_u4be();
     $self->{record_size} = $self->{_io}->read_u4be();
     $self->{records} = ();
@@ -4640,13 +4640,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4693,13 +4693,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4746,7 +4746,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4793,7 +4793,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_TEXT_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_TEXT_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::TextType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4840,7 +4840,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4887,7 +4887,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_DATE_TIME_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_DATE_TIME_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::DateTimeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4934,7 +4934,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::NamedColor2Type->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -4981,7 +4981,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5028,7 +5028,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5073,7 +5073,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_description_structures} = $self->{_io}->read_u4be();
     $self->{profile_descriptions} = ();
     my $n_profile_descriptions = $self->number_of_description_structures();
@@ -5197,7 +5197,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5244,7 +5244,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5289,7 +5289,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{count_of_colorants} = $self->{_io}->read_u4be();
     $self->{numbers_of_colorants_in_order_of_printing} = ();
     my $n_numbers_of_colorants_in_order_of_printing = $self->count_of_colorants();
@@ -5345,7 +5345,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5392,10 +5392,10 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5440,7 +5440,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{un_normalized_ciexyz_values_for_illuminant} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
     $self->{un_normalized_ciexyz_values_for_surround} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
     $self->{illuminant_type} = Icc4::StandardIlluminantEncoding->new($self->{_io}, $self, $self->{_root});
@@ -5496,10 +5496,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{number_of_input_channels} = $self->{_io}->read_u1();
     $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{padding} = $self->{_io}->read_bytes(2);
     $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
     $self->{offset_to_matrix} = $self->{_io}->read_u4be();
     $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
@@ -5590,10 +5590,10 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5638,7 +5638,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, $self->{_io}->read_u4be();
@@ -5687,13 +5687,13 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5738,7 +5738,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, $self->{_io}->read_u1();
@@ -5787,7 +5787,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5832,7 +5832,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{values} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{values}}, $self->{_io}->read_u8be();
@@ -5881,7 +5881,7 @@ sub _read {
 
     $self->{tag_type} = $self->{_io}->read_u4be();
     my $_on = $self->tag_type();
-    if ($_on == $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
         $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -5938,12 +5938,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reflective_or_transparency} = $self->{_io}->read_bits_int(1);
-    $self->{glossy_or_matte} = $self->{_io}->read_bits_int(1);
-    $self->{positive_or_negative_media_polarity} = $self->{_io}->read_bits_int(1);
-    $self->{colour_or_black_and_white_media} = $self->{_io}->read_bits_int(1);
-    $self->{reserved} = $self->{_io}->read_bits_int(28);
-    $self->{vendor_specific} = $self->{_io}->read_bits_int(32);
+    $self->{reflective_or_transparency} = $self->{_io}->read_bits_int_be(1);
+    $self->{glossy_or_matte} = $self->{_io}->read_bits_int_be(1);
+    $self->{positive_or_negative_media_polarity} = $self->{_io}->read_bits_int_be(1);
+    $self->{colour_or_black_and_white_media} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(28);
+    $self->{vendor_specific} = $self->{_io}->read_bits_int_be(32);
 }
 
 sub reflective_or_transparency {

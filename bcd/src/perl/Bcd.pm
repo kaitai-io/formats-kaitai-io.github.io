@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Bcd;
@@ -39,7 +39,7 @@ sub _read {
     for (my $i = 0; $i < $n_digits; $i++) {
         my $_on = $self->bits_per_digit();
         if ($_on == 4) {
-            $self->{digits}[$i] = $self->{_io}->read_bits_int(4);
+            $self->{digits}[$i] = $self->{_io}->read_bits_int_be(4);
         }
         elsif ($_on == 8) {
             $self->{digits}[$i] = $self->{_io}->read_u1();

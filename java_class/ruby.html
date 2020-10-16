@@ -166,11 +166,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".class file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".class file format parsing C# library">C#</a></li>
                 
                 
@@ -266,8 +261,8 @@ section#format-index .row {
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -280,7 +275,8 @@ section#format-index .row {
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">_read</span>
-    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">202</span><span class="p">,</span> <span class="mi">254</span><span class="p">,</span> <span class="mi">186</span><span class="p">,</span> <span class="mi">190</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">202</span><span class="p">,</span> <span class="mi">254</span><span class="p">,</span> <span class="mi">186</span><span class="p">,</span> <span class="mi">190</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">202</span><span class="p">,</span> <span class="mi">254</span><span class="p">,</span> <span class="mi">186</span><span class="p">,</span> <span class="mi">190</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@version_minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@version_major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@constant_pool_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
@@ -343,20 +339,20 @@ section#format-index .row {
       <span class="k">case</span> <span class="n">name_as_str</span>
       <span class="k">when</span> <span class="s2">&quot;SourceFile&quot;</span>
         <span class="vi">@_raw_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">attribute_length</span><span class="p">)</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
-        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodySourceFile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">_io__raw_info</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
+        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodySourceFile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_info</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="s2">&quot;LineNumberTable&quot;</span>
         <span class="vi">@_raw_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">attribute_length</span><span class="p">)</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
-        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyLineNumberTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">_io__raw_info</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
+        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyLineNumberTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_info</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="s2">&quot;Exceptions&quot;</span>
         <span class="vi">@_raw_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">attribute_length</span><span class="p">)</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
-        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyExceptions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">_io__raw_info</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
+        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyExceptions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_info</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="s2">&quot;Code&quot;</span>
         <span class="vi">@_raw_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">attribute_length</span><span class="p">)</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
-        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyCode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">_io__raw_info</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_info</span><span class="p">)</span>
+        <span class="vi">@info</span> <span class="o">=</span> <span class="no">AttrBodyCode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_info</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">else</span>
         <span class="vi">@info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">attribute_length</span><span class="p">)</span>
       <span class="k">end</span>
@@ -848,34 +844,34 @@ section#format-index .row {
     <span class="k">def</span> <span class="nf">_read</span>
       <span class="vi">@tag</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">TAG_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">tag</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_interface_method_ref</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InterfaceMethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_class_type</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">ClassCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_utf8</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">Utf8CpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_method_type</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_integer</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">IntegerCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:tag_enum_string</span>
         <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">StringCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_float</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FloatCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_long</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">LongCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_method_ref</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:tag_enum_double</span>
         <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">DoubleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:tag_enum_invoke_dynamic</span>
         <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InvokeDynamicCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_handle</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodHandleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_class_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">ClassCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_ref</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_long</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">LongCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_name_and_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">NameAndTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_float</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FloatCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_interface_method_ref</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InterfaceMethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_integer</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">IntegerCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_utf8</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">Utf8CpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:tag_enum_field_ref</span>
         <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FieldRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_method_handle</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodHandleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:tag_enum_name_and_type</span>
+        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">NameAndTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>

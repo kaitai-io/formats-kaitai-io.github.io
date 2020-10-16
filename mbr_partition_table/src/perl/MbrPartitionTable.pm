@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package MbrPartitionTable;
@@ -40,7 +40,7 @@ sub _read {
     for (my $i = 0; $i < $n_partitions; $i++) {
         $self->{partitions}[$i] = MbrPartitionTable::PartitionEntry->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{boot_signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (85, 170)));
+    $self->{boot_signature} = $self->{_io}->read_bytes(2);
 }
 
 sub bootstrap_code {

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -54,7 +55,7 @@ public class UefiTe extends KaitaiStruct {
         this._raw_teHdr = this._io.readBytes(40);
         KaitaiStream _io__raw_teHdr = new ByteBufferKaitaiStream(_raw_teHdr);
         this.teHdr = new TeHeader(_io__raw_teHdr, this, _root);
-        sections = new ArrayList<Section>((int) (teHdr().numSections()));
+        sections = new ArrayList<Section>(((Number) (teHdr().numSections())).intValue());
         for (int i = 0; i < teHdr().numSections(); i++) {
             this.sections.add(new Section(this._io, this, _root));
         }
@@ -143,7 +144,10 @@ public class UefiTe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 86, 90 });
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(magic(), new byte[] { 86, 90 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 90 }, magic(), _io(), "/types/te_header/seq/0");
+            }
             this.machine = MachineType.byId(this._io.readU2le());
             this.numSections = this._io.readU1();
             this.subsystem = SubsystemEnum.byId(this._io.readU1());

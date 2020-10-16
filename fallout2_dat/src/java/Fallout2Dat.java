@@ -130,7 +130,7 @@ public class Fallout2Dat extends KaitaiStruct {
         }
         private void _read() {
             this.fileCount = this._io.readU4le();
-            files = new ArrayList<File>((int) (fileCount()));
+            files = new ArrayList<File>(((Number) (fileCount())).intValue());
             for (int i = 0; i < fileCount(); i++) {
                 this.files.add(new File(this._io, this, _root));
             }
@@ -170,17 +170,39 @@ public class Fallout2Dat extends KaitaiStruct {
             this.sizePacked = this._io.readU4le();
             this.offset = this._io.readU4le();
         }
-        private byte[] contents;
-        public byte[] contents() {
-            if (this.contents != null)
-                return this.contents;
+        private byte[] contentsRaw;
+        public byte[] contentsRaw() {
+            if (this.contentsRaw != null)
+                return this.contentsRaw;
+            if (flags() == Fallout2Dat.Compression.NONE) {
+                KaitaiStream io = _root._io();
+                long _pos = io.pos();
+                io.seek(offset());
+                this.contentsRaw = io.readBytes(sizeUnpacked());
+                io.seek(_pos);
+            }
+            return this.contentsRaw;
+        }
+        private byte[] contentsZlib;
+        public byte[] contentsZlib() {
+            if (this.contentsZlib != null)
+                return this.contentsZlib;
             if (flags() == Fallout2Dat.Compression.ZLIB) {
                 KaitaiStream io = _root._io();
                 long _pos = io.pos();
                 io.seek(offset());
-                this._raw_contents = io.readBytes(sizePacked());
-                this.contents = KaitaiStream.processZlib(this._raw_contents);
+                this._raw_contentsZlib = io.readBytes(sizePacked());
+                this.contentsZlib = KaitaiStream.processZlib(_raw_contentsZlib);
                 io.seek(_pos);
+            }
+            return this.contentsZlib;
+        }
+        private byte[] contents;
+        public byte[] contents() {
+            if (this.contents != null)
+                return this.contents;
+            if ( ((flags() == Fallout2Dat.Compression.ZLIB) || (flags() == Fallout2Dat.Compression.NONE)) ) {
+                this.contents = (flags() == Fallout2Dat.Compression.ZLIB ? contentsZlib() : contentsRaw());
             }
             return this.contents;
         }
@@ -191,7 +213,7 @@ public class Fallout2Dat extends KaitaiStruct {
         private long offset;
         private Fallout2Dat _root;
         private Fallout2Dat.Index _parent;
-        private byte[] _raw_contents;
+        private byte[] _raw_contentsZlib;
         public Pstr name() { return name; }
         public Compression flags() { return flags; }
         public long sizeUnpacked() { return sizeUnpacked; }
@@ -199,7 +221,7 @@ public class Fallout2Dat extends KaitaiStruct {
         public long offset() { return offset; }
         public Fallout2Dat _root() { return _root; }
         public Fallout2Dat.Index _parent() { return _parent; }
-        public byte[] _raw_contents() { return _raw_contents; }
+        public byte[] _raw_contentsZlib() { return _raw_contentsZlib; }
     }
     private Footer footer;
     public Footer footer() {

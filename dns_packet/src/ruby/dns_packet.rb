@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -163,8 +163,8 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @name = DomainName.new(@_io, self, @_root)
-      @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
-      @query_class = Kaitai::Struct::Stream::resolve_enum(CLASS_TYPE, @_io.read_u2be)
+      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
+      @query_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
       self
     end
     attr_reader :name
@@ -273,47 +273,47 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @name = DomainName.new(@_io, self, @_root)
-      @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
-      @answer_class = Kaitai::Struct::Stream::resolve_enum(CLASS_TYPE, @_io.read_u2be)
+      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
+      @answer_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
       @ttl = @_io.read_s4be
       @rdlength = @_io.read_u2be
       case type
-      when :type_type_mx
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = MxInfo.new(io, self, @_root)
-      when :type_type_ptr
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(io, self, @_root)
-      when :type_type_soa
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = AuthorityInfo.new(io, self, @_root)
-      when :type_type_cname
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(io, self, @_root)
-      when :type_type_aaaa
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = AddressV6.new(io, self, @_root)
-      when :type_type_txt
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = TxtBody.new(io, self, @_root)
-      when :type_type_ns
-        @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(io, self, @_root)
       when :type_type_srv
         @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = Service.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = Service.new(_io__raw_payload, self, @_root)
       when :type_type_a
         @_raw_payload = @_io.read_bytes(rdlength)
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = Address.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = Address.new(_io__raw_payload, self, @_root)
+      when :type_type_cname
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = DomainName.new(_io__raw_payload, self, @_root)
+      when :type_type_ns
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = DomainName.new(_io__raw_payload, self, @_root)
+      when :type_type_soa
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = AuthorityInfo.new(_io__raw_payload, self, @_root)
+      when :type_type_mx
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = MxInfo.new(_io__raw_payload, self, @_root)
+      when :type_type_txt
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = TxtBody.new(_io__raw_payload, self, @_root)
+      when :type_type_ptr
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = DomainName.new(_io__raw_payload, self, @_root)
+      when :type_type_aaaa
+        @_raw_payload = @_io.read_bytes(rdlength)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = AddressV6.new(_io__raw_payload, self, @_root)
       else
         @payload = @_io.read_bytes(rdlength)
       end

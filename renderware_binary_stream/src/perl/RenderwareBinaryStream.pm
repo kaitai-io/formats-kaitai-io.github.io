@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package RenderwareBinaryStream;
@@ -206,32 +206,32 @@ sub _read {
     $self->{size} = $self->{_io}->read_u4le();
     $self->{library_id_stamp} = $self->{_io}->read_u4le();
     my $_on = $self->code();
-    if ($_on == $SECTIONS_TEXTURE_DICTIONARY) {
+    if ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_GEOMETRY_LIST) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_CLUMP) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY_LIST) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_TEXTURE_NATIVE) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_NATIVE) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_FRAME_LIST) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_GEOMETRY) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
@@ -947,34 +947,34 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{code} = $self->{_io}->ensure_fixed_contents(pack('C*', (1, 0, 0, 0)));
+    $self->{code} = $self->{_io}->read_bytes(4);
     $self->{header_size} = $self->{_io}->read_u4le();
     $self->{library_id_stamp} = $self->{_io}->read_u4le();
     my $_on = $self->_parent()->code();
-    if ($_on == $SECTIONS_TEXTURE_DICTIONARY) {
+    if ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructGeometry->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
         $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
         my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
         $self->{header} = RenderwareBinaryStream::StructTextureDictionary->new($io__raw_header, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_GEOMETRY_LIST) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY_LIST) {
         $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
         my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
         $self->{header} = RenderwareBinaryStream::StructGeometryList->new($io__raw_header, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_CLUMP) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
         $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
         my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
         $self->{header} = RenderwareBinaryStream::StructClump->new($io__raw_header, $self, $self->{_root});
     }
-    elsif ($_on == $SECTIONS_FRAME_LIST) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
         $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
         my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
         $self->{header} = RenderwareBinaryStream::StructFrameList->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $SECTIONS_GEOMETRY) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructGeometry->new($io__raw_header, $self, $self->{_root});
     }
     else {
         $self->{header} = $self->{_io}->read_bytes($self->header_size());

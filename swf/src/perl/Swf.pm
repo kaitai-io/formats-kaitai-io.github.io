@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Compress::Zlib;
 use Encode;
 
@@ -59,15 +59,15 @@ sub _read {
     my ($self) = @_;
 
     $self->{compression} = $self->{_io}->read_u1();
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (87, 83)));
+    $self->{signature} = $self->{_io}->read_bytes(2);
     $self->{version} = $self->{_io}->read_u1();
     $self->{len_file} = $self->{_io}->read_u4le();
-    if ($self->compression() == $COMPRESSIONS_NONE) {
+    if ($self->compression() == $Swf::COMPRESSIONS_NONE) {
         $self->{_raw_plain_body} = $self->{_io}->read_bytes_full();
         my $io__raw_plain_body = IO::KaitaiStruct::Stream->new($self->{_raw_plain_body});
         $self->{plain_body} = Swf::SwfBody->new($io__raw_plain_body, $self, $self->{_root});
     }
-    if ($self->compression() == $COMPRESSIONS_ZLIB) {
+    if ($self->compression() == $Swf::COMPRESSIONS_ZLIB) {
         $self->{_raw__raw_zlib_body} = $self->{_io}->read_bytes_full();
         $self->{_raw_zlib_body} = Compress::Zlib::uncompress($self->{_raw__raw_zlib_body});
         my $io__raw_zlib_body = IO::KaitaiStruct::Stream->new($self->{_raw_zlib_body});
@@ -110,14 +110,14 @@ sub _raw_plain_body {
     return $self->{_raw_plain_body};
 }
 
-sub _raw__raw_zlib_body {
-    my ($self) = @_;
-    return $self->{_raw__raw_zlib_body};
-}
-
 sub _raw_zlib_body {
     my ($self) = @_;
     return $self->{_raw_zlib_body};
+}
+
+sub _raw__raw_zlib_body {
+    my ($self) = @_;
+    return $self->{_raw__raw_zlib_body};
 }
 
 ########################################################################
@@ -377,35 +377,35 @@ sub _read {
 
     $self->{record_header} = Swf::RecordHeader->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->record_header()->tag_type();
-    if ($_on == $TAG_TYPE_SET_BACKGROUND_COLOR) {
-        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
-        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
-        $self->{tag_body} = Swf::Rgb->new($io__raw_tag_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_TYPE_SCRIPT_LIMITS) {
-        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
-        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
-        $self->{tag_body} = Swf::ScriptLimitsBody->new($io__raw_tag_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_TYPE_DEFINE_SOUND) {
+    if ($_on == $Swf::TAG_TYPE_DEFINE_SOUND) {
         $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
         my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
         $self->{tag_body} = Swf::DefineSoundBody->new($io__raw_tag_body, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_EXPORT_ASSETS) {
+    elsif ($_on == $Swf::TAG_TYPE_SET_BACKGROUND_COLOR) {
         $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
         my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
-        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
+        $self->{tag_body} = Swf::Rgb->new($io__raw_tag_body, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_SYMBOL_CLASS) {
+    elsif ($_on == $Swf::TAG_TYPE_SCRIPT_LIMITS) {
         $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
         my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
-        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
+        $self->{tag_body} = Swf::ScriptLimitsBody->new($io__raw_tag_body, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_TYPE_DO_ABC) {
+    elsif ($_on == $Swf::TAG_TYPE_DO_ABC) {
         $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
         my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
         $self->{tag_body} = Swf::DoAbcBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Swf::TAG_TYPE_EXPORT_ASSETS) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Swf::TAG_TYPE_SYMBOL_CLASS) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
     }
     else {
         $self->{tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
@@ -561,10 +561,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{id} = $self->{_io}->read_u2le();
-    $self->{format} = $self->{_io}->read_bits_int(4);
-    $self->{sampling_rate} = $self->{_io}->read_bits_int(2);
-    $self->{bits_per_sample} = $self->{_io}->read_bits_int(1);
-    $self->{num_channels} = $self->{_io}->read_bits_int(1);
+    $self->{format} = $self->{_io}->read_bits_int_be(4);
+    $self->{sampling_rate} = $self->{_io}->read_bits_int_be(2);
+    $self->{bits_per_sample} = $self->{_io}->read_bits_int_be(1);
+    $self->{num_channels} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{num_samples} = $self->{_io}->read_u4le();
 }

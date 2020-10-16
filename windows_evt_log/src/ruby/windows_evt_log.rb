@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -57,7 +57,8 @@ class WindowsEvtLog < Kaitai::Struct::Struct
 
     def _read
       @len_header = @_io.read_u4le
-      @magic = @_io.ensure_fixed_contents([76, 102, 76, 101].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 102, 76, 101].pack('C*'), magic, _io, "/types/header/seq/1") if not magic == [76, 102, 76, 101].pack('C*')
       @version_major = @_io.read_u4le
       @version_minor = @_io.read_u4le
       @ofs_start = @_io.read_u4le
@@ -77,11 +78,11 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       end
 
       def _read
-        @reserved = @_io.read_bits_int(28)
-        @archive = @_io.read_bits_int(1) != 0
-        @log_full = @_io.read_bits_int(1) != 0
-        @wrap = @_io.read_bits_int(1) != 0
-        @dirty = @_io.read_bits_int(1) != 0
+        @reserved = @_io.read_bits_int_be(28)
+        @archive = @_io.read_bits_int_be(1) != 0
+        @log_full = @_io.read_bits_int_be(1) != 0
+        @wrap = @_io.read_bits_int_be(1) != 0
+        @dirty = @_io.read_bits_int_be(1) != 0
         self
       end
       attr_reader :reserved
@@ -153,12 +154,12 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       case type
       when 1699505740
         @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RecordBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RecordBody.new(_io__raw_body, self, @_root)
       when 286331153
         @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CursorRecordBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = CursorRecordBody.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes((len_record - 12))
       end
@@ -287,7 +288,8 @@ class WindowsEvtLog < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*'))
+      @magic = @_io.read_bytes(12)
+      raise Kaitai::Struct::ValidationNotEqualError.new([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*'), magic, _io, "/types/cursor_record_body/seq/0") if not magic == [34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*')
       @ofs_first_record = @_io.read_u4le
       @ofs_next_record = @_io.read_u4le
       @idx_next_record = @_io.read_u4le

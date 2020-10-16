@@ -29,7 +29,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 16, 0, 0, 0 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 16, 0, 0, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, Magic, M_Io, "/seq/0");
+            }
             _flags = m_io.ReadU4le();
             if (HasClut) {
                 _clut = new Bitmap(m_io, this, m_root);

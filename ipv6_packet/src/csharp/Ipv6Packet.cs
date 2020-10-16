@@ -19,9 +19,9 @@ namespace Kaitai
         }
         private void _read()
         {
-            _version = m_io.ReadBitsInt(4);
-            _trafficClass = m_io.ReadBitsInt(8);
-            _flowLabel = m_io.ReadBitsInt(20);
+            _version = m_io.ReadBitsIntBe(4);
+            _trafficClass = m_io.ReadBitsIntBe(8);
+            _flowLabel = m_io.ReadBitsIntBe(20);
             m_io.AlignToByte();
             _payloadLength = m_io.ReadU2be();
             _nextHeaderType = m_io.ReadU1();

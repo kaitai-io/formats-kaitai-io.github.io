@@ -42,11 +42,19 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 69, 61, 205, 40 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 69, 61, 205, 40 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 69, 61, 205, 40 }, Magic, M_Io, "/types/super_block_struct/seq/0");
+                }
                 _size = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
                 _future = m_io.ReadU4le();
-                _signature = m_io.EnsureFixedContents(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 });
+                _signature = m_io.ReadBytes(16);
+                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 }, Signature, M_Io, "/types/super_block_struct/seq/4");
+                }
                 _fsid = new Info(m_io, this, m_root);
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(16));
                 _root = new Inode(m_io, this, m_root);

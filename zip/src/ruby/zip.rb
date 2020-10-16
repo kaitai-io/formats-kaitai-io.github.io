@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -114,21 +114,21 @@ class Zip < Kaitai::Struct::Struct
     end
 
     def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(EXTRA_CODES, @_io.read_u2le)
+      @code = Kaitai::Struct::Stream::resolve_enum(Zip::EXTRA_CODES, @_io.read_u2le)
       @len_body = @_io.read_u2le
       case code
       when :extra_codes_ntfs
         @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Ntfs.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Ntfs.new(_io__raw_body, self, @_root)
       when :extra_codes_extended_timestamp
         @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = ExtendedTimestamp.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = ExtendedTimestamp.new(_io__raw_body, self, @_root)
       when :extra_codes_infozip_unix_var_size
         @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = InfozipUnixVarSize.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = InfozipUnixVarSize.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end
@@ -165,8 +165,8 @@ class Zip < Kaitai::Struct::Struct
           case tag
           when 1
             @_raw_body = @_io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = Attribute1.new(io, self, @_root)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = Attribute1.new(_io__raw_body, self, @_root)
           else
             @body = @_io.read_bytes(len_body)
           end
@@ -277,7 +277,7 @@ class Zip < Kaitai::Struct::Struct
       @version_made_by = @_io.read_u2le
       @version_needed_to_extract = @_io.read_u2le
       @flags = @_io.read_u2le
-      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u2le)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
       @last_mod_file_time = @_io.read_u2le
       @last_mod_file_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
@@ -292,8 +292,8 @@ class Zip < Kaitai::Struct::Struct
       @ofs_local_header = @_io.read_s4le
       @file_name = (@_io.read_bytes(len_file_name)).force_encoding("UTF-8")
       @_raw_extra = @_io.read_bytes(len_extra)
-      io = Kaitai::Struct::Stream.new(@_raw_extra)
-      @extra = Extras.new(io, self, @_root)
+      _io__raw_extra = Kaitai::Struct::Stream.new(@_raw_extra)
+      @extra = Extras.new(_io__raw_extra, self, @_root)
       @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
       self
     end
@@ -333,7 +333,8 @@ class Zip < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([80, 75].pack('C*'))
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([80, 75].pack('C*'), magic, _io, "/types/pk_section/seq/0") if not magic == [80, 75].pack('C*')
       @section_type = @_io.read_u2le
       case section_type
       when 513
@@ -377,7 +378,7 @@ class Zip < Kaitai::Struct::Struct
     def _read
       @version = @_io.read_u2le
       @flags = @_io.read_u2le
-      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u2le)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
       @file_mod_time = @_io.read_u2le
       @file_mod_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
@@ -387,8 +388,8 @@ class Zip < Kaitai::Struct::Struct
       @len_extra = @_io.read_u2le
       @file_name = (@_io.read_bytes(len_file_name)).force_encoding("UTF-8")
       @_raw_extra = @_io.read_bytes(len_extra)
-      io = Kaitai::Struct::Stream.new(@_raw_extra)
-      @extra = Extras.new(io, self, @_root)
+      _io__raw_extra = Kaitai::Struct::Stream.new(@_raw_extra)
+      @extra = Extras.new(_io__raw_extra, self, @_root)
       self
     end
     attr_reader :version

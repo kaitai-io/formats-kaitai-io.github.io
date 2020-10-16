@@ -41,7 +41,11 @@ namespace Kaitai
         private void _read()
         {
             _songName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
-            _magic1 = m_io.EnsureFixedContents(new byte[] { 26 });
+            _magic1 = m_io.ReadBytes(1);
+            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 26 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 26 }, Magic1, M_Io, "/seq/1");
+            }
             _fileType = m_io.ReadU1();
             _reserved1 = m_io.ReadBytes(2);
             _numOrders = m_io.ReadU2le();
@@ -50,12 +54,16 @@ namespace Kaitai
             _flags = m_io.ReadU2le();
             _version = m_io.ReadU2le();
             _samplesFormat = m_io.ReadU2le();
-            _magic2 = m_io.EnsureFixedContents(new byte[] { 83, 67, 82, 77 });
+            _magic2 = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 83, 67, 82, 77 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, Magic2, M_Io, "/seq/10");
+            }
             _globalVolume = m_io.ReadU1();
             _initialSpeed = m_io.ReadU1();
             _initialTempo = m_io.ReadU1();
-            _isStereo = m_io.ReadBitsInt(1) != 0;
-            _masterVolume = m_io.ReadBitsInt(7);
+            _isStereo = m_io.ReadBitsIntBe(1) != 0;
+            _masterVolume = m_io.ReadBitsIntBe(7);
             m_io.AlignToByte();
             _ultraClickRemoval = m_io.ReadU1();
             _hasCustomPan = m_io.ReadU1();
@@ -100,10 +108,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved1 = m_io.ReadBitsInt(2);
-                _hasCustomPan = m_io.ReadBitsInt(1) != 0;
-                _reserved2 = m_io.ReadBitsInt(1) != 0;
-                _pan = m_io.ReadBitsInt(4);
+                _reserved1 = m_io.ReadBitsIntBe(2);
+                _hasCustomPan = m_io.ReadBitsIntBe(1) != 0;
+                _reserved2 = m_io.ReadBitsIntBe(1) != 0;
+                _pan = m_io.ReadBitsIntBe(4);
             }
             private ulong _reserved1;
             private bool _hasCustomPan;
@@ -139,10 +147,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _hasFx = m_io.ReadBitsInt(1) != 0;
-                _hasVolume = m_io.ReadBitsInt(1) != 0;
-                _hasNoteAndInstrument = m_io.ReadBitsInt(1) != 0;
-                _channelNum = m_io.ReadBitsInt(5);
+                _hasFx = m_io.ReadBitsIntBe(1) != 0;
+                _hasVolume = m_io.ReadBitsIntBe(1) != 0;
+                _hasNoteAndInstrument = m_io.ReadBitsIntBe(1) != 0;
+                _channelNum = m_io.ReadBitsIntBe(5);
                 m_io.AlignToByte();
                 if (HasNoteAndInstrument) {
                     _note = m_io.ReadU1();
@@ -229,8 +237,8 @@ namespace Kaitai
             }
             private void _read()
             {
-                _isDisabled = m_io.ReadBitsInt(1) != 0;
-                _chType = m_io.ReadBitsInt(7);
+                _isDisabled = m_io.ReadBitsIntBe(1) != 0;
+                _chType = m_io.ReadBitsIntBe(7);
             }
             private bool _isDisabled;
             private ulong _chType;
@@ -444,7 +452,11 @@ namespace Kaitai
                 _tuningHz = m_io.ReadU4le();
                 _reserved2 = m_io.ReadBytes(12);
                 _sampleName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
-                _magic = m_io.EnsureFixedContents(new byte[] { 83, 67, 82, 83 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 83, 67, 82, 83 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, Magic, M_Io, "/types/instrument/seq/6");
+                }
             }
             public partial class Sampled : KaitaiStruct
             {
@@ -531,7 +543,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0 });
+                    _reserved1 = m_io.ReadBytes(3);
+                    if (!((KaitaiStream.ByteArrayCompare(Reserved1, new byte[] { 0, 0, 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0, 0, 0 }, Reserved1, M_Io, "/types/instrument/types/adlib/seq/0");
+                    }
                     __unnamed1 = m_io.ReadBytes(16);
                 }
                 private byte[] _reserved1;

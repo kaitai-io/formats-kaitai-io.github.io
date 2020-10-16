@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Tsm(KaitaiStruct):
     """InfluxDB is a scalable database optimized for storage of time
@@ -24,7 +25,7 @@ class Tsm(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
+        self.header = Tsm.Header(self._io, self, self._root)
 
     class Header(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -34,7 +35,9 @@ class Tsm(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x16\xD1\x16\xD1")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x16\xD1\x16\xD1":
+                raise kaitaistruct.ValidationNotEqualError(b"\x16\xD1\x16\xD1", self.magic, self._io, u"/types/header/seq/0")
             self.version = self._io.read_u1()
 
 
@@ -62,7 +65,7 @@ class Tsm(KaitaiStruct):
                 self.entry_count = self._io.read_u2be()
                 self.index_entries = [None] * (self.entry_count)
                 for i in range(self.entry_count):
-                    self.index_entries[i] = self._root.Index.IndexHeader.IndexEntry(self._io, self, self._root)
+                    self.index_entries[i] = Tsm.Index.IndexHeader.IndexEntry(self._io, self, self._root)
 
 
             class IndexEntry(KaitaiStruct):
@@ -98,7 +101,7 @@ class Tsm(KaitaiStruct):
                     io = self._root._io
                     _pos = io.pos()
                     io.seek(self.block_offset)
-                    self._m_block = self._root.Index.IndexHeader.IndexEntry.BlockEntry(io, self, self._root)
+                    self._m_block = Tsm.Index.IndexHeader.IndexEntry.BlockEntry(io, self, self._root)
                     io.seek(_pos)
                     return self._m_block if hasattr(self, '_m_block') else None
 
@@ -114,7 +117,7 @@ class Tsm(KaitaiStruct):
             self._m_entries = []
             i = 0
             while True:
-                _ = self._root.Index.IndexHeader(self._io, self, self._root)
+                _ = Tsm.Index.IndexHeader(self._io, self, self._root)
                 self._m_entries.append(_)
                 if self._io.pos() == (self._io.size() - 8):
                     break
@@ -130,7 +133,7 @@ class Tsm(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 8))
-        self._m_index = self._root.Index(self._io, self, self._root)
+        self._m_index = Tsm.Index(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_index if hasattr(self, '_m_index') else None
 

@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from vlq_base128_be import VlqBase128Be
+import vlq_base128_be
 class StandardMidiFile(KaitaiStruct):
     """Standard MIDI file, typically knows just as "MID", is a standard way
     to serialize series of MIDI events, which is a protocol used in many
@@ -32,10 +33,10 @@ class StandardMidiFile(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.hdr = self._root.Header(self._io, self, self._root)
+        self.hdr = StandardMidiFile.Header(self._io, self, self._root)
         self.tracks = [None] * (self.hdr.num_tracks)
         for i in range(self.hdr.num_tracks):
-            self.tracks[i] = self._root.Track(self._io, self, self._root)
+            self.tracks[i] = StandardMidiFile.Track(self._io, self, self._root)
 
 
     class TrackEvents(KaitaiStruct):
@@ -49,7 +50,7 @@ class StandardMidiFile(KaitaiStruct):
             self.event = []
             i = 0
             while not self._io.is_eof():
-                self.event.append(self._root.TrackEvent(self._io, self, self._root))
+                self.event.append(StandardMidiFile.TrackEvent(self._io, self, self._root))
                 i += 1
 
 
@@ -62,29 +63,29 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.v_time = VlqBase128Be(self._io)
+            self.v_time = vlq_base128_be.VlqBase128Be(self._io)
             self.event_header = self._io.read_u1()
             if self.event_header == 255:
-                self.meta_event_body = self._root.MetaEventBody(self._io, self, self._root)
+                self.meta_event_body = StandardMidiFile.MetaEventBody(self._io, self, self._root)
 
             if self.event_header == 240:
-                self.sysex_body = self._root.SysexEventBody(self._io, self, self._root)
+                self.sysex_body = StandardMidiFile.SysexEventBody(self._io, self, self._root)
 
             _on = self.event_type
             if _on == 224:
-                self.event_body = self._root.PitchBendEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.PitchBendEvent(self._io, self, self._root)
             elif _on == 144:
-                self.event_body = self._root.NoteOnEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.NoteOnEvent(self._io, self, self._root)
             elif _on == 208:
-                self.event_body = self._root.ChannelPressureEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.ChannelPressureEvent(self._io, self, self._root)
             elif _on == 192:
-                self.event_body = self._root.ProgramChangeEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.ProgramChangeEvent(self._io, self, self._root)
             elif _on == 160:
-                self.event_body = self._root.PolyphonicPressureEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.PolyphonicPressureEvent(self._io, self, self._root)
             elif _on == 176:
-                self.event_body = self._root.ControllerEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.ControllerEvent(self._io, self, self._root)
             elif _on == 128:
-                self.event_body = self._root.NoteOffEvent(self._io, self, self._root)
+                self.event_body = StandardMidiFile.NoteOffEvent(self._io, self, self._root)
 
         @property
         def event_type(self):
@@ -176,11 +177,13 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x72\x6B")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x4D\x54\x72\x6B":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x72\x6B", self.magic, self._io, u"/types/track/seq/0")
             self.len_events = self._io.read_u4be()
             self._raw_events = self._io.read_bytes(self.len_events)
-            io = KaitaiStream(BytesIO(self._raw_events))
-            self.events = self._root.TrackEvents(io, self, self._root)
+            _io__raw_events = KaitaiStream(BytesIO(self._raw_events))
+            self.events = StandardMidiFile.TrackEvents(_io__raw_events, self, self._root)
 
 
     class MetaEventBody(KaitaiStruct):
@@ -208,8 +211,8 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.meta_type = self._root.MetaEventBody.MetaTypeEnum(self._io.read_u1())
-            self.len = VlqBase128Be(self._io)
+            self.meta_type = KaitaiStream.resolve_enum(StandardMidiFile.MetaEventBody.MetaTypeEnum, self._io.read_u1())
+            self.len = vlq_base128_be.VlqBase128Be(self._io)
             self.body = self._io.read_bytes(self.len.value)
 
 
@@ -233,7 +236,9 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x68\x64")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x4D\x54\x68\x64":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x68\x64", self.magic, self._io, u"/types/header/seq/0")
             self.len_header = self._io.read_u4be()
             self.format = self._io.read_u2be()
             self.num_tracks = self._io.read_u2be()
@@ -248,7 +253,7 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len = VlqBase128Be(self._io)
+            self.len = vlq_base128_be.VlqBase128Be(self._io)
             self.data = self._io.read_bytes(self.len.value)
 
 

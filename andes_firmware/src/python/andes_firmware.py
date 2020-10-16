@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndesFirmware(KaitaiStruct):
     """Firmware image found with MediaTek MT76xx wifi chipsets."""
@@ -17,8 +18,8 @@ class AndesFirmware(KaitaiStruct):
 
     def _read(self):
         self._raw_image_header = self._io.read_bytes(32)
-        io = KaitaiStream(BytesIO(self._raw_image_header))
-        self.image_header = self._root.ImageHeader(io, self, self._root)
+        _io__raw_image_header = KaitaiStream(BytesIO(self._raw_image_header))
+        self.image_header = AndesFirmware.ImageHeader(_io__raw_image_header, self, self._root)
         self.ilm = self._io.read_bytes(self.image_header.ilm_len)
         self.dlm = self._io.read_bytes(self.image_header.dlm_len)
 

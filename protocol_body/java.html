@@ -149,11 +149,6 @@ on that parameter.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
                 
                 
@@ -450,35 +445,40 @@ on that parameter.</p>
         <span class="n">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="n">protocol</span><span class="p">())</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="n">TCP</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TcpSegment</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">IPV6_NONXT</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NoNextHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">ICMP</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IcmpPacket</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">UDP</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UdpDatagram</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">HOPOPT</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OptionHopByHop</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">IPV6</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">case</span> <span class="n">IPV4</span><span class="p">:</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span class="p">{</span>
+            <span class="n">ProtocolEnum</span> <span class="n">on</span> <span class="o">=</span> <span class="n">protocol</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">protocol</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">IPV6_NONXT</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NoNextHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">IPV4</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">UDP</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UdpDatagram</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">ICMP</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IcmpPacket</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">HOPOPT</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OptionHopByHop</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">IPV6</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">TCP</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TcpSegment</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 

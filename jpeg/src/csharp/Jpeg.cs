@@ -89,23 +89,27 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 255 });
+                _magic = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 255 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 255 }, Magic, M_Io, "/types/segment/seq/0");
+                }
                 _marker = ((MarkerEnum) m_io.ReadU1());
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
                     _length = m_io.ReadU2be();
                 }
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
                     switch (Marker) {
-                    case MarkerEnum.Sos: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentSos(io___raw_data, this, m_root);
-                        break;
-                    }
                     case MarkerEnum.App1: {
                         __raw_data = m_io.ReadBytes((Length - 2));
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SegmentApp1(io___raw_data, this, m_root);
+                        break;
+                    }
+                    case MarkerEnum.App0: {
+                        __raw_data = m_io.ReadBytes((Length - 2));
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new SegmentApp0(io___raw_data, this, m_root);
                         break;
                     }
                     case MarkerEnum.Sof0: {
@@ -114,10 +118,10 @@ namespace Kaitai
                         _data = new SegmentSof0(io___raw_data, this, m_root);
                         break;
                     }
-                    case MarkerEnum.App0: {
+                    case MarkerEnum.Sos: {
                         __raw_data = m_io.ReadBytes((Length - 2));
                         var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentApp0(io___raw_data, this, m_root);
+                        _data = new SegmentSos(io___raw_data, this, m_root);
                         break;
                     }
                     default: {
@@ -387,7 +391,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _extraZero = m_io.EnsureFixedContents(new byte[] { 0 });
+                _extraZero = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(ExtraZero, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, ExtraZero, M_Io, "/types/exif_in_jpeg/seq/0");
+                }
                 __raw_data = m_io.ReadBytesFull();
                 var io___raw_data = new KaitaiStream(__raw_data);
                 _data = new Exif(io___raw_data);

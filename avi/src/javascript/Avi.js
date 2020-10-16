@@ -74,9 +74,15 @@ var Avi = (function() {
     this._read();
   }
   Avi.prototype._read = function() {
-    this.magic1 = this._io.ensureFixedContents([82, 73, 70, 70]);
+    this.magic1 = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 73, 70, 70]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([82, 73, 70, 70], this.magic1, this._io, "/seq/0");
+    }
     this.fileSize = this._io.readU4le();
-    this.magic2 = this._io.ensureFixedContents([65, 86, 73, 32]);
+    this.magic2 = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, [65, 86, 73, 32]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([65, 86, 73, 32], this.magic2, this._io, "/seq/2");
+    }
     this._raw_data = this._io.readBytes((this.fileSize - 4));
     var _io__raw_data = new KaitaiStream(this._raw_data);
     this.data = new Blocks(_io__raw_data, this, this._root);

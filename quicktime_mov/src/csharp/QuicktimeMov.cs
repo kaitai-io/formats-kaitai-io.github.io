@@ -425,22 +425,28 @@ namespace Kaitai
                     _len64 = m_io.ReadU8be();
                 }
                 switch (AtomType) {
-                case QuicktimeMov.AtomType.Stbl: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
                 case QuicktimeMov.AtomType.Moof: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new AtomList(io___raw_body, this, m_root);
                     break;
                 }
-                case QuicktimeMov.AtomType.Mvhd: {
+                case QuicktimeMov.AtomType.Tkhd: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new MvhdBody(io___raw_body, this, m_root);
+                    _body = new TkhdBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Stbl: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Traf: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
                     break;
                 }
                 case QuicktimeMov.AtomType.Minf: {
@@ -455,7 +461,7 @@ namespace Kaitai
                     _body = new AtomList(io___raw_body, this, m_root);
                     break;
                 }
-                case QuicktimeMov.AtomType.Traf: {
+                case QuicktimeMov.AtomType.Moov: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new AtomList(io___raw_body, this, m_root);
@@ -467,28 +473,22 @@ namespace Kaitai
                     _body = new AtomList(io___raw_body, this, m_root);
                     break;
                 }
-                case QuicktimeMov.AtomType.Ftyp: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new FtypBody(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Moov: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Tkhd: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new TkhdBody(io___raw_body, this, m_root);
-                    break;
-                }
                 case QuicktimeMov.AtomType.Dinf: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Mvhd: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new MvhdBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Ftyp: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new FtypBody(io___raw_body, this, m_root);
                     break;
                 }
                 default: {

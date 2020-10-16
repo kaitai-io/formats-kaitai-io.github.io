@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -172,7 +172,8 @@ class Id3v11 < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([84, 65, 71].pack('C*'))
+      @magic = @_io.read_bytes(3)
+      raise Kaitai::Struct::ValidationNotEqualError.new([84, 65, 71].pack('C*'), magic, _io, "/types/id3_v1_1_tag/seq/0") if not magic == [84, 65, 71].pack('C*')
       @title = @_io.read_bytes(30)
       @artist = @_io.read_bytes(30)
       @album = @_io.read_bytes(30)

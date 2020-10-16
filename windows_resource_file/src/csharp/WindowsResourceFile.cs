@@ -287,8 +287,8 @@ namespace Kaitai
                         m_io.Seek(SavePos1);
                         _asString = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(((SavePos2 - SavePos1) - 2)));
                         m_io.Seek(_pos);
+                        f_asString = true;
                     }
-                    f_asString = true;
                     return _asString;
                 }
             }

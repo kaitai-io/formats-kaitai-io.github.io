@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (202, 254, 186, 190)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version_minor} = $self->{_io}->read_u2be();
     $self->{version_major} = $self->{_io}->read_u2be();
     $self->{constant_pool_count} = $self->{_io}->read_u2be();
@@ -1320,47 +1320,47 @@ sub _read {
 
     $self->{tag} = $self->{_io}->read_u1();
     my $_on = $self->tag();
-    if ($_on == $TAG_ENUM_STRING) {
-        $self->{cp_info} = JavaClass::StringCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_DOUBLE) {
-        $self->{cp_info} = JavaClass::DoubleCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_INVOKE_DYNAMIC) {
-        $self->{cp_info} = JavaClass::InvokeDynamicCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_METHOD_HANDLE) {
-        $self->{cp_info} = JavaClass::MethodHandleCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_CLASS_TYPE) {
-        $self->{cp_info} = JavaClass::ClassCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_METHOD_REF) {
-        $self->{cp_info} = JavaClass::MethodRefCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_LONG) {
-        $self->{cp_info} = JavaClass::LongCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_NAME_AND_TYPE) {
-        $self->{cp_info} = JavaClass::NameAndTypeCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_FLOAT) {
-        $self->{cp_info} = JavaClass::FloatCpInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $TAG_ENUM_INTERFACE_METHOD_REF) {
+    if ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_INTERFACE_METHOD_REF) {
         $self->{cp_info} = JavaClass::InterfaceMethodRefCpInfo->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_ENUM_INTEGER) {
-        $self->{cp_info} = JavaClass::IntegerCpInfo->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_CLASS_TYPE) {
+        $self->{cp_info} = JavaClass::ClassCpInfo->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_ENUM_UTF8) {
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_UTF8) {
         $self->{cp_info} = JavaClass::Utf8CpInfo->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_ENUM_FIELD_REF) {
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_METHOD_TYPE) {
+        $self->{cp_info} = JavaClass::MethodTypeCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_INTEGER) {
+        $self->{cp_info} = JavaClass::IntegerCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_STRING) {
+        $self->{cp_info} = JavaClass::StringCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_FLOAT) {
+        $self->{cp_info} = JavaClass::FloatCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_LONG) {
+        $self->{cp_info} = JavaClass::LongCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_METHOD_REF) {
+        $self->{cp_info} = JavaClass::MethodRefCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_DOUBLE) {
+        $self->{cp_info} = JavaClass::DoubleCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_INVOKE_DYNAMIC) {
+        $self->{cp_info} = JavaClass::InvokeDynamicCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_FIELD_REF) {
         $self->{cp_info} = JavaClass::FieldRefCpInfo->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $TAG_ENUM_METHOD_TYPE) {
-        $self->{cp_info} = JavaClass::MethodTypeCpInfo->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_METHOD_HANDLE) {
+        $self->{cp_info} = JavaClass::MethodHandleCpInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $JavaClass::ConstantPoolEntry::TAG_ENUM_NAME_AND_TYPE) {
+        $self->{cp_info} = JavaClass::NameAndTypeCpInfo->new($self->{_io}, $self, $self->{_root});
     }
 }
 

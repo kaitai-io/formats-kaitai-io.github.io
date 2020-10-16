@@ -174,11 +174,6 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".pcap / .pcapdump file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".pcap / .pcapdump file format parsing C# library">C#</a></li>
                 
                 
@@ -259,239 +254,244 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="sd"> * [Wireshark](https://www.wireshark.org/).</span>
 <span class="sd"> */</span>
 
-<span class="k">class</span> <span class="nc">Pcap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Pcap\Header</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Pcap\Packet</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Pcap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_hdr</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_packets</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">hdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">packets</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Pcap</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Header</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magicNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s2">&quot;</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_thiszone</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sigfigs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_snaplen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_network</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_magicNumber</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_versionMajor</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_versionMinor</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_thiszone</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_sigfigs</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_snaplen</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_network</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">magicNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magicNumber</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMajor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMinor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * Correction time in seconds between UTC and the local</span>
-<span class="sd">     * timezone of the following packet header timestamps.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">thiszone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_thiszone</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * In theory, the accuracy of time stamps in the capture; in</span>
-<span class="sd">     * practice, all tools set it to 0.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">sigfigs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sigfigs</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * The &quot;snapshot length&quot; for the capture (typically 65535 or</span>
-<span class="sd">     * even more, but might be limited by the user), see: incl_len</span>
-<span class="sd">     * vs. orig_len.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">snaplen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_snaplen</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * Link-layer header type, specifying the type of headers at</span>
-<span class="sd">     * the beginning of the packet.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">network</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_network</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">\Pcap</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Packet</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsSec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsUsec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_inclLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">network</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="nx">\Pcap\Linktype</span><span class="o">::</span><span class="na">PPI</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PacketPpi</span><span class="p">(</span><span class="nv">$io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="nx">\Pcap\Linktype</span><span class="o">::</span><span class="na">ETHERNET</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\EthernetFrame</span><span class="p">(</span><span class="nv">$io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="k">default</span><span class="o">:</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Pcap\Header</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Pcap\Packet</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_hdr</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_packets</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">packets</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_packets</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">protected</span> <span class="nv">$_m_tsSec</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_tsUsec</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_inclLen</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_origLen</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
-    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">tsSec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsSec</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">tsUsec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsUsec</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * Number of bytes of packet data actually captured and saved in the file.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">inclLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_inclLen</span><span class="p">;</span> <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * Length of the packet as it appeared on the network when it was captured.</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">origLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origLen</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">\Pcap</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nx">Pcap</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Header</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">Linktype</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="no">NULL_LINKTYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ETHERNET</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">AX25</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_5</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ARCNET_BSD</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SLIP</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPP</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FDDI</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPP_HDLC</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPP_ETHER</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ATM_RFC1483</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RAW</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">C_HDLC</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_11</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FRELAY</span> <span class="o">=</span> <span class="mi">107</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LOOP</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LINUX_SLL</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LTALK</span> <span class="o">=</span> <span class="mi">114</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PFLOG</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_11_PRISM</span> <span class="o">=</span> <span class="mi">119</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IP_OVER_FC</span> <span class="o">=</span> <span class="mi">122</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SUNATM</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_11_RADIOTAP</span> <span class="o">=</span> <span class="mi">127</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ARCNET_LINUX</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">APPLE_IP_OVER_IEEE1394</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MTP2_WITH_PHDR</span> <span class="o">=</span> <span class="mi">139</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MTP2</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MTP3</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SCCP</span> <span class="o">=</span> <span class="mi">142</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DOCSIS</span> <span class="o">=</span> <span class="mi">143</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LINUX_IRDA</span> <span class="o">=</span> <span class="mi">144</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER0</span> <span class="o">=</span> <span class="mi">147</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER1</span> <span class="o">=</span> <span class="mi">148</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER2</span> <span class="o">=</span> <span class="mi">149</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER3</span> <span class="o">=</span> <span class="mi">150</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER4</span> <span class="o">=</span> <span class="mi">151</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER5</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER6</span> <span class="o">=</span> <span class="mi">153</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER7</span> <span class="o">=</span> <span class="mi">154</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER8</span> <span class="o">=</span> <span class="mi">155</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER9</span> <span class="o">=</span> <span class="mi">156</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER10</span> <span class="o">=</span> <span class="mi">157</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER11</span> <span class="o">=</span> <span class="mi">158</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER12</span> <span class="o">=</span> <span class="mi">159</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER13</span> <span class="o">=</span> <span class="mi">160</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER14</span> <span class="o">=</span> <span class="mi">161</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USER15</span> <span class="o">=</span> <span class="mi">162</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_11_AVS</span> <span class="o">=</span> <span class="mi">163</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BACNET_MS_TP</span> <span class="o">=</span> <span class="mi">165</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPP_PPPD</span> <span class="o">=</span> <span class="mi">166</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GPRS_LLC</span> <span class="o">=</span> <span class="mi">169</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GPF_T</span> <span class="o">=</span> <span class="mi">170</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">GPF_F</span> <span class="o">=</span> <span class="mi">171</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LINUX_LAPD</span> <span class="o">=</span> <span class="mi">177</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_HCI_H4</span> <span class="o">=</span> <span class="mi">187</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USB_LINUX</span> <span class="o">=</span> <span class="mi">189</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPI</span> <span class="o">=</span> <span class="mi">192</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_15_4</span> <span class="o">=</span> <span class="mi">195</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SITA</span> <span class="o">=</span> <span class="mi">196</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ERF</span> <span class="o">=</span> <span class="mi">197</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_HCI_H4_WITH_PHDR</span> <span class="o">=</span> <span class="mi">201</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">AX25_KISS</span> <span class="o">=</span> <span class="mi">202</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">LAPD</span> <span class="o">=</span> <span class="mi">203</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PPP_WITH_DIR</span> <span class="o">=</span> <span class="mi">204</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">C_HDLC_WITH_DIR</span> <span class="o">=</span> <span class="mi">205</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FRELAY_WITH_DIR</span> <span class="o">=</span> <span class="mi">206</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPMB_LINUX</span> <span class="o">=</span> <span class="mi">209</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_15_4_NONASK_PHY</span> <span class="o">=</span> <span class="mi">215</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USB_LINUX_MMAPPED</span> <span class="o">=</span> <span class="mi">220</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FC_2</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">FC_2_WITH_FRAME_DELIMS</span> <span class="o">=</span> <span class="mi">225</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPNET</span> <span class="o">=</span> <span class="mi">226</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">CAN_SOCKETCAN</span> <span class="o">=</span> <span class="mi">227</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPV4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPV6</span> <span class="o">=</span> <span class="mi">229</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IEEE802_15_4_NOFCS</span> <span class="o">=</span> <span class="mi">230</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DBUS</span> <span class="o">=</span> <span class="mi">231</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">DVB_CI</span> <span class="o">=</span> <span class="mi">235</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MUX27010</span> <span class="o">=</span> <span class="mi">236</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">STANAG_5066_D_PDU</span> <span class="o">=</span> <span class="mi">237</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NFLOG</span> <span class="o">=</span> <span class="mi">239</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NETANALYZER</span> <span class="o">=</span> <span class="mi">240</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NETANALYZER_TRANSPARENT</span> <span class="o">=</span> <span class="mi">241</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPOIB</span> <span class="o">=</span> <span class="mi">242</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">MPEG_2_TS</span> <span class="o">=</span> <span class="mi">243</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NG40</span> <span class="o">=</span> <span class="mi">244</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NFC_LLCP</span> <span class="o">=</span> <span class="mi">245</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">INFINIBAND</span> <span class="o">=</span> <span class="mi">247</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">SCTP</span> <span class="o">=</span> <span class="mi">248</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">USBPCAP</span> <span class="o">=</span> <span class="mi">249</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">RTAC_SERIAL</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_LE_LL</span> <span class="o">=</span> <span class="mi">251</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">NETLINK</span> <span class="o">=</span> <span class="mi">253</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_LINUX_MONITOR</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_BREDR_BB</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">BLUETOOTH_LE_LL_WITH_PHDR</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PROFIBUS_DL</span> <span class="o">=</span> <span class="mi">257</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">PKTAP</span> <span class="o">=</span> <span class="mi">258</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">EPON</span> <span class="o">=</span> <span class="mi">259</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">IPMI_HPM_2</span> <span class="o">=</span> <span class="mi">260</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ZWAVE_R1_R2</span> <span class="o">=</span> <span class="mi">261</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ZWAVE_R3</span> <span class="o">=</span> <span class="mi">262</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">WATTSTOPPER_DLM</span> <span class="o">=</span> <span class="mi">263</span><span class="p">;</span>
-    <span class="k">const</span> <span class="no">ISO_14443</span> <span class="o">=</span> <span class="mi">264</span><span class="p">;</span>
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magicNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magicNumber</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magicNumber</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_thiszone</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sigfigs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_snaplen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_network</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_magicNumber</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_versionMajor</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_versionMinor</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_thiszone</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_sigfigs</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_snaplen</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_network</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">magicNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magicNumber</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMajor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMinor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Correction time in seconds between UTC and the local</span>
+<span class="sd">         * timezone of the following packet header timestamps.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">thiszone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_thiszone</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * In theory, the accuracy of time stamps in the capture; in</span>
+<span class="sd">         * practice, all tools set it to 0.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">sigfigs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sigfigs</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The &quot;snapshot length&quot; for the capture (typically 65535 or</span>
+<span class="sd">         * even more, but might be limited by the user), see: incl_len</span>
+<span class="sd">         * vs. orig_len.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">snaplen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_snaplen</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Link-layer header type, specifying the type of headers at</span>
+<span class="sd">         * the beginning of the packet.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">network</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_network</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Pcap</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Packet</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Pcap</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsSec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsUsec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_inclLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">network</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="nx">\Pcap\Linktype</span><span class="o">::</span><span class="na">PPI</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PacketPpi</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Pcap\Linktype</span><span class="o">::</span><span class="na">ETHERNET</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\EthernetFrame</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">default</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">inclLen</span><span class="p">());</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tsSec</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_tsUsec</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_inclLen</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_origLen</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tsSec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsSec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tsUsec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tsUsec</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Number of bytes of packet data actually captured and saved in the file.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">inclLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_inclLen</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Length of the packet as it appeared on the network when it was captured.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">origLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origLen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Pcap</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Linktype</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">NULL_LINKTYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ETHERNET</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AX25</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_5</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ARCNET_BSD</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SLIP</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPP</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FDDI</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPP_HDLC</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPP_ETHER</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ATM_RFC1483</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RAW</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">C_HDLC</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_11</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FRELAY</span> <span class="o">=</span> <span class="mi">107</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LOOP</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LINUX_SLL</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LTALK</span> <span class="o">=</span> <span class="mi">114</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PFLOG</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_11_PRISM</span> <span class="o">=</span> <span class="mi">119</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IP_OVER_FC</span> <span class="o">=</span> <span class="mi">122</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNATM</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_11_RADIOTAP</span> <span class="o">=</span> <span class="mi">127</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ARCNET_LINUX</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">APPLE_IP_OVER_IEEE1394</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MTP2_WITH_PHDR</span> <span class="o">=</span> <span class="mi">139</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MTP2</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MTP3</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SCCP</span> <span class="o">=</span> <span class="mi">142</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DOCSIS</span> <span class="o">=</span> <span class="mi">143</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LINUX_IRDA</span> <span class="o">=</span> <span class="mi">144</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER0</span> <span class="o">=</span> <span class="mi">147</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER1</span> <span class="o">=</span> <span class="mi">148</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER2</span> <span class="o">=</span> <span class="mi">149</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER3</span> <span class="o">=</span> <span class="mi">150</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER4</span> <span class="o">=</span> <span class="mi">151</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER5</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER6</span> <span class="o">=</span> <span class="mi">153</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER7</span> <span class="o">=</span> <span class="mi">154</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER8</span> <span class="o">=</span> <span class="mi">155</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER9</span> <span class="o">=</span> <span class="mi">156</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER10</span> <span class="o">=</span> <span class="mi">157</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER11</span> <span class="o">=</span> <span class="mi">158</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER12</span> <span class="o">=</span> <span class="mi">159</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER13</span> <span class="o">=</span> <span class="mi">160</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER14</span> <span class="o">=</span> <span class="mi">161</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USER15</span> <span class="o">=</span> <span class="mi">162</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_11_AVS</span> <span class="o">=</span> <span class="mi">163</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BACNET_MS_TP</span> <span class="o">=</span> <span class="mi">165</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPP_PPPD</span> <span class="o">=</span> <span class="mi">166</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GPRS_LLC</span> <span class="o">=</span> <span class="mi">169</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GPF_T</span> <span class="o">=</span> <span class="mi">170</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GPF_F</span> <span class="o">=</span> <span class="mi">171</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LINUX_LAPD</span> <span class="o">=</span> <span class="mi">177</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_HCI_H4</span> <span class="o">=</span> <span class="mi">187</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USB_LINUX</span> <span class="o">=</span> <span class="mi">189</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPI</span> <span class="o">=</span> <span class="mi">192</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_15_4</span> <span class="o">=</span> <span class="mi">195</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SITA</span> <span class="o">=</span> <span class="mi">196</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ERF</span> <span class="o">=</span> <span class="mi">197</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_HCI_H4_WITH_PHDR</span> <span class="o">=</span> <span class="mi">201</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AX25_KISS</span> <span class="o">=</span> <span class="mi">202</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">LAPD</span> <span class="o">=</span> <span class="mi">203</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PPP_WITH_DIR</span> <span class="o">=</span> <span class="mi">204</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">C_HDLC_WITH_DIR</span> <span class="o">=</span> <span class="mi">205</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FRELAY_WITH_DIR</span> <span class="o">=</span> <span class="mi">206</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPMB_LINUX</span> <span class="o">=</span> <span class="mi">209</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_15_4_NONASK_PHY</span> <span class="o">=</span> <span class="mi">215</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USB_LINUX_MMAPPED</span> <span class="o">=</span> <span class="mi">220</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FC_2</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FC_2_WITH_FRAME_DELIMS</span> <span class="o">=</span> <span class="mi">225</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPNET</span> <span class="o">=</span> <span class="mi">226</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CAN_SOCKETCAN</span> <span class="o">=</span> <span class="mi">227</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPV4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPV6</span> <span class="o">=</span> <span class="mi">229</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IEEE802_15_4_NOFCS</span> <span class="o">=</span> <span class="mi">230</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DBUS</span> <span class="o">=</span> <span class="mi">231</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">DVB_CI</span> <span class="o">=</span> <span class="mi">235</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MUX27010</span> <span class="o">=</span> <span class="mi">236</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">STANAG_5066_D_PDU</span> <span class="o">=</span> <span class="mi">237</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NFLOG</span> <span class="o">=</span> <span class="mi">239</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NETANALYZER</span> <span class="o">=</span> <span class="mi">240</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NETANALYZER_TRANSPARENT</span> <span class="o">=</span> <span class="mi">241</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPOIB</span> <span class="o">=</span> <span class="mi">242</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">MPEG_2_TS</span> <span class="o">=</span> <span class="mi">243</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NG40</span> <span class="o">=</span> <span class="mi">244</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NFC_LLCP</span> <span class="o">=</span> <span class="mi">245</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">INFINIBAND</span> <span class="o">=</span> <span class="mi">247</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SCTP</span> <span class="o">=</span> <span class="mi">248</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">USBPCAP</span> <span class="o">=</span> <span class="mi">249</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RTAC_SERIAL</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_LE_LL</span> <span class="o">=</span> <span class="mi">251</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NETLINK</span> <span class="o">=</span> <span class="mi">253</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_LINUX_MONITOR</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_BREDR_BB</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BLUETOOTH_LE_LL_WITH_PHDR</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PROFIBUS_DL</span> <span class="o">=</span> <span class="mi">257</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PKTAP</span> <span class="o">=</span> <span class="mi">258</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">EPON</span> <span class="o">=</span> <span class="mi">259</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IPMI_HPM_2</span> <span class="o">=</span> <span class="mi">260</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ZWAVE_R1_R2</span> <span class="o">=</span> <span class="mi">261</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ZWAVE_R3</span> <span class="o">=</span> <span class="mi">262</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">WATTSTOPPER_DLM</span> <span class="o">=</span> <span class="mi">263</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ISO_14443</span> <span class="o">=</span> <span class="mi">264</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

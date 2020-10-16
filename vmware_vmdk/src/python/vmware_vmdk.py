@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class VmwareVmdk(KaitaiStruct):
     """
@@ -24,9 +25,11 @@ class VmwareVmdk(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x4B\x44\x4D\x56")
+        self.magic = self._io.read_bytes(4)
+        if not self.magic == b"\x4B\x44\x4D\x56":
+            raise kaitaistruct.ValidationNotEqualError(b"\x4B\x44\x4D\x56", self.magic, self._io, u"/seq/0")
         self.version = self._io.read_s4le()
-        self.flags = self._root.HeaderFlags(self._io, self, self._root)
+        self.flags = VmwareVmdk.HeaderFlags(self._io, self, self._root)
         self.size_max = self._io.read_s8le()
         self.size_grain = self._io.read_s8le()
         self.start_descriptor = self._io.read_s8le()
@@ -37,7 +40,7 @@ class VmwareVmdk(KaitaiStruct):
         self.size_metadata = self._io.read_s8le()
         self.is_dirty = self._io.read_u1()
         self.stuff = self._io.read_bytes(4)
-        self.compression_method = self._root.CompressionMethods(self._io.read_u2le())
+        self.compression_method = KaitaiStream.resolve_enum(VmwareVmdk.CompressionMethods, self._io.read_u2le())
 
     class HeaderFlags(KaitaiStruct):
         """
@@ -51,15 +54,15 @@ class VmwareVmdk(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved1 = self._io.read_bits_int(5)
-            self.zeroed_grain_table_entry = self._io.read_bits_int(1) != 0
-            self.use_secondary_grain_dir = self._io.read_bits_int(1) != 0
-            self.valid_new_line_detection_test = self._io.read_bits_int(1) != 0
+            self.reserved1 = self._io.read_bits_int_be(5)
+            self.zeroed_grain_table_entry = self._io.read_bits_int_be(1) != 0
+            self.use_secondary_grain_dir = self._io.read_bits_int_be(1) != 0
+            self.valid_new_line_detection_test = self._io.read_bits_int_be(1) != 0
             self._io.align_to_byte()
             self.reserved2 = self._io.read_u1()
-            self.reserved3 = self._io.read_bits_int(6)
-            self.has_metadata = self._io.read_bits_int(1) != 0
-            self.has_compressed_grain = self._io.read_bits_int(1) != 0
+            self.reserved3 = self._io.read_bits_int_be(6)
+            self.has_metadata = self._io.read_bits_int_be(1) != 0
+            self.has_compressed_grain = self._io.read_bits_int_be(1) != 0
             self._io.align_to_byte()
             self.reserved4 = self._io.read_u1()
 

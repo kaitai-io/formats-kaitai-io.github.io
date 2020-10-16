@@ -76,7 +76,11 @@ namespace Kaitai
             private void _read()
             {
                 _lenHeader = m_io.ReadU4le();
-                _magic = m_io.EnsureFixedContents(new byte[] { 76, 102, 76, 101 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 76, 102, 76, 101 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, Magic, M_Io, "/types/header/seq/1");
+                }
                 _versionMajor = m_io.ReadU4le();
                 _versionMinor = m_io.ReadU4le();
                 _ofsStart = m_io.ReadU4le();
@@ -103,11 +107,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved = m_io.ReadBitsInt(28);
-                    _archive = m_io.ReadBitsInt(1) != 0;
-                    _logFull = m_io.ReadBitsInt(1) != 0;
-                    _wrap = m_io.ReadBitsInt(1) != 0;
-                    _dirty = m_io.ReadBitsInt(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(28);
+                    _archive = m_io.ReadBitsIntBe(1) != 0;
+                    _logFull = m_io.ReadBitsIntBe(1) != 0;
+                    _wrap = m_io.ReadBitsIntBe(1) != 0;
+                    _dirty = m_io.ReadBitsIntBe(1) != 0;
                 }
                 private ulong _reserved;
                 private bool _archive;
@@ -437,7 +441,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 });
+                _magic = m_io.ReadBytes(12);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, Magic, M_Io, "/types/cursor_record_body/seq/0");
+                }
                 _ofsFirstRecord = m_io.ReadU4le();
                 _ofsNextRecord = m_io.ReadU4le();
                 _idxNextRecord = m_io.ReadU4le();

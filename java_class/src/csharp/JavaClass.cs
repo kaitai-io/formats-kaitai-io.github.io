@@ -23,7 +23,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 202, 254, 186, 190 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 202, 254, 186, 190 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 202, 254, 186, 190 }, Magic, M_Io, "/seq/0");
+            }
             _versionMinor = m_io.ReadU2be();
             _versionMajor = m_io.ReadU2be();
             _constantPoolCount = m_io.ReadU2be();
@@ -324,7 +328,7 @@ namespace Kaitai
                         {
                             if (f_asInfo)
                                 return _asInfo;
-                            _asInfo = (JavaClass.ClassCpInfo) (((ClassCpInfo) (M_Root.ConstantPool[(Index - 1)].CpInfo)));
+                            _asInfo = (JavaClass.ClassCpInfo) (((JavaClass.ClassCpInfo) (M_Root.ConstantPool[(Index - 1)].CpInfo)));
                             f_asInfo = true;
                             return _asInfo;
                         }
@@ -388,7 +392,7 @@ namespace Kaitai
                     {
                         if (f_sourcefileAsStr)
                             return _sourcefileAsStr;
-                        _sourcefileAsStr = (string) (((Utf8CpInfo) (M_Root.ConstantPool[(SourcefileIndex - 1)].CpInfo)).Value);
+                        _sourcefileAsStr = (string) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(SourcefileIndex - 1)].CpInfo)).Value);
                         f_sourcefileAsStr = true;
                         return _sourcefileAsStr;
                     }
@@ -470,7 +474,7 @@ namespace Kaitai
                 {
                     if (f_nameAsStr)
                         return _nameAsStr;
-                    _nameAsStr = (string) (((Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
+                    _nameAsStr = (string) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
                     f_nameAsStr = true;
                     return _nameAsStr;
                 }
@@ -520,7 +524,7 @@ namespace Kaitai
                 {
                     if (f_classAsInfo)
                         return _classAsInfo;
-                    _classAsInfo = (JavaClass.ClassCpInfo) (((ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
+                    _classAsInfo = (JavaClass.ClassCpInfo) (((JavaClass.ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
                     f_classAsInfo = true;
                     return _classAsInfo;
                 }
@@ -533,7 +537,7 @@ namespace Kaitai
                 {
                     if (f_nameAndTypeAsInfo)
                         return _nameAndTypeAsInfo;
-                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
+                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((JavaClass.NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
                     f_nameAndTypeAsInfo = true;
                     return _nameAndTypeAsInfo;
                 }
@@ -585,7 +589,7 @@ namespace Kaitai
                 {
                     if (f_nameAsStr)
                         return _nameAsStr;
-                    _nameAsStr = (string) (((Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
+                    _nameAsStr = (string) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
                     f_nameAsStr = true;
                     return _nameAsStr;
                 }
@@ -770,7 +774,7 @@ namespace Kaitai
                 {
                     if (f_nameAsInfo)
                         return _nameAsInfo;
-                    _nameAsInfo = (JavaClass.Utf8CpInfo) (((Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)));
+                    _nameAsInfo = (JavaClass.Utf8CpInfo) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)));
                     f_nameAsInfo = true;
                     return _nameAsInfo;
                 }
@@ -796,7 +800,7 @@ namespace Kaitai
                 {
                     if (f_descriptorAsInfo)
                         return _descriptorAsInfo;
-                    _descriptorAsInfo = (JavaClass.Utf8CpInfo) (((Utf8CpInfo) (M_Root.ConstantPool[(DescriptorIndex - 1)].CpInfo)));
+                    _descriptorAsInfo = (JavaClass.Utf8CpInfo) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(DescriptorIndex - 1)].CpInfo)));
                     f_descriptorAsInfo = true;
                     return _descriptorAsInfo;
                 }
@@ -942,7 +946,7 @@ namespace Kaitai
                 {
                     if (f_classAsInfo)
                         return _classAsInfo;
-                    _classAsInfo = (JavaClass.ClassCpInfo) (((ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
+                    _classAsInfo = (JavaClass.ClassCpInfo) (((JavaClass.ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
                     f_classAsInfo = true;
                     return _classAsInfo;
                 }
@@ -955,7 +959,7 @@ namespace Kaitai
                 {
                     if (f_nameAndTypeAsInfo)
                         return _nameAndTypeAsInfo;
-                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
+                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((JavaClass.NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
                     f_nameAndTypeAsInfo = true;
                     return _nameAndTypeAsInfo;
                 }
@@ -1000,7 +1004,7 @@ namespace Kaitai
                 {
                     if (f_nameAsInfo)
                         return _nameAsInfo;
-                    _nameAsInfo = (JavaClass.Utf8CpInfo) (((Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)));
+                    _nameAsInfo = (JavaClass.Utf8CpInfo) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)));
                     f_nameAsInfo = true;
                     return _nameAsInfo;
                 }
@@ -1064,8 +1068,40 @@ namespace Kaitai
             {
                 _tag = ((TagEnum) m_io.ReadU1());
                 switch (Tag) {
+                case TagEnum.InterfaceMethodRef: {
+                    _cpInfo = new InterfaceMethodRefCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.ClassType: {
+                    _cpInfo = new ClassCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.Utf8: {
+                    _cpInfo = new Utf8CpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.MethodType: {
+                    _cpInfo = new MethodTypeCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.Integer: {
+                    _cpInfo = new IntegerCpInfo(m_io, this, m_root);
+                    break;
+                }
                 case TagEnum.String: {
                     _cpInfo = new StringCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.Float: {
+                    _cpInfo = new FloatCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.Long: {
+                    _cpInfo = new LongCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.MethodRef: {
+                    _cpInfo = new MethodRefCpInfo(m_io, this, m_root);
                     break;
                 }
                 case TagEnum.Double: {
@@ -1076,48 +1112,16 @@ namespace Kaitai
                     _cpInfo = new InvokeDynamicCpInfo(m_io, this, m_root);
                     break;
                 }
-                case TagEnum.MethodHandle: {
-                    _cpInfo = new MethodHandleCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.ClassType: {
-                    _cpInfo = new ClassCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.MethodRef: {
-                    _cpInfo = new MethodRefCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Long: {
-                    _cpInfo = new LongCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.NameAndType: {
-                    _cpInfo = new NameAndTypeCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Float: {
-                    _cpInfo = new FloatCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.InterfaceMethodRef: {
-                    _cpInfo = new InterfaceMethodRefCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Integer: {
-                    _cpInfo = new IntegerCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Utf8: {
-                    _cpInfo = new Utf8CpInfo(m_io, this, m_root);
-                    break;
-                }
                 case TagEnum.FieldRef: {
                     _cpInfo = new FieldRefCpInfo(m_io, this, m_root);
                     break;
                 }
-                case TagEnum.MethodType: {
-                    _cpInfo = new MethodTypeCpInfo(m_io, this, m_root);
+                case TagEnum.MethodHandle: {
+                    _cpInfo = new MethodHandleCpInfo(m_io, this, m_root);
+                    break;
+                }
+                case TagEnum.NameAndType: {
+                    _cpInfo = new NameAndTypeCpInfo(m_io, this, m_root);
                     break;
                 }
                 }
@@ -1169,7 +1173,7 @@ namespace Kaitai
                 {
                     if (f_nameAsStr)
                         return _nameAsStr;
-                    _nameAsStr = (string) (((Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
+                    _nameAsStr = (string) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)).Value);
                     f_nameAsStr = true;
                     return _nameAsStr;
                 }
@@ -1249,7 +1253,7 @@ namespace Kaitai
                 {
                     if (f_classAsInfo)
                         return _classAsInfo;
-                    _classAsInfo = (JavaClass.ClassCpInfo) (((ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
+                    _classAsInfo = (JavaClass.ClassCpInfo) (((JavaClass.ClassCpInfo) (M_Root.ConstantPool[(ClassIndex - 1)].CpInfo)));
                     f_classAsInfo = true;
                     return _classAsInfo;
                 }
@@ -1262,7 +1266,7 @@ namespace Kaitai
                 {
                     if (f_nameAndTypeAsInfo)
                         return _nameAndTypeAsInfo;
-                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
+                    _nameAndTypeAsInfo = (JavaClass.NameAndTypeCpInfo) (((JavaClass.NameAndTypeCpInfo) (M_Root.ConstantPool[(NameAndTypeIndex - 1)].CpInfo)));
                     f_nameAndTypeAsInfo = true;
                     return _nameAndTypeAsInfo;
                 }

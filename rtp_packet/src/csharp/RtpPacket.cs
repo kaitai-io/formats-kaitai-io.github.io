@@ -68,12 +68,12 @@ namespace Kaitai
         }
         private void _read()
         {
-            _version = m_io.ReadBitsInt(2);
-            _hasPadding = m_io.ReadBitsInt(1) != 0;
-            _hasExtension = m_io.ReadBitsInt(1) != 0;
-            _csrcCount = m_io.ReadBitsInt(4);
-            _marker = m_io.ReadBitsInt(1) != 0;
-            _payloadType = ((PayloadTypeEnum) m_io.ReadBitsInt(7));
+            _version = m_io.ReadBitsIntBe(2);
+            _hasPadding = m_io.ReadBitsIntBe(1) != 0;
+            _hasExtension = m_io.ReadBitsIntBe(1) != 0;
+            _csrcCount = m_io.ReadBitsIntBe(4);
+            _marker = m_io.ReadBitsIntBe(1) != 0;
+            _payloadType = ((PayloadTypeEnum) m_io.ReadBitsIntBe(7));
             m_io.AlignToByte();
             _sequenceNumber = m_io.ReadU2be();
             _timestamp = m_io.ReadU4be();
@@ -129,8 +129,8 @@ namespace Kaitai
                     m_io.Seek((M_Io.Size - 1));
                     _lenPaddingIfExists = m_io.ReadU1();
                     m_io.Seek(_pos);
+                    f_lenPaddingIfExists = true;
                 }
-                f_lenPaddingIfExists = true;
                 return _lenPaddingIfExists;
             }
         }

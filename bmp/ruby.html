@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.bmp file format: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">.bmp file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.bmp file format:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The <strong>BMP file format</strong>, also known as <strong>bitmap image file</strong> or <strong>device independent
+bitmap (DIB) file format</strong> or simply a <strong>bitmap</strong>, is a raster graphics image file
+format used to store bitmap digital images, independently of the display
+device (such as a graphics adapter), especially on Microsoft Windows
+and OS/2 operating systems.</p>
+<h2>Samples</h2>
+<p>Great collection of various BMP sample files:
+<a href="http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html"><strong>BMP Suite Image List</strong></a> (by Jason Summers)</p>
+<p>If only there was such a comprehensive sample suite for every file format! It's like
+a dream for every developer of any binary file format parser. It contains a lot of
+different types and variations of BMP files, even the tricky ones, where it's not clear
+from the specification how to deal with them (marked there as &quot;<strong>q</strong>uestionable&quot;).</p>
+<p>If you make a program which will be able to read all the &quot;<strong>g</strong>ood&quot; and &quot;<strong>q</strong>uestionable&quot;
+BMP files and won't crash on the &quot;<strong>b</strong>ad&quot; ones, it will definitely have one of the most
+extensive support of BMP files in the universe!</p>
+<h2>BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</h2>
+<p>A beneficial discussion on Adobe forum (archived):
+<a href="https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950"><strong>Invalid BMP Format with Alpha channel</strong></a></p>
+<p>In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn't
+any documentation available for this header at the time (and still isn't).
+However, Chris Cox (former Adobe employee) claimed that they hadn't invented any type
+of proprietary header and everything they were writing was taken directly
+from the Microsoft documentation.</p>
+<p>It showed up that the unknown header was called BITMAPV3INFOHEADER.
+Although Microsoft has apparently requested and verified the use of the header,
+the documentation on MSDN has probably got lost and they have probably
+forgotten about this type of header.</p>
+<p>This is the only source I could find about these structures, so we could't rely
+on it so much, but I think supporting them as a read-only format won't harm anything.
+Due to the fact that it isn't documented anywhere else, most applications don't support it.</p>
+<p>All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</p>
+<p><img src="https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png" alt="Bitmap headers overview" /></p>
+<h2>Specs</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage">Bitmap Storage (Windows Dev Center)</a>
+<ul>
+<li>BITMAPFILEHEADER</li>
+<li>BITMAPINFOHEADER</li>
+<li>BITMAPV4HEADER</li>
+<li>BITMAPV5HEADER</li>
+</ul>
+</li>
+<li><a href="https://www.fileformat.info/format/os2bmp/egff.htm">OS/2 Bitmap File Format</a>
+<ul>
+<li>BITMAPFILEHEADER (OS2BMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (OS21XBITMAPHEADER)</li>
+<li>OS22XBITMAPHEADER</li>
+</ul>
+</li>
+<li><a href="http://netghost.narod.ru/gff/graphics/summary/micbmp.htm">Microsoft Windows Bitmap</a>
+<ul>
+<li>BITMAPFILEHEADER (WINBMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (WIN2XBITMAPHEADER)</li>
+<li>BITMAPINFOHEADER (WINNTBITMAPHEADER)</li>
+<li>BITMAPV4HEADER (WIN4XBITMAPHEADER)</li>
+</ul>
+</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        bmp
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000189.shtml">LOC fdd000189</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/115">PRONOM fmt/115</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/116">PRONOM fmt/116</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/117">PRONOM fmt/117</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/118">PRONOM fmt/118</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/119">PRONOM fmt/119</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/25">PRONOM x-fmt/25</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q192869">Wikidata Q192869</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/BMP">BMP in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/BMP">BMP in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .bmp file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".bmp file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".bmp file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".bmp file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".bmp file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".bmp file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".bmp file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".bmp file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".bmp file format parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title=".bmp file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Bmp</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.bmp&quot;</span><span class="p">)</span>
+</pre></div>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="no">Bmp</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">file_hdr</span> <span class="c1"># =&gt; get file hdr</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse .bmp file format
+            
+        </h2>
+
+        
+
+        <h3>bmp.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/bmp.rb" download="bmp.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
+
+
+<span class="c1">##</span>
+<span class="c1"># The **BMP file format**, also known as **bitmap image file** or **device independent</span>
+<span class="c1"># bitmap (DIB) file format** or simply a **bitmap**, is a raster graphics image file</span>
+<span class="c1"># format used to store bitmap digital images, independently of the display</span>
+<span class="c1"># device (such as a graphics adapter), especially on Microsoft Windows</span>
+<span class="c1"># and OS/2 operating systems.</span>
+<span class="c1"># </span>
+<span class="c1"># ## Samples</span>
+<span class="c1"># </span>
+<span class="c1"># Great collection of various BMP sample files:</span>
+<span class="c1"># [**BMP Suite Image List**](</span>
+<span class="c1">#   http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html</span>
+<span class="c1"># ) (by Jason Summers)</span>
+<span class="c1"># </span>
+<span class="c1"># If only there was such a comprehensive sample suite for every file format! It&#39;s like</span>
+<span class="c1"># a dream for every developer of any binary file format parser. It contains a lot of</span>
+<span class="c1"># different types and variations of BMP files, even the tricky ones, where it&#39;s not clear</span>
+<span class="c1"># from the specification how to deal with them (marked there as &quot;**q**uestionable&quot;).</span>
+<span class="c1"># </span>
+<span class="c1"># If you make a program which will be able to read all the &quot;**g**ood&quot; and &quot;**q**uestionable&quot;</span>
+<span class="c1"># BMP files and won&#39;t crash on the &quot;**b**ad&quot; ones, it will definitely have one of the most</span>
+<span class="c1"># extensive support of BMP files in the universe!</span>
+<span class="c1"># </span>
+<span class="c1"># ## BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</span>
+<span class="c1"># </span>
+<span class="c1"># A beneficial discussion on Adobe forum (archived):</span>
+<span class="c1"># [**Invalid BMP Format with Alpha channel**](</span>
+<span class="c1">#   https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950</span>
+<span class="c1"># )</span>
+<span class="c1"># </span>
+<span class="c1"># In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn&#39;t</span>
+<span class="c1"># any documentation available for this header at the time (and still isn&#39;t).</span>
+<span class="c1"># However, Chris Cox (former Adobe employee) claimed that they hadn&#39;t invented any type</span>
+<span class="c1"># of proprietary header and everything they were writing was taken directly</span>
+<span class="c1"># from the Microsoft documentation.</span>
+<span class="c1"># </span>
+<span class="c1"># It showed up that the unknown header was called BITMAPV3INFOHEADER.</span>
+<span class="c1"># Although Microsoft has apparently requested and verified the use of the header,</span>
+<span class="c1"># the documentation on MSDN has probably got lost and they have probably</span>
+<span class="c1"># forgotten about this type of header.</span>
+<span class="c1"># </span>
+<span class="c1"># This is the only source I could find about these structures, so we could&#39;t rely</span>
+<span class="c1"># on it so much, but I think supporting them as a read-only format won&#39;t harm anything.</span>
+<span class="c1"># Due to the fact that it isn&#39;t documented anywhere else, most applications don&#39;t support it.</span>
+<span class="c1"># </span>
+<span class="c1"># All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</span>
+<span class="c1"># </span>
+<span class="c1"># ![Bitmap headers overview](</span>
+<span class="c1">#   https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png</span>
+<span class="c1"># )</span>
+<span class="c1"># </span>
+<span class="c1"># ## Specs</span>
+<span class="c1">#  * [Bitmap Storage (Windows Dev Center)](</span>
+<span class="c1">#      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage</span>
+<span class="c1">#    )</span>
+<span class="c1">#     * BITMAPFILEHEADER</span>
+<span class="c1">#     * BITMAPINFOHEADER</span>
+<span class="c1">#     * BITMAPV4HEADER</span>
+<span class="c1">#     * BITMAPV5HEADER</span>
+<span class="c1">#  * [OS/2 Bitmap File Format](</span>
+<span class="c1">#       https://www.fileformat.info/format/os2bmp/egff.htm</span>
+<span class="c1">#    )</span>
+<span class="c1">#     * BITMAPFILEHEADER (OS2BMPFILEHEADER)</span>
+<span class="c1">#     * BITMAPCOREHEADER (OS21XBITMAPHEADER)</span>
+<span class="c1">#     * OS22XBITMAPHEADER</span>
+<span class="c1">#  * [Microsoft Windows Bitmap](</span>
+<span class="c1">#       http://netghost.narod.ru/gff/graphics/summary/micbmp.htm</span>
+<span class="c1">#    )</span>
+<span class="c1">#     * BITMAPFILEHEADER (WINBMPFILEHEADER)</span>
+<span class="c1">#     * BITMAPCOREHEADER (WIN2XBITMAPHEADER)</span>
+<span class="c1">#     * BITMAPINFOHEADER (WINNTBITMAPHEADER)</span>
+<span class="c1">#     * BITMAPV4HEADER (WIN4XBITMAPHEADER)</span>
+<span class="k">class</span> <span class="nc">Bmp</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+  <span class="no">INTENT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:intent_business</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:intent_graphics</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:intent_images</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:intent_abs_colorimetric</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__INTENT</span> <span class="o">=</span> <span class="no">INTENT</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">COLOR_SPACE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:color_space_calibrated_rgb</span><span class="p">,</span>
+    <span class="mi">1279872587</span> <span class="o">=&gt;</span> <span class="ss">:color_space_profile_linked</span><span class="p">,</span>
+    <span class="mi">1296188740</span> <span class="o">=&gt;</span> <span class="ss">:color_space_profile_embedded</span><span class="p">,</span>
+    <span class="mi">1466527264</span> <span class="o">=&gt;</span> <span class="ss">:color_space_windows</span><span class="p">,</span>
+    <span class="mi">1934772034</span> <span class="o">=&gt;</span> <span class="ss">:color_space_s_rgb</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__COLOR_SPACE</span> <span class="o">=</span> <span class="no">COLOR_SPACE</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">OS2_RENDERING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:os2_rendering_no_halftoning</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:os2_rendering_error_diffusion</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:os2_rendering_panda</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:os2_rendering_super_circle</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__OS2_RENDERING</span> <span class="o">=</span> <span class="no">OS2_RENDERING</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">HEADER_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_core_header</span><span class="p">,</span>
+    <span class="mi">40</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_info_header</span><span class="p">,</span>
+    <span class="mi">52</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_v2_info_header</span><span class="p">,</span>
+    <span class="mi">56</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_v3_info_header</span><span class="p">,</span>
+    <span class="mi">64</span> <span class="o">=&gt;</span> <span class="ss">:header_type_os2_2x_bitmap_header</span><span class="p">,</span>
+    <span class="mi">108</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_v4_header</span><span class="p">,</span>
+    <span class="mi">124</span> <span class="o">=&gt;</span> <span class="ss">:header_type_bitmap_v5_header</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__HEADER_TYPE</span> <span class="o">=</span> <span class="no">HEADER_TYPE</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">COMPRESSIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:compressions_rgb</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:compressions_rle8</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:compressions_rle4</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:compressions_bitfields</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:compressions_jpeg</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:compressions_png</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:compressions_alpha_bitfields</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__COMPRESSIONS</span> <span class="o">=</span> <span class="no">COMPRESSIONS</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">OS2_COMPRESSIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:os2_compressions_rgb</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:os2_compressions_rle8</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:os2_compressions_rle4</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:os2_compressions_huffman_1d</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:os2_compressions_rle24</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__OS2_COMPRESSIONS</span> <span class="o">=</span> <span class="no">OS2_COMPRESSIONS</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@file_hdr</span> <span class="o">=</span> <span class="no">FileHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_raw_dib_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">file_hdr</span><span class="o">.</span><span class="n">ofs_bitmap</span> <span class="o">-</span> <span class="mi">14</span><span class="p">))</span>
+    <span class="n">_io__raw_dib_info</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_dib_info</span><span class="p">)</span>
+    <span class="vi">@dib_info</span> <span class="o">=</span> <span class="no">BitmapInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_dib_info</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_raw_bitmap</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+    <span class="n">_io__raw_bitmap</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_bitmap</span><span class="p">)</span>
+    <span class="vi">@bitmap</span> <span class="o">=</span> <span class="no">Bitmap</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_bitmap</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source</span>
+  <span class="k">class</span> <span class="nc">CieXyz</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="no">FixedPoint2Dot30</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="no">FixedPoint2Dot30</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@z</span> <span class="o">=</span> <span class="no">FixedPoint2Dot30</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
+    <span class="kp">attr_reader</span> <span class="ss">:z</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RgbRecord</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@has_reserved_field</span> <span class="o">=</span> <span class="n">has_reserved_field</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@blue</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@green</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@red</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span> <span class="n">has_reserved_field</span>
+        <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:blue</span>
+    <span class="kp">attr_reader</span> <span class="ss">:green</span>
+    <span class="kp">attr_reader</span> <span class="ss">:red</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_reserved_field</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source</span>
+  <span class="k">class</span> <span class="nc">BitmapV5Extension</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@intent</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Bmp</span><span class="o">::</span><span class="no">INTENT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@ofs_profile</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_profile</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">has_profile</span>
+      <span class="k">return</span> <span class="vi">@has_profile</span> <span class="k">unless</span> <span class="vi">@has_profile</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_profile</span> <span class="o">=</span>  <span class="p">((</span><span class="n">_parent</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">==</span> <span class="ss">:color_space_profile_linked</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">==</span> <span class="ss">:color_space_profile_embedded</span><span class="p">))</span> 
+      <span class="vi">@has_profile</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># @see https://docs.microsoft.com/en-us/previous-versions/windows/desktop/wcs/using-structures-in-wcs-1-0 &quot;If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252).&quot;</span>
+    <span class="k">def</span> <span class="nf">profile_data</span>
+      <span class="k">return</span> <span class="vi">@profile_data</span> <span class="k">unless</span> <span class="vi">@profile_data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">has_profile</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="mi">14</span> <span class="o">+</span> <span class="n">ofs_profile</span><span class="p">))</span>
+        <span class="k">case</span> <span class="n">_parent</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">==</span> <span class="ss">:color_space_profile_linked</span>
+        <span class="k">when</span> <span class="kp">true</span>
+          <span class="vi">@profile_data</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_profile</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;windows-1252&quot;</span><span class="p">)</span>
+        <span class="k">else</span>
+          <span class="vi">@profile_data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_profile</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@profile_data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:intent</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_profile</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_profile</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ColorMask</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">has_alpha_mask</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@has_alpha_mask</span> <span class="o">=</span> <span class="n">has_alpha_mask</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@red_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@green_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@blue_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">if</span> <span class="n">has_alpha_mask</span>
+        <span class="vi">@alpha_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:red_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:green_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:blue_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:alpha_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_alpha_mask</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source</span>
+  <span class="k">class</span> <span class="nc">BitmapV4Extension</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@color_space_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Bmp</span><span class="o">::</span><span class="no">COLOR_SPACE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@endpoint_red</span> <span class="o">=</span> <span class="no">CieXyz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@endpoint_green</span> <span class="o">=</span> <span class="no">CieXyz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@endpoint_blue</span> <span class="o">=</span> <span class="no">CieXyz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@gamma_red</span> <span class="o">=</span> <span class="no">FixedPoint16Dot16</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@gamma_blue</span> <span class="o">=</span> <span class="no">FixedPoint16Dot16</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@gamma_green</span> <span class="o">=</span> <span class="no">FixedPoint16Dot16</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:color_space_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:endpoint_red</span>
+    <span class="kp">attr_reader</span> <span class="ss">:endpoint_green</span>
+    <span class="kp">attr_reader</span> <span class="ss">:endpoint_blue</span>
+    <span class="kp">attr_reader</span> <span class="ss">:gamma_red</span>
+    <span class="kp">attr_reader</span> <span class="ss">:gamma_blue</span>
+    <span class="kp">attr_reader</span> <span class="ss">:gamma_green</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source</span>
+  <span class="k">class</span> <span class="nc">BitmapInfoExtension</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">)</span>
+        <span class="vi">@compression</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Bmp</span><span class="o">::</span><span class="no">COMPRESSIONS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span>
+        <span class="vi">@os2_compression</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Bmp</span><span class="o">::</span><span class="no">OS2_COMPRESSIONS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@len_image</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@x_resolution</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@y_resolution</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@num_colors_used</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@num_colors_important</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:compression</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os2_compression</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.</span>
+    <span class="c1"># This may be set to zero for BI_RGB bitmaps.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_image</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x_resolution</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y_resolution</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_colors_used</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_colors_important</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">FixedPoint2Dot30</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@raw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">value</span>
+      <span class="k">return</span> <span class="vi">@value</span> <span class="k">unless</span> <span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">))</span>
+      <span class="vi">@value</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:raw</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># Replace with an opaque type if you care about the pixels.</span>
+  <span class="c1"># You can look at an example of a JavaScript implementation: https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js</span>
+  <span class="c1"># </span>
+  <span class="c1"># There is a proposal for adding bitmap data type to Kaitai Struct: https://github.com/kaitai-io/kaitai_struct/issues/188</span>
+  <span class="k">class</span> <span class="nc">Bitmap</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source</span>
+  <span class="c1"># @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1 Source</span>
+  <span class="k">class</span> <span class="nc">BitmapHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">len_header</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="n">len_header</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">case</span> <span class="n">is_core_header</span>
+      <span class="k">when</span> <span class="kp">true</span>
+        <span class="vi">@image_width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="kp">false</span>
+        <span class="vi">@image_width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">case</span> <span class="n">is_core_header</span>
+      <span class="k">when</span> <span class="kp">true</span>
+        <span class="vi">@image_height_raw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="k">when</span> <span class="kp">false</span>
+        <span class="vi">@image_height_raw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="k">end</span>
+      <span class="vi">@num_planes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@bits_per_pixel</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">if</span> <span class="n">extends_bitmap_info</span>
+        <span class="vi">@bitmap_info_ext</span> <span class="o">=</span> <span class="no">BitmapInfoExtension</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">is_color_mask_here</span>
+        <span class="vi">@color_mask</span> <span class="o">=</span> <span class="no">ColorMask</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">len_header</span> <span class="o">!=</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_v2_info_header</span><span class="o">]</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">extends_os2_2x_bitmap</span>
+        <span class="vi">@os2_2x_bitmap_ext</span> <span class="o">=</span> <span class="no">Os22xBitmapExtension</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">extends_bitmap_v4</span>
+        <span class="vi">@bitmap_v4_ext</span> <span class="o">=</span> <span class="no">BitmapV4Extension</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">extends_bitmap_v5</span>
+        <span class="vi">@bitmap_v5_ext</span> <span class="o">=</span> <span class="no">BitmapV5Extension</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">extends_bitmap_v4</span>
+      <span class="k">return</span> <span class="vi">@extends_bitmap_v4</span> <span class="k">unless</span> <span class="vi">@extends_bitmap_v4</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@extends_bitmap_v4</span> <span class="o">=</span> <span class="n">len_header</span> <span class="o">&gt;=</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_v4_header</span><span class="o">]</span>
+      <span class="vi">@extends_bitmap_v4</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">extends_os2_2x_bitmap</span>
+      <span class="k">return</span> <span class="vi">@extends_os2_2x_bitmap</span> <span class="k">unless</span> <span class="vi">@extends_os2_2x_bitmap</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@extends_os2_2x_bitmap</span> <span class="o">=</span> <span class="n">len_header</span> <span class="o">==</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_os2_2x_bitmap_header</span><span class="o">]</span>
+      <span class="vi">@extends_os2_2x_bitmap</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">uses_fixed_palette</span>
+      <span class="k">return</span> <span class="vi">@uses_fixed_palette</span> <span class="k">unless</span> <span class="vi">@uses_fixed_palette</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@uses_fixed_palette</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">extends_os2_2x_bitmap</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_jpeg</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_png</span><span class="p">))</span> <span class="p">))</span> <span class="p">)))</span> 
+      <span class="vi">@uses_fixed_palette</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">extends_bitmap_info</span>
+      <span class="k">return</span> <span class="vi">@extends_bitmap_info</span> <span class="k">unless</span> <span class="vi">@extends_bitmap_info</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@extends_bitmap_info</span> <span class="o">=</span> <span class="n">len_header</span> <span class="o">&gt;=</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_info_header</span><span class="o">]</span>
+      <span class="vi">@extends_bitmap_info</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">image_height</span>
+      <span class="k">return</span> <span class="vi">@image_height</span> <span class="k">unless</span> <span class="vi">@image_height</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@image_height</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_height_raw</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="p">(</span><span class="n">image_height_raw</span><span class="p">)</span> <span class="p">:</span> <span class="n">image_height_raw</span><span class="p">)</span>
+      <span class="vi">@image_height</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_core_header</span>
+      <span class="k">return</span> <span class="vi">@is_core_header</span> <span class="k">unless</span> <span class="vi">@is_core_header</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_core_header</span> <span class="o">=</span> <span class="n">len_header</span> <span class="o">==</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_core_header</span><span class="o">]</span>
+      <span class="vi">@is_core_header</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">extends_bitmap_v5</span>
+      <span class="k">return</span> <span class="vi">@extends_bitmap_v5</span> <span class="k">unless</span> <span class="vi">@extends_bitmap_v5</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@extends_bitmap_v5</span> <span class="o">=</span> <span class="n">len_header</span> <span class="o">&gt;=</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_v5_header</span><span class="o">]</span>
+      <span class="vi">@extends_bitmap_v5</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_color_mask_here</span>
+      <span class="k">return</span> <span class="vi">@is_color_mask_here</span> <span class="k">unless</span> <span class="vi">@is_color_mask_here</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_color_mask_here</span> <span class="o">=</span>  <span class="p">((</span><span class="n">len_header</span> <span class="o">==</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_v2_info_header</span><span class="o">]</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">len_header</span> <span class="o">==</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_v3_info_header</span><span class="o">]</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">extends_bitmap_v4</span><span class="p">))</span> 
+      <span class="vi">@is_color_mask_here</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">bottom_up</span>
+      <span class="k">return</span> <span class="vi">@bottom_up</span> <span class="k">unless</span> <span class="vi">@bottom_up</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@bottom_up</span> <span class="o">=</span> <span class="n">image_height_raw</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="vi">@bottom_up</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Image width, px</span>
+    <span class="kp">attr_reader</span> <span class="ss">:image_width</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Image height, px (positive =&gt; bottom-up image, negative =&gt; top-down image)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:image_height_raw</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Number of planes for target device, must be 1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_planes</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Number of bits per pixel that image buffer uses (1, 4, 8, 16, 24 or 32)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bits_per_pixel</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bitmap_info_ext</span>
+    <span class="kp">attr_reader</span> <span class="ss">:color_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os2_2x_bitmap_ext</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bitmap_v4_ext</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bitmap_v5_ext</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2 Source</span>
+  <span class="k">class</span> <span class="nc">Os22xBitmapExtension</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@units</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@recording</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@rendering</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Bmp</span><span class="o">::</span><span class="no">OS2_RENDERING</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@size1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@color_encoding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@identifier</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:units</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Specifies how the bitmap scan lines are stored.</span>
+    <span class="c1"># The only valid value for this field is 0, indicating that the bitmap is</span>
+    <span class="c1"># stored from left to right and from the bottom up.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:recording</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Specifies the halftoning algorithm used on the bitmap data.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rendering</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># rendering == os2_rendering::error_diffusion</span>
+    <span class="c1">#   =&gt; error damping as a percentage in the range 0 through 100</span>
+    <span class="c1"># rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+    <span class="c1">#   =&gt; X dimension of the pattern used in pixels</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size1</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># rendering == os2_rendering::error_diffusion</span>
+    <span class="c1">#   =&gt; not used</span>
+    <span class="c1"># rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+    <span class="c1">#   =&gt; Y dimension of the pattern used in pixels</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size2</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Specifies the color model used to describe the bitmap data.</span>
+    <span class="c1"># The only valid value is 0, indicating the RGB encoding scheme.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:color_encoding</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Application-specific value</span>
+    <span class="kp">attr_reader</span> <span class="ss">:identifier</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">FixedPoint16Dot16</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@raw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">value</span>
+      <span class="k">return</span> <span class="vi">@value</span> <span class="k">unless</span> <span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="vi">@value</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:raw</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ColorTable</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">,</span> <span class="n">num_colors</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@has_reserved_field</span> <span class="o">=</span> <span class="n">has_reserved_field</span>
+      <span class="vi">@num_colors</span> <span class="o">=</span> <span class="n">num_colors</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@colors</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span> <span class="p">((</span><span class="n">num_colors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">num_colors</span> <span class="o">&lt;</span> <span class="n">num_colors_present</span><span class="p">))</span>  <span class="p">?</span> <span class="n">num_colors</span> <span class="p">:</span> <span class="n">num_colors_present</span><span class="p">))</span>
+      <span class="p">((</span> <span class="p">((</span><span class="n">num_colors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">num_colors</span> <span class="o">&lt;</span> <span class="n">num_colors_present</span><span class="p">))</span>  <span class="p">?</span> <span class="n">num_colors</span> <span class="p">:</span> <span class="n">num_colors_present</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@colors</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">RgbRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">num_colors_present</span>
+      <span class="k">return</span> <span class="vi">@num_colors_present</span> <span class="k">unless</span> <span class="vi">@num_colors_present</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@num_colors_present</span> <span class="o">=</span> <span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="p">(</span><span class="n">has_reserved_field</span> <span class="p">?</span> <span class="mi">4</span> <span class="p">:</span> <span class="mi">3</span><span class="p">))</span>
+      <span class="vi">@num_colors_present</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:colors</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_reserved_field</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># If equal to 0, the pallete should contain as many colors as can fit into the pixel value</span>
+    <span class="c1"># according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can</span>
+    <span class="c1"># represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,</span>
+    <span class="c1"># it reads as many colors as it can until EOS is reached (and the image data begin).</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_colors</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source</span>
+  <span class="k">class</span> <span class="nc">FileHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@file_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">77</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/file_header/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">file_type</span> <span class="o">==</span> <span class="o">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">77</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@len_file</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@ofs_bitmap</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_type</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># not reliable, mostly ignored by BMP decoders</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Offset to actual raw pixel data of the image</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_bitmap</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source</span>
+  <span class="k">class</span> <span class="nc">BitmapInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_raw_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+      <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header</span><span class="p">)</span>
+      <span class="vi">@header</span> <span class="o">=</span> <span class="no">BitmapHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">len_header</span><span class="p">)</span>
+      <span class="k">if</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">is_color_mask_here</span><span class="p">))</span> 
+        <span class="vi">@color_mask</span> <span class="o">=</span> <span class="no">ColorMask</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_alpha_bitfields</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span>
+        <span class="vi">@_raw_color_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+        <span class="n">_io__raw_color_table</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_color_table</span><span class="p">)</span>
+        <span class="vi">@color_table</span> <span class="o">=</span> <span class="no">ColorTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_color_table</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="o">!</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">is_core_header</span><span class="p">),</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span> <span class="p">?</span> <span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">num_colors_used</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_color_mask_given</span>
+      <span class="k">return</span> <span class="vi">@is_color_mask_given</span> <span class="k">unless</span> <span class="vi">@is_color_mask_given</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_color_mask_given</span> <span class="o">=</span>  <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_bitfields</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_alpha_bitfields</span><span class="p">))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="n">is_color_mask_here</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">))</span> <span class="p">))</span> 
+      <span class="vi">@is_color_mask_given</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_mask_given</span>
+      <span class="k">return</span> <span class="vi">@color_mask_given</span> <span class="k">unless</span> <span class="vi">@color_mask_given</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">is_color_mask_given</span>
+        <span class="vi">@color_mask_given</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_color_mask_here</span> <span class="p">?</span> <span class="n">color_mask</span> <span class="p">:</span> <span class="n">header</span><span class="o">.</span><span class="n">color_mask</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@color_mask_given</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_mask_blue</span>
+      <span class="k">return</span> <span class="vi">@color_mask_blue</span> <span class="k">unless</span> <span class="vi">@color_mask_blue</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_mask_blue</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_color_mask_given</span> <span class="p">?</span> <span class="n">color_mask_given</span><span class="o">.</span><span class="n">blue_mask</span> <span class="p">:</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31</span> <span class="p">:</span> <span class="p">(</span> <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="p">?</span> <span class="mi">255</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
+      <span class="vi">@color_mask_blue</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_mask_alpha</span>
+      <span class="k">return</span> <span class="vi">@color_mask_alpha</span> <span class="k">unless</span> <span class="vi">@color_mask_alpha</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_mask_alpha</span> <span class="o">=</span> <span class="p">(</span> <span class="p">((</span><span class="n">is_color_mask_given</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">has_alpha_mask</span><span class="p">))</span>  <span class="p">?</span> <span class="n">color_mask_given</span><span class="o">.</span><span class="n">alpha_mask</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="vi">@color_mask_alpha</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_mask_green</span>
+      <span class="k">return</span> <span class="vi">@color_mask_green</span> <span class="k">unless</span> <span class="vi">@color_mask_green</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_mask_green</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_color_mask_given</span> <span class="p">?</span> <span class="n">color_mask_given</span><span class="o">.</span><span class="n">green_mask</span> <span class="p">:</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">992</span> <span class="p">:</span> <span class="p">(</span> <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="p">?</span> <span class="mi">65280</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
+      <span class="vi">@color_mask_green</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_color_mask_here</span>
+      <span class="k">return</span> <span class="vi">@is_color_mask_here</span> <span class="k">unless</span> <span class="vi">@is_color_mask_here</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_color_mask_here</span> <span class="o">=</span>  <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="no">Bmp</span><span class="o">::</span><span class="no">I__HEADER_TYPE</span><span class="o">[</span><span class="ss">:header_type_bitmap_info_header</span><span class="o">]</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_bitfields</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compressions_alpha_bitfields</span><span class="p">))</span> <span class="p">))</span> 
+      <span class="vi">@is_color_mask_here</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_mask_red</span>
+      <span class="k">return</span> <span class="vi">@color_mask_red</span> <span class="k">unless</span> <span class="vi">@color_mask_red</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_mask_red</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_color_mask_given</span> <span class="p">?</span> <span class="n">color_mask_given</span><span class="o">.</span><span class="n">red_mask</span> <span class="p">:</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31744</span> <span class="p">:</span> <span class="p">(</span> <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="p">?</span> <span class="mi">16711680</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
+      <span class="vi">@color_mask_red</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:header</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:color_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:color_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_color_table</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:file_hdr</span>
+  <span class="kp">attr_reader</span> <span class="ss">:dib_info</span>
+  <span class="kp">attr_reader</span> <span class="ss">:bitmap</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_dib_info</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_bitmap</span>
+<span class="k">end</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

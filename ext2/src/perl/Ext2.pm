@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -106,7 +106,7 @@ sub _read {
     $self->{wtime} = $self->{_io}->read_u4le();
     $self->{mnt_count} = $self->{_io}->read_u2le();
     $self->{max_mnt_count} = $self->{_io}->read_u2le();
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 239)));
+    $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{state} = $self->{_io}->read_u2le();
     $self->{errors} = $self->{_io}->read_u2le();
     $self->{minor_rev_level} = $self->{_io}->read_u2le();

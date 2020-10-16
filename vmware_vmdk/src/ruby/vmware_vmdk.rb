@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -22,7 +22,8 @@ class VmwareVmdk < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([75, 68, 77, 86].pack('C*'))
+    @magic = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([75, 68, 77, 86].pack('C*'), magic, _io, "/seq/0") if not magic == [75, 68, 77, 86].pack('C*')
     @version = @_io.read_s4le
     @flags = HeaderFlags.new(@_io, self, @_root)
     @size_max = @_io.read_s8le
@@ -48,15 +49,15 @@ class VmwareVmdk < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved1 = @_io.read_bits_int(5)
-      @zeroed_grain_table_entry = @_io.read_bits_int(1) != 0
-      @use_secondary_grain_dir = @_io.read_bits_int(1) != 0
-      @valid_new_line_detection_test = @_io.read_bits_int(1) != 0
+      @reserved1 = @_io.read_bits_int_be(5)
+      @zeroed_grain_table_entry = @_io.read_bits_int_be(1) != 0
+      @use_secondary_grain_dir = @_io.read_bits_int_be(1) != 0
+      @valid_new_line_detection_test = @_io.read_bits_int_be(1) != 0
       @_io.align_to_byte
       @reserved2 = @_io.read_u1
-      @reserved3 = @_io.read_bits_int(6)
-      @has_metadata = @_io.read_bits_int(1) != 0
-      @has_compressed_grain = @_io.read_bits_int(1) != 0
+      @reserved3 = @_io.read_bits_int_be(6)
+      @has_metadata = @_io.read_bits_int_be(1) != 0
+      @has_compressed_grain = @_io.read_bits_int_be(1) != 0
       @_io.align_to_byte
       @reserved4 = @_io.read_u1
       self

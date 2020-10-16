@@ -159,11 +159,6 @@ any of:</p>
                 <a href="index.html" title="NT-MDT data parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="NT-MDT data parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="NT-MDT data parsing C# library">C#</a></li>
@@ -464,7 +459,11 @@ any of:</p>
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
-            <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">176</span><span class="p">,</span> <span class="m">147</span><span class="p">,</span> <span class="m">255</span> <span class="p">});</span>
+            <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">176</span><span class="p">,</span> <span class="m">147</span><span class="p">,</span> <span class="m">255</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">176</span><span class="p">,</span> <span class="m">147</span><span class="p">,</span> <span class="m">255</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="n">_reserved0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
             <span class="n">_lastFrame</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
@@ -752,10 +751,10 @@ any of:</p>
                     <span class="n">_dateTime</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="n">_varSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Scanned</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Mda</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_frameData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
                         <span class="kt">var</span> <span class="n">io___raw_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_frameData</span><span class="p">);</span>
-                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdScanned</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdMetaData</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">CurvesNew</span><span class="p">:</span> <span class="p">{</span>
@@ -764,10 +763,10 @@ any of:</p>
                         <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdCurvesNew</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Mda</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Curves</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_frameData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
                         <span class="kt">var</span> <span class="n">io___raw_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_frameData</span><span class="p">);</span>
-                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdMetaData</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdSpectroscopy</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Spectroscopy</span><span class="p">:</span> <span class="p">{</span>
@@ -776,10 +775,10 @@ any of:</p>
                         <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdSpectroscopy</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Curves</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">Frame</span><span class="p">.</span><span class="n">FrameType</span><span class="p">.</span><span class="n">Scanned</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">__raw_frameData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
                         <span class="kt">var</span> <span class="n">io___raw_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_frameData</span><span class="p">);</span>
-                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdSpectroscopy</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="n">_frameData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FdScanned</span><span class="p">(</span><span class="n">io___raw_frameData</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -982,32 +981,20 @@ any of:</p>
                             <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NMesurands</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                             <span class="p">{</span>
                                 <span class="k">switch</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Mesurands</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DataType</span><span class="p">)</span> <span class="p">{</span>
-                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Uint8</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                                    <span class="k">break</span><span class="p">;</span>
-                                <span class="p">}</span>
-                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int8</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">());</span>
-                                    <span class="k">break</span><span class="p">;</span>
-                                <span class="p">}</span>
-                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int16</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">());</span>
-                                    <span class="k">break</span><span class="p">;</span>
-                                <span class="p">}</span>
                                 <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Uint64</span><span class="p">:</span> <span class="p">{</span>
                                     <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">());</span>
                                     <span class="k">break</span><span class="p">;</span>
                                 <span class="p">}</span>
-                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Float64</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">());</span>
-                                    <span class="k">break</span><span class="p">;</span>
-                                <span class="p">}</span>
-                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int32</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">());</span>
+                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Uint8</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                                     <span class="k">break</span><span class="p">;</span>
                                 <span class="p">}</span>
                                 <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Float32</span><span class="p">:</span> <span class="p">{</span>
                                     <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int8</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">());</span>
                                     <span class="k">break</span><span class="p">;</span>
                                 <span class="p">}</span>
                                 <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Uint16</span><span class="p">:</span> <span class="p">{</span>
@@ -1020,6 +1007,18 @@ any of:</p>
                                 <span class="p">}</span>
                                 <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Uint32</span><span class="p">:</span> <span class="p">{</span>
                                     <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Float64</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">());</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int16</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">());</span>
+                                    <span class="k">break</span><span class="p">;</span>
+                                <span class="p">}</span>
+                                <span class="k">case</span> <span class="n">NtMdt</span><span class="p">.</span><span class="n">DataType</span><span class="p">.</span><span class="n">Int32</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">());</span>
                                     <span class="k">break</span><span class="p">;</span>
                                 <span class="p">}</span>
                                 <span class="p">}</span>
@@ -1768,11 +1767,11 @@ any of:</p>
                     <span class="p">}</span>
                     <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
                     <span class="p">{</span>
-                        <span class="n">_unkn</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                        <span class="n">_doublePass</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_bottom</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_left</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                        <span class="n">_horizontal</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_unkn</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                        <span class="n">_doublePass</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_bottom</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_left</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="n">_horizontal</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_unkn</span><span class="p">;</span>
                     <span class="k">private</span> <span class="kt">bool</span> <span class="n">_doublePass</span><span class="p">;</span>

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Id3v24(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,7 +16,7 @@ class Id3v24(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.tag = self._root.Tag(self._io, self, self._root)
+        self.tag = Id3v24.Tag(self._io, self, self._root)
 
     class U1beSynchsafe(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -25,8 +26,8 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.padding = self._io.read_bits_int(1) != 0
-            self.value = self._io.read_bits_int(7)
+            self.padding = self._io.read_bits_int_be(1) != 0
+            self.value = self._io.read_bits_int_be(7)
 
 
     class U2beSynchsafe(KaitaiStruct):
@@ -37,8 +38,8 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.byte0 = self._root.U1beSynchsafe(self._io, self, self._root)
-            self.byte1 = self._root.U1beSynchsafe(self._io, self, self._root)
+            self.byte0 = Id3v24.U1beSynchsafe(self._io, self, self._root)
+            self.byte1 = Id3v24.U1beSynchsafe(self._io, self, self._root)
 
         @property
         def value(self):
@@ -57,23 +58,23 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header = self._root.Header(self._io, self, self._root)
+            self.header = Id3v24.Header(self._io, self, self._root)
             if self.header.flags.flag_headerex:
-                self.header_ex = self._root.HeaderEx(self._io, self, self._root)
+                self.header_ex = Id3v24.HeaderEx(self._io, self, self._root)
 
             self.frames = []
             i = 0
             while True:
-                _ = self._root.Frame(self._io, self, self._root)
+                _ = Id3v24.Frame(self._io, self, self._root)
                 self.frames.append(_)
                 if  (((self._io.pos() + _.size.value) > self.header.size.value) or (_.is_invalid)) :
                     break
                 i += 1
             if not (self.header.flags.flag_footer):
-                self.padding = self._root.Padding(self._io, self, self._root)
+                self.padding = Id3v24.Padding(self._io, self, self._root)
 
             if self.header.flags.flag_footer:
-                self.footer = self._root.Footer(self._io, self, self._root)
+                self.footer = Id3v24.Footer(self._io, self, self._root)
 
 
 
@@ -85,8 +86,8 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.short0 = self._root.U2beSynchsafe(self._io, self, self._root)
-            self.short1 = self._root.U2beSynchsafe(self._io, self, self._root)
+            self.short0 = Id3v24.U2beSynchsafe(self._io, self, self._root)
+            self.short1 = Id3v24.U2beSynchsafe(self._io, self, self._root)
 
         @property
         def value(self):
@@ -106,9 +107,9 @@ class Id3v24(KaitaiStruct):
 
         def _read(self):
             self.id = (self._io.read_bytes(4)).decode(u"ASCII")
-            self.size = self._root.U4beSynchsafe(self._io, self, self._root)
-            self.flags_status = self._root.Frame.FlagsStatus(self._io, self, self._root)
-            self.flags_format = self._root.Frame.FlagsFormat(self._io, self, self._root)
+            self.size = Id3v24.U4beSynchsafe(self._io, self, self._root)
+            self.flags_status = Id3v24.Frame.FlagsStatus(self._io, self, self._root)
+            self.flags_format = Id3v24.Frame.FlagsFormat(self._io, self, self._root)
             self.data = self._io.read_bytes(self.size.value)
 
         class FlagsStatus(KaitaiStruct):
@@ -119,11 +120,11 @@ class Id3v24(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.read_bits_int(1) != 0
-                self.flag_discard_alter_tag = self._io.read_bits_int(1) != 0
-                self.flag_discard_alter_file = self._io.read_bits_int(1) != 0
-                self.flag_read_only = self._io.read_bits_int(1) != 0
-                self.reserved2 = self._io.read_bits_int(4)
+                self.reserved1 = self._io.read_bits_int_be(1) != 0
+                self.flag_discard_alter_tag = self._io.read_bits_int_be(1) != 0
+                self.flag_discard_alter_file = self._io.read_bits_int_be(1) != 0
+                self.flag_read_only = self._io.read_bits_int_be(1) != 0
+                self.reserved2 = self._io.read_bits_int_be(4)
 
 
         class FlagsFormat(KaitaiStruct):
@@ -134,13 +135,13 @@ class Id3v24(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.read_bits_int(1) != 0
-                self.flag_grouping = self._io.read_bits_int(1) != 0
-                self.reserved2 = self._io.read_bits_int(2)
-                self.flag_compressed = self._io.read_bits_int(1) != 0
-                self.flag_encrypted = self._io.read_bits_int(1) != 0
-                self.flag_unsynchronisated = self._io.read_bits_int(1) != 0
-                self.flag_indicator = self._io.read_bits_int(1) != 0
+                self.reserved1 = self._io.read_bits_int_be(1) != 0
+                self.flag_grouping = self._io.read_bits_int_be(1) != 0
+                self.reserved2 = self._io.read_bits_int_be(2)
+                self.flag_compressed = self._io.read_bits_int_be(1) != 0
+                self.flag_encrypted = self._io.read_bits_int_be(1) != 0
+                self.flag_unsynchronisated = self._io.read_bits_int_be(1) != 0
+                self.flag_indicator = self._io.read_bits_int_be(1) != 0
 
 
         @property
@@ -160,8 +161,8 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.size = self._root.U4beSynchsafe(self._io, self, self._root)
-            self.flags_ex = self._root.HeaderEx.FlagsEx(self._io, self, self._root)
+            self.size = Id3v24.U4beSynchsafe(self._io, self, self._root)
+            self.flags_ex = Id3v24.HeaderEx.FlagsEx(self._io, self, self._root)
             self.data = self._io.read_bytes((self.size.value - 5))
 
         class FlagsEx(KaitaiStruct):
@@ -172,11 +173,11 @@ class Id3v24(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.read_bits_int(1) != 0
-                self.flag_update = self._io.read_bits_int(1) != 0
-                self.flag_crc = self._io.read_bits_int(1) != 0
-                self.flag_restrictions = self._io.read_bits_int(1) != 0
-                self.reserved2 = self._io.read_bits_int(4)
+                self.reserved1 = self._io.read_bits_int_be(1) != 0
+                self.flag_update = self._io.read_bits_int_be(1) != 0
+                self.flag_crc = self._io.read_bits_int_be(1) != 0
+                self.flag_restrictions = self._io.read_bits_int_be(1) != 0
+                self.reserved2 = self._io.read_bits_int_be(4)
 
 
 
@@ -188,11 +189,13 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x49\x44\x33")
+            self.magic = self._io.read_bytes(3)
+            if not self.magic == b"\x49\x44\x33":
+                raise kaitaistruct.ValidationNotEqualError(b"\x49\x44\x33", self.magic, self._io, u"/types/header/seq/0")
             self.version_major = self._io.read_u1()
             self.version_revision = self._io.read_u1()
-            self.flags = self._root.Header.Flags(self._io, self, self._root)
-            self.size = self._root.U4beSynchsafe(self._io, self, self._root)
+            self.flags = Id3v24.Header.Flags(self._io, self, self._root)
+            self.size = Id3v24.U4beSynchsafe(self._io, self, self._root)
 
         class Flags(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -202,11 +205,11 @@ class Id3v24(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.flag_unsynchronization = self._io.read_bits_int(1) != 0
-                self.flag_headerex = self._io.read_bits_int(1) != 0
-                self.flag_experimental = self._io.read_bits_int(1) != 0
-                self.flag_footer = self._io.read_bits_int(1) != 0
-                self.reserved = self._io.read_bits_int(4)
+                self.flag_unsynchronization = self._io.read_bits_int_be(1) != 0
+                self.flag_headerex = self._io.read_bits_int_be(1) != 0
+                self.flag_experimental = self._io.read_bits_int_be(1) != 0
+                self.flag_footer = self._io.read_bits_int_be(1) != 0
+                self.reserved = self._io.read_bits_int_be(4)
 
 
 
@@ -229,11 +232,13 @@ class Id3v24(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x33\x44\x49")
+            self.magic = self._io.read_bytes(3)
+            if not self.magic == b"\x33\x44\x49":
+                raise kaitaistruct.ValidationNotEqualError(b"\x33\x44\x49", self.magic, self._io, u"/types/footer/seq/0")
             self.version_major = self._io.read_u1()
             self.version_revision = self._io.read_u1()
-            self.flags = self._root.Footer.Flags(self._io, self, self._root)
-            self.size = self._root.U4beSynchsafe(self._io, self, self._root)
+            self.flags = Id3v24.Footer.Flags(self._io, self, self._root)
+            self.size = Id3v24.U4beSynchsafe(self._io, self, self._root)
 
         class Flags(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -243,11 +248,11 @@ class Id3v24(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.flag_unsynchronization = self._io.read_bits_int(1) != 0
-                self.flag_headerex = self._io.read_bits_int(1) != 0
-                self.flag_experimental = self._io.read_bits_int(1) != 0
-                self.flag_footer = self._io.read_bits_int(1) != 0
-                self.reserved = self._io.read_bits_int(4)
+                self.flag_unsynchronization = self._io.read_bits_int_be(1) != 0
+                self.flag_headerex = self._io.read_bits_int_be(1) != 0
+                self.flag_experimental = self._io.read_bits_int_be(1) != 0
+                self.flag_footer = self._io.read_bits_int_be(1) != 0
+                self.reserved = self._io.read_bits_int_be(4)
 
 
 

@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -48,7 +49,10 @@ public class S3m extends KaitaiStruct {
     }
     private void _read() {
         this.songName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
-        this.magic1 = this._io.ensureFixedContents(new byte[] { 26 });
+        this.magic1 = this._io.readBytes(1);
+        if (!(Arrays.equals(magic1(), new byte[] { 26 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 26 }, magic1(), _io(), "/seq/1");
+        }
         this.fileType = this._io.readU1();
         this.reserved1 = this._io.readBytes(2);
         this.numOrders = this._io.readU2le();
@@ -57,32 +61,35 @@ public class S3m extends KaitaiStruct {
         this.flags = this._io.readU2le();
         this.version = this._io.readU2le();
         this.samplesFormat = this._io.readU2le();
-        this.magic2 = this._io.ensureFixedContents(new byte[] { 83, 67, 82, 77 });
+        this.magic2 = this._io.readBytes(4);
+        if (!(Arrays.equals(magic2(), new byte[] { 83, 67, 82, 77 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, magic2(), _io(), "/seq/10");
+        }
         this.globalVolume = this._io.readU1();
         this.initialSpeed = this._io.readU1();
         this.initialTempo = this._io.readU1();
-        this.isStereo = this._io.readBitsInt(1) != 0;
-        this.masterVolume = this._io.readBitsInt(7);
+        this.isStereo = this._io.readBitsIntBe(1) != 0;
+        this.masterVolume = this._io.readBitsIntBe(7);
         this._io.alignToByte();
         this.ultraClickRemoval = this._io.readU1();
         this.hasCustomPan = this._io.readU1();
         this.reserved2 = this._io.readBytes(8);
         this.ofsSpecial = this._io.readU2le();
-        channels = new ArrayList<Channel>((int) (32));
+        channels = new ArrayList<Channel>(((Number) (32)).intValue());
         for (int i = 0; i < 32; i++) {
             this.channels.add(new Channel(this._io, this, _root));
         }
         this.orders = this._io.readBytes(numOrders());
-        instruments = new ArrayList<InstrumentPtr>((int) (numInstruments()));
+        instruments = new ArrayList<InstrumentPtr>(((Number) (numInstruments())).intValue());
         for (int i = 0; i < numInstruments(); i++) {
             this.instruments.add(new InstrumentPtr(this._io, this, _root));
         }
-        patterns = new ArrayList<PatternPtr>((int) (numPatterns()));
+        patterns = new ArrayList<PatternPtr>(((Number) (numPatterns())).intValue());
         for (int i = 0; i < numPatterns(); i++) {
             this.patterns.add(new PatternPtr(this._io, this, _root));
         }
         if (hasCustomPan() == 252) {
-            channelPans = new ArrayList<ChannelPan>((int) (32));
+            channelPans = new ArrayList<ChannelPan>(((Number) (32)).intValue());
             for (int i = 0; i < 32; i++) {
                 this.channelPans.add(new ChannelPan(this._io, this, _root));
             }
@@ -108,10 +115,10 @@ public class S3m extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved1 = this._io.readBitsInt(2);
-            this.hasCustomPan = this._io.readBitsInt(1) != 0;
-            this.reserved2 = this._io.readBitsInt(1) != 0;
-            this.pan = this._io.readBitsInt(4);
+            this.reserved1 = this._io.readBitsIntBe(2);
+            this.hasCustomPan = this._io.readBitsIntBe(1) != 0;
+            this.reserved2 = this._io.readBitsIntBe(1) != 0;
+            this.pan = this._io.readBitsIntBe(4);
         }
         private long reserved1;
         private boolean hasCustomPan;
@@ -152,10 +159,10 @@ public class S3m extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.hasFx = this._io.readBitsInt(1) != 0;
-            this.hasVolume = this._io.readBitsInt(1) != 0;
-            this.hasNoteAndInstrument = this._io.readBitsInt(1) != 0;
-            this.channelNum = this._io.readBitsInt(5);
+            this.hasFx = this._io.readBitsIntBe(1) != 0;
+            this.hasVolume = this._io.readBitsIntBe(1) != 0;
+            this.hasNoteAndInstrument = this._io.readBitsIntBe(1) != 0;
+            this.channelNum = this._io.readBitsIntBe(5);
             this._io.alignToByte();
             if (hasNoteAndInstrument()) {
                 this.note = this._io.readU1();
@@ -252,8 +259,8 @@ public class S3m extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.isDisabled = this._io.readBitsInt(1) != 0;
-            this.chType = this._io.readBitsInt(7);
+            this.isDisabled = this._io.readBitsIntBe(1) != 0;
+            this.chType = this._io.readBitsIntBe(7);
         }
         private boolean isDisabled;
         private long chType;
@@ -468,20 +475,30 @@ public class S3m extends KaitaiStruct {
         private void _read() {
             this.type = InstTypes.byId(this._io.readU1());
             this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false);
-            switch (type()) {
-            case SAMPLE: {
-                this.body = new Sampled(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.body = new Adlib(this._io, this, _root);
-                break;
-            }
+            {
+                InstTypes on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case SAMPLE: {
+                        this.body = new Sampled(this._io, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = new Adlib(this._io, this, _root);
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = new Adlib(this._io, this, _root);
+                }
             }
             this.tuningHz = this._io.readU4le();
             this.reserved2 = this._io.readBytes(12);
             this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
-            this.magic = this._io.ensureFixedContents(new byte[] { 83, 67, 82, 83 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 83, 67, 82, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, magic(), _io(), "/types/instrument/seq/6");
+            }
         }
         public static class Sampled extends KaitaiStruct {
             public static Sampled fromFile(String fileName) throws IOException {
@@ -571,7 +588,10 @@ public class S3m extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.reserved1 = this._io.ensureFixedContents(new byte[] { 0, 0, 0 });
+                this.reserved1 = this._io.readBytes(3);
+                if (!(Arrays.equals(reserved1(), new byte[] { 0, 0, 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0 }, reserved1(), _io(), "/types/instrument/types/adlib/seq/0");
+                }
                 this._unnamed1 = this._io.readBytes(16);
             }
             private byte[] reserved1;

@@ -230,8 +230,16 @@ namespace Kaitai
             }
             private void _read()
             {
-                _id = m_io.EnsureFixedContents(new byte[] { 83, 68, 78, 65 });
-                _nameMagic = m_io.EnsureFixedContents(new byte[] { 78, 65, 77, 69 });
+                _id = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Id, new byte[] { 83, 68, 78, 65 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 68, 78, 65 }, Id, M_Io, "/types/dna1_body/seq/0");
+                }
+                _nameMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(NameMagic, new byte[] { 78, 65, 77, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 78, 65, 77, 69 }, NameMagic, M_Io, "/types/dna1_body/seq/1");
+                }
                 _numNames = m_io.ReadU4le();
                 _names = new List<string>((int) (NumNames));
                 for (var i = 0; i < NumNames; i++)
@@ -239,7 +247,11 @@ namespace Kaitai
                     _names.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
                 }
                 _padding1 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _typeMagic = m_io.EnsureFixedContents(new byte[] { 84, 89, 80, 69 });
+                _typeMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(TypeMagic, new byte[] { 84, 89, 80, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 84, 89, 80, 69 }, TypeMagic, M_Io, "/types/dna1_body/seq/5");
+                }
                 _numTypes = m_io.ReadU4le();
                 _types = new List<string>((int) (NumTypes));
                 for (var i = 0; i < NumTypes; i++)
@@ -247,14 +259,22 @@ namespace Kaitai
                     _types.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
                 }
                 _padding2 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _tlenMagic = m_io.EnsureFixedContents(new byte[] { 84, 76, 69, 78 });
+                _tlenMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(TlenMagic, new byte[] { 84, 76, 69, 78 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 84, 76, 69, 78 }, TlenMagic, M_Io, "/types/dna1_body/seq/9");
+                }
                 _lengths = new List<ushort>((int) (NumTypes));
                 for (var i = 0; i < NumTypes; i++)
                 {
                     _lengths.Add(m_io.ReadU2le());
                 }
                 _padding3 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _strcMagic = m_io.EnsureFixedContents(new byte[] { 83, 84, 82, 67 });
+                _strcMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(StrcMagic, new byte[] { 83, 84, 82, 67 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 84, 82, 67 }, StrcMagic, M_Io, "/types/dna1_body/seq/12");
+                }
                 _numStructs = m_io.ReadU4le();
                 _structs = new List<DnaStruct>((int) (NumStructs));
                 for (var i = 0; i < NumStructs; i++)
@@ -313,7 +333,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 66, 76, 69, 78, 68, 69, 82 });
+                _magic = m_io.ReadBytes(7);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 76, 69, 78, 68, 69, 82 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 66, 76, 69, 78, 68, 69, 82 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _ptrSizeId = ((BlenderBlend.PtrSize) m_io.ReadU1());
                 _endian = ((BlenderBlend.Endian) m_io.ReadU1());
                 _version = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(3));
@@ -423,7 +447,7 @@ namespace Kaitai
             {
                 if (f_sdnaStructs)
                     return _sdnaStructs;
-                _sdnaStructs = (List<DnaStruct>) (((Dna1Body) (Blocks[(Blocks.Count - 2)].Body)).Structs);
+                _sdnaStructs = (List<DnaStruct>) (((BlenderBlend.Dna1Body) (Blocks[(Blocks.Count - 2)].Body)).Structs);
                 f_sdnaStructs = true;
                 return _sdnaStructs;
             }

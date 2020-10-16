@@ -43,11 +43,15 @@ namespace Kaitai
             private void _read()
             {
                 _lsPerFat = m_io.ReadU4le();
-                _hasActiveFat = m_io.ReadBitsInt(1) != 0;
-                _reserved1 = m_io.ReadBitsInt(3);
-                _activeFatId = m_io.ReadBitsInt(4);
+                _hasActiveFat = m_io.ReadBitsIntBe(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(3);
+                _activeFatId = m_io.ReadBitsIntBe(4);
                 m_io.AlignToByte();
-                _reserved2 = m_io.EnsureFixedContents(new byte[] { 0 });
+                _reserved2 = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved2, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, Reserved2, M_Io, "/types/ext_bios_param_block_fat32/seq/4");
+                }
                 _fatVersion = m_io.ReadU2le();
                 _rootDirStartClus = m_io.ReadU4le();
                 _lsFsInfo = m_io.ReadU2le();

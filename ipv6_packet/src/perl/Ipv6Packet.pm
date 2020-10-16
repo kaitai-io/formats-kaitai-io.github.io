@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use ProtocolBody;
 
 ########################################################################
@@ -35,9 +35,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{version} = $self->{_io}->read_bits_int(4);
-    $self->{traffic_class} = $self->{_io}->read_bits_int(8);
-    $self->{flow_label} = $self->{_io}->read_bits_int(20);
+    $self->{version} = $self->{_io}->read_bits_int_be(4);
+    $self->{traffic_class} = $self->{_io}->read_bits_int_be(8);
+    $self->{flow_label} = $self->{_io}->read_bits_int_be(20);
     $self->{_io}->align_to_byte();
     $self->{payload_length} = $self->{_io}->read_u2be();
     $self->{next_header_type} = $self->{_io}->read_u1();

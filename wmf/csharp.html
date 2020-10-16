@@ -170,11 +170,6 @@ printer, etc).</p>
                 <a href="index.html" title="Windows Metafile (WMF) vector image parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="Windows Metafile (WMF) vector image parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="Windows Metafile (WMF) vector image parsing C# library">C#</a></li>
@@ -809,14 +804,26 @@ printer, etc).</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">215</span><span class="p">,</span> <span class="m">205</span><span class="p">,</span> <span class="m">198</span><span class="p">,</span> <span class="m">154</span> <span class="p">});</span>
-                <span class="n">_handle</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">215</span><span class="p">,</span> <span class="m">205</span><span class="p">,</span> <span class="m">198</span><span class="p">,</span> <span class="m">154</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">215</span><span class="p">,</span> <span class="m">205</span><span class="p">,</span> <span class="m">198</span><span class="p">,</span> <span class="m">154</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/special_header/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_handle</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Handle</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">},</span> <span class="n">Handle</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/special_header/seq/1&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_left</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">();</span>
                 <span class="n">_top</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">();</span>
                 <span class="n">_right</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">();</span>
                 <span class="n">_bottom</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">();</span>
                 <span class="n">_inch</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Reserved</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">},</span> <span class="n">Reserved</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/special_header/seq/7&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_checksum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
@@ -866,22 +873,22 @@ printer, etc).</p>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetbkmode</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Polygon</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
+                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsPolygon</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setbkcolor</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ColorRef</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setrop2</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setpolyfillmode</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
-                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetrop2</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Polyline</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
-                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsPolyline</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetpolyfillmode</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setwindoworg</span><span class="p">:</span> <span class="p">{</span>
@@ -890,10 +897,10 @@ printer, etc).</p>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetwindoworg</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Polygon</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setrop2</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
-                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsPolygon</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetrop2</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setwindowext</span><span class="p">:</span> <span class="p">{</span>
@@ -902,10 +909,10 @@ printer, etc).</p>
                     <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetwindowext</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Setpolyfillmode</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Wmf</span><span class="p">.</span><span class="n">Func</span><span class="p">.</span><span class="n">Polyline</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_params</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_params</span><span class="p">);</span>
-                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsSetpolyfillmode</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ParamsPolyline</span><span class="p">(</span><span class="n">io___raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>

@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -52,7 +53,10 @@ public class ApmPartitionTable extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 80, 77 });
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(magic(), new byte[] { 80, 77 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 77 }, magic(), _io(), "/types/partition_entry/seq/0");
+            }
             this.reserved1 = this._io.readBytes(2);
             this.numberOfPartitions = this._io.readU4be();
             this.partitionStart = this._io.readU4be();
@@ -222,8 +226,8 @@ public class ApmPartitionTable extends KaitaiStruct {
         KaitaiStream io = _root._io();
         long _pos = io.pos();
         io.seek(_root.sectorSize());
-        this._raw_partitionEntries = new ArrayList<byte[]>((int) (_root.partitionLookup().numberOfPartitions()));
-        partitionEntries = new ArrayList<PartitionEntry>((int) (_root.partitionLookup().numberOfPartitions()));
+        this._raw_partitionEntries = new ArrayList<byte[]>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
+        partitionEntries = new ArrayList<PartitionEntry>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
         for (int i = 0; i < _root.partitionLookup().numberOfPartitions(); i++) {
             this._raw_partitionEntries.add(io.readBytes(sectorSize()));
             KaitaiStream _io__raw_partitionEntries = new ByteBufferKaitaiStream(_raw_partitionEntries.get(_raw_partitionEntries.size() - 1));

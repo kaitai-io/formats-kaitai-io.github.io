@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dicom(KaitaiStruct):
     """DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
@@ -4055,11 +4056,11 @@ class Dicom(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.file_header = self._root.TFileHeader(self._io, self, self._root)
+        self.file_header = Dicom.TFileHeader(self._io, self, self._root)
         self.elements = []
         i = 0
         while not self._io.is_eof():
-            self.elements.append(self._root.TDataElementImplicit(self._io, self, self._root))
+            self.elements.append(Dicom.TDataElementImplicit(self._io, self, self._root))
             i += 1
 
 
@@ -4072,7 +4073,9 @@ class Dicom(KaitaiStruct):
 
         def _read(self):
             self.preamble = self._io.read_bytes(128)
-            self.magic = self._io.ensure_fixed_contents(b"\x44\x49\x43\x4D")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x44\x49\x43\x4D":
+                raise kaitaistruct.ValidationNotEqualError(b"\x44\x49\x43\x4D", self.magic, self._io, u"/types/t_file_header/seq/1")
 
 
     class TDataElementExplicit(KaitaiStruct):
@@ -4107,7 +4110,7 @@ class Dicom(KaitaiStruct):
                 self.items = []
                 i = 0
                 while True:
-                    _ = self._root.SeqItem(self._io, self, self._root)
+                    _ = Dicom.SeqItem(self._io, self, self._root)
                     self.items.append(_)
                     if _.tag_elem == 57565:
                         break
@@ -4117,7 +4120,7 @@ class Dicom(KaitaiStruct):
                 self.elements_implicit = []
                 i = 0
                 while not self._io.is_eof():
-                    self.elements_implicit.append(self._root.TDataElementImplicit(self._io, self, self._root))
+                    self.elements_implicit.append(Dicom.TDataElementImplicit(self._io, self, self._root))
                     i += 1
 
 
@@ -4151,7 +4154,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, '_m_tag'):
                 return self._m_tag if hasattr(self, '_m_tag') else None
 
-            self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
+            self._m_tag = KaitaiStream.resolve_enum(Dicom.Tags, ((self.tag_group << 16) | self.tag_elem))
             return self._m_tag if hasattr(self, '_m_tag') else None
 
 
@@ -4187,7 +4190,7 @@ class Dicom(KaitaiStruct):
                 self.items = []
                 i = 0
                 while True:
-                    _ = self._root.SeqItem(self._io, self, self._root)
+                    _ = Dicom.SeqItem(self._io, self, self._root)
                     self.items.append(_)
                     if _.tag_elem == 57565:
                         break
@@ -4197,7 +4200,7 @@ class Dicom(KaitaiStruct):
                 self.elements = []
                 i = 0
                 while not self._io.is_eof():
-                    self.elements.append(self._root.TDataElementExplicit(self._io, self, self._root))
+                    self.elements.append(Dicom.TDataElementExplicit(self._io, self, self._root))
                     i += 1
 
 
@@ -4207,7 +4210,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, '_m_tag'):
                 return self._m_tag if hasattr(self, '_m_tag') else None
 
-            self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
+            self._m_tag = KaitaiStream.resolve_enum(Dicom.Tags, ((self.tag_group << 16) | self.tag_elem))
             return self._m_tag if hasattr(self, '_m_tag') else None
 
         @property
@@ -4251,7 +4254,9 @@ class Dicom(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.tag_group = self._io.ensure_fixed_contents(b"\xFE\xFF")
+            self.tag_group = self._io.read_bytes(2)
+            if not self.tag_group == b"\xFE\xFF":
+                raise kaitaistruct.ValidationNotEqualError(b"\xFE\xFF", self.tag_group, self._io, u"/types/seq_item/seq/0")
             self.tag_elem = self._io.read_u2le()
             self.value_len = self._io.read_u4le()
             if self.value_len != 4294967295:
@@ -4261,7 +4266,7 @@ class Dicom(KaitaiStruct):
                 self.items = []
                 i = 0
                 while True:
-                    _ = self._root.TDataElementExplicit(self._io, self, self._root)
+                    _ = Dicom.TDataElementExplicit(self._io, self, self._root)
                     self.items.append(_)
                     if  ((_.tag_group == 65534) and (_.tag_elem == 57357)) :
                         break

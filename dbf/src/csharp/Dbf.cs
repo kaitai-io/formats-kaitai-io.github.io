@@ -223,13 +223,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved1 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
+                _reserved1 = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved1, new byte[] { 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0 }, Reserved1, M_Io, "/types/header_dbase_7/seq/0");
+                }
                 _hasIncompleteTransaction = m_io.ReadU1();
                 _dbaseIvEncryption = m_io.ReadU1();
                 _reserved2 = m_io.ReadBytes(12);
                 _productionMdx = m_io.ReadU1();
                 _languageDriverId = m_io.ReadU1();
-                _reserved3 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
+                _reserved3 = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved3, new byte[] { 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0 }, Reserved3, M_Io, "/types/header_dbase_7/seq/6");
+                }
                 _languageDriverName = m_io.ReadBytes(32);
                 _reserved4 = m_io.ReadBytes(4);
             }

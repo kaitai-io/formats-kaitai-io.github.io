@@ -267,7 +267,10 @@ var Gif = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([71, 73, 70]);
+      this.magic = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [71, 73, 70]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([71, 73, 70], this.magic, this._io, "/types/header/seq/0");
+      }
       this.version = KaitaiStream.bytesToStr(this._io.readBytes(3), "ASCII");
     }
 
@@ -287,11 +290,17 @@ var Gif = (function() {
       this._read();
     }
     ExtGraphicControl.prototype._read = function() {
-      this.blockSize = this._io.ensureFixedContents([4]);
+      this.blockSize = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.blockSize, [4]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([4], this.blockSize, this._io, "/types/ext_graphic_control/seq/0");
+      }
       this.flags = this._io.readU1();
       this.delayTime = this._io.readU2le();
       this.transparentIdx = this._io.readU1();
-      this.terminator = this._io.ensureFixedContents([0]);
+      this.terminator = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/types/ext_graphic_control/seq/4");
+      }
     }
     Object.defineProperty(ExtGraphicControl.prototype, 'transparentColorFlag', {
       get: function() {

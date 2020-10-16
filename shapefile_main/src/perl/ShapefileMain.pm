@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package ShapefileMain;
@@ -1025,14 +1025,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_code} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 39, 10)));
-    $self->{unused_field_1} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_2} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_3} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_4} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_5} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{file_code} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_1} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_2} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_3} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_4} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_5} = $self->{_io}->read_bytes(4);
     $self->{file_length} = $self->{_io}->read_s4be();
-    $self->{version} = $self->{_io}->ensure_fixed_contents(pack('C*', (232, 3, 0, 0)));
+    $self->{version} = $self->{_io}->read_bytes(4);
     $self->{shape_type} = $self->{_io}->read_s4le();
     $self->{bounding_box} = ShapefileMain::BoundingBoxXYZM->new($self->{_io}, $self, $self->{_root});
 }
@@ -1218,46 +1218,46 @@ sub _read {
     my ($self) = @_;
 
     $self->{shape_type} = $self->{_io}->read_s4le();
-    if ($self->shape_type() != $SHAPE_TYPE_NULL_SHAPE) {
+    if ($self->shape_type() != $ShapefileMain::SHAPE_TYPE_NULL_SHAPE) {
         my $_on = $self->shape_type();
-        if ($_on == $SHAPE_TYPE_POINT_M) {
-            $self->{shape_parameters} = ShapefileMain::PointM->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POLYGON_Z) {
-            $self->{shape_parameters} = ShapefileMain::PolygonZ->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_MULTI_POINT_M) {
-            $self->{shape_parameters} = ShapefileMain::MultiPointM->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POLY_LINE_Z) {
+        if ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE_Z) {
             $self->{shape_parameters} = ShapefileMain::PolyLineZ->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $SHAPE_TYPE_MULTI_POINT_Z) {
-            $self->{shape_parameters} = ShapefileMain::MultiPointZ->new($self->{_io}, $self, $self->{_root});
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_PATCH) {
+            $self->{shape_parameters} = ShapefileMain::MultiPatch->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $SHAPE_TYPE_MULTI_POINT) {
-            $self->{shape_parameters} = ShapefileMain::MultiPoint->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POLYGON_M) {
-            $self->{shape_parameters} = ShapefileMain::PolygonM->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POLYGON) {
-            $self->{shape_parameters} = ShapefileMain::Polygon->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POINT) {
-            $self->{shape_parameters} = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $SHAPE_TYPE_POLY_LINE_M) {
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE_M) {
             $self->{shape_parameters} = ShapefileMain::PolyLineM->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $SHAPE_TYPE_POLY_LINE) {
-            $self->{shape_parameters} = ShapefileMain::PolyLine->new($self->{_io}, $self, $self->{_root});
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON) {
+            $self->{shape_parameters} = ShapefileMain::Polygon->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $SHAPE_TYPE_POINT_Z) {
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON_Z) {
+            $self->{shape_parameters} = ShapefileMain::PolygonZ->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT_Z) {
             $self->{shape_parameters} = ShapefileMain::PointZ->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $SHAPE_TYPE_MULTI_PATCH) {
-            $self->{shape_parameters} = ShapefileMain::MultiPatch->new($self->{_io}, $self, $self->{_root});
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE) {
+            $self->{shape_parameters} = ShapefileMain::PolyLine->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT_M) {
+            $self->{shape_parameters} = ShapefileMain::PointM->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON_M) {
+            $self->{shape_parameters} = ShapefileMain::PolygonM->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT) {
+            $self->{shape_parameters} = ShapefileMain::MultiPoint->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT) {
+            $self->{shape_parameters} = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT_M) {
+            $self->{shape_parameters} = ShapefileMain::MultiPointM->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT_Z) {
+            $self->{shape_parameters} = ShapefileMain::MultiPointZ->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RtpPacket(KaitaiStruct):
     """The Real-time Transport Protocol (RTP) is a widely used network
@@ -59,18 +60,18 @@ class RtpPacket(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.version = self._io.read_bits_int(2)
-        self.has_padding = self._io.read_bits_int(1) != 0
-        self.has_extension = self._io.read_bits_int(1) != 0
-        self.csrc_count = self._io.read_bits_int(4)
-        self.marker = self._io.read_bits_int(1) != 0
-        self.payload_type = self._root.PayloadTypeEnum(self._io.read_bits_int(7))
+        self.version = self._io.read_bits_int_be(2)
+        self.has_padding = self._io.read_bits_int_be(1) != 0
+        self.has_extension = self._io.read_bits_int_be(1) != 0
+        self.csrc_count = self._io.read_bits_int_be(4)
+        self.marker = self._io.read_bits_int_be(1) != 0
+        self.payload_type = KaitaiStream.resolve_enum(RtpPacket.PayloadTypeEnum, self._io.read_bits_int_be(7))
         self._io.align_to_byte()
         self.sequence_number = self._io.read_u2be()
         self.timestamp = self._io.read_u4be()
         self.ssrc = self._io.read_u4be()
         if self.has_extension:
-            self.header_extension = self._root.HeaderExtention(self._io, self, self._root)
+            self.header_extension = RtpPacket.HeaderExtention(self._io, self, self._root)
 
         self.data = self._io.read_bytes(((self._io.size() - self._io.pos()) - self.len_padding))
         self.padding = self._io.read_bytes(self.len_padding)

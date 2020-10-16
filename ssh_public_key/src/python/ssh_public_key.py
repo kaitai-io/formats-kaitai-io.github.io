@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SshPublicKey(KaitaiStruct):
     """SSH public keys are encoded in a special binary format, typically represented
@@ -28,16 +29,16 @@ class SshPublicKey(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.key_name = self._root.Cstring(self._io, self, self._root)
+        self.key_name = SshPublicKey.Cstring(self._io, self, self._root)
         _on = self.key_name.value
         if _on == u"ssh-rsa":
-            self.body = self._root.KeyRsa(self._io, self, self._root)
+            self.body = SshPublicKey.KeyRsa(self._io, self, self._root)
         elif _on == u"ecdsa-sha2-nistp256":
-            self.body = self._root.KeyEcdsa(self._io, self, self._root)
+            self.body = SshPublicKey.KeyEcdsa(self._io, self, self._root)
         elif _on == u"ssh-ed25519":
-            self.body = self._root.KeyEd25519(self._io, self, self._root)
+            self.body = SshPublicKey.KeyEd25519(self._io, self, self._root)
         elif _on == u"ssh-dss":
-            self.body = self._root.KeyDsa(self._io, self, self._root)
+            self.body = SshPublicKey.KeyDsa(self._io, self, self._root)
 
     class KeyRsa(KaitaiStruct):
         """
@@ -51,8 +52,8 @@ class SshPublicKey(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.rsa_e = self._root.Bignum2(self._io, self, self._root)
-            self.rsa_n = self._root.Bignum2(self._io, self, self._root)
+            self.rsa_e = SshPublicKey.Bignum2(self._io, self, self._root)
+            self.rsa_n = SshPublicKey.Bignum2(self._io, self, self._root)
 
         @property
         def key_length(self):
@@ -92,8 +93,8 @@ class SshPublicKey(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.curve_name = self._root.Cstring(self._io, self, self._root)
-            self.ec = self._root.EllipticCurve(self._io, self, self._root)
+            self.curve_name = SshPublicKey.Cstring(self._io, self, self._root)
+            self.ec = SshPublicKey.EllipticCurve(self._io, self, self._root)
 
 
     class Cstring(KaitaiStruct):
@@ -127,10 +128,10 @@ class SshPublicKey(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.dsa_p = self._root.Bignum2(self._io, self, self._root)
-            self.dsa_q = self._root.Bignum2(self._io, self, self._root)
-            self.dsa_g = self._root.Bignum2(self._io, self, self._root)
-            self.dsa_pub_key = self._root.Bignum2(self._io, self, self._root)
+            self.dsa_p = SshPublicKey.Bignum2(self._io, self, self._root)
+            self.dsa_q = SshPublicKey.Bignum2(self._io, self, self._root)
+            self.dsa_g = SshPublicKey.Bignum2(self._io, self, self._root)
+            self.dsa_pub_key = SshPublicKey.Bignum2(self._io, self, self._root)
 
 
     class EllipticCurve(KaitaiStruct):

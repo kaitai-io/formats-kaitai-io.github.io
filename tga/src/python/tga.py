@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Tga(KaitaiStruct):
     """TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
@@ -35,8 +36,8 @@ class Tga(KaitaiStruct):
 
     def _read(self):
         self.image_id_len = self._io.read_u1()
-        self.color_map_type = self._root.ColorMapEnum(self._io.read_u1())
-        self.image_type = self._root.ImageTypeEnum(self._io.read_u1())
+        self.color_map_type = KaitaiStream.resolve_enum(Tga.ColorMapEnum, self._io.read_u1())
+        self.image_type = KaitaiStream.resolve_enum(Tga.ImageTypeEnum, self._io.read_u1())
         self.color_map_ofs = self._io.read_u2le()
         self.num_color_map = self._io.read_u2le()
         self.color_map_depth = self._io.read_u1()
@@ -47,7 +48,7 @@ class Tga(KaitaiStruct):
         self.image_depth = self._io.read_u1()
         self.img_descriptor = self._io.read_u1()
         self.image_id = self._io.read_bytes(self.image_id_len)
-        if self.color_map_type == self._root.ColorMapEnum.has_color_map:
+        if self.color_map_type == Tga.ColorMapEnum.has_color_map:
             self.color_map = [None] * (self.num_color_map)
             for i in range(self.num_color_map):
                 self.color_map[i] = self._io.read_bytes((self.color_map_depth + 7) // 8)
@@ -82,7 +83,7 @@ class Tga(KaitaiStruct):
             if self.is_valid:
                 _pos = self._io.pos()
                 self._io.seek(self.ext_area_ofs)
-                self._m_ext_area = self._root.TgaExtArea(self._io, self, self._root)
+                self._m_ext_area = Tga.TgaExtArea(self._io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_ext_area if hasattr(self, '_m_ext_area') else None
@@ -123,7 +124,7 @@ class Tga(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 26))
-        self._m_footer = self._root.TgaFooter(self._io, self, self._root)
+        self._m_footer = Tga.TgaFooter(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_footer if hasattr(self, '_m_footer') else None
 

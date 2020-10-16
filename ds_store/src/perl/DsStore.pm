@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{alignment_header} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 1)));
+    $self->{alignment_header} = $self->{_io}->read_bytes(4);
     $self->{buddy_allocator_header} = DsStore::BuddyAllocatorHeader->new($self->{_io}, $self, $self->{_root});
 }
 
@@ -103,7 +103,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (66, 117, 100, 49)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{ofs_bookkeeping_info_block} = $self->{_io}->read_u4be();
     $self->{len_bookkeeping_info_block} = $self->{_io}->read_u4be();
     $self->{copy_ofs_bookkeeping_info_block} = $self->{_io}->read_u4be();

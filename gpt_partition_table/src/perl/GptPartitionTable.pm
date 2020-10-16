@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -164,7 +164,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (69, 70, 73, 32, 80, 65, 82, 84)));
+    $self->{signature} = $self->{_io}->read_bytes(8);
     $self->{revision} = $self->{_io}->read_u4le();
     $self->{header_size} = $self->{_io}->read_u4le();
     $self->{crc32_header} = $self->{_io}->read_u4le();

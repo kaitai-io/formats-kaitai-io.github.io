@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -50,8 +50,8 @@ class Gif < Kaitai::Struct::Struct
     @logical_screen_descriptor = LogicalScreenDescriptorStruct.new(@_io, self, @_root)
     if logical_screen_descriptor.has_color_table
       @_raw_global_color_table = @_io.read_bytes((logical_screen_descriptor.color_table_size * 3))
-      io = Kaitai::Struct::Stream.new(@_raw_global_color_table)
-      @global_color_table = ColorTable.new(io, self, @_root)
+      _io__raw_global_color_table = Kaitai::Struct::Stream.new(@_raw_global_color_table)
+      @global_color_table = ColorTable.new(_io__raw_global_color_table, self, @_root)
     end
     @blocks = []
     i = 0
@@ -142,8 +142,8 @@ class Gif < Kaitai::Struct::Struct
       @flags = @_io.read_u1
       if has_color_table
         @_raw_local_color_table = @_io.read_bytes((color_table_size * 3))
-        io = Kaitai::Struct::Stream.new(@_raw_local_color_table)
-        @local_color_table = ColorTable.new(io, self, @_root)
+        _io__raw_local_color_table = Kaitai::Struct::Stream.new(@_raw_local_color_table)
+        @local_color_table = ColorTable.new(_io__raw_local_color_table, self, @_root)
       end
       @image_data = ImageData.new(@_io, self, @_root)
       self
@@ -184,7 +184,7 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPE, @_io.read_u1)
+      @block_type = Kaitai::Struct::Stream::resolve_enum(Gif::BLOCK_TYPE, @_io.read_u1)
       case block_type
       when :block_type_extension
         @body = Extension.new(@_io, self, @_root)
@@ -226,7 +226,8 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([71, 73, 70].pack('C*'))
+      @magic = @_io.read_bytes(3)
+      raise Kaitai::Struct::ValidationNotEqualError.new([71, 73, 70].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [71, 73, 70].pack('C*')
       @version = (@_io.read_bytes(3)).force_encoding("ASCII")
       self
     end
@@ -243,11 +244,13 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @block_size = @_io.ensure_fixed_contents([4].pack('C*'))
+      @block_size = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([4].pack('C*'), block_size, _io, "/types/ext_graphic_control/seq/0") if not block_size == [4].pack('C*')
       @flags = @_io.read_u1
       @delay_time = @_io.read_u2le
       @transparent_idx = @_io.read_u1
-      @terminator = @_io.ensure_fixed_contents([0].pack('C*'))
+      @terminator = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), terminator, _io, "/types/ext_graphic_control/seq/4") if not terminator == [0].pack('C*')
       self
     end
     def transparent_color_flag
@@ -325,7 +328,7 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @label = Kaitai::Struct::Stream::resolve_enum(EXTENSION_LABEL, @_io.read_u1)
+      @label = Kaitai::Struct::Stream::resolve_enum(Gif::EXTENSION_LABEL, @_io.read_u1)
       case label
       when :extension_label_application
         @body = ExtApplication.new(@_io, self, @_root)

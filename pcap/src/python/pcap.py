@@ -1,15 +1,16 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from ethernet_frame import EthernetFrame
-from packet_ppi import PacketPpi
+import ethernet_frame
+import packet_ppi
 class Pcap(KaitaiStruct):
     """PCAP (named after libpcap / winpcap) is a popular format for saving
     network traffic grabbed by network sniffers. It is typically
@@ -132,11 +133,11 @@ class Pcap(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.hdr = self._root.Header(self._io, self, self._root)
+        self.hdr = Pcap.Header(self._io, self, self._root)
         self.packets = []
         i = 0
         while not self._io.is_eof():
-            self.packets.append(self._root.Packet(self._io, self, self._root))
+            self.packets.append(Pcap.Packet(self._io, self, self._root))
             i += 1
 
 
@@ -152,13 +153,15 @@ class Pcap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic_number = self._io.ensure_fixed_contents(b"\xD4\xC3\xB2\xA1")
+            self.magic_number = self._io.read_bytes(4)
+            if not self.magic_number == b"\xD4\xC3\xB2\xA1":
+                raise kaitaistruct.ValidationNotEqualError(b"\xD4\xC3\xB2\xA1", self.magic_number, self._io, u"/types/header/seq/0")
             self.version_major = self._io.read_u2le()
             self.version_minor = self._io.read_u2le()
             self.thiszone = self._io.read_s4le()
             self.sigfigs = self._io.read_u4le()
             self.snaplen = self._io.read_u4le()
-            self.network = self._root.Linktype(self._io.read_u4le())
+            self.network = KaitaiStream.resolve_enum(Pcap.Linktype, self._io.read_u4le())
 
 
     class Packet(KaitaiStruct):
@@ -178,14 +181,14 @@ class Pcap(KaitaiStruct):
             self.incl_len = self._io.read_u4le()
             self.orig_len = self._io.read_u4le()
             _on = self._root.hdr.network
-            if _on == self._root.Linktype.ppi:
+            if _on == Pcap.Linktype.ppi:
                 self._raw_body = self._io.read_bytes(self.incl_len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = PacketPpi(io)
-            elif _on == self._root.Linktype.ethernet:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = packet_ppi.PacketPpi(_io__raw_body)
+            elif _on == Pcap.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.incl_len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = EthernetFrame(io)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
             else:
                 self.body = self._io.read_bytes(self.incl_len)
 

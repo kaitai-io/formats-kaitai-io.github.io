@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -191,30 +191,30 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     @size = @_io.read_u4le
     @library_id_stamp = @_io.read_u4le
     case code
-    when :sections_texture_dictionary
-      @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
-    when :sections_geometry_list
-      @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
-    when :sections_clump
-      @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
-    when :sections_texture_native
-      @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
-    when :sections_frame_list
-      @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
     when :sections_geometry
       @_raw_body = @_io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(io, self, @_root)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+    when :sections_texture_dictionary
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+    when :sections_geometry_list
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+    when :sections_texture_native
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+    when :sections_clump
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+    when :sections_frame_list
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
     else
       @body = @_io.read_bytes(size)
     end
@@ -498,30 +498,31 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     end
 
     def _read
-      @code = @_io.ensure_fixed_contents([1, 0, 0, 0].pack('C*'))
+      @code = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([1, 0, 0, 0].pack('C*'), code, _io, "/types/list_with_header/seq/0") if not code == [1, 0, 0, 0].pack('C*')
       @header_size = @_io.read_u4le
       @library_id_stamp = @_io.read_u4le
       case _parent.code
-      when :sections_texture_dictionary
-        @_raw_header = @_io.read_bytes(header_size)
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructTextureDictionary.new(io, self, @_root)
-      when :sections_geometry_list
-        @_raw_header = @_io.read_bytes(header_size)
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructGeometryList.new(io, self, @_root)
-      when :sections_clump
-        @_raw_header = @_io.read_bytes(header_size)
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructClump.new(io, self, @_root)
-      when :sections_frame_list
-        @_raw_header = @_io.read_bytes(header_size)
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructFrameList.new(io, self, @_root)
       when :sections_geometry
         @_raw_header = @_io.read_bytes(header_size)
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructGeometry.new(io, self, @_root)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructGeometry.new(_io__raw_header, self, @_root)
+      when :sections_texture_dictionary
+        @_raw_header = @_io.read_bytes(header_size)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructTextureDictionary.new(_io__raw_header, self, @_root)
+      when :sections_geometry_list
+        @_raw_header = @_io.read_bytes(header_size)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructGeometryList.new(_io__raw_header, self, @_root)
+      when :sections_clump
+        @_raw_header = @_io.read_bytes(header_size)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructClump.new(_io__raw_header, self, @_root)
+      when :sections_frame_list
+        @_raw_header = @_io.read_bytes(header_size)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructFrameList.new(_io__raw_header, self, @_root)
       else
         @header = @_io.read_bytes(header_size)
       end

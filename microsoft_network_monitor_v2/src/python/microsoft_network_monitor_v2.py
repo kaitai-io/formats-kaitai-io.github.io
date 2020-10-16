@@ -1,15 +1,16 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from ethernet_frame import EthernetFrame
-from windows_systemtime import WindowsSystemtime
+import windows_systemtime
+import ethernet_frame
 class MicrosoftNetworkMonitorV2(KaitaiStruct):
     """Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
     network packet sniffing and analysis tool. It can save captured
@@ -136,11 +137,13 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.signature = self._io.ensure_fixed_contents(b"\x47\x4D\x42\x55")
+        self.signature = self._io.read_bytes(4)
+        if not self.signature == b"\x47\x4D\x42\x55":
+            raise kaitaistruct.ValidationNotEqualError(b"\x47\x4D\x42\x55", self.signature, self._io, u"/seq/0")
         self.version_minor = self._io.read_u1()
         self.version_major = self._io.read_u1()
-        self.mac_type = self._root.Linktype(self._io.read_u2le())
-        self.time_capture_start = WindowsSystemtime(self._io)
+        self.mac_type = KaitaiStream.resolve_enum(MicrosoftNetworkMonitorV2.Linktype, self._io.read_u2le())
+        self.time_capture_start = windows_systemtime.WindowsSystemtime(self._io)
         self.frame_table_ofs = self._io.read_u4le()
         self.frame_table_len = self._io.read_u4le()
         self.user_data_ofs = self._io.read_u4le()
@@ -165,7 +168,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.FrameIndexEntry(self._io, self, self._root))
+                self.entries.append(MicrosoftNetworkMonitorV2.FrameIndexEntry(self._io, self, self._root))
                 i += 1
 
 
@@ -192,7 +195,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs)
-            self._m_body = self._root.Frame(io, self, self._root)
+            self._m_body = MicrosoftNetworkMonitorV2.Frame(io, self, self._root)
             io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
 
@@ -216,10 +219,10 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
             self.orig_len = self._io.read_u4le()
             self.inc_len = self._io.read_u4le()
             _on = self._root.mac_type
-            if _on == self._root.Linktype.ethernet:
+            if _on == MicrosoftNetworkMonitorV2.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.inc_len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = EthernetFrame(io)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
             else:
                 self.body = self._io.read_bytes(self.inc_len)
 
@@ -233,8 +236,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.frame_table_ofs)
         self._raw__m_frame_table = self._io.read_bytes(self.frame_table_len)
-        io = KaitaiStream(BytesIO(self._raw__m_frame_table))
-        self._m_frame_table = self._root.FrameIndex(io, self, self._root)
+        _io__raw__m_frame_table = KaitaiStream(BytesIO(self._raw__m_frame_table))
+        self._m_frame_table = MicrosoftNetworkMonitorV2.FrameIndex(_io__raw__m_frame_table, self, self._root)
         self._io.seek(_pos)
         return self._m_frame_table if hasattr(self, '_m_frame_table') else None
 

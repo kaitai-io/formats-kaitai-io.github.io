@@ -150,11 +150,6 @@ format.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="systemd journal file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="systemd journal file parsing C# library">C#</a></li>
                 
                 
@@ -229,7 +224,7 @@ format.</p>
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
 <span class="k">package</span> <span class="nn">SystemdJournal</span><span class="p">;</span>
@@ -350,7 +345,7 @@ format.</p>
 <span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">signature</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">76</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">72</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">signature</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compatible_flags</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">incompatible_flags</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">state</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
@@ -573,7 +568,7 @@ format.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_object</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
     <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">object_type</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OBJECT_TYPES_DATA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">SystemdJournal::JournalObject::</span><span class="nv">OBJECT_TYPES_DATA</span><span class="p">)</span> <span class="p">{</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_payload</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_object</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
         <span class="k">my</span> <span class="nv">$io__raw_payload</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_payload</span><span class="p">});</span>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">payload</span><span class="p">}</span> <span class="o">=</span> <span class="nn">SystemdJournal::DataObject</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_payload</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>

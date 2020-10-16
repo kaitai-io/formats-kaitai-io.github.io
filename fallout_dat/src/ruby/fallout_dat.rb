@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class FalloutDat < Kaitai::Struct::Struct
@@ -78,7 +78,7 @@ class FalloutDat < Kaitai::Struct::Struct
 
     def _read
       @name = Pstr.new(@_io, self, @_root)
-      @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u4be)
+      @flags = Kaitai::Struct::Stream::resolve_enum(FalloutDat::COMPRESSION, @_io.read_u4be)
       @offset = @_io.read_u4be
       @size_unpacked = @_io.read_u4be
       @size_packed = @_io.read_u4be

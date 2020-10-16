@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Dbf < Kaitai::Struct::Struct
@@ -15,8 +15,8 @@ class Dbf < Kaitai::Struct::Struct
   def _read
     @header1 = Header1.new(@_io, self, @_root)
     @_raw_header2 = @_io.read_bytes((header1.len_header - 12))
-    io = Kaitai::Struct::Stream.new(@_raw_header2)
-    @header2 = Header2.new(io, self, @_root)
+    _io__raw_header2 = Kaitai::Struct::Stream.new(@_raw_header2)
+    @header2 = Header2.new(_io__raw_header2, self, @_root)
     @records = Array.new(header1.num_records)
     (header1.num_records).times { |i|
       @records[i] = @_io.read_bytes(header1.len_record)
@@ -131,13 +131,15 @@ class Dbf < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved1 = @_io.ensure_fixed_contents([0, 0].pack('C*'))
+      @reserved1 = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0].pack('C*'), reserved1, _io, "/types/header_dbase_7/seq/0") if not reserved1 == [0, 0].pack('C*')
       @has_incomplete_transaction = @_io.read_u1
       @dbase_iv_encryption = @_io.read_u1
       @reserved2 = @_io.read_bytes(12)
       @production_mdx = @_io.read_u1
       @language_driver_id = @_io.read_u1
-      @reserved3 = @_io.ensure_fixed_contents([0, 0].pack('C*'))
+      @reserved3 = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0].pack('C*'), reserved3, _io, "/types/header_dbase_7/seq/6") if not reserved3 == [0, 0].pack('C*')
       @language_driver_name = @_io.read_bytes(32)
       @reserved4 = @_io.read_bytes(4)
       self

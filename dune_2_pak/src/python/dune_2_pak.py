@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dune2Pak(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -16,8 +17,8 @@ class Dune2Pak(KaitaiStruct):
 
     def _read(self):
         self._raw_dir = self._io.read_bytes(self.dir_size)
-        io = KaitaiStream(BytesIO(self._raw_dir))
-        self.dir = self._root.Files(io, self, self._root)
+        _io__raw_dir = KaitaiStream(BytesIO(self._raw_dir))
+        self.dir = Dune2Pak.Files(_io__raw_dir, self, self._root)
 
     class Files(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -30,7 +31,7 @@ class Dune2Pak(KaitaiStruct):
             self.files = []
             i = 0
             while not self._io.is_eof():
-                self.files.append(self._root.File(i, self._io, self, self._root))
+                self.files.append(Dune2Pak.File(i, self._io, self, self._root))
                 i += 1
 
 

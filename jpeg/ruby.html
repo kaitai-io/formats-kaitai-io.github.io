@@ -132,11 +132,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C# library">C#</a></li>
                 
                 
@@ -237,8 +232,8 @@ section#format-index .row {
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 <span class="k">class</span> <span class="nc">Jpeg</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
@@ -309,29 +304,30 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/segment/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@marker</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MARKER_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">if</span>  <span class="p">((</span><span class="n">marker</span> <span class="o">!=</span> <span class="ss">:marker_enum_soi</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">marker</span> <span class="o">!=</span> <span class="ss">:marker_enum_eoi</span><span class="p">))</span> 
         <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="k">end</span>
       <span class="k">if</span>  <span class="p">((</span><span class="n">marker</span> <span class="o">!=</span> <span class="ss">:marker_enum_soi</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">marker</span> <span class="o">!=</span> <span class="ss">:marker_enum_eoi</span><span class="p">))</span> 
         <span class="k">case</span> <span class="n">marker</span>
-        <span class="k">when</span> <span class="ss">:marker_enum_sos</span>
-          <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
-          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentSos</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">when</span> <span class="ss">:marker_enum_app1</span>
           <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
-          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentApp1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="k">when</span> <span class="ss">:marker_enum_sof0</span>
-          <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
-          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentSof0</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentApp1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">when</span> <span class="ss">:marker_enum_app0</span>
           <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
-          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentApp0</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentApp0</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:marker_enum_sof0</span>
+          <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+          <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentSof0</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:marker_enum_sos</span>
+          <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+          <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+          <span class="vi">@data</span> <span class="o">=</span> <span class="no">SegmentSos</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">else</span>
           <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
         <span class="k">end</span>
@@ -372,7 +368,7 @@ section#format-index .row {
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="nf">_read</span>
-        <span class="vi">@id</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">COMPONENT_ID</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+        <span class="vi">@id</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Jpeg</span><span class="o">::</span><span class="no">COMPONENT_ID</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
         <span class="vi">@huffman_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -444,7 +440,7 @@ section#format-index .row {
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="nf">_read</span>
-        <span class="vi">@id</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">COMPONENT_ID</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+        <span class="vi">@id</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Jpeg</span><span class="o">::</span><span class="no">COMPONENT_ID</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
         <span class="vi">@sampling_factors</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
         <span class="vi">@quantization_table_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
         <span class="nb">self</span>
@@ -479,10 +475,11 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@extra_zero</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@extra_zero</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">extra_zero</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/exif_in_jpeg/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">extra_zero</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-      <span class="vi">@data</span> <span class="o">=</span> <span class="no">Exif</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+      <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="no">Exif</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">)</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:extra_zero</span>

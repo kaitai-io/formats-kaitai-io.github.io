@@ -18,12 +18,12 @@ digraph {
 		</TABLE>>];
 renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case0">ListWithHeader</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case1">ListWithHeader</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case2">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case0">ListWithHeader</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case1">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case2">ListWithHeader</TD></TR>
 	<TR><TD>:sections_texture_native</TD><TD PORT="case3">ListWithHeader</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case4">ListWithHeader</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case5">ListWithHeader</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case4">ListWithHeader</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case5">ListWithHeader</TD></TR>
 </TABLE>>];
 		subgraph cluster__struct_clump {
 			label="RenderwareBinaryStream::StructClump";
@@ -179,7 +179,7 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 
 			list_with_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">4</TD><TD>01 00 00 00</TD><TD PORT="code_type">code</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">4</TD><TD></TD><TD PORT="code_type">code</TD></TR>
 				<TR><TD PORT="header_size_pos">4</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
 				<TR><TD PORT="library_id_stamp_pos">8</TD><TD PORT="library_id_stamp_size">4</TD><TD>u4le</TD><TD PORT="library_id_stamp_type">library_id_stamp</TD></TR>
 				<TR><TD PORT="header_pos">12</TD><TD PORT="header_size">...</TD><TD>switch (_parent.code)</TD><TD PORT="header_type">header</TD></TR>
@@ -192,11 +192,11 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 			</TABLE>>];
 list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case0">StructTextureDictionary</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case1">StructGeometryList</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case2">StructClump</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case3">StructFrameList</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case4">StructGeometry</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case0">StructGeometry</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case1">StructTextureDictionary</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case2">StructGeometryList</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case3">StructClump</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case4">StructFrameList</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__triangle {
@@ -278,11 +278,11 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	struct_frame_list__seq:num_frames_type -> struct_frame_list__seq:frames__repeat [color="#404040"];
 	matrix__seq:entries_type -> vector_3d__seq [style=bold];
 	list_with_header__seq:header_type -> list_with_header__seq_header_switch [style=bold];
-	list_with_header__seq_header_switch:case0 -> struct_texture_dictionary__seq [style=bold];
-	list_with_header__seq_header_switch:case1 -> struct_geometry_list__seq [style=bold];
-	list_with_header__seq_header_switch:case2 -> struct_clump__seq [style=bold];
-	list_with_header__seq_header_switch:case3 -> struct_frame_list__seq [style=bold];
-	list_with_header__seq_header_switch:case4 -> struct_geometry__seq [style=bold];
+	list_with_header__seq_header_switch:case0 -> struct_geometry__seq [style=bold];
+	list_with_header__seq_header_switch:case1 -> struct_texture_dictionary__seq [style=bold];
+	list_with_header__seq_header_switch:case2 -> struct_geometry_list__seq [style=bold];
+	list_with_header__seq_header_switch:case3 -> struct_clump__seq [style=bold];
+	list_with_header__seq_header_switch:case4 -> struct_frame_list__seq [style=bold];
 	renderware_binary_stream__seq:code_type -> list_with_header__seq:header_type [color="#404040"];
 	list_with_header__seq:entries_type -> renderware_binary_stream__seq [style=bold];
 	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];

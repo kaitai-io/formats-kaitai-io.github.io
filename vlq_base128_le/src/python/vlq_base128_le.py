@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class VlqBase128Le(KaitaiStruct):
     """A variable-length unsigned integer using base128 encoding. 1-byte groups
@@ -38,7 +39,7 @@ class VlqBase128Le(KaitaiStruct):
         self.groups = []
         i = 0
         while True:
-            _ = self._root.Group(self._io, self, self._root)
+            _ = VlqBase128Le.Group(self._io, self, self._root)
             self.groups.append(_)
             if not (_.has_next):
                 break

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -29,7 +29,8 @@ class MbrPartitionTable < Kaitai::Struct::Struct
     (4).times { |i|
       @partitions[i] = PartitionEntry.new(@_io, self, @_root)
     }
-    @boot_signature = @_io.ensure_fixed_contents([85, 170].pack('C*'))
+    @boot_signature = @_io.read_bytes(2)
+    raise Kaitai::Struct::ValidationNotEqualError.new([85, 170].pack('C*'), boot_signature, _io, "/seq/2") if not boot_signature == [85, 170].pack('C*')
     self
   end
   class PartitionEntry < Kaitai::Struct::Struct

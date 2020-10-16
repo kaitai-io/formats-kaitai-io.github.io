@@ -77,14 +77,22 @@ namespace Kaitai
             }
             private void _read()
             {
-                _catalogEnd = m_io.EnsureFixedContents(new byte[] { 0 });
+                _catalogEnd = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(CatalogEnd, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, CatalogEnd, M_Io, "/types/volume_info/seq/0");
+                }
                 _unused = m_io.ReadBytes(224);
                 _firstFreeSectorSector = m_io.ReadU1();
                 _firstFreeSectorTrack = m_io.ReadU1();
                 _diskType = ((TrDosImage.DiskType) m_io.ReadU1());
                 _numFiles = m_io.ReadU1();
                 _numFreeSectors = m_io.ReadU2le();
-                _trDosId = m_io.EnsureFixedContents(new byte[] { 16 });
+                _trDosId = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(TrDosId, new byte[] { 16 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 16 }, TrDosId, M_Io, "/types/volume_info/seq/7");
+                }
                 _unused2 = m_io.ReadBytes(2);
                 _password = m_io.ReadBytes(9);
                 _unused3 = m_io.ReadBytes(1);

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -37,7 +38,7 @@ public class Ttf extends KaitaiStruct {
     }
     private void _read() {
         this.offsetTable = new OffsetTable(this._io, this, _root);
-        directoryTable = new ArrayList<DirTableEntry>((int) (offsetTable().numTables()));
+        directoryTable = new ArrayList<DirTableEntry>(((Number) (offsetTable().numTables())).intValue());
         for (int i = 0; i < offsetTable().numTables(); i++) {
             this.directoryTable.add(new DirTableEntry(this._io, this, _root));
         }
@@ -96,7 +97,7 @@ public class Ttf extends KaitaiStruct {
             }
             private void _read() {
                 this.numberOfGlyphs = this._io.readU2be();
-                glyphNameIndex = new ArrayList<Integer>((int) (numberOfGlyphs()));
+                glyphNameIndex = new ArrayList<Integer>(((Number) (numberOfGlyphs())).intValue());
                 for (int i = 0; i < numberOfGlyphs(); i++) {
                     this.glyphNameIndex.add(this._io.readU2be());
                 }
@@ -264,7 +265,7 @@ public class Ttf extends KaitaiStruct {
             this.formatSelector = this._io.readU2be();
             this.numNameRecords = this._io.readU2be();
             this.ofsStrings = this._io.readU2be();
-            nameRecords = new ArrayList<NameRecord>((int) (numNameRecords()));
+            nameRecords = new ArrayList<NameRecord>(((Number) (numNameRecords())).intValue());
             for (int i = 0; i < numNameRecords(); i++) {
                 this.nameRecords.add(new NameRecord(this._io, this, _root));
             }
@@ -405,7 +406,10 @@ public class Ttf extends KaitaiStruct {
             this.version = new Fixed(this._io, this, _root);
             this.fontRevision = new Fixed(this._io, this, _root);
             this.checksumAdjustment = this._io.readU4be();
-            this.magicNumber = this._io.ensureFixedContents(new byte[] { 95, 15, 60, -11 });
+            this.magicNumber = this._io.readBytes(4);
+            if (!(Arrays.equals(magicNumber(), new byte[] { 95, 15, 60, -11 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 95, 15, 60, -11 }, magicNumber(), _io(), "/types/head/seq/3");
+            }
             this.flags = Flags.byId(this._io.readU2be());
             this.unitsPerEm = this._io.readU2be();
             this.created = this._io.readU8be();
@@ -518,7 +522,10 @@ public class Ttf extends KaitaiStruct {
             this.xMaxExtend = this._io.readS2be();
             this.caretSlopeRise = this._io.readS2be();
             this.caretSlopeRun = this._io.readS2be();
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            this.reserved = this._io.readBytes(10);
+            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, reserved(), _io(), "/types/hhea/seq/10");
+            }
             this.metricDataFormat = this._io.readS2be();
             this.numberOfHmetrics = this._io.readU2be();
         }
@@ -632,7 +639,7 @@ public class Ttf extends KaitaiStruct {
         private void _read() {
             this.version = this._io.readU2be();
             this.subtableCount = this._io.readU2be();
-            subtables = new ArrayList<Subtable>((int) (subtableCount()));
+            subtables = new ArrayList<Subtable>(((Number) (subtableCount())).intValue());
             for (int i = 0; i < subtableCount(); i++) {
                 this.subtables.add(new Subtable(this._io, this, _root));
             }
@@ -660,11 +667,11 @@ public class Ttf extends KaitaiStruct {
                 this.version = this._io.readU2be();
                 this.length = this._io.readU2be();
                 this.format = this._io.readU1();
-                this.reserved = this._io.readBitsInt(4);
-                this.isOverride = this._io.readBitsInt(1) != 0;
-                this.isCrossStream = this._io.readBitsInt(1) != 0;
-                this.isMinimum = this._io.readBitsInt(1) != 0;
-                this.isHorizontal = this._io.readBitsInt(1) != 0;
+                this.reserved = this._io.readBitsIntBe(4);
+                this.isOverride = this._io.readBitsIntBe(1) != 0;
+                this.isCrossStream = this._io.readBitsIntBe(1) != 0;
+                this.isMinimum = this._io.readBitsIntBe(1) != 0;
+                this.isHorizontal = this._io.readBitsIntBe(1) != 0;
                 this._io.alignToByte();
                 if (format() == 0) {
                     this.format0 = new Format0(this._io, this, _root);
@@ -694,7 +701,7 @@ public class Ttf extends KaitaiStruct {
                     this.searchRange = this._io.readU2be();
                     this.entrySelector = this._io.readU2be();
                     this.rangeShift = this._io.readU2be();
-                    kerningPairs = new ArrayList<KerningPair>((int) (pairCount()));
+                    kerningPairs = new ArrayList<KerningPair>(((Number) (pairCount())).intValue());
                     for (int i = 0; i < pairCount(); i++) {
                         this.kerningPairs.add(new KerningPair(this._io, this, _root));
                     }
@@ -1363,76 +1370,76 @@ public class Ttf extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.basicLatin = this._io.readBitsInt(1) != 0;
-                this.latin1Supplement = this._io.readBitsInt(1) != 0;
-                this.latinExtendedA = this._io.readBitsInt(1) != 0;
-                this.latinExtendedB = this._io.readBitsInt(1) != 0;
-                this.ipaExtensions = this._io.readBitsInt(1) != 0;
-                this.spacingModifierLetters = this._io.readBitsInt(1) != 0;
-                this.combiningDiacriticalMarks = this._io.readBitsInt(1) != 0;
-                this.basicGreek = this._io.readBitsInt(1) != 0;
-                this.greekSymbolsAndCoptic = this._io.readBitsInt(1) != 0;
-                this.cyrillic = this._io.readBitsInt(1) != 0;
-                this.armenian = this._io.readBitsInt(1) != 0;
-                this.basicHebrew = this._io.readBitsInt(1) != 0;
-                this.hebrewExtended = this._io.readBitsInt(1) != 0;
-                this.basicArabic = this._io.readBitsInt(1) != 0;
-                this.arabicExtended = this._io.readBitsInt(1) != 0;
-                this.devanagari = this._io.readBitsInt(1) != 0;
-                this.bengali = this._io.readBitsInt(1) != 0;
-                this.gurmukhi = this._io.readBitsInt(1) != 0;
-                this.gujarati = this._io.readBitsInt(1) != 0;
-                this.oriya = this._io.readBitsInt(1) != 0;
-                this.tamil = this._io.readBitsInt(1) != 0;
-                this.telugu = this._io.readBitsInt(1) != 0;
-                this.kannada = this._io.readBitsInt(1) != 0;
-                this.malayalam = this._io.readBitsInt(1) != 0;
-                this.thai = this._io.readBitsInt(1) != 0;
-                this.lao = this._io.readBitsInt(1) != 0;
-                this.basicGeorgian = this._io.readBitsInt(1) != 0;
-                this.georgianExtended = this._io.readBitsInt(1) != 0;
-                this.hangulJamo = this._io.readBitsInt(1) != 0;
-                this.latinExtendedAdditional = this._io.readBitsInt(1) != 0;
-                this.greekExtended = this._io.readBitsInt(1) != 0;
-                this.generalPunctuation = this._io.readBitsInt(1) != 0;
-                this.superscriptsAndSubscripts = this._io.readBitsInt(1) != 0;
-                this.currencySymbols = this._io.readBitsInt(1) != 0;
-                this.combiningDiacriticalMarksForSymbols = this._io.readBitsInt(1) != 0;
-                this.letterlikeSymbols = this._io.readBitsInt(1) != 0;
-                this.numberForms = this._io.readBitsInt(1) != 0;
-                this.arrows = this._io.readBitsInt(1) != 0;
-                this.mathematicalOperators = this._io.readBitsInt(1) != 0;
-                this.miscellaneousTechnical = this._io.readBitsInt(1) != 0;
-                this.controlPictures = this._io.readBitsInt(1) != 0;
-                this.opticalCharacterRecognition = this._io.readBitsInt(1) != 0;
-                this.enclosedAlphanumerics = this._io.readBitsInt(1) != 0;
-                this.boxDrawing = this._io.readBitsInt(1) != 0;
-                this.blockElements = this._io.readBitsInt(1) != 0;
-                this.geometricShapes = this._io.readBitsInt(1) != 0;
-                this.miscellaneousSymbols = this._io.readBitsInt(1) != 0;
-                this.dingbats = this._io.readBitsInt(1) != 0;
-                this.cjkSymbolsAndPunctuation = this._io.readBitsInt(1) != 0;
-                this.hiragana = this._io.readBitsInt(1) != 0;
-                this.katakana = this._io.readBitsInt(1) != 0;
-                this.bopomofo = this._io.readBitsInt(1) != 0;
-                this.hangulCompatibilityJamo = this._io.readBitsInt(1) != 0;
-                this.cjkMiscellaneous = this._io.readBitsInt(1) != 0;
-                this.enclosedCjkLettersAndMonths = this._io.readBitsInt(1) != 0;
-                this.cjkCompatibility = this._io.readBitsInt(1) != 0;
-                this.hangul = this._io.readBitsInt(1) != 0;
-                this.reservedForUnicodeSubranges1 = this._io.readBitsInt(1) != 0;
-                this.reservedForUnicodeSubranges2 = this._io.readBitsInt(1) != 0;
-                this.cjkUnifiedIdeographs = this._io.readBitsInt(1) != 0;
-                this.privateUseArea = this._io.readBitsInt(1) != 0;
-                this.cjkCompatibilityIdeographs = this._io.readBitsInt(1) != 0;
-                this.alphabeticPresentationForms = this._io.readBitsInt(1) != 0;
-                this.arabicPresentationFormsA = this._io.readBitsInt(1) != 0;
-                this.combiningHalfMarks = this._io.readBitsInt(1) != 0;
-                this.cjkCompatibilityForms = this._io.readBitsInt(1) != 0;
-                this.smallFormVariants = this._io.readBitsInt(1) != 0;
-                this.arabicPresentationFormsB = this._io.readBitsInt(1) != 0;
-                this.halfwidthAndFullwidthForms = this._io.readBitsInt(1) != 0;
-                this.specials = this._io.readBitsInt(1) != 0;
+                this.basicLatin = this._io.readBitsIntBe(1) != 0;
+                this.latin1Supplement = this._io.readBitsIntBe(1) != 0;
+                this.latinExtendedA = this._io.readBitsIntBe(1) != 0;
+                this.latinExtendedB = this._io.readBitsIntBe(1) != 0;
+                this.ipaExtensions = this._io.readBitsIntBe(1) != 0;
+                this.spacingModifierLetters = this._io.readBitsIntBe(1) != 0;
+                this.combiningDiacriticalMarks = this._io.readBitsIntBe(1) != 0;
+                this.basicGreek = this._io.readBitsIntBe(1) != 0;
+                this.greekSymbolsAndCoptic = this._io.readBitsIntBe(1) != 0;
+                this.cyrillic = this._io.readBitsIntBe(1) != 0;
+                this.armenian = this._io.readBitsIntBe(1) != 0;
+                this.basicHebrew = this._io.readBitsIntBe(1) != 0;
+                this.hebrewExtended = this._io.readBitsIntBe(1) != 0;
+                this.basicArabic = this._io.readBitsIntBe(1) != 0;
+                this.arabicExtended = this._io.readBitsIntBe(1) != 0;
+                this.devanagari = this._io.readBitsIntBe(1) != 0;
+                this.bengali = this._io.readBitsIntBe(1) != 0;
+                this.gurmukhi = this._io.readBitsIntBe(1) != 0;
+                this.gujarati = this._io.readBitsIntBe(1) != 0;
+                this.oriya = this._io.readBitsIntBe(1) != 0;
+                this.tamil = this._io.readBitsIntBe(1) != 0;
+                this.telugu = this._io.readBitsIntBe(1) != 0;
+                this.kannada = this._io.readBitsIntBe(1) != 0;
+                this.malayalam = this._io.readBitsIntBe(1) != 0;
+                this.thai = this._io.readBitsIntBe(1) != 0;
+                this.lao = this._io.readBitsIntBe(1) != 0;
+                this.basicGeorgian = this._io.readBitsIntBe(1) != 0;
+                this.georgianExtended = this._io.readBitsIntBe(1) != 0;
+                this.hangulJamo = this._io.readBitsIntBe(1) != 0;
+                this.latinExtendedAdditional = this._io.readBitsIntBe(1) != 0;
+                this.greekExtended = this._io.readBitsIntBe(1) != 0;
+                this.generalPunctuation = this._io.readBitsIntBe(1) != 0;
+                this.superscriptsAndSubscripts = this._io.readBitsIntBe(1) != 0;
+                this.currencySymbols = this._io.readBitsIntBe(1) != 0;
+                this.combiningDiacriticalMarksForSymbols = this._io.readBitsIntBe(1) != 0;
+                this.letterlikeSymbols = this._io.readBitsIntBe(1) != 0;
+                this.numberForms = this._io.readBitsIntBe(1) != 0;
+                this.arrows = this._io.readBitsIntBe(1) != 0;
+                this.mathematicalOperators = this._io.readBitsIntBe(1) != 0;
+                this.miscellaneousTechnical = this._io.readBitsIntBe(1) != 0;
+                this.controlPictures = this._io.readBitsIntBe(1) != 0;
+                this.opticalCharacterRecognition = this._io.readBitsIntBe(1) != 0;
+                this.enclosedAlphanumerics = this._io.readBitsIntBe(1) != 0;
+                this.boxDrawing = this._io.readBitsIntBe(1) != 0;
+                this.blockElements = this._io.readBitsIntBe(1) != 0;
+                this.geometricShapes = this._io.readBitsIntBe(1) != 0;
+                this.miscellaneousSymbols = this._io.readBitsIntBe(1) != 0;
+                this.dingbats = this._io.readBitsIntBe(1) != 0;
+                this.cjkSymbolsAndPunctuation = this._io.readBitsIntBe(1) != 0;
+                this.hiragana = this._io.readBitsIntBe(1) != 0;
+                this.katakana = this._io.readBitsIntBe(1) != 0;
+                this.bopomofo = this._io.readBitsIntBe(1) != 0;
+                this.hangulCompatibilityJamo = this._io.readBitsIntBe(1) != 0;
+                this.cjkMiscellaneous = this._io.readBitsIntBe(1) != 0;
+                this.enclosedCjkLettersAndMonths = this._io.readBitsIntBe(1) != 0;
+                this.cjkCompatibility = this._io.readBitsIntBe(1) != 0;
+                this.hangul = this._io.readBitsIntBe(1) != 0;
+                this.reservedForUnicodeSubranges1 = this._io.readBitsIntBe(1) != 0;
+                this.reservedForUnicodeSubranges2 = this._io.readBitsIntBe(1) != 0;
+                this.cjkUnifiedIdeographs = this._io.readBitsIntBe(1) != 0;
+                this.privateUseArea = this._io.readBitsIntBe(1) != 0;
+                this.cjkCompatibilityIdeographs = this._io.readBitsIntBe(1) != 0;
+                this.alphabeticPresentationForms = this._io.readBitsIntBe(1) != 0;
+                this.arabicPresentationFormsA = this._io.readBitsIntBe(1) != 0;
+                this.combiningHalfMarks = this._io.readBitsIntBe(1) != 0;
+                this.cjkCompatibilityForms = this._io.readBitsIntBe(1) != 0;
+                this.smallFormVariants = this._io.readBitsIntBe(1) != 0;
+                this.arabicPresentationFormsB = this._io.readBitsIntBe(1) != 0;
+                this.halfwidthAndFullwidthForms = this._io.readBitsIntBe(1) != 0;
+                this.specials = this._io.readBitsIntBe(1) != 0;
                 this._io.alignToByte();
                 this.reserved = this._io.readBytes(7);
             }
@@ -1603,42 +1610,42 @@ public class Ttf extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.symbolCharacterSet = this._io.readBitsInt(1) != 0;
-                this.oemCharacterSet = this._io.readBitsInt(1) != 0;
-                this.macintoshCharacterSet = this._io.readBitsInt(1) != 0;
-                this.reservedForAlternateAnsiOem = this._io.readBitsInt(7);
-                this.cp1361KoreanJohab = this._io.readBitsInt(1) != 0;
-                this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsInt(1) != 0;
-                this.cp949KoreanWansung = this._io.readBitsInt(1) != 0;
-                this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsInt(1) != 0;
-                this.cp932JisJapan = this._io.readBitsInt(1) != 0;
-                this.cp874Thai = this._io.readBitsInt(1) != 0;
-                this.reservedForAlternateAnsi = this._io.readBitsInt(8);
-                this.cp1257WindowsBaltic = this._io.readBitsInt(1) != 0;
-                this.cp1256Arabic = this._io.readBitsInt(1) != 0;
-                this.cp1255Hebrew = this._io.readBitsInt(1) != 0;
-                this.cp1254Turkish = this._io.readBitsInt(1) != 0;
-                this.cp1253Greek = this._io.readBitsInt(1) != 0;
-                this.cp1251Cyrillic = this._io.readBitsInt(1) != 0;
-                this.cp1250Latin2EasternEurope = this._io.readBitsInt(1) != 0;
-                this.cp1252Latin1 = this._io.readBitsInt(1) != 0;
-                this.cp437Us = this._io.readBitsInt(1) != 0;
-                this.cp850WeLatin1 = this._io.readBitsInt(1) != 0;
-                this.cp708ArabicAsmo708 = this._io.readBitsInt(1) != 0;
-                this.cp737GreekFormer437G = this._io.readBitsInt(1) != 0;
-                this.cp775MsDosBaltic = this._io.readBitsInt(1) != 0;
-                this.cp852Latin2 = this._io.readBitsInt(1) != 0;
-                this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsInt(1) != 0;
-                this.cp857IbmTurkish = this._io.readBitsInt(1) != 0;
-                this.cp860MsDosPortuguese = this._io.readBitsInt(1) != 0;
-                this.cp861MsDosIcelandic = this._io.readBitsInt(1) != 0;
-                this.cp862Hebrew = this._io.readBitsInt(1) != 0;
-                this.cp863MsDosCanadianFrench = this._io.readBitsInt(1) != 0;
-                this.cp864Arabic = this._io.readBitsInt(1) != 0;
-                this.cp865MsDosNordic = this._io.readBitsInt(1) != 0;
-                this.cp866MsDosRussian = this._io.readBitsInt(1) != 0;
-                this.cp869IbmGreek = this._io.readBitsInt(1) != 0;
-                this.reservedForOem = this._io.readBitsInt(16);
+                this.symbolCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.oemCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.macintoshCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.reservedForAlternateAnsiOem = this._io.readBitsIntBe(7);
+                this.cp1361KoreanJohab = this._io.readBitsIntBe(1) != 0;
+                this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsIntBe(1) != 0;
+                this.cp949KoreanWansung = this._io.readBitsIntBe(1) != 0;
+                this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsIntBe(1) != 0;
+                this.cp932JisJapan = this._io.readBitsIntBe(1) != 0;
+                this.cp874Thai = this._io.readBitsIntBe(1) != 0;
+                this.reservedForAlternateAnsi = this._io.readBitsIntBe(8);
+                this.cp1257WindowsBaltic = this._io.readBitsIntBe(1) != 0;
+                this.cp1256Arabic = this._io.readBitsIntBe(1) != 0;
+                this.cp1255Hebrew = this._io.readBitsIntBe(1) != 0;
+                this.cp1254Turkish = this._io.readBitsIntBe(1) != 0;
+                this.cp1253Greek = this._io.readBitsIntBe(1) != 0;
+                this.cp1251Cyrillic = this._io.readBitsIntBe(1) != 0;
+                this.cp1250Latin2EasternEurope = this._io.readBitsIntBe(1) != 0;
+                this.cp1252Latin1 = this._io.readBitsIntBe(1) != 0;
+                this.cp437Us = this._io.readBitsIntBe(1) != 0;
+                this.cp850WeLatin1 = this._io.readBitsIntBe(1) != 0;
+                this.cp708ArabicAsmo708 = this._io.readBitsIntBe(1) != 0;
+                this.cp737GreekFormer437G = this._io.readBitsIntBe(1) != 0;
+                this.cp775MsDosBaltic = this._io.readBitsIntBe(1) != 0;
+                this.cp852Latin2 = this._io.readBitsIntBe(1) != 0;
+                this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsIntBe(1) != 0;
+                this.cp857IbmTurkish = this._io.readBitsIntBe(1) != 0;
+                this.cp860MsDosPortuguese = this._io.readBitsIntBe(1) != 0;
+                this.cp861MsDosIcelandic = this._io.readBitsIntBe(1) != 0;
+                this.cp862Hebrew = this._io.readBitsIntBe(1) != 0;
+                this.cp863MsDosCanadianFrench = this._io.readBitsIntBe(1) != 0;
+                this.cp864Arabic = this._io.readBitsIntBe(1) != 0;
+                this.cp865MsDosNordic = this._io.readBitsIntBe(1) != 0;
+                this.cp866MsDosRussian = this._io.readBitsIntBe(1) != 0;
+                this.cp869IbmGreek = this._io.readBitsIntBe(1) != 0;
+                this.reservedForOem = this._io.readBitsIntBe(16);
             }
             private boolean symbolCharacterSet;
             private boolean oemCharacterSet;
@@ -1963,13 +1970,13 @@ public class Ttf extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                endPtsOfContours = new ArrayList<Integer>((int) (_parent().numberOfContours()));
+                endPtsOfContours = new ArrayList<Integer>(((Number) (_parent().numberOfContours())).intValue());
                 for (int i = 0; i < _parent().numberOfContours(); i++) {
                     this.endPtsOfContours.add(this._io.readU2be());
                 }
                 this.instructionLength = this._io.readU2be();
                 this.instructions = this._io.readBytes(instructionLength());
-                flags = new ArrayList<Flag>((int) (pointCount()));
+                flags = new ArrayList<Flag>(((Number) (pointCount())).intValue());
                 for (int i = 0; i < pointCount(); i++) {
                     this.flags.add(new Flag(this._io, this, _root));
                 }
@@ -1994,13 +2001,13 @@ public class Ttf extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.reserved = this._io.readBitsInt(2);
-                    this.yIsSame = this._io.readBitsInt(1) != 0;
-                    this.xIsSame = this._io.readBitsInt(1) != 0;
-                    this.repeat = this._io.readBitsInt(1) != 0;
-                    this.yShortVector = this._io.readBitsInt(1) != 0;
-                    this.xShortVector = this._io.readBitsInt(1) != 0;
-                    this.onCurve = this._io.readBitsInt(1) != 0;
+                    this.reserved = this._io.readBitsIntBe(2);
+                    this.yIsSame = this._io.readBitsIntBe(1) != 0;
+                    this.xIsSame = this._io.readBitsIntBe(1) != 0;
+                    this.repeat = this._io.readBitsIntBe(1) != 0;
+                    this.yShortVector = this._io.readBitsIntBe(1) != 0;
+                    this.xShortVector = this._io.readBitsIntBe(1) != 0;
+                    this.onCurve = this._io.readBitsIntBe(1) != 0;
                     this._io.alignToByte();
                     if (repeat()) {
                         this.repeatValue = this._io.readU1();
@@ -2303,7 +2310,7 @@ public class Ttf extends KaitaiStruct {
         private void _read() {
             this.versionNumber = this._io.readU2be();
             this.numberOfEncodingTables = this._io.readU2be();
-            tables = new ArrayList<SubtableHeader>((int) (numberOfEncodingTables()));
+            tables = new ArrayList<SubtableHeader>(((Number) (numberOfEncodingTables())).intValue());
             for (int i = 0; i < numberOfEncodingTables(); i++) {
                 this.tables.add(new SubtableHeader(this._io, this, _root));
             }
@@ -2394,35 +2401,42 @@ public class Ttf extends KaitaiStruct {
                 this.format = SubtableFormat.byId(this._io.readU2be());
                 this.length = this._io.readU2be();
                 this.version = this._io.readU2be();
-                switch (format()) {
-                case BYTE_ENCODING_TABLE: {
-                    this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new ByteEncodingTable(_io__raw_value, this, _root);
-                    break;
-                }
-                case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
-                    this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
-                    break;
-                }
-                case TRIMMED_TABLE_MAPPING: {
-                    this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
-                    break;
-                }
-                case SEGMENT_MAPPING_TO_DELTA_VALUES: {
-                    this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
-                    break;
-                }
-                default: {
-                    this.value = this._io.readBytes((length() - 6));
-                    break;
-                }
+                {
+                    SubtableFormat on = format();
+                    if (on != null) {
+                        switch (format()) {
+                        case BYTE_ENCODING_TABLE: {
+                            this._raw_value = this._io.readBytes((length() - 6));
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new ByteEncodingTable(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case SEGMENT_MAPPING_TO_DELTA_VALUES: {
+                            this._raw_value = this._io.readBytes((length() - 6));
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
+                            this._raw_value = this._io.readBytes((length() - 6));
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case TRIMMED_TABLE_MAPPING: {
+                            this._raw_value = this._io.readBytes((length() - 6));
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.value = this._io.readBytes((length() - 6));
+                            break;
+                        }
+                        }
+                    } else {
+                        this.value = this._io.readBytes((length() - 6));
+                    }
                 }
             }
             public static class ByteEncodingTable extends KaitaiStruct {
@@ -2474,7 +2488,7 @@ public class Ttf extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    subHeaderKeys = new ArrayList<Integer>((int) (256));
+                    subHeaderKeys = new ArrayList<Integer>(((Number) (256)).intValue());
                     for (int i = 0; i < 256; i++) {
                         this.subHeaderKeys.add(this._io.readU2be());
                     }
@@ -2510,20 +2524,20 @@ public class Ttf extends KaitaiStruct {
                     this.searchRange = this._io.readU2be();
                     this.entrySelector = this._io.readU2be();
                     this.rangeShift = this._io.readU2be();
-                    endCount = new ArrayList<Integer>((int) (segCount()));
+                    endCount = new ArrayList<Integer>(((Number) (segCount())).intValue());
                     for (int i = 0; i < segCount(); i++) {
                         this.endCount.add(this._io.readU2be());
                     }
                     this.reservedPad = this._io.readU2be();
-                    startCount = new ArrayList<Integer>((int) (segCount()));
+                    startCount = new ArrayList<Integer>(((Number) (segCount())).intValue());
                     for (int i = 0; i < segCount(); i++) {
                         this.startCount.add(this._io.readU2be());
                     }
-                    idDelta = new ArrayList<Integer>((int) (segCount()));
+                    idDelta = new ArrayList<Integer>(((Number) (segCount())).intValue());
                     for (int i = 0; i < segCount(); i++) {
                         this.idDelta.add(this._io.readU2be());
                     }
-                    idRangeOffset = new ArrayList<Integer>((int) (segCount()));
+                    idRangeOffset = new ArrayList<Integer>(((Number) (segCount())).intValue());
                     for (int i = 0; i < segCount(); i++) {
                         this.idRangeOffset.add(this._io.readU2be());
                     }
@@ -2591,7 +2605,7 @@ public class Ttf extends KaitaiStruct {
                 private void _read() {
                     this.firstCode = this._io.readU2be();
                     this.entryCount = this._io.readU2be();
-                    glyphIdArray = new ArrayList<Integer>((int) (entryCount()));
+                    glyphIdArray = new ArrayList<Integer>(((Number) (entryCount())).intValue());
                     for (int i = 0; i < entryCount(); i++) {
                         this.glyphIdArray.add(this._io.readU2be());
                     }

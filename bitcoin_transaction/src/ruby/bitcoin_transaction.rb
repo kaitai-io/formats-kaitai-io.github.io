@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -43,9 +43,10 @@ class BitcoinTransaction < Kaitai::Struct::Struct
       @output_id = @_io.read_u4le
       @len_script = @_io.read_u1
       @_raw_script_sig = @_io.read_bytes(len_script)
-      io = Kaitai::Struct::Stream.new(@_raw_script_sig)
-      @script_sig = ScriptSignature.new(io, self, @_root)
-      @end_of_vin = @_io.ensure_fixed_contents([255, 255, 255, 255].pack('C*'))
+      _io__raw_script_sig = Kaitai::Struct::Stream.new(@_raw_script_sig)
+      @script_sig = ScriptSignature.new(_io__raw_script_sig, self, @_root)
+      @end_of_vin = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([255, 255, 255, 255].pack('C*'), end_of_vin, _io, "/types/vin/seq/4") if not end_of_vin == [255, 255, 255, 255].pack('C*')
       self
     end
     class ScriptSignature < Kaitai::Struct::Struct
@@ -77,12 +78,15 @@ class BitcoinTransaction < Kaitai::Struct::Struct
         end
 
         def _read
-          @sequence = @_io.ensure_fixed_contents([48].pack('C*'))
+          @sequence = @_io.read_bytes(1)
+          raise Kaitai::Struct::ValidationNotEqualError.new([48].pack('C*'), sequence, _io, "/types/vin/types/script_signature/types/der_signature/seq/0") if not sequence == [48].pack('C*')
           @len_sig = @_io.read_u1
-          @sep_1 = @_io.ensure_fixed_contents([2].pack('C*'))
+          @sep_1 = @_io.read_bytes(1)
+          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), sep_1, _io, "/types/vin/types/script_signature/types/der_signature/seq/2") if not sep_1 == [2].pack('C*')
           @len_sig_r = @_io.read_u1
           @sig_r = @_io.read_bytes(len_sig_r)
-          @sep_2 = @_io.ensure_fixed_contents([2].pack('C*'))
+          @sep_2 = @_io.read_bytes(1)
+          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), sep_2, _io, "/types/vin/types/script_signature/types/der_signature/seq/5") if not sep_2 == [2].pack('C*')
           @len_sig_s = @_io.read_u1
           @sig_s = @_io.read_bytes(len_sig_s)
           self

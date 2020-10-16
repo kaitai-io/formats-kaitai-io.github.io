@@ -18,7 +18,10 @@ var SaintsRow2VppPc = (function() {
     this._read();
   }
   SaintsRow2VppPc.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([206, 10, 137, 81, 4]);
+    this.magic = this._io.readBytes(5);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [206, 10, 137, 81, 4]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([206, 10, 137, 81, 4], this.magic, this._io, "/seq/0");
+    }
     this.pad1 = this._io.readBytes(335);
     this.numFiles = this._io.readS4le();
     this.containerSize = this._io.readS4le();

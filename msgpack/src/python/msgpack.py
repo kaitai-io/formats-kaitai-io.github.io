@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Msgpack(KaitaiStruct):
     """MessagePack (msgpack) is a system to serialize arbitrary structured
@@ -78,7 +79,7 @@ class Msgpack(KaitaiStruct):
         if self.is_map:
             self.map_elements = [None] * (self.num_map_elements)
             for i in range(self.num_map_elements):
-                self.map_elements[i] = self._root.MapTuple(self._io, self, self._root)
+                self.map_elements[i] = Msgpack.MapTuple(self._io, self, self._root)
 
 
 

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -221,7 +221,8 @@ class Elf < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([127, 69, 76, 70].pack('C*'))
+    @magic = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([127, 69, 76, 70].pack('C*'), magic, _io, "/seq/0") if not magic == [127, 69, 76, 70].pack('C*')
     @bits = Kaitai::Struct::Stream::resolve_enum(BITS, @_io.read_u1)
     @endian = Kaitai::Struct::Stream::resolve_enum(ENDIAN, @_io.read_u1)
     @ei_version = @_io.read_u1
@@ -621,14 +622,14 @@ class Elf < Kaitai::Struct::Struct
       elsif @_is_le == false
         _read_be
       else
-        raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf")
       end
       self
     end
 
     def _read_le
-      @e_type = Kaitai::Struct::Stream::resolve_enum(OBJ_TYPE, @_io.read_u2le)
-      @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE, @_io.read_u2le)
+      @e_type = Kaitai::Struct::Stream::resolve_enum(Elf::OBJ_TYPE, @_io.read_u2le)
+      @machine = Kaitai::Struct::Stream::resolve_enum(Elf::MACHINE, @_io.read_u2le)
       @e_version = @_io.read_u4le
       case _root.bits
       when :bits_b32
@@ -659,8 +660,8 @@ class Elf < Kaitai::Struct::Struct
     end
 
     def _read_be
-      @e_type = Kaitai::Struct::Stream::resolve_enum(OBJ_TYPE, @_io.read_u2be)
-      @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE, @_io.read_u2be)
+      @e_type = Kaitai::Struct::Stream::resolve_enum(Elf::OBJ_TYPE, @_io.read_u2be)
+      @machine = Kaitai::Struct::Stream::resolve_enum(Elf::MACHINE, @_io.read_u2be)
       @e_version = @_io.read_u4be
       case _root.bits
       when :bits_b32
@@ -703,7 +704,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry64")
         end
         self
       end
@@ -748,13 +749,13 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/program_header")
         end
         self
       end
 
       def _read_le
-        @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4le)
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::PH_TYPE, @_io.read_u4le)
         if _root.bits == :bits_b64
           @flags64 = @_io.read_u4le
         end
@@ -801,7 +802,7 @@ class Elf < Kaitai::Struct::Struct
       end
 
       def _read_be
-        @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4be)
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::PH_TYPE, @_io.read_u4be)
         if _root.bits == :bits_b64
           @flags64 = @_io.read_u4be
         end
@@ -854,12 +855,12 @@ class Elf < Kaitai::Struct::Struct
           io.seek(offset)
           if @_is_le
             @_raw_dynamic = io.read_bytes(filesz)
-            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+            _io__raw_dynamic = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(_io__raw_dynamic, self, @_root, @_is_le)
           else
             @_raw_dynamic = io.read_bytes(filesz)
-            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+            _io__raw_dynamic = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(_io__raw_dynamic, self, @_root, @_is_le)
           end
           io.seek(_pos)
         end
@@ -899,7 +900,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section_entry")
         end
         self
       end
@@ -937,7 +938,7 @@ class Elf < Kaitai::Struct::Struct
       end
       def tag_enum
         return @tag_enum unless @tag_enum.nil?
-        @tag_enum = Kaitai::Struct::Stream::resolve_enum(DYNAMIC_ARRAY_TAGS, tag)
+        @tag_enum = Kaitai::Struct::Stream::resolve_enum(Elf::DYNAMIC_ARRAY_TAGS, tag)
         @tag_enum
       end
       def flag_1_values
@@ -968,14 +969,14 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/section_header")
         end
         self
       end
 
       def _read_le
         @ofs_name = @_io.read_u4le
-        @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4le)
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SH_TYPE, @_io.read_u4le)
         case _root.bits
         when :bits_b32
           @flags = @_io.read_u4le
@@ -1019,7 +1020,7 @@ class Elf < Kaitai::Struct::Struct
 
       def _read_be
         @ofs_name = @_io.read_u4be
-        @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4be)
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SH_TYPE, @_io.read_u4be)
         case _root.bits
         when :bits_b32
           @flags = @_io.read_u4be
@@ -1067,43 +1068,43 @@ class Elf < Kaitai::Struct::Struct
         io.seek(ofs_body)
         if @_is_le
           case type
-          when :sh_type_dynamic
-            @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynamicSection.new(io, self, @_root, @_is_le)
           when :sh_type_strtab
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(io, self, @_root, @_is_le)
-          when :sh_type_dynstr
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_dynamic
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(io, self, @_root, @_is_le)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
           when :sh_type_dynsym
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(io, self, @_root, @_is_le)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_dynstr
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
           else
             @body = io.read_bytes(len_body)
           end
         else
           case type
-          when :sh_type_dynamic
-            @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynamicSection.new(io, self, @_root, @_is_le)
           when :sh_type_strtab
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(io, self, @_root, @_is_le)
-          when :sh_type_dynstr
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_dynamic
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(io, self, @_root, @_is_le)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
           when :sh_type_dynsym
             @_raw_body = io.read_bytes(len_body)
-            io = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(io, self, @_root, @_is_le)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_dynstr
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
           else
             @body = io.read_bytes(len_body)
           end
@@ -1159,7 +1160,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section")
         end
         self
       end
@@ -1199,7 +1200,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section")
         end
         self
       end
@@ -1249,7 +1250,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry32")
         end
         self
       end
@@ -1294,7 +1295,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/strings_struct")
         end
         self
       end
@@ -1329,16 +1330,16 @@ class Elf < Kaitai::Struct::Struct
         @program_headers = Array.new(qty_program_header)
         (qty_program_header).times { |i|
           @_raw_program_headers[i] = @_io.read_bytes(program_header_entry_size)
-          io = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers[i] = ProgramHeader.new(io, self, @_root, @_is_le)
+          _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
+          @program_headers[i] = ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
       else
         @_raw_program_headers = Array.new(qty_program_header)
         @program_headers = Array.new(qty_program_header)
         (qty_program_header).times { |i|
           @_raw_program_headers[i] = @_io.read_bytes(program_header_entry_size)
-          io = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers[i] = ProgramHeader.new(io, self, @_root, @_is_le)
+          _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
+          @program_headers[i] = ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)
@@ -1353,16 +1354,16 @@ class Elf < Kaitai::Struct::Struct
         @section_headers = Array.new(qty_section_header)
         (qty_section_header).times { |i|
           @_raw_section_headers[i] = @_io.read_bytes(section_header_entry_size)
-          io = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers[i] = SectionHeader.new(io, self, @_root, @_is_le)
+          _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
+          @section_headers[i] = SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
       else
         @_raw_section_headers = Array.new(qty_section_header)
         @section_headers = Array.new(qty_section_header)
         (qty_section_header).times { |i|
           @_raw_section_headers[i] = @_io.read_bytes(section_header_entry_size)
-          io = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers[i] = SectionHeader.new(io, self, @_root, @_is_le)
+          _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
+          @section_headers[i] = SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)
@@ -1374,12 +1375,12 @@ class Elf < Kaitai::Struct::Struct
       @_io.seek(section_headers[section_names_idx].ofs_body)
       if @_is_le
         @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_strings)
-        @strings = StringsStruct.new(io, self, @_root, @_is_le)
+        _io__raw_strings = Kaitai::Struct::Stream.new(@_raw_strings)
+        @strings = StringsStruct.new(_io__raw_strings, self, @_root, @_is_le)
       else
         @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_strings)
-        @strings = StringsStruct.new(io, self, @_root, @_is_le)
+        _io__raw_strings = Kaitai::Struct::Stream.new(@_raw_strings)
+        @strings = StringsStruct.new(_io__raw_strings, self, @_root, @_is_le)
       end
       @_io.seek(_pos)
       @strings

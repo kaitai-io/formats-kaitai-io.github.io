@@ -30,8 +30,8 @@ var Id3v24 = (function() {
       this._read();
     }
     U1beSynchsafe.prototype._read = function() {
-      this.padding = this._io.readBitsInt(1) != 0;
-      this.value = this._io.readBitsInt(7);
+      this.padding = this._io.readBitsIntBe(1) != 0;
+      this.value = this._io.readBitsIntBe(7);
     }
 
     return U1beSynchsafe;
@@ -141,11 +141,11 @@ var Id3v24 = (function() {
         this._read();
       }
       FlagsStatus.prototype._read = function() {
-        this.reserved1 = this._io.readBitsInt(1) != 0;
-        this.flagDiscardAlterTag = this._io.readBitsInt(1) != 0;
-        this.flagDiscardAlterFile = this._io.readBitsInt(1) != 0;
-        this.flagReadOnly = this._io.readBitsInt(1) != 0;
-        this.reserved2 = this._io.readBitsInt(4);
+        this.reserved1 = this._io.readBitsIntBe(1) != 0;
+        this.flagDiscardAlterTag = this._io.readBitsIntBe(1) != 0;
+        this.flagDiscardAlterFile = this._io.readBitsIntBe(1) != 0;
+        this.flagReadOnly = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(4);
       }
 
       return FlagsStatus;
@@ -160,13 +160,13 @@ var Id3v24 = (function() {
         this._read();
       }
       FlagsFormat.prototype._read = function() {
-        this.reserved1 = this._io.readBitsInt(1) != 0;
-        this.flagGrouping = this._io.readBitsInt(1) != 0;
-        this.reserved2 = this._io.readBitsInt(2);
-        this.flagCompressed = this._io.readBitsInt(1) != 0;
-        this.flagEncrypted = this._io.readBitsInt(1) != 0;
-        this.flagUnsynchronisated = this._io.readBitsInt(1) != 0;
-        this.flagIndicator = this._io.readBitsInt(1) != 0;
+        this.reserved1 = this._io.readBitsIntBe(1) != 0;
+        this.flagGrouping = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(2);
+        this.flagCompressed = this._io.readBitsIntBe(1) != 0;
+        this.flagEncrypted = this._io.readBitsIntBe(1) != 0;
+        this.flagUnsynchronisated = this._io.readBitsIntBe(1) != 0;
+        this.flagIndicator = this._io.readBitsIntBe(1) != 0;
       }
 
       return FlagsFormat;
@@ -206,11 +206,11 @@ var Id3v24 = (function() {
         this._read();
       }
       FlagsEx.prototype._read = function() {
-        this.reserved1 = this._io.readBitsInt(1) != 0;
-        this.flagUpdate = this._io.readBitsInt(1) != 0;
-        this.flagCrc = this._io.readBitsInt(1) != 0;
-        this.flagRestrictions = this._io.readBitsInt(1) != 0;
-        this.reserved2 = this._io.readBitsInt(4);
+        this.reserved1 = this._io.readBitsIntBe(1) != 0;
+        this.flagUpdate = this._io.readBitsIntBe(1) != 0;
+        this.flagCrc = this._io.readBitsIntBe(1) != 0;
+        this.flagRestrictions = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(4);
       }
 
       return FlagsEx;
@@ -228,7 +228,10 @@ var Id3v24 = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([73, 68, 51]);
+      this.magic = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [73, 68, 51]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([73, 68, 51], this.magic, this._io, "/types/header/seq/0");
+      }
       this.versionMajor = this._io.readU1();
       this.versionRevision = this._io.readU1();
       this.flags = new Flags(this._io, this, this._root);
@@ -244,11 +247,11 @@ var Id3v24 = (function() {
         this._read();
       }
       Flags.prototype._read = function() {
-        this.flagUnsynchronization = this._io.readBitsInt(1) != 0;
-        this.flagHeaderex = this._io.readBitsInt(1) != 0;
-        this.flagExperimental = this._io.readBitsInt(1) != 0;
-        this.flagFooter = this._io.readBitsInt(1) != 0;
-        this.reserved = this._io.readBitsInt(4);
+        this.flagUnsynchronization = this._io.readBitsIntBe(1) != 0;
+        this.flagHeaderex = this._io.readBitsIntBe(1) != 0;
+        this.flagExperimental = this._io.readBitsIntBe(1) != 0;
+        this.flagFooter = this._io.readBitsIntBe(1) != 0;
+        this.reserved = this._io.readBitsIntBe(4);
       }
 
       return Flags;
@@ -281,7 +284,10 @@ var Id3v24 = (function() {
       this._read();
     }
     Footer.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([51, 68, 73]);
+      this.magic = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [51, 68, 73]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([51, 68, 73], this.magic, this._io, "/types/footer/seq/0");
+      }
       this.versionMajor = this._io.readU1();
       this.versionRevision = this._io.readU1();
       this.flags = new Flags(this._io, this, this._root);
@@ -297,11 +303,11 @@ var Id3v24 = (function() {
         this._read();
       }
       Flags.prototype._read = function() {
-        this.flagUnsynchronization = this._io.readBitsInt(1) != 0;
-        this.flagHeaderex = this._io.readBitsInt(1) != 0;
-        this.flagExperimental = this._io.readBitsInt(1) != 0;
-        this.flagFooter = this._io.readBitsInt(1) != 0;
-        this.reserved = this._io.readBitsInt(4);
+        this.flagUnsynchronization = this._io.readBitsIntBe(1) != 0;
+        this.flagHeaderex = this._io.readBitsIntBe(1) != 0;
+        this.flagExperimental = this._io.readBitsIntBe(1) != 0;
+        this.flagFooter = this._io.readBitsIntBe(1) != 0;
+        this.reserved = this._io.readBitsIntBe(4);
       }
 
       return Flags;

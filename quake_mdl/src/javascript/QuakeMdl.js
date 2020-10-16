@@ -82,8 +82,14 @@ var QuakeMdl = (function() {
       this._read();
     }
     MdlHeader.prototype._read = function() {
-      this.ident = this._io.ensureFixedContents([73, 68, 80, 79]);
-      this.versionMustBe6 = this._io.ensureFixedContents([6, 0, 0, 0]);
+      this.ident = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.ident, [73, 68, 80, 79]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([73, 68, 80, 79], this.ident, this._io, "/types/mdl_header/seq/0");
+      }
+      this.versionMustBe6 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.versionMustBe6, [6, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([6, 0, 0, 0], this.versionMustBe6, this._io, "/types/mdl_header/seq/1");
+      }
       this.scale = new Vec3(this._io, this, this._root);
       this.origin = new Vec3(this._io, this, this._root);
       this.radius = this._io.readF4le();

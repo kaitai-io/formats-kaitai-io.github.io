@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map;
@@ -57,8 +58,14 @@ public class Luks extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 76, 85, 75, 83, -70, -66 });
-            this.version = this._io.ensureFixedContents(new byte[] { 0, 1 });
+            this.magic = this._io.readBytes(6);
+            if (!(Arrays.equals(magic(), new byte[] { 76, 85, 75, 83, -70, -66 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 85, 75, 83, -70, -66 }, magic(), _io(), "/types/partition_header/seq/0");
+            }
+            this.version = this._io.readBytes(2);
+            if (!(Arrays.equals(version(), new byte[] { 0, 1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 1 }, version(), _io(), "/types/partition_header/seq/1");
+            }
             this.cipherNameSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
             this.cipherModeSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
             this.hashSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
@@ -68,7 +75,7 @@ public class Luks extends KaitaiStruct {
             this.masterKeySaltParameter = this._io.readBytes(32);
             this.masterKeyIterationsParameter = this._io.readU4be();
             this.uuid = new String(this._io.readBytes(40), Charset.forName("ASCII"));
-            keySlots = new ArrayList<KeySlot>((int) (8));
+            keySlots = new ArrayList<KeySlot>(((Number) (8)).intValue());
             for (int i = 0; i < 8; i++) {
                 this.keySlots.add(new KeySlot(this._io, this, _root));
             }

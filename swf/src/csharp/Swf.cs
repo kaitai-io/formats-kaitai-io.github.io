@@ -66,7 +66,11 @@ namespace Kaitai
         private void _read()
         {
             _compression = ((Compressions) m_io.ReadU1());
-            _signature = m_io.EnsureFixedContents(new byte[] { 87, 83 });
+            _signature = m_io.ReadBytes(2);
+            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 87, 83 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 87, 83 }, Signature, M_Io, "/seq/1");
+            }
             _version = m_io.ReadU1();
             _lenFile = m_io.ReadU4le();
             if (Compression == Compressions.None) {
@@ -258,6 +262,12 @@ namespace Kaitai
             {
                 _recordHeader = new RecordHeader(m_io, this, m_root);
                 switch (RecordHeader.TagType) {
+                case Swf.TagType.DefineSound: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
                 case Swf.TagType.SetBackgroundColor: {
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
@@ -270,10 +280,10 @@ namespace Kaitai
                     _tagBody = new ScriptLimitsBody(io___raw_tagBody, this, m_root);
                     break;
                 }
-                case Swf.TagType.DefineSound: {
+                case Swf.TagType.DoAbc: {
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
+                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
                     break;
                 }
                 case Swf.TagType.ExportAssets: {
@@ -286,12 +296,6 @@ namespace Kaitai
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
                     _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.DoAbc: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
                     break;
                 }
                 default: {
@@ -405,10 +409,10 @@ namespace Kaitai
             private void _read()
             {
                 _id = m_io.ReadU2le();
-                _format = m_io.ReadBitsInt(4);
-                _samplingRate = ((SamplingRates) m_io.ReadBitsInt(2));
-                _bitsPerSample = ((Bps) m_io.ReadBitsInt(1));
-                _numChannels = ((Channels) m_io.ReadBitsInt(1));
+                _format = m_io.ReadBitsIntBe(4);
+                _samplingRate = ((SamplingRates) m_io.ReadBitsIntBe(2));
+                _bitsPerSample = ((Bps) m_io.ReadBitsIntBe(1));
+                _numChannels = ((Channels) m_io.ReadBitsIntBe(1));
                 m_io.AlignToByte();
                 _numSamples = m_io.ReadU4le();
             }
@@ -540,8 +544,8 @@ namespace Kaitai
         private Swf m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_plainBody;
-        private byte[] __raw__raw_zlibBody;
         private byte[] __raw_zlibBody;
+        private byte[] __raw__raw_zlibBody;
         public Compressions Compression { get { return _compression; } }
         public byte[] Signature { get { return _signature; } }
         public byte Version { get { return _version; } }
@@ -551,7 +555,7 @@ namespace Kaitai
         public Swf M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawPlainBody { get { return __raw_plainBody; } }
-        public byte[] M_RawM_RawZlibBody { get { return __raw__raw_zlibBody; } }
         public byte[] M_RawZlibBody { get { return __raw_zlibBody; } }
+        public byte[] M_RawM_RawZlibBody { get { return __raw__raw_zlibBody; } }
     }
 }

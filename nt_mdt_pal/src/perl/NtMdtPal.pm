@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33)));
+    $self->{signature} = $self->{_io}->read_bytes(26);
     $self->{count} = $self->{_io}->read_u4be();
     $self->{meta} = ();
     my $n_meta = $self->count();

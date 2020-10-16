@@ -53,7 +53,10 @@ var Sqlite3 = (function() {
     this._read();
   }
   Sqlite3.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0]);
+    this.magic = this._io.readBytes(16);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0], this.magic, this._io, "/seq/0");
+    }
     this.lenPageMod = this._io.readU2be();
     this.writeVersion = this._io.readU1();
     this.readVersion = this._io.readU1();
@@ -302,10 +305,10 @@ var Sqlite3 = (function() {
           this.asInt = this._io.readU1();
           break;
         case 3:
-          this.asInt = this._io.readBitsInt(24);
+          this.asInt = this._io.readBitsIntBe(24);
           break;
         case 5:
-          this.asInt = this._io.readBitsInt(48);
+          this.asInt = this._io.readBitsIntBe(48);
           break;
         case 2:
           this.asInt = this._io.readU2be();

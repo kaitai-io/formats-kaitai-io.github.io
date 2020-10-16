@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.bmp file format: PHP parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">.bmp file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.bmp file format:
+            
+            PHP parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The <strong>BMP file format</strong>, also known as <strong>bitmap image file</strong> or <strong>device independent
+bitmap (DIB) file format</strong> or simply a <strong>bitmap</strong>, is a raster graphics image file
+format used to store bitmap digital images, independently of the display
+device (such as a graphics adapter), especially on Microsoft Windows
+and OS/2 operating systems.</p>
+<h2>Samples</h2>
+<p>Great collection of various BMP sample files:
+<a href="http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html"><strong>BMP Suite Image List</strong></a> (by Jason Summers)</p>
+<p>If only there was such a comprehensive sample suite for every file format! It's like
+a dream for every developer of any binary file format parser. It contains a lot of
+different types and variations of BMP files, even the tricky ones, where it's not clear
+from the specification how to deal with them (marked there as &quot;<strong>q</strong>uestionable&quot;).</p>
+<p>If you make a program which will be able to read all the &quot;<strong>g</strong>ood&quot; and &quot;<strong>q</strong>uestionable&quot;
+BMP files and won't crash on the &quot;<strong>b</strong>ad&quot; ones, it will definitely have one of the most
+extensive support of BMP files in the universe!</p>
+<h2>BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</h2>
+<p>A beneficial discussion on Adobe forum (archived):
+<a href="https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950"><strong>Invalid BMP Format with Alpha channel</strong></a></p>
+<p>In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn't
+any documentation available for this header at the time (and still isn't).
+However, Chris Cox (former Adobe employee) claimed that they hadn't invented any type
+of proprietary header and everything they were writing was taken directly
+from the Microsoft documentation.</p>
+<p>It showed up that the unknown header was called BITMAPV3INFOHEADER.
+Although Microsoft has apparently requested and verified the use of the header,
+the documentation on MSDN has probably got lost and they have probably
+forgotten about this type of header.</p>
+<p>This is the only source I could find about these structures, so we could't rely
+on it so much, but I think supporting them as a read-only format won't harm anything.
+Due to the fact that it isn't documented anywhere else, most applications don't support it.</p>
+<p>All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</p>
+<p><img src="https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png" alt="Bitmap headers overview" /></p>
+<h2>Specs</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage">Bitmap Storage (Windows Dev Center)</a>
+<ul>
+<li>BITMAPFILEHEADER</li>
+<li>BITMAPINFOHEADER</li>
+<li>BITMAPV4HEADER</li>
+<li>BITMAPV5HEADER</li>
+</ul>
+</li>
+<li><a href="https://www.fileformat.info/format/os2bmp/egff.htm">OS/2 Bitmap File Format</a>
+<ul>
+<li>BITMAPFILEHEADER (OS2BMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (OS21XBITMAPHEADER)</li>
+<li>OS22XBITMAPHEADER</li>
+</ul>
+</li>
+<li><a href="http://netghost.narod.ru/gff/graphics/summary/micbmp.htm">Microsoft Windows Bitmap</a>
+<ul>
+<li>BITMAPFILEHEADER (WINBMPFILEHEADER)</li>
+<li>BITMAPCOREHEADER (WIN2XBITMAPHEADER)</li>
+<li>BITMAPINFOHEADER (WINNTBITMAPHEADER)</li>
+<li>BITMAPV4HEADER (WIN4XBITMAPHEADER)</li>
+</ul>
+</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        bmp
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://www.loc.gov/preservation/digital/formats/fdd/fdd000189.shtml">LOC fdd000189</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/115">PRONOM fmt/115</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/116">PRONOM fmt/116</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/117">PRONOM fmt/117</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/118">PRONOM fmt/118</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/119">PRONOM fmt/119</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/25">PRONOM x-fmt/25</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q192869">Wikidata Q192869</a></li>
+                            
+                            <li><a href="https://forensicswiki.xyz/page/BMP">BMP in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/BMP">BMP in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .bmp file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".bmp file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".bmp file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".bmp file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".bmp file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".bmp file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".bmp file format parsing Perl library">Perl</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="php.html" title=".bmp file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".bmp file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".bmp file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            PHP source code to parse .bmp file format
+            
+        </h2>
+
+        
+
+        <h3>Bmp.php</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/php/Bmp.php" download="Bmp.php" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The **BMP file format**, also known as **bitmap image file** or **device independent</span>
+<span class="sd"> * bitmap (DIB) file format** or simply a **bitmap**, is a raster graphics image file</span>
+<span class="sd"> * format used to store bitmap digital images, independently of the display</span>
+<span class="sd"> * device (such as a graphics adapter), especially on Microsoft Windows</span>
+<span class="sd"> * and OS/2 operating systems.</span>
+<span class="sd"> * </span>
+<span class="sd"> * ## Samples</span>
+<span class="sd"> * </span>
+<span class="sd"> * Great collection of various BMP sample files:</span>
+<span class="sd"> * [**BMP Suite Image List**](</span>
+<span class="sd"> *   http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html</span>
+<span class="sd"> * ) (by Jason Summers)</span>
+<span class="sd"> * </span>
+<span class="sd"> * If only there was such a comprehensive sample suite for every file format! It&#39;s like</span>
+<span class="sd"> * a dream for every developer of any binary file format parser. It contains a lot of</span>
+<span class="sd"> * different types and variations of BMP files, even the tricky ones, where it&#39;s not clear</span>
+<span class="sd"> * from the specification how to deal with them (marked there as &quot;**q**uestionable&quot;).</span>
+<span class="sd"> * </span>
+<span class="sd"> * If you make a program which will be able to read all the &quot;**g**ood&quot; and &quot;**q**uestionable&quot;</span>
+<span class="sd"> * BMP files and won&#39;t crash on the &quot;**b**ad&quot; ones, it will definitely have one of the most</span>
+<span class="sd"> * extensive support of BMP files in the universe!</span>
+<span class="sd"> * </span>
+<span class="sd"> * ## BITMAPV2INFOHEADER and BITMAPV3INFOHEADER</span>
+<span class="sd"> * </span>
+<span class="sd"> * A beneficial discussion on Adobe forum (archived):</span>
+<span class="sd"> * [**Invalid BMP Format with Alpha channel**](</span>
+<span class="sd"> *   https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950</span>
+<span class="sd"> * )</span>
+<span class="sd"> * </span>
+<span class="sd"> * In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn&#39;t</span>
+<span class="sd"> * any documentation available for this header at the time (and still isn&#39;t).</span>
+<span class="sd"> * However, Chris Cox (former Adobe employee) claimed that they hadn&#39;t invented any type</span>
+<span class="sd"> * of proprietary header and everything they were writing was taken directly</span>
+<span class="sd"> * from the Microsoft documentation.</span>
+<span class="sd"> * </span>
+<span class="sd"> * It showed up that the unknown header was called BITMAPV3INFOHEADER.</span>
+<span class="sd"> * Although Microsoft has apparently requested and verified the use of the header,</span>
+<span class="sd"> * the documentation on MSDN has probably got lost and they have probably</span>
+<span class="sd"> * forgotten about this type of header.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This is the only source I could find about these structures, so we could&#39;t rely</span>
+<span class="sd"> * on it so much, but I think supporting them as a read-only format won&#39;t harm anything.</span>
+<span class="sd"> * Due to the fact that it isn&#39;t documented anywhere else, most applications don&#39;t support it.</span>
+<span class="sd"> * </span>
+<span class="sd"> * All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):</span>
+<span class="sd"> * </span>
+<span class="sd"> * ![Bitmap headers overview](</span>
+<span class="sd"> *   https://web.archive.org/web/20190527043845/https://forums.adobe.com/servlet/JiveServlet/showImage/2-3273299-47801/BMP_Headers.png</span>
+<span class="sd"> * )</span>
+<span class="sd"> * </span>
+<span class="sd"> * ## Specs</span>
+<span class="sd"> *  * [Bitmap Storage (Windows Dev Center)](</span>
+<span class="sd"> *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage</span>
+<span class="sd"> *    )</span>
+<span class="sd"> *     * BITMAPFILEHEADER</span>
+<span class="sd"> *     * BITMAPINFOHEADER</span>
+<span class="sd"> *     * BITMAPV4HEADER</span>
+<span class="sd"> *     * BITMAPV5HEADER</span>
+<span class="sd"> *  * [OS/2 Bitmap File Format](</span>
+<span class="sd"> *       https://www.fileformat.info/format/os2bmp/egff.htm</span>
+<span class="sd"> *    )</span>
+<span class="sd"> *     * BITMAPFILEHEADER (OS2BMPFILEHEADER)</span>
+<span class="sd"> *     * BITMAPCOREHEADER (OS21XBITMAPHEADER)</span>
+<span class="sd"> *     * OS22XBITMAPHEADER</span>
+<span class="sd"> *  * [Microsoft Windows Bitmap](</span>
+<span class="sd"> *       http://netghost.narod.ru/gff/graphics/summary/micbmp.htm</span>
+<span class="sd"> *    )</span>
+<span class="sd"> *     * BITMAPFILEHEADER (WINBMPFILEHEADER)</span>
+<span class="sd"> *     * BITMAPCOREHEADER (WIN2XBITMAPHEADER)</span>
+<span class="sd"> *     * BITMAPINFOHEADER (WINNTBITMAPHEADER)</span>
+<span class="sd"> *     * BITMAPV4HEADER (WIN4XBITMAPHEADER)</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Bmp</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileHdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FileHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dibInfo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileHdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsBitmap</span><span class="p">()</span> <span class="o">-</span> <span class="mi">14</span><span class="p">));</span>
+            <span class="nv">$_io__raw_dibInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dibInfo</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dibInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\BitmapInfo</span><span class="p">(</span><span class="nv">$_io__raw_dibInfo</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_bitmap</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="nv">$_io__raw_bitmap</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_bitmap</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmap</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\Bitmap</span><span class="p">(</span><span class="nv">$_io__raw_bitmap</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_fileHdr</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_dibInfo</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitmap</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_dibInfo</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_bitmap</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">fileHdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileHdr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dibInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dibInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitmap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmap</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_dibInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dibInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_bitmap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_bitmap</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">CieXyz</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapV4Extension</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint2Dot30</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint2Dot30</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint2Dot30</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_z</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">z</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">RgbRecord</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">bool</span> <span class="nv">$hasReservedField</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\ColorTable</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasReservedField</span> <span class="o">=</span> <span class="nv">$hasReservedField</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasReservedField</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_blue</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_green</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_red</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_hasReservedField</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">blue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">green</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">red</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hasReservedField</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasReservedField</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">BitmapV5Extension</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_intent</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsProfile</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenProfile</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_hasProfile</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hasProfile</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasProfile</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasProfile</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasProfile</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapV4Ext</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">colorSpaceType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\ColorSpace</span><span class="o">::</span><span class="na">PROFILE_LINKED</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapV4Ext</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">colorSpaceType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\ColorSpace</span><span class="o">::</span><span class="na">PROFILE_EMBEDDED</span><span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasProfile</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_profileData</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">profileData</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_profileData</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_profileData</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasProfile</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="mi">14</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsProfile</span><span class="p">()));</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapV4Ext</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">colorSpaceType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\ColorSpace</span><span class="o">::</span><span class="na">PROFILE_LINKED</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="k">true</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_profileData</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenProfile</span><span class="p">()),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">),</span> <span class="s2">&quot;windows-1252&quot;</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">default</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_profileData</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenProfile</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_profileData</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_intent</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsProfile</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenProfile</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">intent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_intent</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsProfile</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsProfile</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenProfile</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenProfile</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ColorMask</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">bool</span> <span class="nv">$hasAlphaMask</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAlphaMask</span> <span class="o">=</span> <span class="nv">$hasAlphaMask</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_redMask</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_greenMask</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blueMask</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasAlphaMask</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alphaMask</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_redMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_greenMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_blueMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_alphaMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_hasAlphaMask</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">redMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_redMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">greenMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_greenMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">blueMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blueMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">alphaMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alphaMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hasAlphaMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAlphaMask</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">BitmapV4Extension</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorSpaceType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointRed</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\CieXyz</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointGreen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\CieXyz</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointBlue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\CieXyz</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaRed</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint16Dot16</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaBlue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint16Dot16</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaGreen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\FixedPoint16Dot16</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorSpaceType</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_endpointRed</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_endpointGreen</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_endpointBlue</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_gammaRed</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_gammaBlue</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_gammaGreen</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorSpaceType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorSpaceType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">endpointRed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointRed</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">endpointGreen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointGreen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">endpointBlue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endpointBlue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">gammaRed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaRed</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">gammaBlue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaBlue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">gammaGreen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaGreen</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">BitmapInfoExtension</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">extendsOs22xBitmap</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">extendsOs22xBitmap</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os2Compression</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenImage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xResolution</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yResolution</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsUsed</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsImportant</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_compression</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_os2Compression</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenImage</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_xResolution</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_yResolution</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numColorsUsed</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numColorsImportant</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">compression</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">os2Compression</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os2Compression</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.</span>
+<span class="sd">         * This may be set to zero for BI_RGB bitmaps.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenImage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenImage</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">xResolution</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xResolution</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">yResolution</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yResolution</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numColorsUsed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsUsed</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numColorsImportant</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsImportant</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">FixedPoint2Dot30</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\CieXyz</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_raw</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">raw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Replace with an opaque type if you care about the pixels.</span>
+<span class="sd"> * You can look at an example of a JavaScript implementation: https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js</span>
+<span class="sd"> * </span>
+<span class="sd"> * There is a proposal for adding bitmap data type to Kaitai Struct: https://github.com/kaitai-io/kaitai_struct/issues/188</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Bitmap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">BitmapHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$lenHeader</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapInfo</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">=</span> <span class="nv">$lenHeader</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isCoreHeader</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="k">true</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageWidth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="k">false</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageWidth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isCoreHeader</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="k">true</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeightRaw</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="k">false</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeightRaw</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPlanes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitsPerPixel</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsBitmapInfo</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapInfoExt</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\BitmapInfoExtension</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskHere</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\ColorMask</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_V2_INFO_HEADER</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsOs22xBitmap</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os22xBitmapExt</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\Os22xBitmapExtension</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsBitmapV4</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapV4Ext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\BitmapV4Extension</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsBitmapV5</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapV5Ext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\BitmapV5Extension</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_extendsBitmapV4</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">extendsBitmapV4</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV4</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV4</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_V4_HEADER</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV4</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_extendsOs22xBitmap</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">extendsOs22xBitmap</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsOs22xBitmap</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsOs22xBitmap</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsOs22xBitmap</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">OS2_2X_BITMAP_HEADER</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsOs22xBitmap</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_usesFixedPalette</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">usesFixedPalette</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usesFixedPalette</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usesFixedPalette</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usesFixedPalette</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsBitmapInfo</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsOs22xBitmap</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">JPEG</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">PNG</span><span class="p">))</span> <span class="p">))</span> <span class="p">)))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usesFixedPalette</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_extendsBitmapInfo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">extendsBitmapInfo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapInfo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapInfo</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapInfo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_INFO_HEADER</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapInfo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_imageHeight</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">imageHeight</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeight</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeight</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeight</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">imageHeightRaw</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">imageHeightRaw</span><span class="p">())</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">imageHeightRaw</span><span class="p">());</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeight</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isCoreHeader</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isCoreHeader</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCoreHeader</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCoreHeader</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCoreHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_CORE_HEADER</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCoreHeader</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_extendsBitmapV5</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">extendsBitmapV5</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV5</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV5</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV5</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_V5_HEADER</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extendsBitmapV5</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isColorMaskHere</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_V2_INFO_HEADER</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_V3_INFO_HEADER</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extendsBitmapV4</span><span class="p">()))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_bottomUp</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bottomUp</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bottomUp</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bottomUp</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bottomUp</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">imageHeightRaw</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bottomUp</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_imageWidth</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_imageHeightRaw</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numPlanes</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitsPerPixel</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitmapInfoExt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_os22xBitmapExt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitmapV4Ext</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitmapV5Ext</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenHeader</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Image width, px</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">imageWidth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageWidth</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Image height, px (positive =&gt; bottom-up image, negative =&gt; top-down image)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">imageHeightRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageHeightRaw</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Number of planes for target device, must be 1</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numPlanes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPlanes</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Number of bits per pixel that image buffer uses (1, 4, 8, 16, 24 or 32)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitsPerPixel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitsPerPixel</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitmapInfoExt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapInfoExt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">os22xBitmapExt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os22xBitmapExt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitmapV4Ext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapV4Ext</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitmapV5Ext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitmapV5Ext</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Os22xBitmapExtension</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recording</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rendering</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorEncoding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_identifier</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_units</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_recording</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_rendering</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_size1</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_size2</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorEncoding</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_identifier</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">units</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_units</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Specifies how the bitmap scan lines are stored.</span>
+<span class="sd">         * The only valid value for this field is 0, indicating that the bitmap is</span>
+<span class="sd">         * stored from left to right and from the bottom up.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">recording</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recording</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Specifies the halftoning algorithm used on the bitmap data.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">rendering</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rendering</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * rendering == os2_rendering::error_diffusion</span>
+<span class="sd">         *   =&gt; error damping as a percentage in the range 0 through 100</span>
+<span class="sd">         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+<span class="sd">         *   =&gt; X dimension of the pattern used in pixels</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">size1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * rendering == os2_rendering::error_diffusion</span>
+<span class="sd">         *   =&gt; not used</span>
+<span class="sd">         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle</span>
+<span class="sd">         *   =&gt; Y dimension of the pattern used in pixels</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">size2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Specifies the color model used to describe the bitmap data.</span>
+<span class="sd">         * The only valid value is 0, indicating the RGB encoding scheme.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorEncoding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorEncoding</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Application-specific value</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">identifier</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_identifier</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">FixedPoint16Dot16</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapV4Extension</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_raw</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">raw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ColorTable</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">bool</span> <span class="nv">$hasReservedField</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$numColors</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp\BitmapInfo</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasReservedField</span> <span class="o">=</span> <span class="nv">$hasReservedField</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColors</span> <span class="o">=</span> <span class="nv">$numColors</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colors</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColors</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColors</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColorsPresent</span><span class="p">()))</span>  <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColors</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColorsPresent</span><span class="p">());</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\RgbRecord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasReservedField</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numColorsPresent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numColorsPresent</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsPresent</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsPresent</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsPresent</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasReservedField</span><span class="p">()</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="mi">3</span><span class="p">));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorsPresent</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colors</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_hasReservedField</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numColors</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colors</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colors</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hasReservedField</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasReservedField</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value</span>
+<span class="sd">         * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can</span>
+<span class="sd">         * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,</span>
+<span class="sd">         * it reads as many colors as it can until EOS is reached (and the image data begin).</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numColors</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColors</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">FileHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x42\x4D</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x42\x4D</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileType</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/types/file_header/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFile</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBitmap</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_fileType</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenFile</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_reserved2</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsBitmap</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">fileType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * not reliable, mostly ignored by BMP decoders</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenFile</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFile</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Offset to actual raw pixel data of the image</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsBitmap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBitmap</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">BitmapInfo</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Bmp</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_header</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="nv">$_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_header</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\BitmapHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">(),</span> <span class="nv">$_io__raw_header</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskHere</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\ColorMask</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">ALPHA_BITFIELDS</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_colorTable</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="nv">$_io__raw_colorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_colorTable</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Bmp\ColorTable</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isCoreHeader</span><span class="p">()),</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">extendsBitmapInfo</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numColorsUsed</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">),</span> <span class="nv">$_io__raw_colorTable</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isColorMaskGiven</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isColorMaskGiven</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskGiven</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskGiven</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskGiven</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">extendsBitmapInfo</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">BITFIELDS</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">ALPHA_BITFIELDS</span><span class="p">))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskHere</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isColorMaskHere</span><span class="p">()))</span> <span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskGiven</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMaskGiven</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMaskGiven</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGiven</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGiven</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskGiven</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGiven</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskHere</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMask</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">colorMask</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGiven</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMaskBlue</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMaskBlue</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskBlue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskBlue</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskBlue</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskGiven</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMaskGiven</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">blueMask</span><span class="p">()</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">255</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskBlue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMaskAlpha</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMaskAlpha</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskAlpha</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskAlpha</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskAlpha</span> <span class="o">=</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskGiven</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMaskGiven</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasAlphaMask</span><span class="p">()))</span>  <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMaskGiven</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">alphaMask</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskAlpha</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMaskGreen</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMaskGreen</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGreen</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGreen</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGreen</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskGiven</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMaskGiven</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">greenMask</span><span class="p">()</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">992</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">65280</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskGreen</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isColorMaskHere</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenHeader</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\HeaderType</span><span class="o">::</span><span class="na">BITMAP_INFO_HEADER</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">BITFIELDS</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitmapInfoExt</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Bmp\Compressions</span><span class="o">::</span><span class="na">ALPHA_BITFIELDS</span><span class="p">))</span> <span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isColorMaskHere</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMaskRed</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMaskRed</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskRed</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskRed</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskRed</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isColorMaskGiven</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMaskGiven</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">redMask</span><span class="p">()</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">31744</span> <span class="o">:</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bitsPerPixel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="o">?</span> <span class="mi">16711680</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)));</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMaskRed</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenHeader</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorMask</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorTable</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_header</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_colorTable</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTable</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_colorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_colorTable</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Intent</span> <span class="p">{</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maintains saturation. Used for business charts and other situations in which undithered colors are required.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">BUSINESS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maintains colorimetric match. Used for graphic designs and named colors.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">GRAPHICS</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maintains contrast. Used for photographs and natural images.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IMAGES</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maintains the white point. Matches the colors to their nearest color in the destination gamut.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ABS_COLORIMETRIC</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ColorSpace</span> <span class="p">{</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * This value implies that endpoints and gamma values are given in the appropriate fields.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CALIBRATED_RGB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * This value indicates that bV5ProfileData points to the file name of the profile</span>
+<span class="sd">         * to use (gamma and endpoints values are ignored).</span>
+<span class="sd">         * </span>
+<span class="sd">         * If a profile is linked, the path of the profile can be any fully qualified name</span>
+<span class="sd">         * (including a network path) that can be opened using the Win32 CreateFile function.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PROFILE_LINKED</span> <span class="o">=</span> <span class="mi">1279872587</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * This value indicates that bV5ProfileData points to a memory buffer that contains</span>
+<span class="sd">         * the profile to be used (gamma and endpoints values are ignored).</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PROFILE_EMBEDDED</span> <span class="o">=</span> <span class="mi">1296188740</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * This value indicates that the bitmap is in the system default color space, sRGB.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">WINDOWS</span> <span class="o">=</span> <span class="mi">1466527264</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Specifies that the bitmap is in sRGB color space.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">S_RGB</span> <span class="o">=</span> <span class="mi">1934772034</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Os2Rendering</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">NO_HALFTONING</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ERROR_DIFFUSION</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Processing Algorithm for Noncoded Document Acquisition (PANDA)</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PANDA</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUPER_CIRCLE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">HeaderType</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">BITMAP_CORE_HEADER</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITMAP_INFO_HEADER</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITMAP_V2_INFO_HEADER</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITMAP_V3_INFO_HEADER</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">OS2_2X_BITMAP_HEADER</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITMAP_V4_HEADER</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITMAP_V5_HEADER</span> <span class="o">=</span> <span class="mi">124</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Compressions</span> <span class="p">{</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Uncompressed RGB format</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RGB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * RLE compression, 8 bits per pixel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RLE8</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * RLE compression, 4 bits per pixel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RLE4</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">BITFIELDS</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * BMP file includes whole JPEG file in image buffer</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">JPEG</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * BMP file includes whole PNG file in image buffer</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PNG</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * only Windows CE 5.0 with .NET 4.0 or later</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALPHA_BITFIELDS</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Bmp</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Os2Compressions</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">RGB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RLE8</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">RLE4</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Huffman 1D compression (also known as CCITT Group 3 One-Dimensional (G31D))</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">HUFFMAN_1D</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * RLE compression, 24 bits per pixel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RLE24</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

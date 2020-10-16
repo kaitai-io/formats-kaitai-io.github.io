@@ -304,7 +304,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 });
+                _magic = m_io.ReadBytes(10);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }, Magic, M_Io, "/types/section_type/seq/0");
+                }
                 _unused = m_io.ReadBytes(2);
                 _idTag = m_io.ReadU4le();
             }

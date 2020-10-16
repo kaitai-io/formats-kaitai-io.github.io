@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package WindowsEvtLog;
@@ -82,7 +82,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{len_header} = $self->{_io}->read_u4le();
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 102, 76, 101)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version_major} = $self->{_io}->read_u4le();
     $self->{version_minor} = $self->{_io}->read_u4le();
     $self->{ofs_start} = $self->{_io}->read_u4le();
@@ -185,11 +185,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->read_bits_int(28);
-    $self->{archive} = $self->{_io}->read_bits_int(1);
-    $self->{log_full} = $self->{_io}->read_bits_int(1);
-    $self->{wrap} = $self->{_io}->read_bits_int(1);
-    $self->{dirty} = $self->{_io}->read_bits_int(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(28);
+    $self->{archive} = $self->{_io}->read_bits_int_be(1);
+    $self->{log_full} = $self->{_io}->read_bits_int_be(1);
+    $self->{wrap} = $self->{_io}->read_bits_int_be(1);
+    $self->{dirty} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub reserved {
@@ -457,7 +457,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68)));
+    $self->{magic} = $self->{_io}->read_bytes(12);
     $self->{ofs_first_record} = $self->{_io}->read_u4le();
     $self->{ofs_next_record} = $self->{_io}->read_u4le();
     $self->{idx_next_record} = $self->{_io}->read_u4le();

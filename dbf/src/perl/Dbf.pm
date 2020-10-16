@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -377,13 +377,13 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{reserved1} = $self->{_io}->read_bytes(2);
     $self->{has_incomplete_transaction} = $self->{_io}->read_u1();
     $self->{dbase_iv_encryption} = $self->{_io}->read_u1();
     $self->{reserved2} = $self->{_io}->read_bytes(12);
     $self->{production_mdx} = $self->{_io}->read_u1();
     $self->{language_driver_id} = $self->{_io}->read_u1();
-    $self->{reserved3} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0)));
+    $self->{reserved3} = $self->{_io}->read_bytes(2);
     $self->{language_driver_name} = $self->{_io}->read_bytes(32);
     $self->{reserved4} = $self->{_io}->read_bytes(4);
 }

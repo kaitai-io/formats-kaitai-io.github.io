@@ -18,10 +18,16 @@ var GranTurismoVol = (function() {
     this._read();
   }
   GranTurismoVol.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([71, 84, 70, 83, 0, 0, 0, 0]);
+    this.magic = this._io.readBytes(8);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [71, 84, 70, 83, 0, 0, 0, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([71, 84, 70, 83, 0, 0, 0, 0], this.magic, this._io, "/seq/0");
+    }
     this.numFiles = this._io.readU2le();
     this.numEntries = this._io.readU2le();
-    this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
+    this.reserved = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.reserved, this._io, "/seq/3");
+    }
     this.offsets = new Array(this.numFiles);
     for (var i = 0; i < this.numFiles; i++) {
       this.offsets[i] = this._io.readU4le();

@@ -307,7 +307,10 @@ var Id3v11 = (function() {
       this._read();
     }
     Id3V11Tag.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([84, 65, 71]);
+      this.magic = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [84, 65, 71]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([84, 65, 71], this.magic, this._io, "/types/id3_v1_1_tag/seq/0");
+      }
       this.title = this._io.readBytes(30);
       this.artist = this._io.readBytes(30);
       this.album = this._io.readBytes(30);

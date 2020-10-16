@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -97,7 +97,8 @@ class BtrfsStream < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0].pack('C*'))
+      @magic = @_io.read_bytes(13)
+      raise Kaitai::Struct::ValidationNotEqualError.new([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0].pack('C*'), magic, _io, "/types/send_stream_header/seq/0") if not magic == [98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0].pack('C*')
       @version = @_io.read_u4le
       self
     end
@@ -112,11 +113,11 @@ class BtrfsStream < Kaitai::Struct::Struct
 
     def _read
       @len_data = @_io.read_u4le
-      @type = Kaitai::Struct::Stream::resolve_enum(COMMAND, @_io.read_u2le)
+      @type = Kaitai::Struct::Stream::resolve_enum(BtrfsStream::COMMAND, @_io.read_u2le)
       @checksum = @_io.read_bytes(4)
       @_raw_data = @_io.read_bytes(len_data)
-      io = Kaitai::Struct::Stream.new(@_raw_data)
-      @data = Tlvs.new(io, self, @_root)
+      _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+      @data = Tlvs.new(_io__raw_data, self, @_root)
       self
     end
     class Tlv < Kaitai::Struct::Struct
@@ -126,73 +127,73 @@ class BtrfsStream < Kaitai::Struct::Struct
       end
 
       def _read
-        @type = Kaitai::Struct::Stream::resolve_enum(ATTRIBUTE, @_io.read_u2le)
+        @type = Kaitai::Struct::Stream::resolve_enum(BtrfsStream::ATTRIBUTE, @_io.read_u2le)
         @length = @_io.read_u2le
         case type
+        when :attribute_ctransid
+          @value = @_io.read_u8le
         when :attribute_size
+          @value = @_io.read_u8le
+        when :attribute_clone_uuid
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Uuid.new(_io__raw_value, self, @_root)
+        when :attribute_file_offset
           @value = @_io.read_u8le
         when :attribute_otime
           @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Timespec.new(io, self, @_root)
-        when :attribute_mode
-          @value = @_io.read_u8le
-        when :attribute_uuid
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Uuid.new(io, self, @_root)
-        when :attribute_clone_uuid
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Uuid.new(io, self, @_root)
-        when :attribute_atime
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Timespec.new(io, self, @_root)
-        when :attribute_gid
-          @value = @_io.read_u8le
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Timespec.new(_io__raw_value, self, @_root)
         when :attribute_uid
           @value = @_io.read_u8le
+        when :attribute_atime
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Timespec.new(_io__raw_value, self, @_root)
+        when :attribute_ctime
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Timespec.new(_io__raw_value, self, @_root)
+        when :attribute_uuid
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Uuid.new(_io__raw_value, self, @_root)
+        when :attribute_clone_len
+          @value = @_io.read_u8le
+        when :attribute_xattr_name
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = String.new(_io__raw_value, self, @_root)
         when :attribute_clone_ctransid
           @value = @_io.read_u8le
-        when :attribute_path_to
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = String.new(io, self, @_root)
-        when :attribute_ctransid
-          @value = @_io.read_u8le
-        when :attribute_clone_len
+        when :attribute_mode
           @value = @_io.read_u8le
         when :attribute_mtime
           @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Timespec.new(io, self, @_root)
-        when :attribute_file_offset
-          @value = @_io.read_u8le
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = Timespec.new(_io__raw_value, self, @_root)
         when :attribute_path_link
           @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = String.new(io, self, @_root)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = String.new(_io__raw_value, self, @_root)
         when :attribute_rdev
           @value = @_io.read_u8le
-        when :attribute_ctime
+        when :attribute_path_to
           @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = Timespec.new(io, self, @_root)
-        when :attribute_clone_path
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = String.new(io, self, @_root)
-        when :attribute_xattr_name
-          @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = String.new(io, self, @_root)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = String.new(_io__raw_value, self, @_root)
         when :attribute_path
           @_raw_value = @_io.read_bytes(length)
-          io = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = String.new(io, self, @_root)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = String.new(_io__raw_value, self, @_root)
         when :attribute_clone_offset
           @value = @_io.read_u8le
+        when :attribute_gid
+          @value = @_io.read_u8le
+        when :attribute_clone_path
+          @_raw_value = @_io.read_bytes(length)
+          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = String.new(_io__raw_value, self, @_root)
         else
           @value = @_io.read_bytes(length)
         end

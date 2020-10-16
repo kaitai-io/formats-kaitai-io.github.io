@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Vdi(KaitaiStruct):
     """A native VirtualBox file format
@@ -32,7 +33,7 @@ class Vdi(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
+        self.header = Vdi.Header(self._io, self, self._root)
 
     class Header(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -43,14 +44,16 @@ class Vdi(KaitaiStruct):
 
         def _read(self):
             self.text = (self._io.read_bytes(64)).decode(u"utf-8")
-            self.signature = self._io.ensure_fixed_contents(b"\x7F\x10\xDA\xBE")
-            self.version = self._root.Header.Version(self._io, self, self._root)
+            self.signature = self._io.read_bytes(4)
+            if not self.signature == b"\x7F\x10\xDA\xBE":
+                raise kaitaistruct.ValidationNotEqualError(b"\x7F\x10\xDA\xBE", self.signature, self._io, u"/types/header/seq/1")
+            self.version = Vdi.Header.Version(self._io, self, self._root)
             if self.subheader_size_is_dynamic:
                 self.header_size_optional = self._io.read_u4le()
 
             self._raw_header_main = self._io.read_bytes(self.header_size)
-            io = KaitaiStream(BytesIO(self._raw_header_main))
-            self.header_main = self._root.Header.HeaderMain(io, self, self._root)
+            _io__raw_header_main = KaitaiStream(BytesIO(self._raw_header_main))
+            self.header_main = Vdi.Header.HeaderMain(_io__raw_header_main, self, self._root)
 
         class Uuid(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -83,8 +86,8 @@ class Vdi(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.image_type = self._root.ImageType(self._io.read_u4le())
-                self.image_flags = self._root.Header.HeaderMain.Flags(self._io, self, self._root)
+                self.image_type = KaitaiStream.resolve_enum(Vdi.ImageType, self._io.read_u4le())
+                self.image_flags = Vdi.Header.HeaderMain.Flags(self._io, self, self._root)
                 self.description = (self._io.read_bytes(256)).decode(u"utf-8")
                 if self._parent.version.major >= 1:
                     self.blocks_map_offset = self._io.read_u4le()
@@ -92,7 +95,7 @@ class Vdi(KaitaiStruct):
                 if self._parent.version.major >= 1:
                     self.offset_data = self._io.read_u4le()
 
-                self.geometry = self._root.Header.HeaderMain.Geometry(self._io, self, self._root)
+                self.geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
                 if self._parent.version.major >= 1:
                     self.reserved1 = self._io.read_u4le()
 
@@ -103,14 +106,14 @@ class Vdi(KaitaiStruct):
 
                 self.blocks_in_image = self._io.read_u4le()
                 self.blocks_allocated = self._io.read_u4le()
-                self.uuid_image = self._root.Header.Uuid(self._io, self, self._root)
-                self.uuid_last_snap = self._root.Header.Uuid(self._io, self, self._root)
-                self.uuid_link = self._root.Header.Uuid(self._io, self, self._root)
+                self.uuid_image = Vdi.Header.Uuid(self._io, self, self._root)
+                self.uuid_last_snap = Vdi.Header.Uuid(self._io, self, self._root)
+                self.uuid_link = Vdi.Header.Uuid(self._io, self, self._root)
                 if self._parent.version.major >= 1:
-                    self.uuid_parent = self._root.Header.Uuid(self._io, self, self._root)
+                    self.uuid_parent = Vdi.Header.Uuid(self._io, self, self._root)
 
                 if  ((self._parent.version.major >= 1) and ((self._io.pos() + 16) <= self._io.size())) :
-                    self.lchc_geometry = self._root.Header.HeaderMain.Geometry(self._io, self, self._root)
+                    self.lchc_geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
 
 
             class Geometry(KaitaiStruct):
@@ -135,12 +138,12 @@ class Vdi(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved0 = self._io.read_bits_int(15)
-                    self.zero_expand = self._io.read_bits_int(1) != 0
-                    self.reserved1 = self._io.read_bits_int(6)
-                    self.diff = self._io.read_bits_int(1) != 0
-                    self.fixed = self._io.read_bits_int(1) != 0
-                    self.reserved2 = self._io.read_bits_int(8)
+                    self.reserved0 = self._io.read_bits_int_be(15)
+                    self.zero_expand = self._io.read_bits_int_be(1) != 0
+                    self.reserved1 = self._io.read_bits_int_be(6)
+                    self.diff = self._io.read_bits_int_be(1) != 0
+                    self.fixed = self._io.read_bits_int_be(1) != 0
+                    self.reserved2 = self._io.read_bits_int_be(8)
 
 
 
@@ -203,7 +206,7 @@ class Vdi(KaitaiStruct):
         def _read(self):
             self.index = [None] * (self._root.header.header_main.blocks_in_image)
             for i in range(self._root.header.header_main.blocks_in_image):
-                self.index[i] = self._root.BlocksMap.BlockIndex(self._io, self, self._root)
+                self.index[i] = Vdi.BlocksMap.BlockIndex(self._io, self, self._root)
 
 
         class BlockIndex(KaitaiStruct):
@@ -246,7 +249,7 @@ class Vdi(KaitaiStruct):
         def _read(self):
             self.blocks = [None] * (self._root.header.header_main.blocks_in_image)
             for i in range(self._root.header.header_main.blocks_in_image):
-                self.blocks[i] = self._root.Disk.Block(self._io, self, self._root)
+                self.blocks[i] = Vdi.Disk.Block(self._io, self, self._root)
 
 
         class Block(KaitaiStruct):
@@ -263,8 +266,8 @@ class Vdi(KaitaiStruct):
                 i = 0
                 while not self._io.is_eof():
                     self._raw_data.append(self._io.read_bytes(self._root.header.header_main.block_data_size))
-                    io = KaitaiStream(BytesIO(self._raw_data[-1]))
-                    self.data.append(self._root.Disk.Block.Sector(io, self, self._root))
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data[-1]))
+                    self.data.append(Vdi.Disk.Block.Sector(_io__raw_data, self, self._root))
                     i += 1
 
 
@@ -308,8 +311,8 @@ class Vdi(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.header.blocks_map_offset)
         self._raw__m_blocks_map = self._io.read_bytes(self.header.blocks_map_size)
-        io = KaitaiStream(BytesIO(self._raw__m_blocks_map))
-        self._m_blocks_map = self._root.BlocksMap(io, self, self._root)
+        _io__raw__m_blocks_map = KaitaiStream(BytesIO(self._raw__m_blocks_map))
+        self._m_blocks_map = Vdi.BlocksMap(_io__raw__m_blocks_map, self, self._root)
         self._io.seek(_pos)
         return self._m_blocks_map if hasattr(self, '_m_blocks_map') else None
 
@@ -320,7 +323,7 @@ class Vdi(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(self.header.blocks_offset)
-        self._m_disk = self._root.Disk(self._io, self, self._root)
+        self._m_disk = Vdi.Disk(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_disk if hasattr(self, '_m_disk') else None
 

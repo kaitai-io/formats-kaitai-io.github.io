@@ -1023,12 +1023,16 @@ https://www.python.org/dev/peps/pep-0574/</li>
             <span class="p">{</span>
                 <span class="n">_code</span> <span class="p">=</span> <span class="p">((</span><span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">List</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext4</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple1</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext2</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Setitem</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ReadonlyBuffer</span><span class="p">:</span> <span class="p">{</span>
@@ -1039,139 +1043,15 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binunicode</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Put</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newfalse</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Long1</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Long1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Unicode</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestringnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptyList</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Mark</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Persid</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescape</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">StackGlobal</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binput</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint1</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint2</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext2</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinstring</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptySet</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stringnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptyDict</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binget</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Append</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">PopMark</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Get</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newobj</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Reduce</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binbytes</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">NextBuffer</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binbytes8</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes8</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Setitem</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Frame</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Floatnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binunicode8</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring8</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">LongBinput</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptyTuple</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newtrue</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1179,51 +1059,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlLong</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Frozenset</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Global</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Obj</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Additems</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple1</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Setitems</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">None</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Build</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext4</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">NewobjEx</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binfloat</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Dup</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newobj</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1231,27 +1067,47 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytearray8</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Put</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">StackGlobal</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">PopMark</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Append</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newfalse</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binpersid</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Build</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptyDict</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple2</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Long4</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Long4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinunicode</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple3</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinbytes</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext1</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Dict</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">NextBuffer</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1259,15 +1115,15 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Inst</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binbytes</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binpersid</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Dup</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Memoize</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">List</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1275,7 +1131,87 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Newtrue</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Pop</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Frame</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stringnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binunicode</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Floatnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Reduce</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binput</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Memoize</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Persid</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescape</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Ext1</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">None</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinunicode</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Obj</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binfloat</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">NewobjEx</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptyList</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binunicode8</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestring8</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binget</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Global</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Dict</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
@@ -1283,16 +1219,80 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String4</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple2</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Setitems</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Pop</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint2</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binbytes8</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes8</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint1</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Inst</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">LongBinget</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">LongBinput</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binint</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Unicode</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Unicodestringnl</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Long1</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Long1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinstring</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Mark</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Frozenset</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Tuple3</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Additems</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Get</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DecimalnlShort</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">EmptySet</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">ShortBinbytes</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bytes1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="p">}</span>

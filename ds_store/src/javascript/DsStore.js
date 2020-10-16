@@ -26,7 +26,10 @@ var DsStore = (function() {
     this._read();
   }
   DsStore.prototype._read = function() {
-    this.alignmentHeader = this._io.ensureFixedContents([0, 0, 0, 1]);
+    this.alignmentHeader = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.alignmentHeader, [0, 0, 0, 1]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 1], this.alignmentHeader, this._io, "/seq/0");
+    }
     this.buddyAllocatorHeader = new BuddyAllocatorHeader(this._io, this, this._root);
   }
 
@@ -39,7 +42,10 @@ var DsStore = (function() {
       this._read();
     }
     BuddyAllocatorHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([66, 117, 100, 49]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [66, 117, 100, 49]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([66, 117, 100, 49], this.magic, this._io, "/types/buddy_allocator_header/seq/0");
+      }
       this.ofsBookkeepingInfoBlock = this._io.readU4be();
       this.lenBookkeepingInfoBlock = this._io.readU4be();
       this.copyOfsBookkeepingInfoBlock = this._io.readU4be();

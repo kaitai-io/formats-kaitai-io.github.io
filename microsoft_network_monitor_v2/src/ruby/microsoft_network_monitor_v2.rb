@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -132,7 +132,8 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
   end
 
   def _read
-    @signature = @_io.ensure_fixed_contents([71, 77, 66, 85].pack('C*'))
+    @signature = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([71, 77, 66, 85].pack('C*'), signature, _io, "/seq/0") if not signature == [71, 77, 66, 85].pack('C*')
     @version_minor = @_io.read_u1
     @version_major = @_io.read_u1
     @mac_type = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u2le)
@@ -218,8 +219,8 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
       case _root.mac_type
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(inc_len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(io)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EthernetFrame.new(_io__raw_body)
       else
         @body = @_io.read_bytes(inc_len)
       end
@@ -251,8 +252,8 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(frame_table_ofs)
     @_raw_frame_table = @_io.read_bytes(frame_table_len)
-    io = Kaitai::Struct::Stream.new(@_raw_frame_table)
-    @frame_table = FrameIndex.new(io, self, @_root)
+    _io__raw_frame_table = Kaitai::Struct::Stream.new(@_raw_frame_table)
+    @frame_table = FrameIndex.new(_io__raw_frame_table, self, @_root)
     @_io.seek(_pos)
     @frame_table
   end

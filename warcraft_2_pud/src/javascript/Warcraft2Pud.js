@@ -365,7 +365,10 @@ var Warcraft2Pud = (function() {
       this._read();
     }
     SectionType.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([87, 65, 82, 50, 32, 77, 65, 80, 0, 0]);
+      this.magic = this._io.readBytes(10);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [87, 65, 82, 50, 32, 77, 65, 80, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([87, 65, 82, 50, 32, 77, 65, 80, 0, 0], this.magic, this._io, "/types/section_type/seq/0");
+      }
       this.unused = this._io.readBytes(2);
       this.idTag = this._io.readU4le();
     }

@@ -4088,7 +4088,11 @@ namespace Kaitai
             private void _read()
             {
                 _preamble = m_io.ReadBytes(128);
-                _magic = m_io.EnsureFixedContents(new byte[] { 68, 73, 67, 77 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 68, 73, 67, 77 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, Magic, M_Io, "/types/t_file_header/seq/1");
+                }
             }
             private byte[] _preamble;
             private byte[] _magic;
@@ -4410,7 +4414,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _tagGroup = m_io.EnsureFixedContents(new byte[] { 254, 255 });
+                _tagGroup = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(TagGroup, new byte[] { 254, 255 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 254, 255 }, TagGroup, M_Io, "/types/seq_item/seq/0");
+                }
                 _tagElem = m_io.ReadU2le();
                 _valueLen = m_io.ReadU4le();
                 if (ValueLen != 4294967295) {

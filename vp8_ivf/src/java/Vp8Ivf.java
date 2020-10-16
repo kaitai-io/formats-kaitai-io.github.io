@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -35,17 +36,23 @@ public class Vp8Ivf extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic1 = this._io.ensureFixedContents(new byte[] { 68, 75, 73, 70 });
+        this.magic1 = this._io.readBytes(4);
+        if (!(Arrays.equals(magic1(), new byte[] { 68, 75, 73, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, magic1(), _io(), "/seq/0");
+        }
         this.version = this._io.readU2le();
         this.lenHeader = this._io.readU2le();
-        this.codec = this._io.ensureFixedContents(new byte[] { 86, 80, 56, 48 });
+        this.codec = this._io.readBytes(4);
+        if (!(Arrays.equals(codec(), new byte[] { 86, 80, 56, 48 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, codec(), _io(), "/seq/3");
+        }
         this.width = this._io.readU2le();
         this.height = this._io.readU2le();
         this.framerate = this._io.readU4le();
         this.timescale = this._io.readU4le();
         this.numFrames = this._io.readU4le();
         this.unused = this._io.readU4le();
-        imageData = new ArrayList<Blocks>((int) (numFrames()));
+        imageData = new ArrayList<Blocks>(((Number) (numFrames())).intValue());
         for (int i = 0; i < numFrames(); i++) {
             this.imageData.add(new Blocks(this._io, this, _root));
         }

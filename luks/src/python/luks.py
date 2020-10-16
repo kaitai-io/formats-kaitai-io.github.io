@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Luks(KaitaiStruct):
     """Linux Unified Key Setup (LUKS) is a format specification for storing disk
@@ -22,7 +23,7 @@ class Luks(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.partition_header = self._root.PartitionHeader(self._io, self, self._root)
+        self.partition_header = Luks.PartitionHeader(self._io, self, self._root)
 
     class PartitionHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -32,8 +33,12 @@ class Luks(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x4C\x55\x4B\x53\xBA\xBE")
-            self.version = self._io.ensure_fixed_contents(b"\x00\x01")
+            self.magic = self._io.read_bytes(6)
+            if not self.magic == b"\x4C\x55\x4B\x53\xBA\xBE":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4C\x55\x4B\x53\xBA\xBE", self.magic, self._io, u"/types/partition_header/seq/0")
+            self.version = self._io.read_bytes(2)
+            if not self.version == b"\x00\x01":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x01", self.version, self._io, u"/types/partition_header/seq/1")
             self.cipher_name_specification = (self._io.read_bytes(32)).decode(u"ASCII")
             self.cipher_mode_specification = (self._io.read_bytes(32)).decode(u"ASCII")
             self.hash_specification = (self._io.read_bytes(32)).decode(u"ASCII")
@@ -45,7 +50,7 @@ class Luks(KaitaiStruct):
             self.uuid = (self._io.read_bytes(40)).decode(u"ASCII")
             self.key_slots = [None] * (8)
             for i in range(8):
-                self.key_slots[i] = self._root.PartitionHeader.KeySlot(self._io, self, self._root)
+                self.key_slots[i] = Luks.PartitionHeader.KeySlot(self._io, self, self._root)
 
 
         class KeySlot(KaitaiStruct):
@@ -60,7 +65,7 @@ class Luks(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.state_of_key_slot = self._root.PartitionHeader.KeySlot.KeySlotStates(self._io.read_u4be())
+                self.state_of_key_slot = KaitaiStream.resolve_enum(Luks.PartitionHeader.KeySlot.KeySlotStates, self._io.read_u4be())
                 self.iteration_parameter = self._io.read_u4be()
                 self.salt_parameter = self._io.read_bytes(32)
                 self.start_sector_of_key_material = self._io.read_u4be()

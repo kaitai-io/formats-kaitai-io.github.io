@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -33,7 +34,10 @@ public class PcxDcx extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { -79, 104, -34, 58 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { -79, 104, -34, 58 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -79, 104, -34, 58 }, magic(), _io(), "/seq/0");
+        }
         this.files = new ArrayList<PcxOffset>();
         {
             PcxOffset _it;

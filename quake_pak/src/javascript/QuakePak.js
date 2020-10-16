@@ -22,7 +22,10 @@ var QuakePak = (function() {
     this._read();
   }
   QuakePak.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([80, 65, 67, 75]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 65, 67, 75]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([80, 65, 67, 75], this.magic, this._io, "/seq/0");
+    }
     this.ofsIndex = this._io.readU4le();
     this.lenIndex = this._io.readU4le();
   }

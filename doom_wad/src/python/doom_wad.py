@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class DoomWad(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -31,7 +32,7 @@ class DoomWad(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Sector(self._io, self, self._root))
+                self.entries.append(DoomWad.Sector(self._io, self, self._root))
                 i += 1
 
 
@@ -68,7 +69,7 @@ class DoomWad(KaitaiStruct):
             self.num_textures = self._io.read_s4le()
             self.textures = [None] * (self.num_textures)
             for i in range(self.num_textures):
-                self.textures[i] = self._root.Texture12.TextureIndex(self._io, self, self._root)
+                self.textures[i] = DoomWad.Texture12.TextureIndex(self._io, self, self._root)
 
 
         class TextureIndex(KaitaiStruct):
@@ -88,7 +89,7 @@ class DoomWad(KaitaiStruct):
 
                 _pos = self._io.pos()
                 self._io.seek(self.offset)
-                self._m_body = self._root.Texture12.TextureBody(self._io, self, self._root)
+                self._m_body = DoomWad.Texture12.TextureBody(self._io, self, self._root)
                 self._io.seek(_pos)
                 return self._m_body if hasattr(self, '_m_body') else None
 
@@ -109,7 +110,7 @@ class DoomWad(KaitaiStruct):
                 self.num_patches = self._io.read_u2le()
                 self.patches = [None] * (self.num_patches)
                 for i in range(self.num_patches):
-                    self.patches[i] = self._root.Texture12.Patch(self._io, self, self._root)
+                    self.patches[i] = DoomWad.Texture12.Patch(self._io, self, self._root)
 
 
 
@@ -219,7 +220,7 @@ class DoomWad(KaitaiStruct):
             self.floor_flat = (self._io.read_bytes(8)).decode(u"ASCII")
             self.ceil_flat = (self._io.read_bytes(8)).decode(u"ASCII")
             self.light = self._io.read_s2le()
-            self.special_type = self._root.Sector.SpecialSector(self._io.read_u2le())
+            self.special_type = KaitaiStream.resolve_enum(DoomWad.Sector.SpecialSector, self._io.read_u2le())
             self.tag = self._io.read_u2le()
 
 
@@ -234,7 +235,7 @@ class DoomWad(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Vertex(self._io, self, self._root))
+                self.entries.append(DoomWad.Vertex(self._io, self, self._root))
                 i += 1
 
 
@@ -266,7 +267,7 @@ class DoomWad(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Thing(self._io, self, self._root))
+                self.entries.append(DoomWad.Thing(self._io, self, self._root))
                 i += 1
 
 
@@ -282,7 +283,7 @@ class DoomWad(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Linedef(self._io, self, self._root))
+                self.entries.append(DoomWad.Linedef(self._io, self, self._root))
                 i += 1
 
 
@@ -310,40 +311,40 @@ class DoomWad(KaitaiStruct):
             _on = self.name
             if _on == u"SECTORS":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Sectors(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Sectors(_io__raw__m_contents, self, self._root)
             elif _on == u"TEXTURE1":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Texture12(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Texture12(_io__raw__m_contents, self, self._root)
             elif _on == u"VERTEXES":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Vertexes(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Vertexes(_io__raw__m_contents, self, self._root)
             elif _on == u"BLOCKMAP":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Blockmap(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Blockmap(_io__raw__m_contents, self, self._root)
             elif _on == u"PNAMES":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Pnames(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Pnames(_io__raw__m_contents, self, self._root)
             elif _on == u"TEXTURE2":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Texture12(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Texture12(_io__raw__m_contents, self, self._root)
             elif _on == u"THINGS":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Things(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Things(_io__raw__m_contents, self, self._root)
             elif _on == u"LINEDEFS":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Linedefs(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Linedefs(_io__raw__m_contents, self, self._root)
             elif _on == u"SIDEDEFS":
                 self._raw__m_contents = io.read_bytes(self.size)
-                io = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Sidedefs(io, self, self._root)
+                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = DoomWad.Sidedefs(_io__raw__m_contents, self, self._root)
             else:
                 self._m_contents = io.read_bytes(self.size)
             io.seek(_pos)
@@ -361,7 +362,7 @@ class DoomWad(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Sidedef(self._io, self, self._root))
+                self.entries.append(DoomWad.Sidedef(self._io, self, self._root))
                 i += 1
 
 
@@ -380,7 +381,7 @@ class DoomWad(KaitaiStruct):
             self.num_rows = self._io.read_s2le()
             self.linedefs_in_block = [None] * ((self.num_cols * self.num_rows))
             for i in range((self.num_cols * self.num_rows)):
-                self.linedefs_in_block[i] = self._root.Blockmap.Blocklist(self._io, self, self._root)
+                self.linedefs_in_block[i] = DoomWad.Blockmap.Blocklist(self._io, self, self._root)
 
 
         class Blocklist(KaitaiStruct):
@@ -423,7 +424,7 @@ class DoomWad(KaitaiStruct):
         self._io.seek(self.index_offset)
         self._m_index = [None] * (self.num_index_entries)
         for i in range(self.num_index_entries):
-            self._m_index[i] = self._root.IndexEntry(self._io, self, self._root)
+            self._m_index[i] = DoomWad.IndexEntry(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_index if hasattr(self, '_m_index') else None

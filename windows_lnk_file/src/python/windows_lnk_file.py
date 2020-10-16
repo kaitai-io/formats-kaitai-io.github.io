@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from windows_shell_items import WindowsShellItems
+import windows_shell_items
 class WindowsLnkFile(KaitaiStruct):
     """Windows .lnk files (AKA "shell link" file) are most frequently used
     in Windows shell to create "shortcuts" to another files, usually for
@@ -39,27 +40,27 @@ class WindowsLnkFile(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.FileHeader(self._io, self, self._root)
+        self.header = WindowsLnkFile.FileHeader(self._io, self, self._root)
         if self.header.flags.has_link_target_id_list:
-            self.target_id_list = self._root.LinkTargetIdList(self._io, self, self._root)
+            self.target_id_list = WindowsLnkFile.LinkTargetIdList(self._io, self, self._root)
 
         if self.header.flags.has_link_info:
-            self.info = self._root.LinkInfo(self._io, self, self._root)
+            self.info = WindowsLnkFile.LinkInfo(self._io, self, self._root)
 
         if self.header.flags.has_name:
-            self.name = self._root.StringData(self._io, self, self._root)
+            self.name = WindowsLnkFile.StringData(self._io, self, self._root)
 
         if self.header.flags.has_rel_path:
-            self.rel_path = self._root.StringData(self._io, self, self._root)
+            self.rel_path = WindowsLnkFile.StringData(self._io, self, self._root)
 
         if self.header.flags.has_work_dir:
-            self.work_dir = self._root.StringData(self._io, self, self._root)
+            self.work_dir = WindowsLnkFile.StringData(self._io, self, self._root)
 
         if self.header.flags.has_arguments:
-            self.arguments = self._root.StringData(self._io, self, self._root)
+            self.arguments = WindowsLnkFile.StringData(self._io, self, self._root)
 
         if self.header.flags.has_icon_location:
-            self.icon_location = self._root.StringData(self._io, self, self._root)
+            self.icon_location = WindowsLnkFile.StringData(self._io, self, self._root)
 
 
     class LinkTargetIdList(KaitaiStruct):
@@ -76,8 +77,8 @@ class WindowsLnkFile(KaitaiStruct):
         def _read(self):
             self.len_id_list = self._io.read_u2le()
             self._raw_id_list = self._io.read_bytes(self.len_id_list)
-            io = KaitaiStream(BytesIO(self._raw_id_list))
-            self.id_list = WindowsShellItems(io)
+            _io__raw_id_list = KaitaiStream(BytesIO(self._raw_id_list))
+            self.id_list = windows_shell_items.WindowsShellItems(_io__raw_id_list)
 
 
     class StringData(KaitaiStruct):
@@ -106,8 +107,8 @@ class WindowsLnkFile(KaitaiStruct):
         def _read(self):
             self.len_all = self._io.read_u4le()
             self._raw_all = self._io.read_bytes((self.len_all - 4))
-            io = KaitaiStream(BytesIO(self._raw_all))
-            self.all = self._root.LinkInfo.All(io, self, self._root)
+            _io__raw_all = KaitaiStream(BytesIO(self._raw_all))
+            self.all = WindowsLnkFile.LinkInfo.All(_io__raw_all, self, self._root)
 
         class VolumeIdBody(KaitaiStruct):
             """
@@ -121,7 +122,7 @@ class WindowsLnkFile(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.drive_type = self._root.DriveTypes(self._io.read_u4le())
+                self.drive_type = KaitaiStream.resolve_enum(WindowsLnkFile.DriveTypes, self._io.read_u4le())
                 self.drive_serial_number = self._io.read_u4le()
                 self.ofs_volume_label = self._io.read_u4le()
                 if self.is_unicode:
@@ -164,8 +165,8 @@ class WindowsLnkFile(KaitaiStruct):
             def _read(self):
                 self.len_header = self._io.read_u4le()
                 self._raw_header = self._io.read_bytes((self.len_header - 8))
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.LinkInfo.Header(io, self, self._root)
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = WindowsLnkFile.LinkInfo.Header(_io__raw_header, self, self._root)
 
             @property
             def volume_id(self):
@@ -175,7 +176,7 @@ class WindowsLnkFile(KaitaiStruct):
                 if self.header.flags.has_volume_id_and_local_base_path:
                     _pos = self._io.pos()
                     self._io.seek((self.header.ofs_volume_id - 4))
-                    self._m_volume_id = self._root.LinkInfo.VolumeIdSpec(self._io, self, self._root)
+                    self._m_volume_id = WindowsLnkFile.LinkInfo.VolumeIdSpec(self._io, self, self._root)
                     self._io.seek(_pos)
 
                 return self._m_volume_id if hasattr(self, '_m_volume_id') else None
@@ -208,8 +209,8 @@ class WindowsLnkFile(KaitaiStruct):
             def _read(self):
                 self.len_all = self._io.read_u4le()
                 self._raw_body = self._io.read_bytes((self.len_all - 4))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkInfo.VolumeIdBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = WindowsLnkFile.LinkInfo.VolumeIdBody(_io__raw_body, self, self._root)
 
 
         class LinkInfoFlags(KaitaiStruct):
@@ -224,10 +225,10 @@ class WindowsLnkFile(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.read_bits_int(6)
-                self.has_common_net_rel_link = self._io.read_bits_int(1) != 0
-                self.has_volume_id_and_local_base_path = self._io.read_bits_int(1) != 0
-                self.reserved2 = self._io.read_bits_int(24)
+                self.reserved1 = self._io.read_bits_int_be(6)
+                self.has_common_net_rel_link = self._io.read_bits_int_be(1) != 0
+                self.has_volume_id_and_local_base_path = self._io.read_bits_int_be(1) != 0
+                self.reserved2 = self._io.read_bits_int_be(24)
 
 
         class Header(KaitaiStruct):
@@ -242,7 +243,7 @@ class WindowsLnkFile(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.flags = self._root.LinkInfo.LinkInfoFlags(self._io, self, self._root)
+                self.flags = WindowsLnkFile.LinkInfo.LinkInfoFlags(self._io, self, self._root)
                 self.ofs_volume_id = self._io.read_u4le()
                 self.ofs_local_base_path = self._io.read_u4le()
                 self.ofs_common_net_rel_link = self._io.read_u4le()
@@ -268,18 +269,18 @@ class WindowsLnkFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.is_unicode = self._io.read_bits_int(1) != 0
-            self.has_icon_location = self._io.read_bits_int(1) != 0
-            self.has_arguments = self._io.read_bits_int(1) != 0
-            self.has_work_dir = self._io.read_bits_int(1) != 0
-            self.has_rel_path = self._io.read_bits_int(1) != 0
-            self.has_name = self._io.read_bits_int(1) != 0
-            self.has_link_info = self._io.read_bits_int(1) != 0
-            self.has_link_target_id_list = self._io.read_bits_int(1) != 0
-            self._unnamed8 = self._io.read_bits_int(16)
-            self.reserved = self._io.read_bits_int(5)
-            self.keep_local_id_list_for_unc_target = self._io.read_bits_int(1) != 0
-            self._unnamed11 = self._io.read_bits_int(2)
+            self.is_unicode = self._io.read_bits_int_be(1) != 0
+            self.has_icon_location = self._io.read_bits_int_be(1) != 0
+            self.has_arguments = self._io.read_bits_int_be(1) != 0
+            self.has_work_dir = self._io.read_bits_int_be(1) != 0
+            self.has_rel_path = self._io.read_bits_int_be(1) != 0
+            self.has_name = self._io.read_bits_int_be(1) != 0
+            self.has_link_info = self._io.read_bits_int_be(1) != 0
+            self.has_link_target_id_list = self._io.read_bits_int_be(1) != 0
+            self._unnamed8 = self._io.read_bits_int_be(16)
+            self.reserved = self._io.read_bits_int_be(5)
+            self.keep_local_id_list_for_unc_target = self._io.read_bits_int_be(1) != 0
+            self._unnamed11 = self._io.read_bits_int_be(2)
 
 
     class FileHeader(KaitaiStruct):
@@ -294,20 +295,26 @@ class WindowsLnkFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len_header = self._io.ensure_fixed_contents(b"\x4C\x00\x00\x00")
-            self.link_clsid = self._io.ensure_fixed_contents(b"\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46")
+            self.len_header = self._io.read_bytes(4)
+            if not self.len_header == b"\x4C\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4C\x00\x00\x00", self.len_header, self._io, u"/types/file_header/seq/0")
+            self.link_clsid = self._io.read_bytes(16)
+            if not self.link_clsid == b"\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46":
+                raise kaitaistruct.ValidationNotEqualError(b"\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46", self.link_clsid, self._io, u"/types/file_header/seq/1")
             self._raw_flags = self._io.read_bytes(4)
-            io = KaitaiStream(BytesIO(self._raw_flags))
-            self.flags = self._root.LinkFlags(io, self, self._root)
+            _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
+            self.flags = WindowsLnkFile.LinkFlags(_io__raw_flags, self, self._root)
             self.file_attrs = self._io.read_u4le()
             self.time_creation = self._io.read_u8le()
             self.time_access = self._io.read_u8le()
             self.time_write = self._io.read_u8le()
             self.target_file_size = self._io.read_u4le()
             self.icon_index = self._io.read_s4le()
-            self.show_command = self._root.WindowState(self._io.read_u4le())
+            self.show_command = KaitaiStream.resolve_enum(WindowsLnkFile.WindowState, self._io.read_u4le())
             self.hotkey = self._io.read_u2le()
-            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
+            self.reserved = self._io.read_bytes(10)
+            if not self.reserved == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", self.reserved, self._io, u"/types/file_header/seq/11")
 
 
 

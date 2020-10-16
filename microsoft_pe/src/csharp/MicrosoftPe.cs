@@ -418,7 +418,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _peSignature = m_io.EnsureFixedContents(new byte[] { 80, 69, 0, 0 });
+                _peSignature = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(PeSignature, new byte[] { 80, 69, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 80, 69, 0, 0 }, PeSignature, M_Io, "/types/pe_header/seq/0");
+                }
                 _coffHdr = new CoffHeader(m_io, this, m_root);
                 __raw_optionalHdr = m_io.ReadBytes(CoffHdr.SizeOfOptionalHeader);
                 var io___raw_optionalHdr = new KaitaiStream(__raw_optionalHdr);
@@ -444,8 +448,8 @@ namespace Kaitai
                         var io___raw_certificateTable = new KaitaiStream(__raw_certificateTable);
                         _certificateTable = new CertificateTable(io___raw_certificateTable, this, m_root);
                         m_io.Seek(_pos);
+                        f_certificateTable = true;
                     }
-                    f_certificateTable = true;
                     return _certificateTable;
                 }
             }
@@ -610,7 +614,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 77, 90 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 77, 90 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 77, 90 }, Magic, M_Io, "/types/mz_placeholder/seq/0");
+                }
                 _data1 = m_io.ReadBytes(58);
                 _ofsPe = m_io.ReadU4le();
             }
@@ -856,8 +864,8 @@ namespace Kaitai
                         io.Seek((NameZeroes == 0 ? (M_Parent.M_Parent.SymbolNameTableOffset + NameOffset) : 0));
                         _nameFromOffset = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytesTerm(0, false, true, false));
                         io.Seek(_pos);
+                        f_nameFromOffset = true;
                     }
-                    f_nameFromOffset = true;
                     return _nameFromOffset;
                 }
             }
@@ -919,8 +927,8 @@ namespace Kaitai
                         m_io.Seek(0);
                         _nameFromShort = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, false));
                         m_io.Seek(_pos);
+                        f_nameFromShort = true;
                     }
-                    f_nameFromShort = true;
                     return _nameFromShort;
                 }
             }

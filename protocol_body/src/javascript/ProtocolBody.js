@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './IcmpPacket', './TcpSegment', './Ipv4Packet', './UdpDatagram', './Ipv6Packet'], factory);
+    define(['kaitai-struct/KaitaiStream', './IcmpPacket', './UdpDatagram', './Ipv4Packet', './Ipv6Packet', './TcpSegment'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./IcmpPacket'), require('./TcpSegment'), require('./Ipv4Packet'), require('./UdpDatagram'), require('./Ipv6Packet'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./IcmpPacket'), require('./UdpDatagram'), require('./Ipv4Packet'), require('./Ipv6Packet'), require('./TcpSegment'));
   } else {
-    root.ProtocolBody = factory(root.KaitaiStream, root.IcmpPacket, root.TcpSegment, root.Ipv4Packet, root.UdpDatagram, root.Ipv6Packet);
+    root.ProtocolBody = factory(root.KaitaiStream, root.IcmpPacket, root.UdpDatagram, root.Ipv4Packet, root.Ipv6Packet, root.TcpSegment);
   }
-}(this, function (KaitaiStream, IcmpPacket, TcpSegment, Ipv4Packet, UdpDatagram, Ipv6Packet) {
+}(this, function (KaitaiStream, IcmpPacket, UdpDatagram, Ipv4Packet, Ipv6Packet, TcpSegment) {
 /**
  * Protocol body represents particular payload on transport level (OSI
  * layer 4).
@@ -328,17 +328,17 @@ var ProtocolBody = (function() {
   }
   ProtocolBody.prototype._read = function() {
     switch (this.protocol) {
-    case ProtocolBody.ProtocolEnum.TCP:
-      this.body = new TcpSegment(this._io, this, null);
-      break;
     case ProtocolBody.ProtocolEnum.IPV6_NONXT:
       this.body = new NoNextHeader(this._io, this, this._root);
       break;
-    case ProtocolBody.ProtocolEnum.ICMP:
-      this.body = new IcmpPacket(this._io, this, null);
+    case ProtocolBody.ProtocolEnum.IPV4:
+      this.body = new Ipv4Packet(this._io, this, null);
       break;
     case ProtocolBody.ProtocolEnum.UDP:
       this.body = new UdpDatagram(this._io, this, null);
+      break;
+    case ProtocolBody.ProtocolEnum.ICMP:
+      this.body = new IcmpPacket(this._io, this, null);
       break;
     case ProtocolBody.ProtocolEnum.HOPOPT:
       this.body = new OptionHopByHop(this._io, this, this._root);
@@ -346,8 +346,8 @@ var ProtocolBody = (function() {
     case ProtocolBody.ProtocolEnum.IPV6:
       this.body = new Ipv6Packet(this._io, this, null);
       break;
-    case ProtocolBody.ProtocolEnum.IPV4:
-      this.body = new Ipv4Packet(this._io, this, null);
+    case ProtocolBody.ProtocolEnum.TCP:
+      this.body = new TcpSegment(this._io, this, null);
       break;
     }
   }

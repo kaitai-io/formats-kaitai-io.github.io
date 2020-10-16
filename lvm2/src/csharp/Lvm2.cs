@@ -89,7 +89,11 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _signature = m_io.EnsureFixedContents(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 });
+                        _signature = m_io.ReadBytes(8);
+                        if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }) == 0)))
+                        {
+                            throw new ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, Signature, M_Io, "/types/physical_volume/types/label/types/label_header/seq/0");
+                        }
                         _sectorNumber = m_io.ReadU8le();
                         _checksum = m_io.ReadU4le();
                         _labelHeader = new LabelHeader(m_io, this, m_root);
@@ -110,7 +114,11 @@ namespace Kaitai
                         private void _read()
                         {
                             _dataOffset = m_io.ReadU4le();
-                            _typeIndicator = m_io.EnsureFixedContents(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 });
+                            _typeIndicator = m_io.ReadBytes(8);
+                            if (!((KaitaiStream.ByteArrayCompare(TypeIndicator, new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }) == 0)))
+                            {
+                                throw new ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, TypeIndicator, M_Io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+                            }
                         }
                         private uint _dataOffset;
                         private byte[] _typeIndicator;
@@ -216,8 +224,8 @@ namespace Kaitai
                                     m_io.Seek(Offset);
                                     _data = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Size));
                                     m_io.Seek(_pos);
+                                    f_data = true;
                                 }
-                                f_data = true;
                                 return _data;
                             }
                         }
@@ -272,8 +280,8 @@ namespace Kaitai
                                     var io___raw_data = new KaitaiStream(__raw_data);
                                     _data = new MetadataArea(io___raw_data, this, m_root);
                                     m_io.Seek(_pos);
+                                    f_data = true;
                                 }
-                                f_data = true;
                                 return _data;
                             }
                         }
@@ -334,7 +342,11 @@ namespace Kaitai
                             private void _read()
                             {
                                 _checksum = new MetadataAreaHeader(m_io, this, m_root);
-                                _signature = m_io.EnsureFixedContents(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 });
+                                _signature = m_io.ReadBytes(16);
+                                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }) == 0)))
+                                {
+                                    throw new ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, Signature, M_Io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+                                }
                                 _version = m_io.ReadU4le();
                                 _metadataAreaOffset = m_io.ReadU8le();
                                 _metadataAreaSize = m_io.ReadU8le();

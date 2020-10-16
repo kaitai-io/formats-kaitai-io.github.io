@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use VlqBase128Be;
 
@@ -43,7 +43,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(16);
     $self->{len_page_mod} = $self->{_io}->read_u2be();
     $self->{write_version} = $self->{_io}->read_u1();
     $self->{read_version} = $self->{_io}->read_u1();
@@ -690,10 +690,10 @@ sub _read {
             $self->{as_int} = $self->{_io}->read_u1();
         }
         elsif ($_on == 3) {
-            $self->{as_int} = $self->{_io}->read_bits_int(24);
+            $self->{as_int} = $self->{_io}->read_bits_int_be(24);
         }
         elsif ($_on == 5) {
-            $self->{as_int} = $self->{_io}->read_bits_int(48);
+            $self->{as_int} = $self->{_io}->read_bits_int_be(48);
         }
         elsif ($_on == 2) {
             $self->{as_int} = $self->{_io}->read_u2be();

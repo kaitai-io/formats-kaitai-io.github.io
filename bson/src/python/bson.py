@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Bson(KaitaiStruct):
     """BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents. Like JSON, BSON supports the embedding of documents and arrays within other documents and arrays. BSON also contains extensions that allow representation of data types that are not part of the JSON spec. For example, BSON has a Date type and a BinData type. BSON can be compared to binary interchange formats, like Protocol Buffers. BSON is more "schemaless" than Protocol Buffers, which can give it an advantage in flexibility but also a slight disadvantage in space efficiency (BSON has overhead for field names within the serialized data). BSON was designed to have the following three characteristics:
@@ -23,9 +24,11 @@ class Bson(KaitaiStruct):
     def _read(self):
         self.len = self._io.read_s4le()
         self._raw_fields = self._io.read_bytes((self.len - 5))
-        io = KaitaiStream(BytesIO(self._raw_fields))
-        self.fields = self._root.ElementsList(io, self, self._root)
-        self.terminator = self._io.ensure_fixed_contents(b"\x00")
+        _io__raw_fields = KaitaiStream(BytesIO(self._raw_fields))
+        self.fields = Bson.ElementsList(_io__raw_fields, self, self._root)
+        self.terminator = self._io.read_bytes(1)
+        if not self.terminator == b"\x00":
+            raise kaitaistruct.ValidationNotEqualError(b"\x00", self.terminator, self._io, u"/seq/2")
 
     class Timestamp(KaitaiStruct):
         """Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp."""
@@ -59,12 +62,12 @@ class Bson(KaitaiStruct):
 
         def _read(self):
             self.len = self._io.read_s4le()
-            self.subtype = self._root.BinData.Subtype(self._io.read_u1())
+            self.subtype = KaitaiStream.resolve_enum(Bson.BinData.Subtype, self._io.read_u1())
             _on = self.subtype
-            if _on == self._root.BinData.Subtype.byte_array_deprecated:
+            if _on == Bson.BinData.Subtype.byte_array_deprecated:
                 self._raw_content = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.BinData.ByteArrayDeprecated(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = Bson.BinData.ByteArrayDeprecated(_io__raw_content, self, self._root)
             else:
                 self.content = self._io.read_bytes(self.len)
 
@@ -93,7 +96,7 @@ class Bson(KaitaiStruct):
             self.elements = []
             i = 0
             while not self._io.is_eof():
-                self.elements.append(self._root.Element(self._io, self, self._root))
+                self.elements.append(Bson.Element(self._io, self, self._root))
                 i += 1
 
 
@@ -119,7 +122,9 @@ class Bson(KaitaiStruct):
         def _read(self):
             self.len = self._io.read_s4le()
             self.str = (self._io.read_bytes((self.len - 1))).decode(u"UTF-8")
-            self.terminator = self._io.ensure_fixed_contents(b"\x00")
+            self.terminator = self._io.read_bytes(1)
+            if not self.terminator == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.terminator, self._io, u"/types/string/seq/2")
 
 
     class Element(KaitaiStruct):
@@ -154,43 +159,43 @@ class Bson(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type_byte = self._root.Element.BsonType(self._io.read_u1())
-            self.name = self._root.Cstring(self._io, self, self._root)
+            self.type_byte = KaitaiStream.resolve_enum(Bson.Element.BsonType, self._io.read_u1())
+            self.name = Bson.Cstring(self._io, self, self._root)
             _on = self.type_byte
-            if _on == self._root.Element.BsonType.number_double:
+            if _on == Bson.Element.BsonType.code_with_scope:
+                self.content = Bson.CodeWithScope(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.reg_ex:
+                self.content = Bson.RegEx(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.number_double:
                 self.content = self._io.read_f8le()
-            elif _on == self._root.Element.BsonType.code_with_scope:
-                self.content = self._root.CodeWithScope(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.object_id:
-                self.content = self._root.ObjectId(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.string:
-                self.content = self._root.String(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.reg_ex:
-                self.content = self._root.RegEx(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.number_decimal:
-                self.content = self._root.F16(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.utc_datetime:
-                self.content = self._io.read_s8le()
-            elif _on == self._root.Element.BsonType.number_long:
-                self.content = self._io.read_s8le()
-            elif _on == self._root.Element.BsonType.timestamp:
-                self.content = self._root.Timestamp(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.db_pointer:
-                self.content = self._root.DbPointer(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.array:
-                self.content = Bson(self._io)
-            elif _on == self._root.Element.BsonType.javascript:
-                self.content = self._root.String(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.boolean:
-                self.content = self._io.read_u1()
-            elif _on == self._root.Element.BsonType.document:
-                self.content = Bson(self._io)
-            elif _on == self._root.Element.BsonType.symbol:
-                self.content = self._root.String(self._io, self, self._root)
-            elif _on == self._root.Element.BsonType.number_int:
+            elif _on == Bson.Element.BsonType.symbol:
+                self.content = Bson.String(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.timestamp:
+                self.content = Bson.Timestamp(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.number_int:
                 self.content = self._io.read_s4le()
-            elif _on == self._root.Element.BsonType.bin_data:
-                self.content = self._root.BinData(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.document:
+                self.content = Bson(self._io)
+            elif _on == Bson.Element.BsonType.object_id:
+                self.content = Bson.ObjectId(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.javascript:
+                self.content = Bson.String(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.utc_datetime:
+                self.content = self._io.read_s8le()
+            elif _on == Bson.Element.BsonType.boolean:
+                self.content = self._io.read_u1()
+            elif _on == Bson.Element.BsonType.number_long:
+                self.content = self._io.read_s8le()
+            elif _on == Bson.Element.BsonType.bin_data:
+                self.content = Bson.BinData(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.string:
+                self.content = Bson.String(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.db_pointer:
+                self.content = Bson.DbPointer(self._io, self, self._root)
+            elif _on == Bson.Element.BsonType.array:
+                self.content = Bson(self._io)
+            elif _on == Bson.Element.BsonType.number_decimal:
+                self.content = Bson.F16(self._io, self, self._root)
 
 
     class DbPointer(KaitaiStruct):
@@ -201,8 +206,8 @@ class Bson(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.namespace = self._root.String(self._io, self, self._root)
-            self.id = self._root.ObjectId(self._io, self, self._root)
+            self.namespace = Bson.String(self._io, self, self._root)
+            self.id = Bson.ObjectId(self._io, self, self._root)
 
 
     class U3(KaitaiStruct):
@@ -237,7 +242,7 @@ class Bson(KaitaiStruct):
 
         def _read(self):
             self.id = self._io.read_s4le()
-            self.source = self._root.String(self._io, self, self._root)
+            self.source = Bson.String(self._io, self, self._root)
             self.scope = Bson(self._io)
 
 
@@ -250,9 +255,9 @@ class Bson(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.str = self._io.read_bits_int(1) != 0
-            self.exponent = self._io.read_bits_int(15)
-            self.significand_hi = self._io.read_bits_int(49)
+            self.str = self._io.read_bits_int_be(1) != 0
+            self.exponent = self._io.read_bits_int_be(15)
+            self.significand_hi = self._io.read_bits_int_be(49)
             self._io.align_to_byte()
             self.significand_lo = self._io.read_u8le()
 
@@ -267,9 +272,9 @@ class Bson(KaitaiStruct):
 
         def _read(self):
             self.epoch_time = self._io.read_u4le()
-            self.machine_id = self._root.U3(self._io, self, self._root)
+            self.machine_id = Bson.U3(self._io, self, self._root)
             self.process_id = self._io.read_u2le()
-            self.counter = self._root.U3(self._io, self, self._root)
+            self.counter = Bson.U3(self._io, self, self._root)
 
 
     class RegEx(KaitaiStruct):
@@ -280,8 +285,8 @@ class Bson(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.pattern = self._root.Cstring(self._io, self, self._root)
-            self.options = self._root.Cstring(self._io, self, self._root)
+            self.pattern = Bson.Cstring(self._io, self, self._root)
+            self.options = Bson.Cstring(self._io, self, self._root)
 
 
 

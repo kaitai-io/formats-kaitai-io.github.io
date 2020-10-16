@@ -150,11 +150,6 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="xwd (X Window Dump) bitmap image parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="xwd (X Window Dump) bitmap image parsing C# library">C#</a></li>
                 
                 
@@ -255,8 +250,8 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -302,14 +297,14 @@ and thus is probably a poor choice for true cross-platform usage.</p>
   <span class="k">def</span> <span class="nf">_read</span>
     <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
     <span class="vi">@_raw_hdr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
-    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_hdr</span><span class="p">)</span>
-    <span class="vi">@hdr</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="n">_io__raw_hdr</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_hdr</span><span class="p">)</span>
+    <span class="vi">@hdr</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_hdr</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="vi">@_raw_color_map</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">color_map_entries</span><span class="p">)</span>
     <span class="vi">@color_map</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">color_map_entries</span><span class="p">)</span>
     <span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">color_map_entries</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
       <span class="vi">@_raw_color_map</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_color_map</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-      <span class="vi">@color_map</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ColorMapEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">_io__raw_color_map</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_color_map</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+      <span class="vi">@color_map</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ColorMapEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_color_map</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -321,18 +316,18 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
     <span class="k">def</span> <span class="nf">_read</span>
       <span class="vi">@file_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@pixmap_format</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PIXMAP_FORMAT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+      <span class="vi">@pixmap_format</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Xwd</span><span class="o">::</span><span class="no">PIXMAP_FORMAT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
       <span class="vi">@pixmap_depth</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@pixmap_width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@pixmap_height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@x_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@byte_order</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BYTE_ORDER</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+      <span class="vi">@byte_order</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Xwd</span><span class="o">::</span><span class="no">BYTE_ORDER</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
       <span class="vi">@bitmap_unit</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@bitmap_bit_order</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@bitmap_pad</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@bits_per_pixel</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@bytes_per_line</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@visual_class</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VISUAL_CLASS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+      <span class="vi">@visual_class</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Xwd</span><span class="o">::</span><span class="no">VISUAL_CLASS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
       <span class="vi">@red_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@green_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@blue_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>

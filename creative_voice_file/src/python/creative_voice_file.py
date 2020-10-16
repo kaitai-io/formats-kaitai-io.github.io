@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class CreativeVoiceFile(KaitaiStruct):
     """Creative Voice File is a container file format for digital audio
@@ -52,14 +53,16 @@ class CreativeVoiceFile(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A")
+        self.magic = self._io.read_bytes(20)
+        if not self.magic == b"\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A":
+            raise kaitaistruct.ValidationNotEqualError(b"\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A", self.magic, self._io, u"/seq/0")
         self.header_size = self._io.read_u2le()
         self.version = self._io.read_u2le()
         self.checksum = self._io.read_u2le()
         self.blocks = []
         i = 0
         while not self._io.is_eof():
-            self.blocks.append(self._root.Block(self._io, self, self._root))
+            self.blocks.append(CreativeVoiceFile.Block(self._io, self, self._root))
             i += 1
 
 
@@ -126,7 +129,7 @@ class CreativeVoiceFile(KaitaiStruct):
             self.sample_rate = self._io.read_u4le()
             self.bits_per_sample = self._io.read_u1()
             self.num_channels = self._io.read_u1()
-            self.codec = self._root.Codecs(self._io.read_u2le())
+            self.codec = KaitaiStream.resolve_enum(CreativeVoiceFile.Codecs, self._io.read_u2le())
             self.reserved = self._io.read_bytes(4)
             self.wave = self._io.read_bytes_full()
 
@@ -139,39 +142,39 @@ class CreativeVoiceFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.block_type = self._root.BlockTypes(self._io.read_u1())
-            if self.block_type != self._root.BlockTypes.terminator:
+            self.block_type = KaitaiStream.resolve_enum(CreativeVoiceFile.BlockTypes, self._io.read_u1())
+            if self.block_type != CreativeVoiceFile.BlockTypes.terminator:
                 self.body_size1 = self._io.read_u2le()
 
-            if self.block_type != self._root.BlockTypes.terminator:
+            if self.block_type != CreativeVoiceFile.BlockTypes.terminator:
                 self.body_size2 = self._io.read_u1()
 
-            if self.block_type != self._root.BlockTypes.terminator:
+            if self.block_type != CreativeVoiceFile.BlockTypes.terminator:
                 _on = self.block_type
-                if _on == self._root.BlockTypes.silence:
+                if _on == CreativeVoiceFile.BlockTypes.sound_data_new:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSilence(io, self, self._root)
-                elif _on == self._root.BlockTypes.sound_data:
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockSoundDataNew(_io__raw_body, self, self._root)
+                elif _on == CreativeVoiceFile.BlockTypes.repeat_start:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSoundData(io, self, self._root)
-                elif _on == self._root.BlockTypes.marker:
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockRepeatStart(_io__raw_body, self, self._root)
+                elif _on == CreativeVoiceFile.BlockTypes.marker:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockMarker(io, self, self._root)
-                elif _on == self._root.BlockTypes.sound_data_new:
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockMarker(_io__raw_body, self, self._root)
+                elif _on == CreativeVoiceFile.BlockTypes.sound_data:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSoundDataNew(io, self, self._root)
-                elif _on == self._root.BlockTypes.repeat_start:
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockSoundData(_io__raw_body, self, self._root)
+                elif _on == CreativeVoiceFile.BlockTypes.extra_info:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockRepeatStart(io, self, self._root)
-                elif _on == self._root.BlockTypes.extra_info:
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockExtraInfo(_io__raw_body, self, self._root)
+                elif _on == CreativeVoiceFile.BlockTypes.silence:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockExtraInfo(io, self, self._root)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = CreativeVoiceFile.BlockSilence(_io__raw_body, self, self._root)
                 else:
                     self.body = self._io.read_bytes(self.body_size)
 
@@ -185,7 +188,7 @@ class CreativeVoiceFile(KaitaiStruct):
             if hasattr(self, '_m_body_size'):
                 return self._m_body_size if hasattr(self, '_m_body_size') else None
 
-            if self.block_type != self._root.BlockTypes.terminator:
+            if self.block_type != CreativeVoiceFile.BlockTypes.terminator:
                 self._m_body_size = (self.body_size1 + (self.body_size2 << 16))
 
             return self._m_body_size if hasattr(self, '_m_body_size') else None
@@ -219,7 +222,7 @@ class CreativeVoiceFile(KaitaiStruct):
 
         def _read(self):
             self.freq_div = self._io.read_u1()
-            self.codec = self._root.Codecs(self._io.read_u1())
+            self.codec = KaitaiStream.resolve_enum(CreativeVoiceFile.Codecs, self._io.read_u1())
             self.wave = self._io.read_bytes_full()
 
         @property
@@ -244,7 +247,7 @@ class CreativeVoiceFile(KaitaiStruct):
 
         def _read(self):
             self.freq_div = self._io.read_u2le()
-            self.codec = self._root.Codecs(self._io.read_u1())
+            self.codec = KaitaiStream.resolve_enum(CreativeVoiceFile.Codecs, self._io.read_u1())
             self.num_channels_1 = self._io.read_u1()
 
         @property

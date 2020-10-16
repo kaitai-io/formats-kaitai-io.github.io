@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ApmPartitionTable(KaitaiStruct):
     """
@@ -29,7 +30,9 @@ class ApmPartitionTable(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x50\x4D")
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x50\x4D":
+                raise kaitaistruct.ValidationNotEqualError(b"\x50\x4D", self.magic, self._io, u"/types/partition_entry/seq/0")
             self.reserved_1 = self._io.read_bytes(2)
             self.number_of_partitions = self._io.read_u4be()
             self.partition_start = self._io.read_u4be()
@@ -111,8 +114,8 @@ class ApmPartitionTable(KaitaiStruct):
         _pos = io.pos()
         io.seek(self._root.sector_size)
         self._raw__m_partition_lookup = io.read_bytes(self.sector_size)
-        io = KaitaiStream(BytesIO(self._raw__m_partition_lookup))
-        self._m_partition_lookup = self._root.PartitionEntry(io, self, self._root)
+        _io__raw__m_partition_lookup = KaitaiStream(BytesIO(self._raw__m_partition_lookup))
+        self._m_partition_lookup = ApmPartitionTable.PartitionEntry(_io__raw__m_partition_lookup, self, self._root)
         io.seek(_pos)
         return self._m_partition_lookup if hasattr(self, '_m_partition_lookup') else None
 
@@ -128,8 +131,8 @@ class ApmPartitionTable(KaitaiStruct):
         self._m_partition_entries = [None] * (self._root.partition_lookup.number_of_partitions)
         for i in range(self._root.partition_lookup.number_of_partitions):
             self._raw__m_partition_entries[i] = io.read_bytes(self.sector_size)
-            io = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
-            self._m_partition_entries[i] = self._root.PartitionEntry(io, self, self._root)
+            _io__raw__m_partition_entries = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
+            self._m_partition_entries[i] = ApmPartitionTable.PartitionEntry(_io__raw__m_partition_entries, self, self._root)
 
         io.seek(_pos)
         return self._m_partition_entries if hasattr(self, '_m_partition_entries') else None

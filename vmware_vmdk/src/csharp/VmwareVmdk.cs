@@ -33,7 +33,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 75, 68, 77, 86 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 75, 68, 77, 86 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, Magic, M_Io, "/seq/0");
+            }
             _version = m_io.ReadS4le();
             _flags = new HeaderFlags(m_io, this, m_root);
             _sizeMax = m_io.ReadS8le();
@@ -67,15 +71,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved1 = m_io.ReadBitsInt(5);
-                _zeroedGrainTableEntry = m_io.ReadBitsInt(1) != 0;
-                _useSecondaryGrainDir = m_io.ReadBitsInt(1) != 0;
-                _validNewLineDetectionTest = m_io.ReadBitsInt(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(5);
+                _zeroedGrainTableEntry = m_io.ReadBitsIntBe(1) != 0;
+                _useSecondaryGrainDir = m_io.ReadBitsIntBe(1) != 0;
+                _validNewLineDetectionTest = m_io.ReadBitsIntBe(1) != 0;
                 m_io.AlignToByte();
                 _reserved2 = m_io.ReadU1();
-                _reserved3 = m_io.ReadBitsInt(6);
-                _hasMetadata = m_io.ReadBitsInt(1) != 0;
-                _hasCompressedGrain = m_io.ReadBitsInt(1) != 0;
+                _reserved3 = m_io.ReadBitsIntBe(6);
+                _hasMetadata = m_io.ReadBitsIntBe(1) != 0;
+                _hasCompressedGrain = m_io.ReadBitsIntBe(1) != 0;
                 m_io.AlignToByte();
                 _reserved4 = m_io.ReadU1();
             }

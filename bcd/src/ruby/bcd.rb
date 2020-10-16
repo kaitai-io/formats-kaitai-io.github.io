@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -49,7 +49,7 @@ class Bcd < Kaitai::Struct::Struct
     (num_digits).times { |i|
       case bits_per_digit
       when 4
-        @digits[i] = @_io.read_bits_int(4)
+        @digits[i] = @_io.read_bits_int_be(4)
       when 8
         @digits[i] = @_io.read_u1
       end

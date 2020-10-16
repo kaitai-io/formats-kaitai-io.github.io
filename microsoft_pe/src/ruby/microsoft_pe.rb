@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -233,8 +233,8 @@ class MicrosoftPe < Kaitai::Struct::Struct
 
     def _read
       @_raw_name_annoying = @_io.read_bytes(8)
-      io = Kaitai::Struct::Stream.new(@_raw_name_annoying)
-      @name_annoying = Annoyingstring.new(io, self, @_root)
+      _io__raw_name_annoying = Kaitai::Struct::Stream.new(@_raw_name_annoying)
+      @name_annoying = Annoyingstring.new(_io__raw_name_annoying, self, @_root)
       @value = @_io.read_u4le
       @section_number = @_io.read_u2le
       @type = @_io.read_u2le
@@ -270,11 +270,12 @@ class MicrosoftPe < Kaitai::Struct::Struct
     end
 
     def _read
-      @pe_signature = @_io.ensure_fixed_contents([80, 69, 0, 0].pack('C*'))
+      @pe_signature = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([80, 69, 0, 0].pack('C*'), pe_signature, _io, "/types/pe_header/seq/0") if not pe_signature == [80, 69, 0, 0].pack('C*')
       @coff_hdr = CoffHeader.new(@_io, self, @_root)
       @_raw_optional_hdr = @_io.read_bytes(coff_hdr.size_of_optional_header)
-      io = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
-      @optional_hdr = OptionalHeader.new(io, self, @_root)
+      _io__raw_optional_hdr = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
+      @optional_hdr = OptionalHeader.new(_io__raw_optional_hdr, self, @_root)
       @sections = Array.new(coff_hdr.number_of_sections)
       (coff_hdr.number_of_sections).times { |i|
         @sections[i] = Section.new(@_io, self, @_root)
@@ -287,8 +288,8 @@ class MicrosoftPe < Kaitai::Struct::Struct
         _pos = @_io.pos
         @_io.seek(optional_hdr.data_dirs.certificate_table.virtual_address)
         @_raw_certificate_table = @_io.read_bytes(optional_hdr.data_dirs.certificate_table.size)
-        io = Kaitai::Struct::Stream.new(@_raw_certificate_table)
-        @certificate_table = CertificateTable.new(io, self, @_root)
+        _io__raw_certificate_table = Kaitai::Struct::Stream.new(@_raw_certificate_table)
+        @certificate_table = CertificateTable.new(_io__raw_certificate_table, self, @_root)
         @_io.seek(_pos)
       end
       @certificate_table
@@ -378,7 +379,8 @@ class MicrosoftPe < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([77, 90].pack('C*'))
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([77, 90].pack('C*'), magic, _io, "/types/mz_placeholder/seq/0") if not magic == [77, 90].pack('C*')
       @data1 = @_io.read_bytes(58)
       @ofs_pe = @_io.read_u4le
       self
@@ -397,7 +399,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
     end
 
     def _read
-      @format = Kaitai::Struct::Stream::resolve_enum(PE_FORMAT, @_io.read_u2le)
+      @format = Kaitai::Struct::Stream::resolve_enum(MicrosoftPe::PE_FORMAT, @_io.read_u2le)
       @major_linker_version = @_io.read_u1
       @minor_linker_version = @_io.read_u1
       @size_of_code = @_io.read_u4le

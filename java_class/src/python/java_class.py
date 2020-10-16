@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class JavaClass(KaitaiStruct):
     """
@@ -20,13 +21,15 @@ class JavaClass(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\xCA\xFE\xBA\xBE")
+        self.magic = self._io.read_bytes(4)
+        if not self.magic == b"\xCA\xFE\xBA\xBE":
+            raise kaitaistruct.ValidationNotEqualError(b"\xCA\xFE\xBA\xBE", self.magic, self._io, u"/seq/0")
         self.version_minor = self._io.read_u2be()
         self.version_major = self._io.read_u2be()
         self.constant_pool_count = self._io.read_u2be()
         self.constant_pool = [None] * ((self.constant_pool_count - 1))
         for i in range((self.constant_pool_count - 1)):
-            self.constant_pool[i] = self._root.ConstantPoolEntry(self._io, self, self._root)
+            self.constant_pool[i] = JavaClass.ConstantPoolEntry(self._io, self, self._root)
 
         self.access_flags = self._io.read_u2be()
         self.this_class = self._io.read_u2be()
@@ -39,17 +42,17 @@ class JavaClass(KaitaiStruct):
         self.fields_count = self._io.read_u2be()
         self.fields = [None] * (self.fields_count)
         for i in range(self.fields_count):
-            self.fields[i] = self._root.FieldInfo(self._io, self, self._root)
+            self.fields[i] = JavaClass.FieldInfo(self._io, self, self._root)
 
         self.methods_count = self._io.read_u2be()
         self.methods = [None] * (self.methods_count)
         for i in range(self.methods_count):
-            self.methods[i] = self._root.MethodInfo(self._io, self, self._root)
+            self.methods[i] = JavaClass.MethodInfo(self._io, self, self._root)
 
         self.attributes_count = self._io.read_u2be()
         self.attributes = [None] * (self.attributes_count)
         for i in range(self.attributes_count):
-            self.attributes[i] = self._root.AttributeInfo(self._io, self, self._root)
+            self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
 
 
     class FloatCpInfo(KaitaiStruct):
@@ -84,20 +87,20 @@ class JavaClass(KaitaiStruct):
             _on = self.name_as_str
             if _on == u"SourceFile":
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                io = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodySourceFile(io, self, self._root)
+                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
+                self.info = JavaClass.AttributeInfo.AttrBodySourceFile(_io__raw_info, self, self._root)
             elif _on == u"LineNumberTable":
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                io = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyLineNumberTable(io, self, self._root)
+                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
+                self.info = JavaClass.AttributeInfo.AttrBodyLineNumberTable(_io__raw_info, self, self._root)
             elif _on == u"Exceptions":
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                io = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyExceptions(io, self, self._root)
+                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
+                self.info = JavaClass.AttributeInfo.AttrBodyExceptions(_io__raw_info, self, self._root)
             elif _on == u"Code":
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                io = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyCode(io, self, self._root)
+                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
+                self.info = JavaClass.AttributeInfo.AttrBodyCode(_io__raw_info, self, self._root)
             else:
                 self.info = self._io.read_bytes(self.attribute_length)
 
@@ -120,12 +123,12 @@ class JavaClass(KaitaiStruct):
                 self.exception_table_length = self._io.read_u2be()
                 self.exception_table = [None] * (self.exception_table_length)
                 for i in range(self.exception_table_length):
-                    self.exception_table[i] = self._root.AttributeInfo.AttrBodyCode.ExceptionEntry(self._io, self, self._root)
+                    self.exception_table[i] = JavaClass.AttributeInfo.AttrBodyCode.ExceptionEntry(self._io, self, self._root)
 
                 self.attributes_count = self._io.read_u2be()
                 self.attributes = [None] * (self.attributes_count)
                 for i in range(self.attributes_count):
-                    self.attributes[i] = self._root.AttributeInfo(self._io, self, self._root)
+                    self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
 
 
             class ExceptionEntry(KaitaiStruct):
@@ -172,7 +175,7 @@ class JavaClass(KaitaiStruct):
                 self.number_of_exceptions = self._io.read_u2be()
                 self.exceptions = [None] * (self.number_of_exceptions)
                 for i in range(self.number_of_exceptions):
-                    self.exceptions[i] = self._root.AttributeInfo.AttrBodyExceptions.ExceptionTableEntry(self._io, self, self._root)
+                    self.exceptions[i] = JavaClass.AttributeInfo.AttrBodyExceptions.ExceptionTableEntry(self._io, self, self._root)
 
 
             class ExceptionTableEntry(KaitaiStruct):
@@ -241,7 +244,7 @@ class JavaClass(KaitaiStruct):
                 self.line_number_table_length = self._io.read_u2be()
                 self.line_number_table = [None] * (self.line_number_table_length)
                 for i in range(self.line_number_table_length):
-                    self.line_number_table[i] = self._root.AttributeInfo.AttrBodyLineNumberTable.LineNumberTableEntry(self._io, self, self._root)
+                    self.line_number_table[i] = JavaClass.AttributeInfo.AttrBodyLineNumberTable.LineNumberTableEntry(self._io, self, self._root)
 
 
             class LineNumberTableEntry(KaitaiStruct):
@@ -316,7 +319,7 @@ class JavaClass(KaitaiStruct):
             self.attributes_count = self._io.read_u2be()
             self.attributes = [None] * (self.attributes_count)
             for i in range(self.attributes_count):
-                self.attributes[i] = self._root.AttributeInfo(self._io, self, self._root)
+                self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
 
 
         @property
@@ -397,7 +400,7 @@ class JavaClass(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reference_kind = self._root.MethodHandleCpInfo.ReferenceKindEnum(self._io.read_u1())
+            self.reference_kind = KaitaiStream.resolve_enum(JavaClass.MethodHandleCpInfo.ReferenceKindEnum, self._io.read_u1())
             self.reference_index = self._io.read_u2be()
 
 
@@ -586,36 +589,36 @@ class JavaClass(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.tag = self._root.ConstantPoolEntry.TagEnum(self._io.read_u1())
+            self.tag = KaitaiStream.resolve_enum(JavaClass.ConstantPoolEntry.TagEnum, self._io.read_u1())
             _on = self.tag
-            if _on == self._root.ConstantPoolEntry.TagEnum.string:
-                self.cp_info = self._root.StringCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.double:
-                self.cp_info = self._root.DoubleCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.invoke_dynamic:
-                self.cp_info = self._root.InvokeDynamicCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.method_handle:
-                self.cp_info = self._root.MethodHandleCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.class_type:
-                self.cp_info = self._root.ClassCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.method_ref:
-                self.cp_info = self._root.MethodRefCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.long:
-                self.cp_info = self._root.LongCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.name_and_type:
-                self.cp_info = self._root.NameAndTypeCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.float:
-                self.cp_info = self._root.FloatCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.interface_method_ref:
-                self.cp_info = self._root.InterfaceMethodRefCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.integer:
-                self.cp_info = self._root.IntegerCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.utf8:
-                self.cp_info = self._root.Utf8CpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.field_ref:
-                self.cp_info = self._root.FieldRefCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.method_type:
-                self.cp_info = self._root.MethodTypeCpInfo(self._io, self, self._root)
+            if _on == JavaClass.ConstantPoolEntry.TagEnum.interface_method_ref:
+                self.cp_info = JavaClass.InterfaceMethodRefCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.class_type:
+                self.cp_info = JavaClass.ClassCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.utf8:
+                self.cp_info = JavaClass.Utf8CpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_type:
+                self.cp_info = JavaClass.MethodTypeCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.integer:
+                self.cp_info = JavaClass.IntegerCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.string:
+                self.cp_info = JavaClass.StringCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.float:
+                self.cp_info = JavaClass.FloatCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.long:
+                self.cp_info = JavaClass.LongCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_ref:
+                self.cp_info = JavaClass.MethodRefCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.double:
+                self.cp_info = JavaClass.DoubleCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.invoke_dynamic:
+                self.cp_info = JavaClass.InvokeDynamicCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.field_ref:
+                self.cp_info = JavaClass.FieldRefCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_handle:
+                self.cp_info = JavaClass.MethodHandleCpInfo(self._io, self, self._root)
+            elif _on == JavaClass.ConstantPoolEntry.TagEnum.name_and_type:
+                self.cp_info = JavaClass.NameAndTypeCpInfo(self._io, self, self._root)
 
 
     class MethodInfo(KaitaiStruct):
@@ -636,7 +639,7 @@ class JavaClass(KaitaiStruct):
             self.attributes_count = self._io.read_u2be()
             self.attributes = [None] * (self.attributes_count)
             for i in range(self.attributes_count):
-                self.attributes[i] = self._root.AttributeInfo(self._io, self, self._root)
+                self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
 
 
         @property

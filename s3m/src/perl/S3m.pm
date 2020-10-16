@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package S3m;
@@ -35,7 +35,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{song_name} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(28), 0, 0);
-    $self->{magic1} = $self->{_io}->ensure_fixed_contents(pack('C*', (26)));
+    $self->{magic1} = $self->{_io}->read_bytes(1);
     $self->{file_type} = $self->{_io}->read_u1();
     $self->{reserved1} = $self->{_io}->read_bytes(2);
     $self->{num_orders} = $self->{_io}->read_u2le();
@@ -44,12 +44,12 @@ sub _read {
     $self->{flags} = $self->{_io}->read_u2le();
     $self->{version} = $self->{_io}->read_u2le();
     $self->{samples_format} = $self->{_io}->read_u2le();
-    $self->{magic2} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 67, 82, 77)));
+    $self->{magic2} = $self->{_io}->read_bytes(4);
     $self->{global_volume} = $self->{_io}->read_u1();
     $self->{initial_speed} = $self->{_io}->read_u1();
     $self->{initial_tempo} = $self->{_io}->read_u1();
-    $self->{is_stereo} = $self->{_io}->read_bits_int(1);
-    $self->{master_volume} = $self->{_io}->read_bits_int(7);
+    $self->{is_stereo} = $self->{_io}->read_bits_int_be(1);
+    $self->{master_volume} = $self->{_io}->read_bits_int_be(7);
     $self->{_io}->align_to_byte();
     $self->{ultra_click_removal} = $self->{_io}->read_u1();
     $self->{has_custom_pan} = $self->{_io}->read_u1();
@@ -235,10 +235,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->read_bits_int(2);
-    $self->{has_custom_pan} = $self->{_io}->read_bits_int(1);
-    $self->{reserved2} = $self->{_io}->read_bits_int(1);
-    $self->{pan} = $self->{_io}->read_bits_int(4);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(2);
+    $self->{has_custom_pan} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved2} = $self->{_io}->read_bits_int_be(1);
+    $self->{pan} = $self->{_io}->read_bits_int_be(4);
 }
 
 sub reserved1 {
@@ -291,10 +291,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{has_fx} = $self->{_io}->read_bits_int(1);
-    $self->{has_volume} = $self->{_io}->read_bits_int(1);
-    $self->{has_note_and_instrument} = $self->{_io}->read_bits_int(1);
-    $self->{channel_num} = $self->{_io}->read_bits_int(5);
+    $self->{has_fx} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_volume} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_note_and_instrument} = $self->{_io}->read_bits_int_be(1);
+    $self->{channel_num} = $self->{_io}->read_bits_int_be(5);
     $self->{_io}->align_to_byte();
     if ($self->has_note_and_instrument()) {
         $self->{note} = $self->{_io}->read_u1();
@@ -429,8 +429,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{is_disabled} = $self->{_io}->read_bits_int(1);
-    $self->{ch_type} = $self->{_io}->read_bits_int(7);
+    $self->{is_disabled} = $self->{_io}->read_bits_int_be(1);
+    $self->{ch_type} = $self->{_io}->read_bits_int_be(7);
 }
 
 sub is_disabled {
@@ -682,7 +682,7 @@ sub _read {
     $self->{type} = $self->{_io}->read_u1();
     $self->{filename} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(12), 0, 0);
     my $_on = $self->type();
-    if ($_on == $INST_TYPES_SAMPLE) {
+    if ($_on == $S3m::Instrument::INST_TYPES_SAMPLE) {
         $self->{body} = S3m::Instrument::Sampled->new($self->{_io}, $self, $self->{_root});
     }
     else {
@@ -691,7 +691,7 @@ sub _read {
     $self->{tuning_hz} = $self->{_io}->read_u4le();
     $self->{reserved2} = $self->{_io}->read_bytes(12);
     $self->{sample_name} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(28), 0, 0);
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (83, 67, 82, 83)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
 }
 
 sub type {
@@ -849,7 +849,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0)));
+    $self->{reserved1} = $self->{_io}->read_bytes(3);
     $self->{_unnamed1} = $self->{_io}->read_bytes(16);
 }
 

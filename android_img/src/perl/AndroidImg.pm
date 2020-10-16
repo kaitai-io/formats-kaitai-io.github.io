@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (65, 78, 68, 82, 79, 73, 68, 33)));
+    $self->{magic} = $self->{_io}->read_bytes(8);
     $self->{kernel} = AndroidImg::Load->new($self->{_io}, $self, $self->{_root});
     $self->{ramdisk} = AndroidImg::Load->new($self->{_io}, $self, $self->{_root});
     $self->{second} = AndroidImg::Load->new($self->{_io}, $self, $self->{_root});

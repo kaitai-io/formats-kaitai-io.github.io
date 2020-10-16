@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -18,11 +18,12 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([69, 71, 76, 36].pack('C*'))
+    @magic = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([69, 71, 76, 36].pack('C*'), magic, _io, "/seq/0") if not magic == [69, 71, 76, 36].pack('C*')
     @crc32 = @_io.read_u4le
     @_raw_contents = @_io.read_bytes_full
-    io = Kaitai::Struct::Stream.new(@_raw_contents)
-    @contents = Cache.new(io, self, @_root)
+    _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+    @contents = Cache.new(_io__raw_contents, self, @_root)
     self
   end
   class Alignment < Kaitai::Struct::Struct
@@ -66,7 +67,8 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([36, 98, 66, 95].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([36, 98, 66, 95].pack('C*'), magic, _io, "/types/cache/seq/0") if not magic == [36, 98, 66, 95].pack('C*')
       @version = @_io.read_u4le
       @device_version = @_io.read_u4le
       @num_entries = @_io.read_u4le

@@ -627,115 +627,115 @@ var OpenpgpMessage = (function() {
       this.len = new LenSubpacket(this._io, this, this._root);
       this.subpacketType = this._io.readU1();
       switch (this.subpacketType) {
-      case OpenpgpMessage.SubpacketTypes.EXPORTABLE_CERTIFICATION:
+      case OpenpgpMessage.SubpacketTypes.PREFERRED_KEY_SERVER:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new ExportableCertification(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.PREFERRED_HASH_ALGORITHMS:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new PreferredHashAlgorithms(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.EMBEDDED_SIGNATURE:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new EmbeddedSignature(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.TRUST_SIGNATURE:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new TrustSignature(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.REASON_FOR_REVOCATION:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new ReasonForRevocation(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.FEATURES:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new Features(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.SIGNATURE_EXPIRATION_TIME:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new SignatureExpirationTime(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.PREFERRED_COMPRESSION_ALGORITHMS:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new PreferredCompressionAlgorithms(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.REVOCABLE:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new Revocable(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.REGULAR_EXPRESSION:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new RegularExpression(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.NOTATION_DATA:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new NotationData(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.KEY_EXPIRATION_TIME:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new KeyExpirationTime(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.SIGNATURE_CREATION_TIME:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new SignatureCreationTime(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.REVOCATION_KEY:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new RevocationKey(_io__raw_content, this, this._root);
-        break;
-      case OpenpgpMessage.SubpacketTypes.KEY_FLAGS:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new KeyFlags(_io__raw_content, this, this._root);
+        this.content = new PreferredKeyServer(_io__raw_content, this, this._root);
         break;
       case OpenpgpMessage.SubpacketTypes.ISSUER:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new Issuer(_io__raw_content, this, this._root);
         break;
+      case OpenpgpMessage.SubpacketTypes.REVOCABLE:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new Revocable(_io__raw_content, this, this._root);
+        break;
       case OpenpgpMessage.SubpacketTypes.SIGNATURE_TARGET:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new SignatureTarget(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.REGULAR_EXPRESSION:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new RegularExpression(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.EXPORTABLE_CERTIFICATION:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new ExportableCertification(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.REASON_FOR_REVOCATION:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new ReasonForRevocation(_io__raw_content, this, this._root);
         break;
       case OpenpgpMessage.SubpacketTypes.KEY_SERVER_PREFERENCES:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new KeyServerPreferences(_io__raw_content, this, this._root);
         break;
+      case OpenpgpMessage.SubpacketTypes.SIGNATURE_CREATION_TIME:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new SignatureCreationTime(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.PREFERRED_HASH_ALGORITHMS:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new PreferredHashAlgorithms(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.TRUST_SIGNATURE:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new TrustSignature(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.KEY_EXPIRATION_TIME:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new KeyExpirationTime(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.KEY_FLAGS:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new KeyFlags(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.SIGNATURE_EXPIRATION_TIME:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new SignatureExpirationTime(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.FEATURES:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new Features(_io__raw_content, this, this._root);
+        break;
       case OpenpgpMessage.SubpacketTypes.SIGNERS_USER_ID:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new SignersUserId(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.NOTATION_DATA:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new NotationData(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.REVOCATION_KEY:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new RevocationKey(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.PREFERRED_COMPRESSION_ALGORITHMS:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new PreferredCompressionAlgorithms(_io__raw_content, this, this._root);
         break;
       case OpenpgpMessage.SubpacketTypes.POLICY_URI:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new PolicyUri(_io__raw_content, this, this._root);
         break;
-      case OpenpgpMessage.SubpacketTypes.PREFERRED_KEY_SERVER:
-        this._raw_content = this._io.readBytes((this.len.len - 1));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new PreferredKeyServer(_io__raw_content, this, this._root);
-        break;
       case OpenpgpMessage.SubpacketTypes.PRIMARY_USER_ID:
         this._raw_content = this._io.readBytes((this.len.len - 1));
         var _io__raw_content = new KaitaiStream(this._raw_content);
         this.content = new PrimaryUserId(_io__raw_content, this, this._root);
+        break;
+      case OpenpgpMessage.SubpacketTypes.EMBEDDED_SIGNATURE:
+        this._raw_content = this._io.readBytes((this.len.len - 1));
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new EmbeddedSignature(_io__raw_content, this, this._root);
         break;
       default:
         this.content = this._io.readBytes((this.len.len - 1));
@@ -772,7 +772,7 @@ var OpenpgpMessage = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PublicKeyPacket(_io__raw_body, this, this._root);
         break;
-      case OpenpgpMessage.PacketTags.SECRET_SUBKEY_PACKET:
+      case OpenpgpMessage.PacketTags.PUBLIC_SUBKEY_PACKET:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PublicKeyPacket(_io__raw_body, this, this._root);
@@ -782,20 +782,20 @@ var OpenpgpMessage = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new UserIdPacket(_io__raw_body, this, this._root);
         break;
-      case OpenpgpMessage.PacketTags.SECRET_KEY_PACKET:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SecretKeyPacket(_io__raw_body, this, this._root);
-        break;
       case OpenpgpMessage.PacketTags.SIGNATURE_PACKET:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SignaturePacket(_io__raw_body, this, this._root);
         break;
-      case OpenpgpMessage.PacketTags.PUBLIC_SUBKEY_PACKET:
+      case OpenpgpMessage.PacketTags.SECRET_SUBKEY_PACKET:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PublicKeyPacket(_io__raw_body, this, this._root);
+        break;
+      case OpenpgpMessage.PacketTags.SECRET_KEY_PACKET:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SecretKeyPacket(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes(this.len);
@@ -1049,16 +1049,16 @@ var OpenpgpMessage = (function() {
       this._read();
     }
     Packet.prototype._read = function() {
-      this.one = this._io.readBitsInt(1) != 0;
-      this.newPacketFormat = this._io.readBitsInt(1) != 0;
+      this.one = this._io.readBitsIntBe(1) != 0;
+      this.newPacketFormat = this._io.readBitsIntBe(1) != 0;
       if (this.newPacketFormat) {
-        this.packetTypeNew = this._io.readBitsInt(6);
+        this.packetTypeNew = this._io.readBitsIntBe(6);
       }
       if (!(this.newPacketFormat)) {
-        this.packetTypeOld = this._io.readBitsInt(4);
+        this.packetTypeOld = this._io.readBitsIntBe(4);
       }
       if (!(this.newPacketFormat)) {
-        this.lenType = this._io.readBitsInt(2);
+        this.lenType = this._io.readBitsIntBe(2);
       }
       this._io.alignToByte();
       switch (this.newPacketFormat) {

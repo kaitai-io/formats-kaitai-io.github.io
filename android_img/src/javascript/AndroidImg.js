@@ -22,7 +22,10 @@ var AndroidImg = (function() {
     this._read();
   }
   AndroidImg.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([65, 78, 68, 82, 79, 73, 68, 33]);
+    this.magic = this._io.readBytes(8);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [65, 78, 68, 82, 79, 73, 68, 33]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([65, 78, 68, 82, 79, 73, 68, 33], this.magic, this._io, "/seq/0");
+    }
     this.kernel = new Load(this._io, this, this._root);
     this.ramdisk = new Load(this._io, this, this._root);
     this.second = new Load(this._io, this, this._root);

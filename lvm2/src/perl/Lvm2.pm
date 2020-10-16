@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -168,7 +168,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 65, 66, 69, 76, 79, 78, 69)));
+    $self->{signature} = $self->{_io}->read_bytes(8);
     $self->{sector_number} = $self->{_io}->read_u8le();
     $self->{checksum} = $self->{_io}->read_u4le();
     $self->{label_header_} = Lvm2::PhysicalVolume::Label::LabelHeader::LabelHeader->new($self->{_io}, $self, $self->{_root});
@@ -225,7 +225,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{data_offset} = $self->{_io}->read_u4le();
-    $self->{type_indicator} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 86, 77, 50, 32, 48, 48, 49)));
+    $self->{type_indicator} = $self->{_io}->read_bytes(8);
 }
 
 sub data_offset {
@@ -490,7 +490,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{checksum} = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataArea::MetadataAreaHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62)));
+    $self->{signature} = $self->{_io}->read_bytes(16);
     $self->{version} = $self->{_io}->read_u4le();
     $self->{metadata_area_offset} = $self->{_io}->read_u8le();
     $self->{metadata_area_size} = $self->{_io}->read_u8le();

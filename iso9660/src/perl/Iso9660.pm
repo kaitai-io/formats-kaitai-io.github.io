@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -84,12 +84,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{unused1} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{unused1} = $self->{_io}->read_bytes(1);
     $self->{system_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(32));
     $self->{volume_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(32));
-    $self->{unused2} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0, 0, 0, 0)));
+    $self->{unused2} = $self->{_io}->read_bytes(8);
     $self->{vol_space_size} = Iso9660::U4bi->new($self->{_io}, $self, $self->{_root});
-    $self->{unused3} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    $self->{unused3} = $self->{_io}->read_bytes(32);
     $self->{vol_set_size} = Iso9660::U2bi->new($self->{_io}, $self, $self->{_root});
     $self->{vol_seq_num} = Iso9660::U2bi->new($self->{_io}, $self, $self->{_root});
     $self->{logical_block_size} = Iso9660::U2bi->new($self->{_io}, $self, $self->{_root});
@@ -486,7 +486,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{type} = $self->{_io}->read_u1();
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (67, 68, 48, 48, 49)));
+    $self->{magic} = $self->{_io}->read_bytes(5);
     $self->{version} = $self->{_io}->read_u1();
     if ($self->type() == 0) {
         $self->{vol_desc_boot_record} = Iso9660::VolDescBootRecord->new($self->{_io}, $self, $self->{_root});

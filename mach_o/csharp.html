@@ -123,11 +123,6 @@ section#format-index .row {
                 <a href="index.html" title="mach_o parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="mach_o parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="mach_o parsing C# library">C#</a></li>
@@ -522,30 +517,6 @@ section#format-index .row {
                 <span class="n">_magic</span> <span class="p">=</span> <span class="p">((</span><span class="n">CsMagic</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
                 <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">Magic</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">DetachedSignature</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">EmbeddedSignature</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Entitlement</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Entitlement</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">BlobWrapper</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BlobWrapper</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Requirement</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -558,10 +529,34 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CodeDirectory</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Entitlement</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Entitlement</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Requirements</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Requirements</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">BlobWrapper</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BlobWrapper</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">EmbeddedSignature</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">DetachedSignature</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -821,56 +816,56 @@ section#format-index .row {
                 <span class="p">{</span>
                     <span class="n">_op</span> <span class="p">=</span> <span class="p">((</span><span class="n">OpEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">Op</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">CertGeneric</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertGenericExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AppleGenericAnchor</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AppleGenericAnchorExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">InfoKeyField</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InfoKeyFieldExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AndOp</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AndExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AnchorHash</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AnchorHashExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">InfoKeyValue</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Data</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">Ident</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IdentExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">OrOp</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">TrustedCert</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertSlotExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">InfoKeyValue</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Data</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AnchorHash</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AnchorHashExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">InfoKeyField</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InfoKeyFieldExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">NotOp</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Expr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">Ident</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IdentExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">EntitlementField</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EntitlementFieldExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">TrustedCert</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertSlotExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AndOp</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AndExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">CertGeneric</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertGenericExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">CertField</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CertFieldExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">EntitlementField</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EntitlementFieldExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">CdHash</span><span class="p">:</span> <span class="p">{</span>
                         <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Data</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">OpEnum</span><span class="p">.</span><span class="n">AppleGenericAnchor</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AppleGenericAnchorExpr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="p">}</span>
@@ -2601,15 +2596,15 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_stripRead</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_isMask</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_reserved0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_copy</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_noChange</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_execute</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_write</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_read</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
+                <span class="n">_stripRead</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_isMask</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_copy</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_noChange</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_execute</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_write</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_read</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">_stripRead</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMask</span><span class="p">;</span>
@@ -3728,55 +3723,13 @@ section#format-index .row {
                 <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
                 <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubLibrary</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SegmentSplitInfo</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Rpath</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RpathCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SourceVersion</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SourceVersionCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">EncryptionInfo64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncryptionInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinTvos</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadDylinker</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">IdDylinker</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylinkerCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubFramework</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadWeakDylib</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">ReexportDylib</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -3788,70 +3741,10 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BuildVersionCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinIphoneos</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SourceVersion</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LinkerOptimizationHint</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldEnvironment</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylinkerCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadUpwardDylib</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DylibCodeSignDrs</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldInfo</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DyldInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">ReexportDylib</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Symtab</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SymtabCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Routines64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RoutinesCommand64</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">IdDylinker</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylinkerCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Main</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EntryPointCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SourceVersionCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">FunctionStarts</span><span class="p">:</span> <span class="p">{</span>
@@ -3860,76 +3753,16 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinMacosx</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Rpath</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RpathCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DataInCode</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinWatchos</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">EncryptionInfo</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncryptionInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubUmbrella</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubFramework</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LinkerOption</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkerOptionCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">TwolevelHints</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwolevelHintsCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Uuid</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UuidCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldInfoOnly</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DyldInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LazyLoadDylib</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubClient</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Segment</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Routines</span><span class="p">:</span> <span class="p">{</span>
@@ -3938,10 +3771,52 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RoutinesCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">CodeSignature</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubLibrary</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CodeSignatureCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldInfoOnly</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DyldInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldEnvironment</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylinkerCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadDylinker</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylinkerCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SegmentSplitInfo</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Main</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EntryPointCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadDylib</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">EncryptionInfo</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncryptionInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Dysymtab</span><span class="p">:</span> <span class="p">{</span>
@@ -3950,7 +3825,37 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DysymtabCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadDylib</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">TwolevelHints</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwolevelHintsCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">EncryptionInfo64</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncryptionInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LinkerOption</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkerOptionCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DyldInfo</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DyldInfoCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinTvos</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadUpwardDylib</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -3962,10 +3867,100 @@ section#format-index .row {
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentCommand64</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Segment</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubUmbrella</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinWatchos</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Routines64</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RoutinesCommand64</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">IdDylib</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">SubClient</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SubCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DylibCodeSignDrs</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Symtab</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SymtabCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LinkerOptimizationHint</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">DataInCode</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LinkeditDataCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">CodeSignature</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CodeSignatureCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinIphoneos</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LoadWeakDylib</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">LazyLoadDylib</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DylibCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">Uuid</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UuidCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MachO</span><span class="p">.</span><span class="n">LoadCommandType</span><span class="p">.</span><span class="n">VersionMinMacosx</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Size</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VersionMinCommand</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -4104,8 +4099,8 @@ section#format-index .row {
                             <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">StrOff</span> <span class="p">+</span> <span class="n">Un</span><span class="p">));</span>
                             <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
                             <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="p">}</span>
-                        <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
@@ -4159,8 +4154,8 @@ section#format-index .row {
                             <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">StrOff</span> <span class="p">+</span> <span class="n">Un</span><span class="p">));</span>
                             <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
                             <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="p">}</span>
-                        <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>

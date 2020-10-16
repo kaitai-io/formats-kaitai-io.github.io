@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MbrPartitionTable(KaitaiStruct):
     """MBR (Master Boot Record) partition table is a traditional way of
@@ -28,9 +29,11 @@ class MbrPartitionTable(KaitaiStruct):
         self.bootstrap_code = self._io.read_bytes(446)
         self.partitions = [None] * (4)
         for i in range(4):
-            self.partitions[i] = self._root.PartitionEntry(self._io, self, self._root)
+            self.partitions[i] = MbrPartitionTable.PartitionEntry(self._io, self, self._root)
 
-        self.boot_signature = self._io.ensure_fixed_contents(b"\x55\xAA")
+        self.boot_signature = self._io.read_bytes(2)
+        if not self.boot_signature == b"\x55\xAA":
+            raise kaitaistruct.ValidationNotEqualError(b"\x55\xAA", self.boot_signature, self._io, u"/seq/2")
 
     class PartitionEntry(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -41,9 +44,9 @@ class MbrPartitionTable(KaitaiStruct):
 
         def _read(self):
             self.status = self._io.read_u1()
-            self.chs_start = self._root.Chs(self._io, self, self._root)
+            self.chs_start = MbrPartitionTable.Chs(self._io, self, self._root)
             self.partition_type = self._io.read_u1()
-            self.chs_end = self._root.Chs(self._io, self, self._root)
+            self.chs_end = MbrPartitionTable.Chs(self._io, self, self._root)
             self.lba_start = self._io.read_u4le()
             self.num_sectors = self._io.read_u4le()
 

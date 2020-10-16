@@ -260,7 +260,10 @@ var Pcap = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magicNumber = this._io.ensureFixedContents([212, 195, 178, 161]);
+      this.magicNumber = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, [212, 195, 178, 161]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([212, 195, 178, 161], this.magicNumber, this._io, "/types/header/seq/0");
+      }
       this.versionMajor = this._io.readU2le();
       this.versionMinor = this._io.readU2le();
       this.thiszone = this._io.readS4le();

@@ -34,14 +34,20 @@ var HeapsPak = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic1 = this._io.ensureFixedContents([80, 65, 75]);
+      this.magic1 = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic1, [80, 65, 75]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([80, 65, 75], this.magic1, this._io, "/types/header/seq/0");
+      }
       this.version = this._io.readU1();
       this.lenHeader = this._io.readU4le();
       this.lenData = this._io.readU4le();
       this._raw_rootEntry = this._io.readBytes((this.lenHeader - 16));
       var _io__raw_rootEntry = new KaitaiStream(this._raw_rootEntry);
       this.rootEntry = new Entry(_io__raw_rootEntry, this, this._root);
-      this.magic2 = this._io.ensureFixedContents([68, 65, 84, 65]);
+      this.magic2 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic2, [68, 65, 84, 65]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([68, 65, 84, 65], this.magic2, this._io, "/types/header/seq/5");
+      }
     }
 
     /**
@@ -79,8 +85,8 @@ var HeapsPak = (function() {
           this._read();
         }
         Flags.prototype._read = function() {
-          this.unused = this._io.readBitsInt(7);
-          this.isDir = this._io.readBitsInt(1) != 0;
+          this.unused = this._io.readBitsIntBe(7);
+          this.isDir = this._io.readBitsIntBe(1) != 0;
         }
 
         return Flags;

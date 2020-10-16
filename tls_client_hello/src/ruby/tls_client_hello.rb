@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class TlsClientHello < Kaitai::Struct::Struct
@@ -195,12 +195,12 @@ class TlsClientHello < Kaitai::Struct::Struct
       case type
       when 0
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Sni.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Sni.new(_io__raw_body, self, @_root)
       when 16
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Alpn.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Alpn.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len)
       end

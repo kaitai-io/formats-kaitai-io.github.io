@@ -52,12 +52,18 @@ var Ogg = (function() {
       this._read();
     }
     Page.prototype._read = function() {
-      this.syncCode = this._io.ensureFixedContents([79, 103, 103, 83]);
-      this.version = this._io.ensureFixedContents([0]);
-      this.reserved1 = this._io.readBitsInt(5);
-      this.isEndOfStream = this._io.readBitsInt(1) != 0;
-      this.isBeginningOfStream = this._io.readBitsInt(1) != 0;
-      this.isContinuation = this._io.readBitsInt(1) != 0;
+      this.syncCode = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.syncCode, [79, 103, 103, 83]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([79, 103, 103, 83], this.syncCode, this._io, "/types/page/seq/0");
+      }
+      this.version = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.version, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.version, this._io, "/types/page/seq/1");
+      }
+      this.reserved1 = this._io.readBitsIntBe(5);
+      this.isEndOfStream = this._io.readBitsIntBe(1) != 0;
+      this.isBeginningOfStream = this._io.readBitsIntBe(1) != 0;
+      this.isContinuation = this._io.readBitsIntBe(1) != 0;
       this._io.alignToByte();
       this.granulePos = this._io.readU8le();
       this.bitstreamSerial = this._io.readU4le();

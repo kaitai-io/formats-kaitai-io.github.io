@@ -154,11 +154,6 @@ magic header and a record.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ruby_marshal parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ruby_marshal parsing C# library">C#</a></li>
                 
                 
@@ -323,7 +318,10 @@ magic header and a record.</p>
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">version</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">version</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">records</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
   <span class="p">}</span>
 
@@ -587,32 +585,32 @@ magic header and a record.</p>
     <span class="nx">Record</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
       <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">PACKED_INT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">BIGNUM</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_HASH</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyHash</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_ARRAY</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyArray</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_SYMBOL</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubySymbol</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">INSTANCE_VAR</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InstanceVar</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_STRING</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">PACKED_INT</span><span class="o">:</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_SYMBOL_LINK</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_STRUCT</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyStruct</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_SYMBOL_LINK</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_STRING</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">INSTANCE_VAR</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InstanceVar</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_HASH</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubyHash</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_SYMBOL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubySymbol</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>

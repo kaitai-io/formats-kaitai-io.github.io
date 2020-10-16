@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class QuakeMdl(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,22 +16,22 @@ class QuakeMdl(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.MdlHeader(self._io, self, self._root)
+        self.header = QuakeMdl.MdlHeader(self._io, self, self._root)
         self.skins = [None] * (self.header.num_skins)
         for i in range(self.header.num_skins):
-            self.skins[i] = self._root.MdlSkin(self._io, self, self._root)
+            self.skins[i] = QuakeMdl.MdlSkin(self._io, self, self._root)
 
         self.texture_coordinates = [None] * (self.header.num_verts)
         for i in range(self.header.num_verts):
-            self.texture_coordinates[i] = self._root.MdlTexcoord(self._io, self, self._root)
+            self.texture_coordinates[i] = QuakeMdl.MdlTexcoord(self._io, self, self._root)
 
         self.triangles = [None] * (self.header.num_tris)
         for i in range(self.header.num_tris):
-            self.triangles[i] = self._root.MdlTriangle(self._io, self, self._root)
+            self.triangles[i] = QuakeMdl.MdlTriangle(self._io, self, self._root)
 
         self.frames = [None] * (self.header.num_frames)
         for i in range(self.header.num_frames):
-            self.frames[i] = self._root.MdlFrame(self._io, self, self._root)
+            self.frames[i] = QuakeMdl.MdlFrame(self._io, self, self._root)
 
 
     class MdlVertex(KaitaiStruct):
@@ -69,12 +70,16 @@ class QuakeMdl(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ident = self._io.ensure_fixed_contents(b"\x49\x44\x50\x4F")
-            self.version_must_be_6 = self._io.ensure_fixed_contents(b"\x06\x00\x00\x00")
-            self.scale = self._root.Vec3(self._io, self, self._root)
-            self.origin = self._root.Vec3(self._io, self, self._root)
+            self.ident = self._io.read_bytes(4)
+            if not self.ident == b"\x49\x44\x50\x4F":
+                raise kaitaistruct.ValidationNotEqualError(b"\x49\x44\x50\x4F", self.ident, self._io, u"/types/mdl_header/seq/0")
+            self.version_must_be_6 = self._io.read_bytes(4)
+            if not self.version_must_be_6 == b"\x06\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x06\x00\x00\x00", self.version_must_be_6, self._io, u"/types/mdl_header/seq/1")
+            self.scale = QuakeMdl.Vec3(self._io, self, self._root)
+            self.origin = QuakeMdl.Vec3(self._io, self, self._root)
             self.radius = self._io.read_f4le()
-            self.eye_position = self._root.Vec3(self._io, self, self._root)
+            self.eye_position = QuakeMdl.Vec3(self._io, self, self._root)
             self.num_skins = self._io.read_s4le()
             self.skin_width = self._io.read_s4le()
             self.skin_height = self._io.read_s4le()
@@ -141,10 +146,10 @@ class QuakeMdl(KaitaiStruct):
         def _read(self):
             self.type = self._io.read_s4le()
             if self.type != 0:
-                self.min = self._root.MdlVertex(self._io, self, self._root)
+                self.min = QuakeMdl.MdlVertex(self._io, self, self._root)
 
             if self.type != 0:
-                self.max = self._root.MdlVertex(self._io, self, self._root)
+                self.max = QuakeMdl.MdlVertex(self._io, self, self._root)
 
             if self.type != 0:
                 self.time = [None] * (self.type)
@@ -154,7 +159,7 @@ class QuakeMdl(KaitaiStruct):
 
             self.frames = [None] * (self.num_simple_frames)
             for i in range(self.num_simple_frames):
-                self.frames[i] = self._root.MdlSimpleFrame(self._io, self, self._root)
+                self.frames[i] = QuakeMdl.MdlSimpleFrame(self._io, self, self._root)
 
 
         @property
@@ -174,12 +179,12 @@ class QuakeMdl(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bbox_min = self._root.MdlVertex(self._io, self, self._root)
-            self.bbox_max = self._root.MdlVertex(self._io, self, self._root)
+            self.bbox_min = QuakeMdl.MdlVertex(self._io, self, self._root)
+            self.bbox_max = QuakeMdl.MdlVertex(self._io, self, self._root)
             self.name = (KaitaiStream.bytes_terminate(KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0), 0, False)).decode(u"ASCII")
             self.vertices = [None] * (self._root.header.num_verts)
             for i in range(self._root.header.num_verts):
-                self.vertices[i] = self._root.MdlVertex(self._io, self, self._root)
+                self.vertices[i] = QuakeMdl.MdlVertex(self._io, self, self._root)
 
 
 

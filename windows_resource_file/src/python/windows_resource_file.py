@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class WindowsResourceFile(KaitaiStruct):
     """Windows resource file (.res) are binary bundles of
@@ -44,7 +45,7 @@ class WindowsResourceFile(KaitaiStruct):
         self.resources = []
         i = 0
         while not self._io.is_eof():
-            self.resources.append(self._root.Resource(self._io, self, self._root))
+            self.resources.append(WindowsResourceFile.Resource(self._io, self, self._root))
             i += 1
 
 
@@ -88,8 +89,8 @@ class WindowsResourceFile(KaitaiStruct):
         def _read(self):
             self.value_size = self._io.read_u4le()
             self.header_size = self._io.read_u4le()
-            self.type = self._root.UnicodeOrId(self._io, self, self._root)
-            self.name = self._root.UnicodeOrId(self._io, self, self._root)
+            self.type = WindowsResourceFile.UnicodeOrId(self._io, self, self._root)
+            self.name = WindowsResourceFile.UnicodeOrId(self._io, self, self._root)
             self.padding1 = self._io.read_bytes(((4 - self._io.pos()) % 4))
             self.format_version = self._io.read_u4le()
             self.flags = self._io.read_u2le()
@@ -110,7 +111,7 @@ class WindowsResourceFile(KaitaiStruct):
                 return self._m_type_as_predef if hasattr(self, '_m_type_as_predef') else None
 
             if  ((not (self.type.is_string)) and (self.type.as_numeric <= 255)) :
-                self._m_type_as_predef = self._root.Resource.PredefTypes(self.type.as_numeric)
+                self._m_type_as_predef = KaitaiStream.resolve_enum(WindowsResourceFile.Resource.PredefTypes, self.type.as_numeric)
 
             return self._m_type_as_predef if hasattr(self, '_m_type_as_predef') else None
 

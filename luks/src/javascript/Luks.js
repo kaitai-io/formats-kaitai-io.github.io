@@ -36,8 +36,14 @@ var Luks = (function() {
       this._read();
     }
     PartitionHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([76, 85, 75, 83, 186, 190]);
-      this.version = this._io.ensureFixedContents([0, 1]);
+      this.magic = this._io.readBytes(6);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [76, 85, 75, 83, 186, 190]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([76, 85, 75, 83, 186, 190], this.magic, this._io, "/types/partition_header/seq/0");
+      }
+      this.version = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.version, [0, 1]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 1], this.version, this._io, "/types/partition_header/seq/1");
+      }
       this.cipherNameSpecification = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");
       this.cipherModeSpecification = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");
       this.hashSpecification = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");

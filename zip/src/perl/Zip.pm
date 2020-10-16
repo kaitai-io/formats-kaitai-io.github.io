@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -210,17 +210,17 @@ sub _read {
     $self->{code} = $self->{_io}->read_u2le();
     $self->{len_body} = $self->{_io}->read_u2le();
     my $_on = $self->code();
-    if ($_on == $EXTRA_CODES_NTFS) {
+    if ($_on == $Zip::EXTRA_CODES_NTFS) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::Ntfs->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $EXTRA_CODES_EXTENDED_TIMESTAMP) {
+    elsif ($_on == $Zip::EXTRA_CODES_EXTENDED_TIMESTAMP) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::ExtendedTimestamp->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
+    elsif ($_on == $Zip::EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::InfozipUnixVarSize->new($io__raw_body, $self, $self->{_root});
@@ -725,7 +725,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (80, 75)));
+    $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{section_type} = $self->{_io}->read_u2le();
     my $_on = $self->section_type();
     if ($_on == 513) {

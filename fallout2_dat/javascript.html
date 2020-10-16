@@ -142,11 +142,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="fallout2_dat parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="fallout2_dat parsing C# library">C#</a></li>
                 
                 
@@ -335,17 +330,41 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">sizePacked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
     <span class="p">}</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contentsRaw&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsRaw</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsRaw</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Fallout2Dat</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">NONE</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsRaw</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sizeUnpacked</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsRaw</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contentsZlib&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsZlib</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsZlib</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Fallout2Dat</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">ZLIB</span><span class="p">)</span> <span class="p">{</span>
           <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
           <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sizePacked</span><span class="p">);</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">processZlib</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contentsZlib</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sizePacked</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsZlib</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">processZlib</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contentsZlib</span><span class="p">);</span>
           <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contentsZlib</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Fallout2Dat</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">ZLIB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Fallout2Dat</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">NONE</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Fallout2Dat</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">ZLIB</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">contentsZlib</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">contentsRaw</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
       <span class="p">}</span>

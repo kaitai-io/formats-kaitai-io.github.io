@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GptPartitionTable(KaitaiStruct):
     """
@@ -45,7 +46,9 @@ class GptPartitionTable(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.ensure_fixed_contents(b"\x45\x46\x49\x20\x50\x41\x52\x54")
+            self.signature = self._io.read_bytes(8)
+            if not self.signature == b"\x45\x46\x49\x20\x50\x41\x52\x54":
+                raise kaitaistruct.ValidationNotEqualError(b"\x45\x46\x49\x20\x50\x41\x52\x54", self.signature, self._io, u"/types/partition_header/seq/0")
             self.revision = self._io.read_u4le()
             self.header_size = self._io.read_u4le()
             self.crc32_header = self._io.read_u4le()
@@ -72,8 +75,8 @@ class GptPartitionTable(KaitaiStruct):
             self._m_entries = [None] * (self.entries_count)
             for i in range(self.entries_count):
                 self._raw__m_entries[i] = io.read_bytes(self.entries_size)
-                io = KaitaiStream(BytesIO(self._raw__m_entries[i]))
-                self._m_entries[i] = self._root.PartitionEntry(io, self, self._root)
+                _io__raw__m_entries = KaitaiStream(BytesIO(self._raw__m_entries[i]))
+                self._m_entries[i] = GptPartitionTable.PartitionEntry(_io__raw__m_entries, self, self._root)
 
             io.seek(_pos)
             return self._m_entries if hasattr(self, '_m_entries') else None
@@ -95,7 +98,7 @@ class GptPartitionTable(KaitaiStruct):
         io = self._root._io
         _pos = io.pos()
         io.seek(self._root.sector_size)
-        self._m_primary = self._root.PartitionHeader(io, self, self._root)
+        self._m_primary = GptPartitionTable.PartitionHeader(io, self, self._root)
         io.seek(_pos)
         return self._m_primary if hasattr(self, '_m_primary') else None
 
@@ -107,7 +110,7 @@ class GptPartitionTable(KaitaiStruct):
         io = self._root._io
         _pos = io.pos()
         io.seek((self._io.size() - self._root.sector_size))
-        self._m_backup = self._root.PartitionHeader(io, self, self._root)
+        self._m_backup = GptPartitionTable.PartitionHeader(io, self, self._root)
         io.seek(_pos)
         return self._m_backup if hasattr(self, '_m_backup') else None
 

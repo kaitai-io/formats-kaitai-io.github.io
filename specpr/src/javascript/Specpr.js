@@ -267,13 +267,13 @@ var Specpr = (function() {
       this._read();
     }
     Icflag.prototype._read = function() {
-      this.reserved = this._io.readBitsInt(26);
-      this.isctbType = this._io.readBitsInt(1) != 0;
-      this.isctaType = this._io.readBitsInt(1) != 0;
-      this.coordinateMode = this._io.readBitsInt(1) != 0;
-      this.errors = this._io.readBitsInt(1) != 0;
-      this.text = this._io.readBitsInt(1) != 0;
-      this.continuation = this._io.readBitsInt(1) != 0;
+      this.reserved = this._io.readBitsIntBe(26);
+      this.isctbType = this._io.readBitsIntBe(1) != 0;
+      this.isctaType = this._io.readBitsIntBe(1) != 0;
+      this.coordinateMode = this._io.readBitsIntBe(1) != 0;
+      this.errors = this._io.readBitsIntBe(1) != 0;
+      this.text = this._io.readBitsIntBe(1) != 0;
+      this.continuation = this._io.readBitsIntBe(1) != 0;
     }
     Object.defineProperty(Icflag.prototype, 'type', {
       get: function() {

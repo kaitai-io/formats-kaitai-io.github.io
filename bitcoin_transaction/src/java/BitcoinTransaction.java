@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -36,12 +37,12 @@ public class BitcoinTransaction extends KaitaiStruct {
     private void _read() {
         this.version = this._io.readU4le();
         this.numVins = this._io.readU1();
-        vins = new ArrayList<Vin>((int) (numVins()));
+        vins = new ArrayList<Vin>(((Number) (numVins())).intValue());
         for (int i = 0; i < numVins(); i++) {
             this.vins.add(new Vin(this._io, this, _root));
         }
         this.numVouts = this._io.readU1();
-        vouts = new ArrayList<Vout>((int) (numVouts()));
+        vouts = new ArrayList<Vout>(((Number) (numVouts())).intValue());
         for (int i = 0; i < numVouts(); i++) {
             this.vouts.add(new Vout(this._io, this, _root));
         }
@@ -73,7 +74,10 @@ public class BitcoinTransaction extends KaitaiStruct {
             this._raw_scriptSig = this._io.readBytes(lenScript());
             KaitaiStream _io__raw_scriptSig = new ByteBufferKaitaiStream(_raw_scriptSig);
             this.scriptSig = new ScriptSignature(_io__raw_scriptSig, this, _root);
-            this.endOfVin = this._io.ensureFixedContents(new byte[] { -1, -1, -1, -1 });
+            this.endOfVin = this._io.readBytes(4);
+            if (!(Arrays.equals(endOfVin(), new byte[] { -1, -1, -1, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -1, -1, -1, -1 }, endOfVin(), _io(), "/types/vin/seq/4");
+            }
         }
         public static class ScriptSignature extends KaitaiStruct {
             public static ScriptSignature fromFile(String fileName) throws IOException {
@@ -138,12 +142,21 @@ public class BitcoinTransaction extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.sequence = this._io.ensureFixedContents(new byte[] { 48 });
+                    this.sequence = this._io.readBytes(1);
+                    if (!(Arrays.equals(sequence(), new byte[] { 48 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 48 }, sequence(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/0");
+                    }
                     this.lenSig = this._io.readU1();
-                    this.sep1 = this._io.ensureFixedContents(new byte[] { 2 });
+                    this.sep1 = this._io.readBytes(1);
+                    if (!(Arrays.equals(sep1(), new byte[] { 2 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, sep1(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/2");
+                    }
                     this.lenSigR = this._io.readU1();
                     this.sigR = this._io.readBytes(lenSigR());
-                    this.sep2 = this._io.ensureFixedContents(new byte[] { 2 });
+                    this.sep2 = this._io.readBytes(1);
+                    if (!(Arrays.equals(sep2(), new byte[] { 2 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, sep2(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/5");
+                    }
                     this.lenSigS = this._io.readU1();
                     this.sigS = this._io.readBytes(lenSigS());
                 }

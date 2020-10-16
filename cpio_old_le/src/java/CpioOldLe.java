@@ -58,13 +58,22 @@ public class CpioOldLe extends KaitaiStruct {
         private void _read() {
             this.header = new FileHeader(this._io, this, _root);
             this.pathName = this._io.readBytes((header().pathNameSize() - 1));
-            this.stringTerminator = this._io.ensureFixedContents(new byte[] { 0 });
+            this.stringTerminator = this._io.readBytes(1);
+            if (!(Arrays.equals(stringTerminator(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, stringTerminator(), _io(), "/types/file/seq/2");
+            }
             if (KaitaiStream.mod(header().pathNameSize(), 2) == 1) {
-                this.pathNamePadding = this._io.ensureFixedContents(new byte[] { 0 });
+                this.pathNamePadding = this._io.readBytes(1);
+                if (!(Arrays.equals(pathNamePadding(), new byte[] { 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, pathNamePadding(), _io(), "/types/file/seq/3");
+                }
             }
             this.fileData = this._io.readBytes(header().fileSize().value());
             if (KaitaiStream.mod(header().fileSize().value(), 2) == 1) {
-                this.fileDataPadding = this._io.ensureFixedContents(new byte[] { 0 });
+                this.fileDataPadding = this._io.readBytes(1);
+                if (!(Arrays.equals(fileDataPadding(), new byte[] { 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, fileDataPadding(), _io(), "/types/file/seq/5");
+                }
             }
             if ( ((Arrays.equals(pathName(), new byte[] { 84, 82, 65, 73, 76, 69, 82, 33, 33, 33 })) && (header().fileSize().value() == 0)) ) {
                 this.endOfFilePadding = this._io.readBytesFull();
@@ -109,7 +118,10 @@ public class CpioOldLe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { -57, 113 });
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(magic(), new byte[] { -57, 113 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -57, 113 }, magic(), _io(), "/types/file_header/seq/0");
+            }
             this.deviceNumber = this._io.readU2le();
             this.inodeNumber = this._io.readU2le();
             this.mode = this._io.readU2le();

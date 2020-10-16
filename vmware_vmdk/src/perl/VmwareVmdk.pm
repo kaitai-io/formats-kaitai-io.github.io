@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package VmwareVmdk;
@@ -37,7 +37,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (75, 68, 77, 86)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version} = $self->{_io}->read_s4le();
     $self->{flags} = VmwareVmdk::HeaderFlags->new($self->{_io}, $self, $self->{_root});
     $self->{size_max} = $self->{_io}->read_s8le();
@@ -190,15 +190,15 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved1} = $self->{_io}->read_bits_int(5);
-    $self->{zeroed_grain_table_entry} = $self->{_io}->read_bits_int(1);
-    $self->{use_secondary_grain_dir} = $self->{_io}->read_bits_int(1);
-    $self->{valid_new_line_detection_test} = $self->{_io}->read_bits_int(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(5);
+    $self->{zeroed_grain_table_entry} = $self->{_io}->read_bits_int_be(1);
+    $self->{use_secondary_grain_dir} = $self->{_io}->read_bits_int_be(1);
+    $self->{valid_new_line_detection_test} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{reserved2} = $self->{_io}->read_u1();
-    $self->{reserved3} = $self->{_io}->read_bits_int(6);
-    $self->{has_metadata} = $self->{_io}->read_bits_int(1);
-    $self->{has_compressed_grain} = $self->{_io}->read_bits_int(1);
+    $self->{reserved3} = $self->{_io}->read_bits_int_be(6);
+    $self->{has_metadata} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_compressed_grain} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{reserved4} = $self->{_io}->read_u1();
 }

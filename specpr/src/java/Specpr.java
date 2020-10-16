@@ -98,7 +98,7 @@ public class Specpr extends KaitaiStruct {
             this.itchan = this._io.readS4be();
             this.irmas = this._io.readS4be();
             this.revs = this._io.readS4be();
-            iband = new ArrayList<Integer>((int) (2));
+            iband = new ArrayList<Integer>(((Number) (2)).intValue());
             for (int i = 0; i < 2; i++) {
                 this.iband.add(this._io.readS4be());
             }
@@ -107,7 +107,7 @@ public class Specpr extends KaitaiStruct {
             this.irecno = this._io.readS4be();
             this.itpntr = this._io.readS4be();
             this.ihist = new String(KaitaiStream.bytesStripRight(this._io.readBytes(60), (byte) 32), Charset.forName("ascii"));
-            mhist = new ArrayList<String>((int) (4));
+            mhist = new ArrayList<String>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.mhist.add(new String(this._io.readBytes(74), Charset.forName("ascii")));
             }
@@ -121,7 +121,7 @@ public class Specpr extends KaitaiStruct {
             this.scatim = this._io.readF4be();
             this.timint = this._io.readF4be();
             this.tempd = this._io.readF4be();
-            data = new ArrayList<Float>((int) (256));
+            data = new ArrayList<Float>(((Number) (256)).intValue());
             for (int i = 0; i < 256; i++) {
                 this.data.add(this._io.readF4be());
             }
@@ -379,13 +379,13 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved = this._io.readBitsInt(26);
-            this.isctbType = this._io.readBitsInt(1) != 0;
-            this.isctaType = this._io.readBitsInt(1) != 0;
-            this.coordinateMode = this._io.readBitsInt(1) != 0;
-            this.errors = this._io.readBitsInt(1) != 0;
-            this.text = this._io.readBitsInt(1) != 0;
-            this.continuation = this._io.readBitsInt(1) != 0;
+            this.reserved = this._io.readBitsIntBe(26);
+            this.isctbType = this._io.readBitsIntBe(1) != 0;
+            this.isctaType = this._io.readBitsIntBe(1) != 0;
+            this.coordinateMode = this._io.readBitsIntBe(1) != 0;
+            this.errors = this._io.readBitsIntBe(1) != 0;
+            this.text = this._io.readBitsIntBe(1) != 0;
+            this.continuation = this._io.readBitsIntBe(1) != 0;
         }
         private RecordType type;
         public RecordType type() {
@@ -470,7 +470,7 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            cdata = new ArrayList<Float>((int) (383));
+            cdata = new ArrayList<Float>(((Number) (383)).intValue());
             for (int i = 0; i < 383; i++) {
                 this.cdata.add(this._io.readF4be());
             }
@@ -654,35 +654,42 @@ public class Specpr extends KaitaiStruct {
         }
         private void _read() {
             this.icflag = new Icflag(this._io, this, _root);
-            switch (icflag().type()) {
-            case DATA_INITIAL: {
-                this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new DataInitial(_io__raw_content, this, _root);
-                break;
-            }
-            case DATA_CONTINUATION: {
-                this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new DataContinuation(_io__raw_content, this, _root);
-                break;
-            }
-            case TEXT_CONTINUATION: {
-                this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new TextContinuation(_io__raw_content, this, _root);
-                break;
-            }
-            case TEXT_INITIAL: {
-                this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new TextInitial(_io__raw_content, this, _root);
-                break;
-            }
-            default: {
-                this.content = this._io.readBytes((1536 - 4));
-                break;
-            }
+            {
+                RecordType on = icflag().type();
+                if (on != null) {
+                    switch (icflag().type()) {
+                    case DATA_INITIAL: {
+                        this._raw_content = this._io.readBytes((1536 - 4));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new DataInitial(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case DATA_CONTINUATION: {
+                        this._raw_content = this._io.readBytes((1536 - 4));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new DataContinuation(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case TEXT_CONTINUATION: {
+                        this._raw_content = this._io.readBytes((1536 - 4));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new TextContinuation(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case TEXT_INITIAL: {
+                        this._raw_content = this._io.readBytes((1536 - 4));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new TextInitial(_io__raw_content, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.content = this._io.readBytes((1536 - 4));
+                        break;
+                    }
+                    }
+                } else {
+                    this.content = this._io.readBytes((1536 - 4));
+                }
             }
         }
         private Icflag icflag;

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -43,12 +43,14 @@ class Ogg < Kaitai::Struct::Struct
     end
 
     def _read
-      @sync_code = @_io.ensure_fixed_contents([79, 103, 103, 83].pack('C*'))
-      @version = @_io.ensure_fixed_contents([0].pack('C*'))
-      @reserved1 = @_io.read_bits_int(5)
-      @is_end_of_stream = @_io.read_bits_int(1) != 0
-      @is_beginning_of_stream = @_io.read_bits_int(1) != 0
-      @is_continuation = @_io.read_bits_int(1) != 0
+      @sync_code = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([79, 103, 103, 83].pack('C*'), sync_code, _io, "/types/page/seq/0") if not sync_code == [79, 103, 103, 83].pack('C*')
+      @version = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), version, _io, "/types/page/seq/1") if not version == [0].pack('C*')
+      @reserved1 = @_io.read_bits_int_be(5)
+      @is_end_of_stream = @_io.read_bits_int_be(1) != 0
+      @is_beginning_of_stream = @_io.read_bits_int_be(1) != 0
+      @is_continuation = @_io.read_bits_int_be(1) != 0
       @_io.align_to_byte
       @granule_pos = @_io.read_u8le
       @bitstream_serial = @_io.read_u4le

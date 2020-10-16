@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Vfat < Kaitai::Struct::Struct
@@ -27,11 +27,12 @@ class Vfat < Kaitai::Struct::Struct
 
     def _read
       @ls_per_fat = @_io.read_u4le
-      @has_active_fat = @_io.read_bits_int(1) != 0
-      @reserved1 = @_io.read_bits_int(3)
-      @active_fat_id = @_io.read_bits_int(4)
+      @has_active_fat = @_io.read_bits_int_be(1) != 0
+      @reserved1 = @_io.read_bits_int_be(3)
+      @active_fat_id = @_io.read_bits_int_be(4)
       @_io.align_to_byte
-      @reserved2 = @_io.ensure_fixed_contents([0].pack('C*'))
+      @reserved2 = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved2, _io, "/types/ext_bios_param_block_fat32/seq/4") if not reserved2 == [0].pack('C*')
       @fat_version = @_io.read_u2le
       @root_dir_start_clus = @_io.read_u4le
       @ls_fs_info = @_io.read_u2le
@@ -390,8 +391,8 @@ class Vfat < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(boot_sector.pos_root_dir)
     @_raw_root_dir = @_io.read_bytes(boot_sector.size_root_dir)
-    io = Kaitai::Struct::Stream.new(@_raw_root_dir)
-    @root_dir = RootDirectory.new(io, self, @_root)
+    _io__raw_root_dir = Kaitai::Struct::Stream.new(@_raw_root_dir)
+    @root_dir = RootDirectory.new(_io__raw_root_dir, self, @_root)
     @_io.seek(_pos)
     @root_dir
   end

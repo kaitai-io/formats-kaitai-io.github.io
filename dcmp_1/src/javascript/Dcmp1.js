@@ -94,20 +94,20 @@ var Dcmp1 = (function() {
     Chunk.prototype._read = function() {
       this.tag = this._io.readU1();
       switch (( ((this.tag >= 0) && (this.tag <= 31))  ? Dcmp1.Chunk.TagKind.LITERAL : ( ((this.tag >= 32) && (this.tag <= 207))  ? Dcmp1.Chunk.TagKind.BACKREFERENCE : ( ((this.tag >= 208) && (this.tag <= 209))  ? Dcmp1.Chunk.TagKind.LITERAL : (this.tag == 210 ? Dcmp1.Chunk.TagKind.BACKREFERENCE : ( ((this.tag >= 213) && (this.tag <= 253))  ? Dcmp1.Chunk.TagKind.TABLE_LOOKUP : (this.tag == 254 ? Dcmp1.Chunk.TagKind.EXTENDED : (this.tag == 255 ? Dcmp1.Chunk.TagKind.END : Dcmp1.Chunk.TagKind.INVALID)))))))) {
-      case Dcmp1.Chunk.TagKind.END:
-        this.body = new EndBody(this._io, this, this._root);
+      case Dcmp1.Chunk.TagKind.EXTENDED:
+        this.body = new ExtendedBody(this._io, this, this._root);
         break;
       case Dcmp1.Chunk.TagKind.LITERAL:
         this.body = new LiteralBody(this._io, this, this._root, this.tag);
         break;
-      case Dcmp1.Chunk.TagKind.BACKREFERENCE:
-        this.body = new BackreferenceBody(this._io, this, this._root, this.tag);
+      case Dcmp1.Chunk.TagKind.END:
+        this.body = new EndBody(this._io, this, this._root);
         break;
       case Dcmp1.Chunk.TagKind.TABLE_LOOKUP:
         this.body = new TableLookupBody(this._io, this, this._root, this.tag);
         break;
-      case Dcmp1.Chunk.TagKind.EXTENDED:
-        this.body = new ExtendedBody(this._io, this, this._root);
+      case Dcmp1.Chunk.TagKind.BACKREFERENCE:
+        this.body = new BackreferenceBody(this._io, this, this._root, this.tag);
         break;
       }
     }

@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -40,12 +41,15 @@ public class GenmidiOp2 extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 });
-        instruments = new ArrayList<InstrumentEntry>((int) (175));
+        this.magic = this._io.readBytes(8);
+        if (!(Arrays.equals(magic(), new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, magic(), _io(), "/seq/0");
+        }
+        instruments = new ArrayList<InstrumentEntry>(((Number) (175)).intValue());
         for (int i = 0; i < 175; i++) {
             this.instruments.add(new InstrumentEntry(this._io, this, _root));
         }
-        instrumentNames = new ArrayList<String>((int) (175));
+        instrumentNames = new ArrayList<String>(((Number) (175)).intValue());
         for (int i = 0; i < 175; i++) {
             this.instrumentNames.add(new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), (byte) 0), (byte) 0, false), Charset.forName("ASCII")));
         }
@@ -73,7 +77,7 @@ public class GenmidiOp2 extends KaitaiStruct {
             this.flags = this._io.readU2le();
             this.finetune = this._io.readU1();
             this.note = this._io.readU1();
-            instruments = new ArrayList<Instrument>((int) (2));
+            instruments = new ArrayList<Instrument>(((Number) (2)).intValue());
             for (int i = 0; i < 2; i++) {
                 this.instruments.add(new Instrument(this._io, this, _root));
             }

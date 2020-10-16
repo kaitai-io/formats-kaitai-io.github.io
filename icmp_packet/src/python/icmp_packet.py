@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class IcmpPacket(KaitaiStruct):
 
@@ -24,15 +25,15 @@ class IcmpPacket(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.icmp_type = self._root.IcmpTypeEnum(self._io.read_u1())
-        if self.icmp_type == self._root.IcmpTypeEnum.destination_unreachable:
-            self.destination_unreachable = self._root.DestinationUnreachableMsg(self._io, self, self._root)
+        self.icmp_type = KaitaiStream.resolve_enum(IcmpPacket.IcmpTypeEnum, self._io.read_u1())
+        if self.icmp_type == IcmpPacket.IcmpTypeEnum.destination_unreachable:
+            self.destination_unreachable = IcmpPacket.DestinationUnreachableMsg(self._io, self, self._root)
 
-        if self.icmp_type == self._root.IcmpTypeEnum.time_exceeded:
-            self.time_exceeded = self._root.TimeExceededMsg(self._io, self, self._root)
+        if self.icmp_type == IcmpPacket.IcmpTypeEnum.time_exceeded:
+            self.time_exceeded = IcmpPacket.TimeExceededMsg(self._io, self, self._root)
 
-        if  ((self.icmp_type == self._root.IcmpTypeEnum.echo) or (self.icmp_type == self._root.IcmpTypeEnum.echo_reply)) :
-            self.echo = self._root.EchoMsg(self._io, self, self._root)
+        if  ((self.icmp_type == IcmpPacket.IcmpTypeEnum.echo) or (self.icmp_type == IcmpPacket.IcmpTypeEnum.echo_reply)) :
+            self.echo = IcmpPacket.EchoMsg(self._io, self, self._root)
 
 
     class DestinationUnreachableMsg(KaitaiStruct):
@@ -61,7 +62,7 @@ class IcmpPacket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._root.DestinationUnreachableMsg.DestinationUnreachableCode(self._io.read_u1())
+            self.code = KaitaiStream.resolve_enum(IcmpPacket.DestinationUnreachableMsg.DestinationUnreachableCode, self._io.read_u1())
             self.checksum = self._io.read_u2be()
 
 
@@ -77,7 +78,7 @@ class IcmpPacket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._root.TimeExceededMsg.TimeExceededCode(self._io.read_u1())
+            self.code = KaitaiStream.resolve_enum(IcmpPacket.TimeExceededMsg.TimeExceededCode, self._io.read_u1())
             self.checksum = self._io.read_u2be()
 
 
@@ -89,7 +90,9 @@ class IcmpPacket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._io.ensure_fixed_contents(b"\x00")
+            self.code = self._io.read_bytes(1)
+            if not self.code == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.code, self._io, u"/types/echo_msg/seq/0")
             self.checksum = self._io.read_u2be()
             self.identifier = self._io.read_u2be()
             self.seq_num = self._io.read_u2be()

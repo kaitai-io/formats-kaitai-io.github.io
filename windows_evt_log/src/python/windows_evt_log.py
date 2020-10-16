@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class WindowsEvtLog(KaitaiStruct):
     """EVT files are Windows Event Log files written by older Windows
@@ -41,11 +42,11 @@ class WindowsEvtLog(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
+        self.header = WindowsEvtLog.Header(self._io, self, self._root)
         self.records = []
         i = 0
         while not self._io.is_eof():
-            self.records.append(self._root.Record(self._io, self, self._root))
+            self.records.append(WindowsEvtLog.Record(self._io, self, self._root))
             i += 1
 
 
@@ -62,7 +63,9 @@ class WindowsEvtLog(KaitaiStruct):
 
         def _read(self):
             self.len_header = self._io.read_u4le()
-            self.magic = self._io.ensure_fixed_contents(b"\x4C\x66\x4C\x65")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x4C\x66\x4C\x65":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4C\x66\x4C\x65", self.magic, self._io, u"/types/header/seq/1")
             self.version_major = self._io.read_u4le()
             self.version_minor = self._io.read_u4le()
             self.ofs_start = self._io.read_u4le()
@@ -70,7 +73,7 @@ class WindowsEvtLog(KaitaiStruct):
             self.cur_rec_idx = self._io.read_u4le()
             self.oldest_rec_idx = self._io.read_u4le()
             self.len_file_max = self._io.read_u4le()
-            self.flags = self._root.Header.Flags(self._io, self, self._root)
+            self.flags = WindowsEvtLog.Header.Flags(self._io, self, self._root)
             self.retention = self._io.read_u4le()
             self.len_header_2 = self._io.read_u4le()
 
@@ -82,11 +85,11 @@ class WindowsEvtLog(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved = self._io.read_bits_int(28)
-                self.archive = self._io.read_bits_int(1) != 0
-                self.log_full = self._io.read_bits_int(1) != 0
-                self.wrap = self._io.read_bits_int(1) != 0
-                self.dirty = self._io.read_bits_int(1) != 0
+                self.reserved = self._io.read_bits_int_be(28)
+                self.archive = self._io.read_bits_int_be(1) != 0
+                self.log_full = self._io.read_bits_int_be(1) != 0
+                self.wrap = self._io.read_bits_int_be(1) != 0
+                self.dirty = self._io.read_bits_int_be(1) != 0
 
 
 
@@ -107,12 +110,12 @@ class WindowsEvtLog(KaitaiStruct):
             _on = self.type
             if _on == 1699505740:
                 self._raw_body = self._io.read_bytes((self.len_record - 12))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RecordBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = WindowsEvtLog.RecordBody(_io__raw_body, self, self._root)
             elif _on == 286331153:
                 self._raw_body = self._io.read_bytes((self.len_record - 12))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CursorRecordBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = WindowsEvtLog.CursorRecordBody(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes((self.len_record - 12))
             self.len_record2 = self._io.read_u4le()
@@ -141,7 +144,7 @@ class WindowsEvtLog(KaitaiStruct):
             self.time_generated = self._io.read_u4le()
             self.time_written = self._io.read_u4le()
             self.event_id = self._io.read_u4le()
-            self.event_type = self._root.RecordBody.EventTypes(self._io.read_u2le())
+            self.event_type = KaitaiStream.resolve_enum(WindowsEvtLog.RecordBody.EventTypes, self._io.read_u2le())
             self.num_strings = self._io.read_u2le()
             self.event_category = self._io.read_u2le()
             self.reserved = self._io.read_bytes(6)
@@ -186,7 +189,9 @@ class WindowsEvtLog(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44")
+            self.magic = self._io.read_bytes(12)
+            if not self.magic == b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44":
+                raise kaitaistruct.ValidationNotEqualError(b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", self.magic, self._io, u"/types/cursor_record_body/seq/0")
             self.ofs_first_record = self._io.read_u4le()
             self.ofs_next_record = self._io.read_u4le()
             self.idx_next_record = self._io.read_u4le()

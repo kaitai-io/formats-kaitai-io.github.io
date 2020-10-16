@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -210,7 +211,10 @@ public class Id3v11 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 84, 65, 71 });
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(magic(), new byte[] { 84, 65, 71 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 84, 65, 71 }, magic(), _io(), "/types/id3_v1_1_tag/seq/0");
+            }
             this.title = this._io.readBytes(30);
             this.artist = this._io.readBytes(30);
             this.album = this._io.readBytes(30);

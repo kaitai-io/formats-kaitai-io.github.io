@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -48,12 +48,14 @@ class Avi < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic1 = @_io.ensure_fixed_contents([82, 73, 70, 70].pack('C*'))
+    @magic1 = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([82, 73, 70, 70].pack('C*'), magic1, _io, "/seq/0") if not magic1 == [82, 73, 70, 70].pack('C*')
     @file_size = @_io.read_u4le
-    @magic2 = @_io.ensure_fixed_contents([65, 86, 73, 32].pack('C*'))
+    @magic2 = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([65, 86, 73, 32].pack('C*'), magic2, _io, "/seq/2") if not magic2 == [65, 86, 73, 32].pack('C*')
     @_raw_data = @_io.read_bytes((file_size - 4))
-    io = Kaitai::Struct::Stream.new(@_raw_data)
-    @data = Blocks.new(io, self, @_root)
+    _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+    @data = Blocks.new(_io__raw_data, self, @_root)
     self
   end
   class ListBody < Kaitai::Struct::Struct
@@ -63,7 +65,7 @@ class Avi < Kaitai::Struct::Struct
     end
 
     def _read
-      @list_type = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
+      @list_type = Kaitai::Struct::Stream::resolve_enum(Avi::CHUNK_TYPE, @_io.read_u4le)
       @data = Blocks.new(@_io, self, @_root)
       self
     end
@@ -148,21 +150,21 @@ class Avi < Kaitai::Struct::Struct
     end
 
     def _read
-      @four_cc = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
+      @four_cc = Kaitai::Struct::Stream::resolve_enum(Avi::CHUNK_TYPE, @_io.read_u4le)
       @block_size = @_io.read_u4le
       case four_cc
       when :chunk_type_list
         @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ListBody.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ListBody.new(_io__raw_data, self, @_root)
       when :chunk_type_avih
         @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = AvihBody.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = AvihBody.new(_io__raw_data, self, @_root)
       when :chunk_type_strh
         @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = StrhBody.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = StrhBody.new(_io__raw_data, self, @_root)
       else
         @data = @_io.read_bytes(block_size)
       end
@@ -184,8 +186,8 @@ class Avi < Kaitai::Struct::Struct
     end
 
     def _read
-      @fcc_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPE, @_io.read_u4le)
-      @fcc_handler = Kaitai::Struct::Stream::resolve_enum(HANDLER_TYPE, @_io.read_u4le)
+      @fcc_type = Kaitai::Struct::Stream::resolve_enum(Avi::STREAM_TYPE, @_io.read_u4le)
+      @fcc_handler = Kaitai::Struct::Stream::resolve_enum(Avi::HANDLER_TYPE, @_io.read_u4le)
       @flags = @_io.read_u4le
       @priority = @_io.read_u2le
       @language = @_io.read_u2le

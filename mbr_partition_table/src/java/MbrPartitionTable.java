@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -39,11 +40,14 @@ public class MbrPartitionTable extends KaitaiStruct {
     }
     private void _read() {
         this.bootstrapCode = this._io.readBytes(446);
-        partitions = new ArrayList<PartitionEntry>((int) (4));
+        partitions = new ArrayList<PartitionEntry>(((Number) (4)).intValue());
         for (int i = 0; i < 4; i++) {
             this.partitions.add(new PartitionEntry(this._io, this, _root));
         }
-        this.bootSignature = this._io.ensureFixedContents(new byte[] { 85, -86 });
+        this.bootSignature = this._io.readBytes(2);
+        if (!(Arrays.equals(bootSignature(), new byte[] { 85, -86 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 85, -86 }, bootSignature(), _io(), "/seq/2");
+        }
     }
     public static class PartitionEntry extends KaitaiStruct {
         public static PartitionEntry fromFile(String fileName) throws IOException {

@@ -99,24 +99,24 @@ namespace Kaitai
             {
                 _tag = m_io.ReadU1();
                 switch (( ((Tag >= 0) && (Tag <= 31))  ? TagKind.Literal : ( ((Tag >= 32) && (Tag <= 207))  ? TagKind.Backreference : ( ((Tag >= 208) && (Tag <= 209))  ? TagKind.Literal : (Tag == 210 ? TagKind.Backreference : ( ((Tag >= 213) && (Tag <= 253))  ? TagKind.TableLookup : (Tag == 254 ? TagKind.Extended : (Tag == 255 ? TagKind.End : TagKind.Invalid)))))))) {
-                case TagKind.End: {
-                    _body = new EndBody(m_io, this, m_root);
+                case TagKind.Extended: {
+                    _body = new ExtendedBody(m_io, this, m_root);
                     break;
                 }
                 case TagKind.Literal: {
                     _body = new LiteralBody(Tag, m_io, this, m_root);
                     break;
                 }
-                case TagKind.Backreference: {
-                    _body = new BackreferenceBody(Tag, m_io, this, m_root);
+                case TagKind.End: {
+                    _body = new EndBody(m_io, this, m_root);
                     break;
                 }
                 case TagKind.TableLookup: {
                     _body = new TableLookupBody(Tag, m_io, this, m_root);
                     break;
                 }
-                case TagKind.Extended: {
-                    _body = new ExtendedBody(m_io, this, m_root);
+                case TagKind.Backreference: {
+                    _body = new BackreferenceBody(Tag, m_io, this, m_root);
                     break;
                 }
                 }

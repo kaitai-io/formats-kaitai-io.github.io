@@ -163,11 +163,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Microsoft AVI file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Microsoft AVI file parsing C# library">C#</a></li>
                 
                 
@@ -272,6 +267,7 @@ section#format-index .row {
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
@@ -357,9 +353,15 @@ section#format-index .row {
         <span class="n">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="na">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic1</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span> <span class="p">})))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span> <span class="p">},</span> <span class="n">magic1</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="na">fileSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="na">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">32</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic2</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">32</span> <span class="p">})))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">32</span> <span class="p">},</span> <span class="n">magic2</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/seq/2&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">fileSize</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
         <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Blocks</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
@@ -556,29 +558,36 @@ section#format-index .row {
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">fourCc</span> <span class="o">=</span> <span class="n">Avi</span><span class="p">.</span><span class="na">ChunkType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">blockSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">fourCc</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">LIST</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">AVIH</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AvihBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">STRH</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
-                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StrhBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="p">{</span>
+                <span class="n">ChunkType</span> <span class="n">on</span> <span class="o">=</span> <span class="n">fourCc</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">fourCc</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">LIST</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">AVIH</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AvihBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">STRH</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StrhBody</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">blockSize</span><span class="p">());</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">ChunkType</span> <span class="n">fourCc</span><span class="p">;</span>

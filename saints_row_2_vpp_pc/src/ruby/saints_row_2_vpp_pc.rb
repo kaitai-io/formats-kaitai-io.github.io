@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class SaintsRow2VppPc < Kaitai::Struct::Struct
@@ -13,7 +13,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([206, 10, 137, 81, 4].pack('C*'))
+    @magic = @_io.read_bytes(5)
+    raise Kaitai::Struct::ValidationNotEqualError.new([206, 10, 137, 81, 4].pack('C*'), magic, _io, "/seq/0") if not magic == [206, 10, 137, 81, 4].pack('C*')
     @pad1 = @_io.read_bytes(335)
     @num_files = @_io.read_s4le
     @container_size = @_io.read_s4le
@@ -117,8 +118,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(ofs_filenames)
     @_raw_filenames = @_io.read_bytes(len_filenames)
-    io = Kaitai::Struct::Stream.new(@_raw_filenames)
-    @filenames = Strings.new(io, self, @_root)
+    _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames)
+    @filenames = Strings.new(_io__raw_filenames, self, @_root)
     @_io.seek(_pos)
     @filenames
   end
@@ -132,8 +133,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(2048)
     @_raw_files = @_io.read_bytes(len_offsets)
-    io = Kaitai::Struct::Stream.new(@_raw_files)
-    @files = Offsets.new(io, self, @_root)
+    _io__raw_files = Kaitai::Struct::Stream.new(@_raw_files)
+    @files = Offsets.new(_io__raw_files, self, @_root)
     @_io.seek(_pos)
     @files
   end
@@ -147,8 +148,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(ofs_extensions)
     @_raw_extensions = @_io.read_bytes(len_extensions)
-    io = Kaitai::Struct::Stream.new(@_raw_extensions)
-    @extensions = Strings.new(io, self, @_root)
+    _io__raw_extensions = Kaitai::Struct::Stream.new(@_raw_extensions)
+    @extensions = Strings.new(_io__raw_extensions, self, @_root)
     @_io.seek(_pos)
     @extensions
   end

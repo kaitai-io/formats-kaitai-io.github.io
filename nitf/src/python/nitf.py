@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Nitf(KaitaiStruct):
     """The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
@@ -29,26 +30,26 @@ class Nitf(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
+        self.header = Nitf.Header(self._io, self, self._root)
         self.image_segments = [None] * (int(self.header.num_image_segments))
         for i in range(int(self.header.num_image_segments)):
-            self.image_segments[i] = self._root.ImageSegment(i, self._io, self, self._root)
+            self.image_segments[i] = Nitf.ImageSegment(i, self._io, self, self._root)
 
         self.graphics_segments = [None] * (int(self.header.num_graphics_segments))
         for i in range(int(self.header.num_graphics_segments)):
-            self.graphics_segments[i] = self._root.GraphicsSegment(i, self._io, self, self._root)
+            self.graphics_segments[i] = Nitf.GraphicsSegment(i, self._io, self, self._root)
 
         self.text_segments = [None] * (int(self.header.num_text_files))
         for i in range(int(self.header.num_text_files)):
-            self.text_segments[i] = self._root.TextSegment(i, self._io, self, self._root)
+            self.text_segments[i] = Nitf.TextSegment(i, self._io, self, self._root)
 
         self.data_extension_segments = [None] * (int(self.header.num_data_extension))
         for i in range(int(self.header.num_data_extension)):
-            self.data_extension_segments[i] = self._root.DataExtensionSegment(i, self._io, self, self._root)
+            self.data_extension_segments[i] = Nitf.DataExtensionSegment(i, self._io, self, self._root)
 
         self.reserved_extension_segments = [None] * (int(self.header.num_reserved_extension))
         for i in range(int(self.header.num_reserved_extension)):
-            self.reserved_extension_segments[i] = self._root.ReservedExtensionSegment(i, self._io, self, self._root)
+            self.reserved_extension_segments[i] = Nitf.ReservedExtensionSegment(i, self._io, self, self._root)
 
 
     class ReservedExtensionSegment(KaitaiStruct):
@@ -61,8 +62,8 @@ class Nitf(KaitaiStruct):
 
         def _read(self):
             self._raw_reserved_sub_header = self._io.read_bytes(int(self._parent.header.lrnfo[self.idx].length_reserved_extension_subheader))
-            io = KaitaiStream(BytesIO(self._raw_reserved_sub_header))
-            self.reserved_sub_header = self._root.ReservedSubHeader(io, self, self._root)
+            _io__raw_reserved_sub_header = KaitaiStream(BytesIO(self._raw_reserved_sub_header))
+            self.reserved_sub_header = Nitf.ReservedSubHeader(_io__raw_reserved_sub_header, self, self._root)
             self.reserved_data_field = self._io.read_bytes(int(self._parent.header.lrnfo[self.idx].length_reserved_extension_segment))
 
 
@@ -112,7 +113,9 @@ class Nitf(KaitaiStruct):
         def _read(self):
             self.representation = (self._io.read_bytes(2)).decode(u"UTF-8")
             self.subcategory = (self._io.read_bytes(6)).decode(u"UTF-8")
-            self.img_filter_condition = self._io.ensure_fixed_contents(b"\x4E")
+            self.img_filter_condition = self._io.read_bytes(1)
+            if not self.img_filter_condition == b"\x4E":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4E", self.img_filter_condition, self._io, u"/types/band_info/seq/2")
             self.img_filter_code = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.num_luts = (self._io.read_bytes(1)).decode(u"UTF-8")
             if int(self.num_luts) != 0:
@@ -133,9 +136,9 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.image_sub_header = self._root.ImageSubHeader(self._io, self, self._root)
+            self.image_sub_header = Nitf.ImageSubHeader(self._io, self, self._root)
             if self.has_mask:
-                self.image_data_mask = self._root.ImageDataMask(self._io, self, self._root)
+                self.image_data_mask = Nitf.ImageDataMask(self._io, self, self._root)
 
             if self.has_mask:
                 self.image_data_field = self._io.read_bytes((int(self._parent.header.linfo[self.idx].length_image_segment) - self.image_data_mask.total_size))
@@ -146,7 +149,7 @@ class Nitf(KaitaiStruct):
             if hasattr(self, '_m_has_mask'):
                 return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
-            self._m_has_mask =  ((self.image_sub_header.img_compression[0:1] == u"M") or (self.image_sub_header.img_compression[1:2] == u"M")) 
+            self._m_has_mask =  (((self.image_sub_header.img_compression)[0:1] == u"M") or ((self.image_sub_header.img_compression)[1:2] == u"M")) 
             return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
 
@@ -171,12 +174,16 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_part_type_sy = self._io.ensure_fixed_contents(b"\x53\x59")
+            self.file_part_type_sy = self._io.read_bytes(2)
+            if not self.file_part_type_sy == b"\x53\x59":
+                raise kaitaistruct.ValidationNotEqualError(b"\x53\x59", self.file_part_type_sy, self._io, u"/types/graphic_sub_header/seq/0")
             self.graphic_id = (self._io.read_bytes(10)).decode(u"UTF-8")
             self.graphic_name = (self._io.read_bytes(20)).decode(u"UTF-8")
-            self.graphic_classification = self._root.Clasnfo(self._io, self, self._root)
-            self.encryption = self._root.Encrypt(self._io, self, self._root)
-            self.graphic_type = self._io.ensure_fixed_contents(b"\x43")
+            self.graphic_classification = Nitf.Clasnfo(self._io, self, self._root)
+            self.encryption = Nitf.Encrypt(self._io, self, self._root)
+            self.graphic_type = self._io.read_bytes(1)
+            if not self.graphic_type == b"\x43":
+                raise kaitaistruct.ValidationNotEqualError(b"\x43", self.graphic_type, self._io, u"/types/graphic_sub_header/seq/5")
             self.reserved1 = (self._io.read_bytes(13)).decode(u"UTF-8")
             self.graphic_display_level = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.graphic_attachment_level = (self._io.read_bytes(3)).decode(u"UTF-8")
@@ -185,7 +192,7 @@ class Nitf(KaitaiStruct):
             self.graphic_color = (self._io.read_bytes(1)).decode(u"UTF-8")
             self.second_graphic_bound_loc = (self._io.read_bytes(10)).decode(u"UTF-8")
             self.reserved2 = (self._io.read_bytes(2)).decode(u"UTF-8")
-            self.graphics_extended_sub_header = self._root.TreHeader(self._io, self, self._root)
+            self.graphics_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
 
 
     class Clasnfo(KaitaiStruct):
@@ -329,7 +336,7 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.graphic_sub_header = self._root.GraphicSubHeader(self._io, self, self._root)
+            self.graphic_sub_header = Nitf.GraphicSubHeader(self._io, self, self._root)
             self.graphic_data_field = self._io.read_bytes(int(self._parent.header.lnnfo[self.idx].length_graphic_segment))
 
 
@@ -341,7 +348,7 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.des_base = self._root.DataSubHeaderBase(self._io, self, self._root)
+            self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
             if self.tre_ofl:
                 self.overflowed_header_type = (self._io.read_bytes(6)).decode(u"UTF-8")
 
@@ -371,8 +378,8 @@ class Nitf(KaitaiStruct):
 
         def _read(self):
             self._raw_data_sub_header = self._io.read_bytes(int(self._parent.header.ldnfo[self.idx].length_data_extension_subheader))
-            io = KaitaiStream(BytesIO(self._raw_data_sub_header))
-            self.data_sub_header = self._root.DataSubHeader(io, self, self._root)
+            _io__raw_data_sub_header = KaitaiStream(BytesIO(self._raw_data_sub_header))
+            self.data_sub_header = Nitf.DataSubHeader(_io__raw_data_sub_header, self, self._root)
             self.data_data_field = self._io.read_bytes(int(self._parent.header.ldnfo[self.idx].length_data_extension_segment))
 
 
@@ -384,7 +391,7 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.des_base = self._root.DataSubHeaderBase(self._io, self, self._root)
+            self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
             if self.des_base.desid == u"TRE_OVERFLOW":
                 self.overflowed_header_type = (self._io.read_bytes(6)).decode(u"UTF-8")
 
@@ -403,13 +410,15 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_part_type = self._io.ensure_fixed_contents(b"\x49\x4D")
+            self.file_part_type = self._io.read_bytes(2)
+            if not self.file_part_type == b"\x49\x4D":
+                raise kaitaistruct.ValidationNotEqualError(b"\x49\x4D", self.file_part_type, self._io, u"/types/image_sub_header/seq/0")
             self.image_id_1 = (self._io.read_bytes(10)).decode(u"UTF-8")
-            self.image_date_time = self._root.DateTime(self._io, self, self._root)
+            self.image_date_time = Nitf.DateTime(self._io, self, self._root)
             self.target_id = (self._io.read_bytes(17)).decode(u"UTF-8")
             self.image_id_2 = (self._io.read_bytes(80)).decode(u"UTF-8")
-            self.image_security_classification = self._root.Clasnfo(self._io, self, self._root)
-            self.encryption = self._root.Encrypt(self._io, self, self._root)
+            self.image_security_classification = Nitf.Clasnfo(self._io, self, self._root)
+            self.encryption = Nitf.Encrypt(self._io, self, self._root)
             self.image_source = (self._io.read_bytes(42)).decode(u"UTF-8")
             self.num_sig_rows = (self._io.read_bytes(8)).decode(u"UTF-8")
             self.num_sig_cols = (self._io.read_bytes(8)).decode(u"UTF-8")
@@ -423,7 +432,7 @@ class Nitf(KaitaiStruct):
             self.num_img_comments = (self._io.read_bytes(1)).decode(u"UTF-8")
             self.img_comments = [None] * (int(self.num_img_comments))
             for i in range(int(self.num_img_comments)):
-                self.img_comments[i] = self._root.ImageComment(self._io, self, self._root)
+                self.img_comments[i] = Nitf.ImageComment(self._io, self, self._root)
 
             self.img_compression = (self._io.read_bytes(2)).decode(u"UTF-8")
             self.compression_rate_code = (self._io.read_bytes(4)).decode(u"UTF-8")
@@ -433,7 +442,7 @@ class Nitf(KaitaiStruct):
 
             self.bands = [None] * ((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands)))
             for i in range((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands))):
-                self.bands[i] = self._root.BandInfo(self._io, self, self._root)
+                self.bands[i] = Nitf.BandInfo(self._io, self, self._root)
 
             self.img_sync_code = (self._io.read_bytes(1)).decode(u"UTF-8")
             self.img_mode = (self._io.read_bytes(1)).decode(u"UTF-8")
@@ -456,7 +465,7 @@ class Nitf(KaitaiStruct):
                     self.user_def_img_data[i] = self._io.read_u1()
 
 
-            self.image_extended_sub_header = self._root.TreHeader(self._io, self, self._root)
+            self.image_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
 
 
     class ReservedSubHeader(KaitaiStruct):
@@ -467,10 +476,12 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_part_type_re = self._io.ensure_fixed_contents(b"\x52\x45")
+            self.file_part_type_re = self._io.read_bytes(2)
+            if not self.file_part_type_re == b"\x52\x45":
+                raise kaitaistruct.ValidationNotEqualError(b"\x52\x45", self.file_part_type_re, self._io, u"/types/reserved_sub_header/seq/0")
             self.res_type_id = (self._io.read_bytes(25)).decode(u"UTF-8")
             self.res_version = (self._io.read_bytes(2)).decode(u"UTF-8")
-            self.reclasnfo = self._root.Clasnfo(self._io, self, self._root)
+            self.reclasnfo = Nitf.Clasnfo(self._io, self, self._root)
             self.res_user_defined_subheader_length = (self._io.read_bytes(4)).decode(u"UTF-8")
             self.res_user_defined_subheader_fields = (self._io.read_bytes(int(self.res_user_defined_subheader_length))).decode(u"UTF-8")
             self.res_user_defined_data = (self._io.read_bytes_full()).decode(u"UTF-8")
@@ -484,10 +495,12 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_part_type_de = self._io.ensure_fixed_contents(b"\x44\x45")
+            self.file_part_type_de = self._io.read_bytes(2)
+            if not self.file_part_type_de == b"\x44\x45":
+                raise kaitaistruct.ValidationNotEqualError(b"\x44\x45", self.file_part_type_de, self._io, u"/types/data_sub_header_base/seq/0")
             self.desid = (self._io.read_bytes(25)).decode(u"UTF-8")
             self.data_definition_version = (self._io.read_bytes(2)).decode(u"UTF-8")
-            self.declasnfo = self._root.Clasnfo(self._io, self, self._root)
+            self.declasnfo = Nitf.Clasnfo(self._io, self, self._root)
 
 
     class TextSubHeader(KaitaiStruct):
@@ -500,10 +513,10 @@ class Nitf(KaitaiStruct):
         def _read(self):
             self.text_date_time = (self._io.read_bytes(14)).decode(u"UTF-8")
             self.text_title = (self._io.read_bytes(80)).decode(u"UTF-8")
-            self.text_security_class = self._root.Clasnfo(self._io, self, self._root)
-            self.encryp = self._root.Encrypt(self._io, self, self._root)
+            self.text_security_class = Nitf.Clasnfo(self._io, self, self._root)
+            self.encryp = Nitf.Encrypt(self._io, self, self._root)
             self.text_format = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.text_extended_sub_header = self._root.TreHeader(self._io, self, self._root)
+            self.text_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
 
 
     class DateTime(KaitaiStruct):
@@ -525,17 +538,23 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_profile_name = self._io.ensure_fixed_contents(b"\x4E\x49\x54\x46")
-            self.file_version = self._io.ensure_fixed_contents(b"\x30\x32\x2E\x31\x30")
+            self.file_profile_name = self._io.read_bytes(4)
+            if not self.file_profile_name == b"\x4E\x49\x54\x46":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4E\x49\x54\x46", self.file_profile_name, self._io, u"/types/header/seq/0")
+            self.file_version = self._io.read_bytes(5)
+            if not self.file_version == b"\x30\x32\x2E\x31\x30":
+                raise kaitaistruct.ValidationNotEqualError(b"\x30\x32\x2E\x31\x30", self.file_version, self._io, u"/types/header/seq/1")
             self.complexity_level = self._io.read_bytes(2)
-            self.standard_type = self._io.ensure_fixed_contents(b"\x42\x46\x30\x31")
+            self.standard_type = self._io.read_bytes(4)
+            if not self.standard_type == b"\x42\x46\x30\x31":
+                raise kaitaistruct.ValidationNotEqualError(b"\x42\x46\x30\x31", self.standard_type, self._io, u"/types/header/seq/3")
             self.originating_station_id = (self._io.read_bytes(10)).decode(u"UTF-8")
-            self.file_date_time = self._root.DateTime(self._io, self, self._root)
+            self.file_date_time = Nitf.DateTime(self._io, self, self._root)
             self.file_title = (self._io.read_bytes(80)).decode(u"UTF-8")
-            self.file_security = self._root.Clasnfo(self._io, self, self._root)
+            self.file_security = Nitf.Clasnfo(self._io, self, self._root)
             self.file_copy_number = (self._io.read_bytes(5)).decode(u"UTF-8")
             self.file_num_of_copys = (self._io.read_bytes(5)).decode(u"UTF-8")
-            self.encryption = self._root.Encrypt(self._io, self, self._root)
+            self.encryption = Nitf.Encrypt(self._io, self, self._root)
             self.file_bg_color = self._io.read_bytes(3)
             self.originator_name = (self._io.read_bytes(24)).decode(u"UTF-8")
             self.originator_phone = (self._io.read_bytes(18)).decode(u"UTF-8")
@@ -544,31 +563,31 @@ class Nitf(KaitaiStruct):
             self.num_image_segments = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.linfo = [None] * (int(self.num_image_segments))
             for i in range(int(self.num_image_segments)):
-                self.linfo[i] = self._root.LengthImageInfo(self._io, self, self._root)
+                self.linfo[i] = Nitf.LengthImageInfo(self._io, self, self._root)
 
             self.num_graphics_segments = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.lnnfo = [None] * (int(self.num_graphics_segments))
             for i in range(int(self.num_graphics_segments)):
-                self.lnnfo[i] = self._root.LengthGraphicInfo(self._io, self, self._root)
+                self.lnnfo[i] = Nitf.LengthGraphicInfo(self._io, self, self._root)
 
             self.reserved_numx = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.num_text_files = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.ltnfo = [None] * (int(self.num_text_files))
             for i in range(int(self.num_text_files)):
-                self.ltnfo[i] = self._root.LengthTextInfo(self._io, self, self._root)
+                self.ltnfo[i] = Nitf.LengthTextInfo(self._io, self, self._root)
 
             self.num_data_extension = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.ldnfo = [None] * (int(self.num_data_extension))
             for i in range(int(self.num_data_extension)):
-                self.ldnfo[i] = self._root.LengthDataInfo(self._io, self, self._root)
+                self.ldnfo[i] = Nitf.LengthDataInfo(self._io, self, self._root)
 
             self.num_reserved_extension = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.lrnfo = [None] * (int(self.num_reserved_extension))
             for i in range(int(self.num_reserved_extension)):
-                self.lrnfo[i] = self._root.LengthReservedInfo(self._io, self, self._root)
+                self.lrnfo[i] = Nitf.LengthReservedInfo(self._io, self, self._root)
 
-            self.user_defined_header = self._root.TreHeader(self._io, self, self._root)
-            self.extended_header = self._root.TreHeader(self._io, self, self._root)
+            self.user_defined_header = Nitf.TreHeader(self._io, self, self._root)
+            self.extended_header = Nitf.TreHeader(self._io, self, self._root)
 
 
     class DataSubHeaderStreaming(KaitaiStruct):
@@ -580,7 +599,7 @@ class Nitf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.des_base = self._root.DataSubHeaderBase(self._io, self, self._root)
+            self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
             self.des_defined_subheader_fields_len = (self._io.read_bytes(4)).decode(u"UTF-8")
             self.sfh_l1 = (self._io.read_bytes(7)).decode(u"UTF-8")
             self.sfh_delim1 = self._io.read_u4be()

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class DsStore(KaitaiStruct):
     """Apple macOS '.DS_Store' file format.
@@ -22,8 +23,10 @@ class DsStore(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.alignment_header = self._io.ensure_fixed_contents(b"\x00\x00\x00\x01")
-        self.buddy_allocator_header = self._root.BuddyAllocatorHeader(self._io, self, self._root)
+        self.alignment_header = self._io.read_bytes(4)
+        if not self.alignment_header == b"\x00\x00\x00\x01":
+            raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x01", self.alignment_header, self._io, u"/seq/0")
+        self.buddy_allocator_header = DsStore.BuddyAllocatorHeader(self._io, self, self._root)
 
     class BuddyAllocatorHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -33,7 +36,9 @@ class DsStore(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x42\x75\x64\x31")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x42\x75\x64\x31":
+                raise kaitaistruct.ValidationNotEqualError(b"\x42\x75\x64\x31", self.magic, self._io, u"/types/buddy_allocator_header/seq/0")
             self.ofs_bookkeeping_info_block = self._io.read_u4be()
             self.len_bookkeeping_info_block = self._io.read_u4be()
             self.copy_ofs_bookkeeping_info_block = self._io.read_u4be()
@@ -52,16 +57,16 @@ class DsStore(KaitaiStruct):
             self._unnamed1 = self._io.read_bytes(4)
             self.block_addresses = [None] * (self.num_block_addresses)
             for i in range(self.num_block_addresses):
-                self.block_addresses[i] = self._root.BuddyAllocatorBody.BlockDescriptor(self._io, self, self._root)
+                self.block_addresses[i] = DsStore.BuddyAllocatorBody.BlockDescriptor(self._io, self, self._root)
 
             self.num_directories = self._io.read_u4be()
             self.directory_entries = [None] * (self.num_directories)
             for i in range(self.num_directories):
-                self.directory_entries[i] = self._root.BuddyAllocatorBody.DirectoryEntry(self._io, self, self._root)
+                self.directory_entries[i] = DsStore.BuddyAllocatorBody.DirectoryEntry(self._io, self, self._root)
 
             self.free_lists = [None] * (self.num_free_lists)
             for i in range(self.num_free_lists):
-                self.free_lists[i] = self._root.BuddyAllocatorBody.FreeList(self._io, self, self._root)
+                self.free_lists[i] = DsStore.BuddyAllocatorBody.FreeList(self._io, self, self._root)
 
 
         class BlockDescriptor(KaitaiStruct):
@@ -144,7 +149,7 @@ class DsStore(KaitaiStruct):
             io = self._root._io
             self._m_directories = [None] * (self.num_directories)
             for i in range(self.num_directories):
-                self._m_directories[i] = self._root.MasterBlockRef(i, io, self, self._root)
+                self._m_directories[i] = DsStore.MasterBlockRef(i, io, self, self._root)
 
             return self._m_directories if hasattr(self, '_m_directories') else None
 
@@ -182,7 +187,7 @@ class DsStore(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self._root.buddy_allocator_body.block_addresses[self.block_id].offset)
-                self._m_root_block = self._root.Block(io, self, self._root)
+                self._m_root_block = DsStore.Block(io, self, self._root)
                 io.seek(_pos)
                 return self._m_root_block if hasattr(self, '_m_root_block') else None
 
@@ -195,8 +200,8 @@ class DsStore(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self._parent.block_addresses[self._parent.directory_entries[self.idx].block_id].offset)
             self._raw__m_master_block = self._io.read_bytes(self._parent.block_addresses[self._parent.directory_entries[self.idx].block_id].size)
-            io = KaitaiStream(BytesIO(self._raw__m_master_block))
-            self._m_master_block = self._root.MasterBlockRef.MasterBlock(io, self, self._root)
+            _io__raw__m_master_block = KaitaiStream(BytesIO(self._raw__m_master_block))
+            self._m_master_block = DsStore.MasterBlockRef.MasterBlock(_io__raw__m_master_block, self, self._root)
             self._io.seek(_pos)
             return self._m_master_block if hasattr(self, '_m_master_block') else None
 
@@ -213,7 +218,7 @@ class DsStore(KaitaiStruct):
             self.counter = self._io.read_u4be()
             self.data = [None] * (self.counter)
             for i in range(self.counter):
-                self.data[i] = self._root.Block.BlockData(self.mode, self._io, self, self._root)
+                self.data[i] = DsStore.Block.BlockData(self.mode, self._io, self, self._root)
 
 
         class BlockData(KaitaiStruct):
@@ -228,7 +233,7 @@ class DsStore(KaitaiStruct):
                 if self.mode > 0:
                     self.block_id = self._io.read_u4be()
 
-                self.record = self._root.Block.BlockData.Record(self._io, self, self._root)
+                self.record = DsStore.Block.BlockData.Record(self._io, self, self._root)
 
             class Record(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -238,8 +243,8 @@ class DsStore(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.filename = self._root.Block.BlockData.Record.Ustr(self._io, self, self._root)
-                    self.structure_type = self._root.Block.BlockData.Record.FourCharCode(self._io, self, self._root)
+                    self.filename = DsStore.Block.BlockData.Record.Ustr(self._io, self, self._root)
+                    self.structure_type = DsStore.Block.BlockData.Record.FourCharCode(self._io, self, self._root)
                     self.data_type = (self._io.read_bytes(4)).decode(u"UTF-8")
                     _on = self.data_type
                     if _on == u"long":
@@ -251,13 +256,13 @@ class DsStore(KaitaiStruct):
                     elif _on == u"bool":
                         self.value = self._io.read_u1()
                     elif _on == u"ustr":
-                        self.value = self._root.Block.BlockData.Record.Ustr(self._io, self, self._root)
+                        self.value = DsStore.Block.BlockData.Record.Ustr(self._io, self, self._root)
                     elif _on == u"dutc":
                         self.value = self._io.read_u8be()
                     elif _on == u"type":
-                        self.value = self._root.Block.BlockData.Record.FourCharCode(self._io, self, self._root)
+                        self.value = DsStore.Block.BlockData.Record.FourCharCode(self._io, self, self._root)
                     elif _on == u"blob":
-                        self.value = self._root.Block.BlockData.Record.RecordBlob(self._io, self, self._root)
+                        self.value = DsStore.Block.BlockData.Record.RecordBlob(self._io, self, self._root)
 
                 class RecordBlob(KaitaiStruct):
                     def __init__(self, _io, _parent=None, _root=None):
@@ -304,7 +309,7 @@ class DsStore(KaitaiStruct):
                     io = self._root._io
                     _pos = io.pos()
                     io.seek(self._root.buddy_allocator_body.block_addresses[self.block_id].offset)
-                    self._m_block = self._root.Block(io, self, self._root)
+                    self._m_block = DsStore.Block(io, self, self._root)
                     io.seek(_pos)
 
                 return self._m_block if hasattr(self, '_m_block') else None
@@ -320,7 +325,7 @@ class DsStore(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self._root.buddy_allocator_body.block_addresses[self.mode].offset)
-                self._m_rightmost_block = self._root.Block(io, self, self._root)
+                self._m_rightmost_block = DsStore.Block(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_rightmost_block if hasattr(self, '_m_rightmost_block') else None
@@ -334,8 +339,8 @@ class DsStore(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek((self.buddy_allocator_header.ofs_bookkeeping_info_block + 4))
         self._raw__m_buddy_allocator_body = self._io.read_bytes(self.buddy_allocator_header.len_bookkeeping_info_block)
-        io = KaitaiStream(BytesIO(self._raw__m_buddy_allocator_body))
-        self._m_buddy_allocator_body = self._root.BuddyAllocatorBody(io, self, self._root)
+        _io__raw__m_buddy_allocator_body = KaitaiStream(BytesIO(self._raw__m_buddy_allocator_body))
+        self._m_buddy_allocator_body = DsStore.BuddyAllocatorBody(_io__raw__m_buddy_allocator_body, self, self._root)
         self._io.seek(_pos)
         return self._m_buddy_allocator_body if hasattr(self, '_m_buddy_allocator_body') else None
 

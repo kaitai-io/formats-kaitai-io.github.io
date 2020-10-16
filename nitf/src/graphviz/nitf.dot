@@ -1,0 +1,560 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__nitf {
+		label="Nitf";
+		graph[style=dotted];
+
+		nitf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="image_segments_pos">...</TD><TD PORT="image_segments_size">...</TD><TD>ImageSegment</TD><TD PORT="image_segments_type">image_segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="image_segments__repeat">repeat header.num_image_segments.to_i times</TD></TR>
+			<TR><TD PORT="graphics_segments_pos">...</TD><TD PORT="graphics_segments_size">...</TD><TD>GraphicsSegment</TD><TD PORT="graphics_segments_type">graphics_segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="graphics_segments__repeat">repeat header.num_graphics_segments.to_i times</TD></TR>
+			<TR><TD PORT="text_segments_pos">...</TD><TD PORT="text_segments_size">...</TD><TD>TextSegment</TD><TD PORT="text_segments_type">text_segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="text_segments__repeat">repeat header.num_text_files.to_i times</TD></TR>
+			<TR><TD PORT="data_extension_segments_pos">...</TD><TD PORT="data_extension_segments_size">...</TD><TD>DataExtensionSegment</TD><TD PORT="data_extension_segments_type">data_extension_segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="data_extension_segments__repeat">repeat header.num_data_extension.to_i times</TD></TR>
+			<TR><TD PORT="reserved_extension_segments_pos">...</TD><TD PORT="reserved_extension_segments_size">...</TD><TD>ReservedExtensionSegment</TD><TD PORT="reserved_extension_segments_type">reserved_extension_segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="reserved_extension_segments__repeat">repeat header.num_reserved_extension.to_i times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__reserved_extension_segment {
+			label="Nitf::ReservedExtensionSegment";
+			graph[style=dotted];
+
+			reserved_extension_segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_sub_header_pos">0</TD><TD PORT="reserved_sub_header_size">_parent.header.lrnfo[idx].length_reserved_extension_subheader.to_i</TD><TD>ReservedSubHeader</TD><TD PORT="reserved_sub_header_type">reserved_sub_header</TD></TR>
+				<TR><TD PORT="reserved_data_field_pos">...</TD><TD PORT="reserved_data_field_size">_parent.header.lrnfo[idx].length_reserved_extension_segment.to_i</TD><TD></TD><TD PORT="reserved_data_field_type">reserved_data_field</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__image_comment {
+			label="Nitf::ImageComment";
+			graph[style=dotted];
+
+			image_comment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">80</TD><TD>str(UTF-8)</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_reserved_info {
+			label="Nitf::LengthReservedInfo";
+			graph[style=dotted];
+
+			length_reserved_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_reserved_extension_subheader_pos">0</TD><TD PORT="length_reserved_extension_subheader_size">4</TD><TD>str(UTF-8)</TD><TD PORT="length_reserved_extension_subheader_type">length_reserved_extension_subheader</TD></TR>
+				<TR><TD PORT="length_reserved_extension_segment_pos">4</TD><TD PORT="length_reserved_extension_segment_size">7</TD><TD>str(UTF-8)</TD><TD PORT="length_reserved_extension_segment_type">length_reserved_extension_segment</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tre {
+			label="Nitf::Tre";
+			graph[style=dotted];
+
+			tre__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="extension_type_id_pos">0</TD><TD PORT="extension_type_id_size">6</TD><TD>str(UTF-8)</TD><TD PORT="extension_type_id_type">extension_type_id</TD></TR>
+				<TR><TD PORT="edata_length_pos">6</TD><TD PORT="edata_length_size">5</TD><TD>str(UTF-8)</TD><TD PORT="edata_length_type">edata_length</TD></TR>
+				<TR><TD PORT="edata_pos">11</TD><TD PORT="edata_size">edata_length.to_i</TD><TD>str(UTF-8)</TD><TD PORT="edata_type">edata</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__band_info {
+			label="Nitf::BandInfo";
+			graph[style=dotted];
+
+			band_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="representation_pos">0</TD><TD PORT="representation_size">2</TD><TD>str(UTF-8)</TD><TD PORT="representation_type">representation</TD></TR>
+				<TR><TD PORT="subcategory_pos">2</TD><TD PORT="subcategory_size">6</TD><TD>str(UTF-8)</TD><TD PORT="subcategory_type">subcategory</TD></TR>
+				<TR><TD PORT="img_filter_condition_pos">8</TD><TD PORT="img_filter_condition_size">1</TD><TD></TD><TD PORT="img_filter_condition_type">img_filter_condition</TD></TR>
+				<TR><TD PORT="img_filter_code_pos">9</TD><TD PORT="img_filter_code_size">3</TD><TD>str(UTF-8)</TD><TD PORT="img_filter_code_type">img_filter_code</TD></TR>
+				<TR><TD PORT="num_luts_pos">12</TD><TD PORT="num_luts_size">1</TD><TD>str(UTF-8)</TD><TD PORT="num_luts_type">num_luts</TD></TR>
+				<TR><TD PORT="num_lut_entries_pos">13</TD><TD PORT="num_lut_entries_size">5</TD><TD>str(UTF-8)</TD><TD PORT="num_lut_entries_type">num_lut_entries</TD></TR>
+				<TR><TD PORT="luts_pos">18</TD><TD PORT="luts_size">num_lut_entries.to_i</TD><TD></TD><TD PORT="luts_type">luts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="luts__repeat">repeat num_luts.to_i times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__image_segment {
+			label="Nitf::ImageSegment";
+			graph[style=dotted];
+
+			image_segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="image_sub_header_pos">0</TD><TD PORT="image_sub_header_size">...</TD><TD>ImageSubHeader</TD><TD PORT="image_sub_header_type">image_sub_header</TD></TR>
+				<TR><TD PORT="image_data_mask_pos">...</TD><TD PORT="image_data_mask_size">...</TD><TD>ImageDataMask</TD><TD PORT="image_data_mask_type">image_data_mask</TD></TR>
+				<TR><TD PORT="image_data_field_pos">...</TD><TD PORT="image_data_field_size">(_parent.header.linfo[idx].length_image_segment.to_i - image_data_mask.total_size)</TD><TD></TD><TD PORT="image_data_field_type">image_data_field</TD></TR>
+			</TABLE>>];
+			image_segment__inst__has_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_mask</TD><TD> ((image_sub_header.img_compression[0..(1 - 1)] == &quot;M&quot;) || (image_sub_header.img_compression[1..(2 - 1)] == &quot;M&quot;)) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__text_segment {
+			label="Nitf::TextSegment";
+			graph[style=dotted];
+
+			text_segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="text_sub_header_pos">0</TD><TD PORT="text_sub_header_size">1</TD><TD></TD><TD PORT="text_sub_header_type">text_sub_header</TD></TR>
+				<TR><TD PORT="text_data_field_pos">1</TD><TD PORT="text_data_field_size">_parent.header.ltnfo[idx].length_text_segment.to_i</TD><TD></TD><TD PORT="text_data_field_type">text_data_field</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__graphic_sub_header {
+			label="Nitf::GraphicSubHeader";
+			graph[style=dotted];
+
+			graphic_sub_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_part_type_sy_pos">0</TD><TD PORT="file_part_type_sy_size">2</TD><TD></TD><TD PORT="file_part_type_sy_type">file_part_type_sy</TD></TR>
+				<TR><TD PORT="graphic_id_pos">2</TD><TD PORT="graphic_id_size">10</TD><TD>str(UTF-8)</TD><TD PORT="graphic_id_type">graphic_id</TD></TR>
+				<TR><TD PORT="graphic_name_pos">12</TD><TD PORT="graphic_name_size">20</TD><TD>str(UTF-8)</TD><TD PORT="graphic_name_type">graphic_name</TD></TR>
+				<TR><TD PORT="graphic_classification_pos">32</TD><TD PORT="graphic_classification_size">167</TD><TD>Clasnfo</TD><TD PORT="graphic_classification_type">graphic_classification</TD></TR>
+				<TR><TD PORT="encryption_pos">199</TD><TD PORT="encryption_size">1</TD><TD>Encrypt</TD><TD PORT="encryption_type">encryption</TD></TR>
+				<TR><TD PORT="graphic_type_pos">200</TD><TD PORT="graphic_type_size">1</TD><TD></TD><TD PORT="graphic_type_type">graphic_type</TD></TR>
+				<TR><TD PORT="reserved1_pos">201</TD><TD PORT="reserved1_size">13</TD><TD>str(UTF-8)</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="graphic_display_level_pos">214</TD><TD PORT="graphic_display_level_size">3</TD><TD>str(UTF-8)</TD><TD PORT="graphic_display_level_type">graphic_display_level</TD></TR>
+				<TR><TD PORT="graphic_attachment_level_pos">217</TD><TD PORT="graphic_attachment_level_size">3</TD><TD>str(UTF-8)</TD><TD PORT="graphic_attachment_level_type">graphic_attachment_level</TD></TR>
+				<TR><TD PORT="graphic_location_pos">220</TD><TD PORT="graphic_location_size">10</TD><TD>str(UTF-8)</TD><TD PORT="graphic_location_type">graphic_location</TD></TR>
+				<TR><TD PORT="first_graphic_bound_loc_pos">230</TD><TD PORT="first_graphic_bound_loc_size">10</TD><TD>str(UTF-8)</TD><TD PORT="first_graphic_bound_loc_type">first_graphic_bound_loc</TD></TR>
+				<TR><TD PORT="graphic_color_pos">240</TD><TD PORT="graphic_color_size">1</TD><TD>str(UTF-8)</TD><TD PORT="graphic_color_type">graphic_color</TD></TR>
+				<TR><TD PORT="second_graphic_bound_loc_pos">241</TD><TD PORT="second_graphic_bound_loc_size">10</TD><TD>str(UTF-8)</TD><TD PORT="second_graphic_bound_loc_type">second_graphic_bound_loc</TD></TR>
+				<TR><TD PORT="reserved2_pos">251</TD><TD PORT="reserved2_size">2</TD><TD>str(UTF-8)</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="graphics_extended_sub_header_pos">253</TD><TD PORT="graphics_extended_sub_header_size">...</TD><TD>TreHeader</TD><TD PORT="graphics_extended_sub_header_type">graphics_extended_sub_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__clasnfo {
+			label="Nitf::Clasnfo";
+			graph[style=dotted];
+
+			clasnfo__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="security_class_pos">0</TD><TD PORT="security_class_size">1</TD><TD>str(UTF-8)</TD><TD PORT="security_class_type">security_class</TD></TR>
+				<TR><TD PORT="security_system_pos">1</TD><TD PORT="security_system_size">2</TD><TD>str(UTF-8)</TD><TD PORT="security_system_type">security_system</TD></TR>
+				<TR><TD PORT="codewords_pos">3</TD><TD PORT="codewords_size">11</TD><TD>str(UTF-8)</TD><TD PORT="codewords_type">codewords</TD></TR>
+				<TR><TD PORT="control_and_handling_pos">14</TD><TD PORT="control_and_handling_size">2</TD><TD>str(UTF-8)</TD><TD PORT="control_and_handling_type">control_and_handling</TD></TR>
+				<TR><TD PORT="releaseability_pos">16</TD><TD PORT="releaseability_size">20</TD><TD>str(UTF-8)</TD><TD PORT="releaseability_type">releaseability</TD></TR>
+				<TR><TD PORT="declass_type_pos">36</TD><TD PORT="declass_type_size">2</TD><TD>str(UTF-8)</TD><TD PORT="declass_type_type">declass_type</TD></TR>
+				<TR><TD PORT="declass_date_pos">38</TD><TD PORT="declass_date_size">8</TD><TD>str(UTF-8)</TD><TD PORT="declass_date_type">declass_date</TD></TR>
+				<TR><TD PORT="declass_exemption_pos">46</TD><TD PORT="declass_exemption_size">4</TD><TD>str(UTF-8)</TD><TD PORT="declass_exemption_type">declass_exemption</TD></TR>
+				<TR><TD PORT="downgrade_pos">50</TD><TD PORT="downgrade_size">1</TD><TD>str(UTF-8)</TD><TD PORT="downgrade_type">downgrade</TD></TR>
+				<TR><TD PORT="downgrade_date_pos">51</TD><TD PORT="downgrade_date_size">8</TD><TD>str(UTF-8)</TD><TD PORT="downgrade_date_type">downgrade_date</TD></TR>
+				<TR><TD PORT="class_text_pos">59</TD><TD PORT="class_text_size">43</TD><TD>str(UTF-8)</TD><TD PORT="class_text_type">class_text</TD></TR>
+				<TR><TD PORT="class_authority_type_pos">102</TD><TD PORT="class_authority_type_size">1</TD><TD>str(UTF-8)</TD><TD PORT="class_authority_type_type">class_authority_type</TD></TR>
+				<TR><TD PORT="class_authority_pos">103</TD><TD PORT="class_authority_size">40</TD><TD>str(UTF-8)</TD><TD PORT="class_authority_type">class_authority</TD></TR>
+				<TR><TD PORT="class_reason_pos">143</TD><TD PORT="class_reason_size">1</TD><TD>str(UTF-8)</TD><TD PORT="class_reason_type">class_reason</TD></TR>
+				<TR><TD PORT="source_date_pos">144</TD><TD PORT="source_date_size">8</TD><TD>str(UTF-8)</TD><TD PORT="source_date_type">source_date</TD></TR>
+				<TR><TD PORT="control_number_pos">152</TD><TD PORT="control_number_size">15</TD><TD>str(UTF-8)</TD><TD PORT="control_number_type">control_number</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_graphic_info {
+			label="Nitf::LengthGraphicInfo";
+			graph[style=dotted];
+
+			length_graphic_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_graphic_subheader_pos">0</TD><TD PORT="length_graphic_subheader_size">4</TD><TD>str(UTF-8)</TD><TD PORT="length_graphic_subheader_type">length_graphic_subheader</TD></TR>
+				<TR><TD PORT="length_graphic_segment_pos">4</TD><TD PORT="length_graphic_segment_size">6</TD><TD>str(UTF-8)</TD><TD PORT="length_graphic_segment_type">length_graphic_segment</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encrypt {
+			label="Nitf::Encrypt";
+			graph[style=dotted];
+
+			encrypt__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">1</TD><TD>str(UTF-8)</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__image_data_mask {
+			label="Nitf::ImageDataMask";
+			graph[style=dotted];
+
+			image_data_mask__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="blocked_img_data_offset_pos">0</TD><TD PORT="blocked_img_data_offset_size">4</TD><TD>u4be</TD><TD PORT="blocked_img_data_offset_type">blocked_img_data_offset</TD></TR>
+				<TR><TD PORT="bmrlnth_pos">4</TD><TD PORT="bmrlnth_size">2</TD><TD>u2be</TD><TD PORT="bmrlnth_type">bmrlnth</TD></TR>
+				<TR><TD PORT="tmrlnth_pos">6</TD><TD PORT="tmrlnth_size">2</TD><TD>u2be</TD><TD PORT="tmrlnth_type">tmrlnth</TD></TR>
+				<TR><TD PORT="tpxcdlnth_pos">8</TD><TD PORT="tpxcdlnth_size">2</TD><TD>u2be</TD><TD PORT="tpxcdlnth_type">tpxcdlnth</TD></TR>
+				<TR><TD PORT="tpxcd_pos">10</TD><TD PORT="tpxcd_size">tpxcd_size</TD><TD></TD><TD PORT="tpxcd_type">tpxcd</TD></TR>
+				<TR><TD PORT="bmrbnd_pos">...</TD><TD PORT="bmrbnd_size">4</TD><TD>u4be</TD><TD PORT="bmrbnd_type">bmrbnd</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bmrbnd__repeat">repeat bmrtmr_count times</TD></TR>
+				<TR><TD PORT="tmrbnd_pos">...</TD><TD PORT="tmrbnd_size">4</TD><TD>u4be</TD><TD PORT="tmrbnd_type">tmrbnd</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tmrbnd__repeat">repeat bmrtmr_count times</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__has_bmr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_bmr</TD><TD>bmrlnth != 0</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__has_tmr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_tmr</TD><TD>tmrlnth != 0</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__tmrbnd_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tmrbnd_size</TD><TD>(has_tmr ? (bmrtmr_count * 4) : 0)</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__tpxcd_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tpxcd_size</TD><TD>(((tpxcdlnth % 8) == 0 ? tpxcdlnth : (tpxcdlnth + (8 - (tpxcdlnth % 8)))) / 8)</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__total_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>total_size</TD><TD>((((((4 + 2) + 2) + 2) + tpxcd_size) + bmrbnd_size) + tmrbnd_size)</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__bmrbnd_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>bmrbnd_size</TD><TD>(has_bmr ? (bmrtmr_count * 4) : 0)</TD></TR>
+			</TABLE>>];
+			image_data_mask__inst__bmrtmr_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>bmrtmr_count</TD><TD>((_parent.image_sub_header.num_blocks_per_row.to_i * _parent.image_sub_header.num_blocks_per_col.to_i) * (_parent.image_sub_header.img_mode != &quot;S&quot; ? 1 : (_parent.image_sub_header.num_bands.to_i != 0 ? _parent.image_sub_header.num_bands.to_i : _parent.image_sub_header.num_multispectral_bands.to_i)))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__graphics_segment {
+			label="Nitf::GraphicsSegment";
+			graph[style=dotted];
+
+			graphics_segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="graphic_sub_header_pos">0</TD><TD PORT="graphic_sub_header_size">...</TD><TD>GraphicSubHeader</TD><TD PORT="graphic_sub_header_type">graphic_sub_header</TD></TR>
+				<TR><TD PORT="graphic_data_field_pos">...</TD><TD PORT="graphic_data_field_size">_parent.header.lnnfo[idx].length_graphic_segment.to_i</TD><TD></TD><TD PORT="graphic_data_field_type">graphic_data_field</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_sub_header {
+			label="Nitf::DataSubHeader";
+			graph[style=dotted];
+
+			data_sub_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="des_base_pos">0</TD><TD PORT="des_base_size">196</TD><TD>DataSubHeaderBase</TD><TD PORT="des_base_type">des_base</TD></TR>
+				<TR><TD PORT="overflowed_header_type_pos">196</TD><TD PORT="overflowed_header_type_size">6</TD><TD>str(UTF-8)</TD><TD PORT="overflowed_header_type_type">overflowed_header_type</TD></TR>
+				<TR><TD PORT="data_item_overflowed_pos">202</TD><TD PORT="data_item_overflowed_size">3</TD><TD>str(UTF-8)</TD><TD PORT="data_item_overflowed_type">data_item_overflowed</TD></TR>
+				<TR><TD PORT="des_defined_subheader_fields_len_pos">205</TD><TD PORT="des_defined_subheader_fields_len_size">4</TD><TD>str(UTF-8)</TD><TD PORT="des_defined_subheader_fields_len_type">des_defined_subheader_fields_len</TD></TR>
+				<TR><TD PORT="desshf_pos">209</TD><TD PORT="desshf_size">des_defined_subheader_fields_len.to_i</TD><TD>str(UTF-8)</TD><TD PORT="desshf_type">desshf</TD></TR>
+				<TR><TD PORT="des_defined_data_field_pos">...</TD><TD PORT="des_defined_data_field_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="des_defined_data_field_type">des_defined_data_field</TD></TR>
+			</TABLE>>];
+			data_sub_header__inst__tre_ofl [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tre_ofl</TD><TD>des_base.desid == &quot;TRE_OVERFLOW&quot;</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_extension_segment {
+			label="Nitf::DataExtensionSegment";
+			graph[style=dotted];
+
+			data_extension_segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_sub_header_pos">0</TD><TD PORT="data_sub_header_size">_parent.header.ldnfo[idx].length_data_extension_subheader.to_i</TD><TD>DataSubHeader</TD><TD PORT="data_sub_header_type">data_sub_header</TD></TR>
+				<TR><TD PORT="data_data_field_pos">...</TD><TD PORT="data_data_field_size">_parent.header.ldnfo[idx].length_data_extension_segment.to_i</TD><TD></TD><TD PORT="data_data_field_type">data_data_field</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_sub_header_tre {
+			label="Nitf::DataSubHeaderTre";
+			graph[style=dotted];
+
+			data_sub_header_tre__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="des_base_pos">0</TD><TD PORT="des_base_size">196</TD><TD>DataSubHeaderBase</TD><TD PORT="des_base_type">des_base</TD></TR>
+				<TR><TD PORT="overflowed_header_type_pos">196</TD><TD PORT="overflowed_header_type_size">6</TD><TD>str(UTF-8)</TD><TD PORT="overflowed_header_type_type">overflowed_header_type</TD></TR>
+				<TR><TD PORT="data_item_overflowed_pos">202</TD><TD PORT="data_item_overflowed_size">3</TD><TD>str(UTF-8)</TD><TD PORT="data_item_overflowed_type">data_item_overflowed</TD></TR>
+				<TR><TD PORT="des_defined_subheader_fields_len_pos">205</TD><TD PORT="des_defined_subheader_fields_len_size">4</TD><TD>str(UTF-8)</TD><TD PORT="des_defined_subheader_fields_len_type">des_defined_subheader_fields_len</TD></TR>
+				<TR><TD PORT="des_defined_data_field_pos">209</TD><TD PORT="des_defined_data_field_size">des_defined_subheader_fields_len.to_i</TD><TD>str(UTF-8)</TD><TD PORT="des_defined_data_field_type">des_defined_data_field</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__image_sub_header {
+			label="Nitf::ImageSubHeader";
+			graph[style=dotted];
+
+			image_sub_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_part_type_pos">0</TD><TD PORT="file_part_type_size">2</TD><TD></TD><TD PORT="file_part_type_type">file_part_type</TD></TR>
+				<TR><TD PORT="image_id_1_pos">2</TD><TD PORT="image_id_1_size">10</TD><TD>str(UTF-8)</TD><TD PORT="image_id_1_type">image_id_1</TD></TR>
+				<TR><TD PORT="image_date_time_pos">12</TD><TD PORT="image_date_time_size">14</TD><TD>DateTime</TD><TD PORT="image_date_time_type">image_date_time</TD></TR>
+				<TR><TD PORT="target_id_pos">26</TD><TD PORT="target_id_size">17</TD><TD>str(UTF-8)</TD><TD PORT="target_id_type">target_id</TD></TR>
+				<TR><TD PORT="image_id_2_pos">43</TD><TD PORT="image_id_2_size">80</TD><TD>str(UTF-8)</TD><TD PORT="image_id_2_type">image_id_2</TD></TR>
+				<TR><TD PORT="image_security_classification_pos">123</TD><TD PORT="image_security_classification_size">167</TD><TD>Clasnfo</TD><TD PORT="image_security_classification_type">image_security_classification</TD></TR>
+				<TR><TD PORT="encryption_pos">290</TD><TD PORT="encryption_size">1</TD><TD>Encrypt</TD><TD PORT="encryption_type">encryption</TD></TR>
+				<TR><TD PORT="image_source_pos">291</TD><TD PORT="image_source_size">42</TD><TD>str(UTF-8)</TD><TD PORT="image_source_type">image_source</TD></TR>
+				<TR><TD PORT="num_sig_rows_pos">333</TD><TD PORT="num_sig_rows_size">8</TD><TD>str(UTF-8)</TD><TD PORT="num_sig_rows_type">num_sig_rows</TD></TR>
+				<TR><TD PORT="num_sig_cols_pos">341</TD><TD PORT="num_sig_cols_size">8</TD><TD>str(UTF-8)</TD><TD PORT="num_sig_cols_type">num_sig_cols</TD></TR>
+				<TR><TD PORT="pixel_value_type_pos">349</TD><TD PORT="pixel_value_type_size">3</TD><TD>str(UTF-8)</TD><TD PORT="pixel_value_type_type">pixel_value_type</TD></TR>
+				<TR><TD PORT="image_representation_pos">352</TD><TD PORT="image_representation_size">8</TD><TD>str(UTF-8)</TD><TD PORT="image_representation_type">image_representation</TD></TR>
+				<TR><TD PORT="image_category_pos">360</TD><TD PORT="image_category_size">8</TD><TD>str(UTF-8)</TD><TD PORT="image_category_type">image_category</TD></TR>
+				<TR><TD PORT="actual_bits_per_pixel_per_band_pos">368</TD><TD PORT="actual_bits_per_pixel_per_band_size">2</TD><TD>str(UTF-8)</TD><TD PORT="actual_bits_per_pixel_per_band_type">actual_bits_per_pixel_per_band</TD></TR>
+				<TR><TD PORT="pixel_justification_pos">370</TD><TD PORT="pixel_justification_size">1</TD><TD>str(UTF-8)</TD><TD PORT="pixel_justification_type">pixel_justification</TD></TR>
+				<TR><TD PORT="image_coordinate_rep_pos">371</TD><TD PORT="image_coordinate_rep_size">1</TD><TD>str(UTF-8)</TD><TD PORT="image_coordinate_rep_type">image_coordinate_rep</TD></TR>
+				<TR><TD PORT="image_geo_loc_pos">372</TD><TD PORT="image_geo_loc_size">60</TD><TD>str(UTF-8)</TD><TD PORT="image_geo_loc_type">image_geo_loc</TD></TR>
+				<TR><TD PORT="num_img_comments_pos">432</TD><TD PORT="num_img_comments_size">1</TD><TD>str(UTF-8)</TD><TD PORT="num_img_comments_type">num_img_comments</TD></TR>
+				<TR><TD PORT="img_comments_pos">433</TD><TD PORT="img_comments_size">80</TD><TD>ImageComment</TD><TD PORT="img_comments_type">img_comments</TD></TR>
+				<TR><TD COLSPAN="4" PORT="img_comments__repeat">repeat num_img_comments.to_i times</TD></TR>
+				<TR><TD PORT="img_compression_pos">...</TD><TD PORT="img_compression_size">2</TD><TD>str(UTF-8)</TD><TD PORT="img_compression_type">img_compression</TD></TR>
+				<TR><TD PORT="compression_rate_code_pos">...</TD><TD PORT="compression_rate_code_size">4</TD><TD>str(UTF-8)</TD><TD PORT="compression_rate_code_type">compression_rate_code</TD></TR>
+				<TR><TD PORT="num_bands_pos">...</TD><TD PORT="num_bands_size">1</TD><TD>str(UTF-8)</TD><TD PORT="num_bands_type">num_bands</TD></TR>
+				<TR><TD PORT="num_multispectral_bands_pos">...</TD><TD PORT="num_multispectral_bands_size">5</TD><TD>str(UTF-8)</TD><TD PORT="num_multispectral_bands_type">num_multispectral_bands</TD></TR>
+				<TR><TD PORT="bands_pos">...</TD><TD PORT="bands_size">...</TD><TD>BandInfo</TD><TD PORT="bands_type">bands</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bands__repeat">repeat (num_bands.to_i != 0 ? num_bands.to_i : num_multispectral_bands.to_i) times</TD></TR>
+				<TR><TD PORT="img_sync_code_pos">...</TD><TD PORT="img_sync_code_size">1</TD><TD>str(UTF-8)</TD><TD PORT="img_sync_code_type">img_sync_code</TD></TR>
+				<TR><TD PORT="img_mode_pos">...</TD><TD PORT="img_mode_size">1</TD><TD>str(UTF-8)</TD><TD PORT="img_mode_type">img_mode</TD></TR>
+				<TR><TD PORT="num_blocks_per_row_pos">...</TD><TD PORT="num_blocks_per_row_size">4</TD><TD>str(UTF-8)</TD><TD PORT="num_blocks_per_row_type">num_blocks_per_row</TD></TR>
+				<TR><TD PORT="num_blocks_per_col_pos">...</TD><TD PORT="num_blocks_per_col_size">4</TD><TD>str(UTF-8)</TD><TD PORT="num_blocks_per_col_type">num_blocks_per_col</TD></TR>
+				<TR><TD PORT="num_pixels_per_block_horz_pos">...</TD><TD PORT="num_pixels_per_block_horz_size">4</TD><TD>str(UTF-8)</TD><TD PORT="num_pixels_per_block_horz_type">num_pixels_per_block_horz</TD></TR>
+				<TR><TD PORT="num_pixels_per_block_vert_pos">...</TD><TD PORT="num_pixels_per_block_vert_size">4</TD><TD>str(UTF-8)</TD><TD PORT="num_pixels_per_block_vert_type">num_pixels_per_block_vert</TD></TR>
+				<TR><TD PORT="num_pixels_per_band_pos">...</TD><TD PORT="num_pixels_per_band_size">2</TD><TD>str(UTF-8)</TD><TD PORT="num_pixels_per_band_type">num_pixels_per_band</TD></TR>
+				<TR><TD PORT="img_display_level_pos">...</TD><TD PORT="img_display_level_size">3</TD><TD>str(UTF-8)</TD><TD PORT="img_display_level_type">img_display_level</TD></TR>
+				<TR><TD PORT="attachment_level_pos">...</TD><TD PORT="attachment_level_size">3</TD><TD>str(UTF-8)</TD><TD PORT="attachment_level_type">attachment_level</TD></TR>
+				<TR><TD PORT="img_location_pos">...</TD><TD PORT="img_location_size">10</TD><TD>str(UTF-8)</TD><TD PORT="img_location_type">img_location</TD></TR>
+				<TR><TD PORT="img_magnification_pos">...</TD><TD PORT="img_magnification_size">4</TD><TD>str(UTF-8)</TD><TD PORT="img_magnification_type">img_magnification</TD></TR>
+				<TR><TD PORT="user_def_img_data_len_pos">...</TD><TD PORT="user_def_img_data_len_size">5</TD><TD>str(UTF-8)</TD><TD PORT="user_def_img_data_len_type">user_def_img_data_len</TD></TR>
+				<TR><TD PORT="user_def_overflow_pos">...</TD><TD PORT="user_def_overflow_size">3</TD><TD>str(UTF-8)</TD><TD PORT="user_def_overflow_type">user_def_overflow</TD></TR>
+				<TR><TD PORT="user_def_img_data_pos">...</TD><TD PORT="user_def_img_data_size">1</TD><TD>u1</TD><TD PORT="user_def_img_data_type">user_def_img_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="user_def_img_data__repeat">repeat (user_def_img_data_len.to_i - 3) times</TD></TR>
+				<TR><TD PORT="image_extended_sub_header_pos">...</TD><TD PORT="image_extended_sub_header_size">...</TD><TD>TreHeader</TD><TD PORT="image_extended_sub_header_type">image_extended_sub_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__reserved_sub_header {
+			label="Nitf::ReservedSubHeader";
+			graph[style=dotted];
+
+			reserved_sub_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_part_type_re_pos">0</TD><TD PORT="file_part_type_re_size">2</TD><TD></TD><TD PORT="file_part_type_re_type">file_part_type_re</TD></TR>
+				<TR><TD PORT="res_type_id_pos">2</TD><TD PORT="res_type_id_size">25</TD><TD>str(UTF-8)</TD><TD PORT="res_type_id_type">res_type_id</TD></TR>
+				<TR><TD PORT="res_version_pos">27</TD><TD PORT="res_version_size">2</TD><TD>str(UTF-8)</TD><TD PORT="res_version_type">res_version</TD></TR>
+				<TR><TD PORT="reclasnfo_pos">29</TD><TD PORT="reclasnfo_size">167</TD><TD>Clasnfo</TD><TD PORT="reclasnfo_type">reclasnfo</TD></TR>
+				<TR><TD PORT="res_user_defined_subheader_length_pos">196</TD><TD PORT="res_user_defined_subheader_length_size">4</TD><TD>str(UTF-8)</TD><TD PORT="res_user_defined_subheader_length_type">res_user_defined_subheader_length</TD></TR>
+				<TR><TD PORT="res_user_defined_subheader_fields_pos">200</TD><TD PORT="res_user_defined_subheader_fields_size">res_user_defined_subheader_length.to_i</TD><TD>str(UTF-8)</TD><TD PORT="res_user_defined_subheader_fields_type">res_user_defined_subheader_fields</TD></TR>
+				<TR><TD PORT="res_user_defined_data_pos">...</TD><TD PORT="res_user_defined_data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="res_user_defined_data_type">res_user_defined_data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_sub_header_base {
+			label="Nitf::DataSubHeaderBase";
+			graph[style=dotted];
+
+			data_sub_header_base__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_part_type_de_pos">0</TD><TD PORT="file_part_type_de_size">2</TD><TD></TD><TD PORT="file_part_type_de_type">file_part_type_de</TD></TR>
+				<TR><TD PORT="desid_pos">2</TD><TD PORT="desid_size">25</TD><TD>str(UTF-8)</TD><TD PORT="desid_type">desid</TD></TR>
+				<TR><TD PORT="data_definition_version_pos">27</TD><TD PORT="data_definition_version_size">2</TD><TD>str(UTF-8)</TD><TD PORT="data_definition_version_type">data_definition_version</TD></TR>
+				<TR><TD PORT="declasnfo_pos">29</TD><TD PORT="declasnfo_size">167</TD><TD>Clasnfo</TD><TD PORT="declasnfo_type">declasnfo</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__text_sub_header {
+			label="Nitf::TextSubHeader";
+			graph[style=dotted];
+
+			text_sub_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="text_date_time_pos">0</TD><TD PORT="text_date_time_size">14</TD><TD>str(UTF-8)</TD><TD PORT="text_date_time_type">text_date_time</TD></TR>
+				<TR><TD PORT="text_title_pos">14</TD><TD PORT="text_title_size">80</TD><TD>str(UTF-8)</TD><TD PORT="text_title_type">text_title</TD></TR>
+				<TR><TD PORT="text_security_class_pos">94</TD><TD PORT="text_security_class_size">167</TD><TD>Clasnfo</TD><TD PORT="text_security_class_type">text_security_class</TD></TR>
+				<TR><TD PORT="encryp_pos">261</TD><TD PORT="encryp_size">1</TD><TD>Encrypt</TD><TD PORT="encryp_type">encryp</TD></TR>
+				<TR><TD PORT="text_format_pos">262</TD><TD PORT="text_format_size">3</TD><TD>str(UTF-8)</TD><TD PORT="text_format_type">text_format</TD></TR>
+				<TR><TD PORT="text_extended_sub_header_pos">265</TD><TD PORT="text_extended_sub_header_size">...</TD><TD>TreHeader</TD><TD PORT="text_extended_sub_header_type">text_extended_sub_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__date_time {
+			label="Nitf::DateTime";
+			graph[style=dotted];
+
+			date_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">14</TD><TD>str(UTF-8)</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="Nitf::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_profile_name_pos">0</TD><TD PORT="file_profile_name_size">4</TD><TD></TD><TD PORT="file_profile_name_type">file_profile_name</TD></TR>
+				<TR><TD PORT="file_version_pos">4</TD><TD PORT="file_version_size">5</TD><TD></TD><TD PORT="file_version_type">file_version</TD></TR>
+				<TR><TD PORT="complexity_level_pos">9</TD><TD PORT="complexity_level_size">2</TD><TD></TD><TD PORT="complexity_level_type">complexity_level</TD></TR>
+				<TR><TD PORT="standard_type_pos">11</TD><TD PORT="standard_type_size">4</TD><TD></TD><TD PORT="standard_type_type">standard_type</TD></TR>
+				<TR><TD PORT="originating_station_id_pos">15</TD><TD PORT="originating_station_id_size">10</TD><TD>str(UTF-8)</TD><TD PORT="originating_station_id_type">originating_station_id</TD></TR>
+				<TR><TD PORT="file_date_time_pos">25</TD><TD PORT="file_date_time_size">14</TD><TD>DateTime</TD><TD PORT="file_date_time_type">file_date_time</TD></TR>
+				<TR><TD PORT="file_title_pos">39</TD><TD PORT="file_title_size">80</TD><TD>str(UTF-8)</TD><TD PORT="file_title_type">file_title</TD></TR>
+				<TR><TD PORT="file_security_pos">119</TD><TD PORT="file_security_size">167</TD><TD>Clasnfo</TD><TD PORT="file_security_type">file_security</TD></TR>
+				<TR><TD PORT="file_copy_number_pos">286</TD><TD PORT="file_copy_number_size">5</TD><TD>str(UTF-8)</TD><TD PORT="file_copy_number_type">file_copy_number</TD></TR>
+				<TR><TD PORT="file_num_of_copys_pos">291</TD><TD PORT="file_num_of_copys_size">5</TD><TD>str(UTF-8)</TD><TD PORT="file_num_of_copys_type">file_num_of_copys</TD></TR>
+				<TR><TD PORT="encryption_pos">296</TD><TD PORT="encryption_size">1</TD><TD>Encrypt</TD><TD PORT="encryption_type">encryption</TD></TR>
+				<TR><TD PORT="file_bg_color_pos">297</TD><TD PORT="file_bg_color_size">3</TD><TD></TD><TD PORT="file_bg_color_type">file_bg_color</TD></TR>
+				<TR><TD PORT="originator_name_pos">300</TD><TD PORT="originator_name_size">24</TD><TD>str(UTF-8)</TD><TD PORT="originator_name_type">originator_name</TD></TR>
+				<TR><TD PORT="originator_phone_pos">324</TD><TD PORT="originator_phone_size">18</TD><TD>str(UTF-8)</TD><TD PORT="originator_phone_type">originator_phone</TD></TR>
+				<TR><TD PORT="file_length_pos">342</TD><TD PORT="file_length_size">12</TD><TD>str(UTF-8)</TD><TD PORT="file_length_type">file_length</TD></TR>
+				<TR><TD PORT="file_header_length_pos">354</TD><TD PORT="file_header_length_size">6</TD><TD>str(UTF-8)</TD><TD PORT="file_header_length_type">file_header_length</TD></TR>
+				<TR><TD PORT="num_image_segments_pos">360</TD><TD PORT="num_image_segments_size">3</TD><TD>str(UTF-8)</TD><TD PORT="num_image_segments_type">num_image_segments</TD></TR>
+				<TR><TD PORT="linfo_pos">363</TD><TD PORT="linfo_size">16</TD><TD>LengthImageInfo</TD><TD PORT="linfo_type">linfo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="linfo__repeat">repeat num_image_segments.to_i times</TD></TR>
+				<TR><TD PORT="num_graphics_segments_pos">...</TD><TD PORT="num_graphics_segments_size">3</TD><TD>str(UTF-8)</TD><TD PORT="num_graphics_segments_type">num_graphics_segments</TD></TR>
+				<TR><TD PORT="lnnfo_pos">...</TD><TD PORT="lnnfo_size">10</TD><TD>LengthGraphicInfo</TD><TD PORT="lnnfo_type">lnnfo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="lnnfo__repeat">repeat num_graphics_segments.to_i times</TD></TR>
+				<TR><TD PORT="reserved_numx_pos">...</TD><TD PORT="reserved_numx_size">3</TD><TD>str(UTF-8)</TD><TD PORT="reserved_numx_type">reserved_numx</TD></TR>
+				<TR><TD PORT="num_text_files_pos">...</TD><TD PORT="num_text_files_size">3</TD><TD>str(UTF-8)</TD><TD PORT="num_text_files_type">num_text_files</TD></TR>
+				<TR><TD PORT="ltnfo_pos">...</TD><TD PORT="ltnfo_size">9</TD><TD>LengthTextInfo</TD><TD PORT="ltnfo_type">ltnfo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ltnfo__repeat">repeat num_text_files.to_i times</TD></TR>
+				<TR><TD PORT="num_data_extension_pos">...</TD><TD PORT="num_data_extension_size">3</TD><TD>str(UTF-8)</TD><TD PORT="num_data_extension_type">num_data_extension</TD></TR>
+				<TR><TD PORT="ldnfo_pos">...</TD><TD PORT="ldnfo_size">13</TD><TD>LengthDataInfo</TD><TD PORT="ldnfo_type">ldnfo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ldnfo__repeat">repeat num_data_extension.to_i times</TD></TR>
+				<TR><TD PORT="num_reserved_extension_pos">...</TD><TD PORT="num_reserved_extension_size">3</TD><TD>str(UTF-8)</TD><TD PORT="num_reserved_extension_type">num_reserved_extension</TD></TR>
+				<TR><TD PORT="lrnfo_pos">...</TD><TD PORT="lrnfo_size">11</TD><TD>LengthReservedInfo</TD><TD PORT="lrnfo_type">lrnfo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="lrnfo__repeat">repeat num_reserved_extension.to_i times</TD></TR>
+				<TR><TD PORT="user_defined_header_pos">...</TD><TD PORT="user_defined_header_size">...</TD><TD>TreHeader</TD><TD PORT="user_defined_header_type">user_defined_header</TD></TR>
+				<TR><TD PORT="extended_header_pos">...</TD><TD PORT="extended_header_size">...</TD><TD>TreHeader</TD><TD PORT="extended_header_type">extended_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_sub_header_streaming {
+			label="Nitf::DataSubHeaderStreaming";
+			graph[style=dotted];
+
+			data_sub_header_streaming__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="des_base_pos">0</TD><TD PORT="des_base_size">196</TD><TD>DataSubHeaderBase</TD><TD PORT="des_base_type">des_base</TD></TR>
+				<TR><TD PORT="des_defined_subheader_fields_len_pos">196</TD><TD PORT="des_defined_subheader_fields_len_size">4</TD><TD>str(UTF-8)</TD><TD PORT="des_defined_subheader_fields_len_type">des_defined_subheader_fields_len</TD></TR>
+				<TR><TD PORT="sfh_l1_pos">200</TD><TD PORT="sfh_l1_size">7</TD><TD>str(UTF-8)</TD><TD PORT="sfh_l1_type">sfh_l1</TD></TR>
+				<TR><TD PORT="sfh_delim1_pos">207</TD><TD PORT="sfh_delim1_size">4</TD><TD>u4be</TD><TD PORT="sfh_delim1_type">sfh_delim1</TD></TR>
+				<TR><TD PORT="sfh_dr_pos">211</TD><TD PORT="sfh_dr_size">1</TD><TD>u1</TD><TD PORT="sfh_dr_type">sfh_dr</TD></TR>
+				<TR><TD COLSPAN="4" PORT="sfh_dr__repeat">repeat sfh_l1.to_i times</TD></TR>
+				<TR><TD PORT="sfh_delim2_pos">...</TD><TD PORT="sfh_delim2_size">4</TD><TD>u4be</TD><TD PORT="sfh_delim2_type">sfh_delim2</TD></TR>
+				<TR><TD PORT="sfh_l2_pos">...</TD><TD PORT="sfh_l2_size">7</TD><TD>str(UTF-8)</TD><TD PORT="sfh_l2_type">sfh_l2</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tre_header {
+			label="Nitf::TreHeader";
+			graph[style=dotted];
+
+			tre_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_data_length_pos">0</TD><TD PORT="header_data_length_size">5</TD><TD>str(UTF-8)</TD><TD PORT="header_data_length_type">header_data_length</TD></TR>
+				<TR><TD PORT="header_overflow_pos">5</TD><TD PORT="header_overflow_size">3</TD><TD>str(UTF-8)</TD><TD PORT="header_overflow_type">header_overflow</TD></TR>
+				<TR><TD PORT="header_data_pos">8</TD><TD PORT="header_data_size">1</TD><TD>u1</TD><TD PORT="header_data_type">header_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="header_data__repeat">repeat (header_data_length.to_i - 3) times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_image_info {
+			label="Nitf::LengthImageInfo";
+			graph[style=dotted];
+
+			length_image_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_image_subheader_pos">0</TD><TD PORT="length_image_subheader_size">6</TD><TD>str(UTF-8)</TD><TD PORT="length_image_subheader_type">length_image_subheader</TD></TR>
+				<TR><TD PORT="length_image_segment_pos">6</TD><TD PORT="length_image_segment_size">10</TD><TD>str(UTF-8)</TD><TD PORT="length_image_segment_type">length_image_segment</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_data_info {
+			label="Nitf::LengthDataInfo";
+			graph[style=dotted];
+
+			length_data_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_data_extension_subheader_pos">0</TD><TD PORT="length_data_extension_subheader_size">4</TD><TD>str(UTF-8)</TD><TD PORT="length_data_extension_subheader_type">length_data_extension_subheader</TD></TR>
+				<TR><TD PORT="length_data_extension_segment_pos">4</TD><TD PORT="length_data_extension_segment_size">9</TD><TD>str(UTF-8)</TD><TD PORT="length_data_extension_segment_type">length_data_extension_segment</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_text_info {
+			label="Nitf::LengthTextInfo";
+			graph[style=dotted];
+
+			length_text_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_text_subheader_pos">0</TD><TD PORT="length_text_subheader_size">4</TD><TD>str(UTF-8)</TD><TD PORT="length_text_subheader_type">length_text_subheader</TD></TR>
+				<TR><TD PORT="length_text_segment_pos">4</TD><TD PORT="length_text_segment_size">5</TD><TD>str(UTF-8)</TD><TD PORT="length_text_segment_type">length_text_segment</TD></TR>
+			</TABLE>>];
+		}
+	}
+	nitf__seq:header_type -> header__seq [style=bold];
+	nitf__seq:image_segments_type -> image_segment__seq [style=bold];
+	header__seq:num_image_segments_type -> nitf__seq:image_segments__repeat [color="#404040"];
+	nitf__seq:graphics_segments_type -> graphics_segment__seq [style=bold];
+	header__seq:num_graphics_segments_type -> nitf__seq:graphics_segments__repeat [color="#404040"];
+	nitf__seq:text_segments_type -> text_segment__seq [style=bold];
+	header__seq:num_text_files_type -> nitf__seq:text_segments__repeat [color="#404040"];
+	nitf__seq:data_extension_segments_type -> data_extension_segment__seq [style=bold];
+	header__seq:num_data_extension_type -> nitf__seq:data_extension_segments__repeat [color="#404040"];
+	nitf__seq:reserved_extension_segments_type -> reserved_extension_segment__seq [style=bold];
+	header__seq:num_reserved_extension_type -> nitf__seq:reserved_extension_segments__repeat [color="#404040"];
+	length_reserved_info__seq:length_reserved_extension_subheader_type -> reserved_extension_segment__seq:reserved_sub_header_size [color="#404040"];
+	reserved_extension_segment__seq:reserved_sub_header_type -> reserved_sub_header__seq [style=bold];
+	length_reserved_info__seq:length_reserved_extension_segment_type -> reserved_extension_segment__seq:reserved_data_field_size [color="#404040"];
+	tre__seq:edata_length_type -> tre__seq:edata_size [color="#404040"];
+	band_info__seq:num_lut_entries_type -> band_info__seq:luts_size [color="#404040"];
+	band_info__seq:num_luts_type -> band_info__seq:luts__repeat [color="#404040"];
+	image_segment__seq:image_sub_header_type -> image_sub_header__seq [style=bold];
+	image_segment__seq:image_data_mask_type -> image_data_mask__seq [style=bold];
+	length_image_info__seq:length_image_segment_type -> image_segment__seq:image_data_field_size [color="#404040"];
+	image_data_mask__inst__total_size:total_size_type -> image_segment__seq:image_data_field_size [color="#404040"];
+	image_sub_header__seq:img_compression_type -> image_segment__inst__has_mask [color="#404040"];
+	image_sub_header__seq:img_compression_type -> image_segment__inst__has_mask [color="#404040"];
+	length_text_info__seq:length_text_segment_type -> text_segment__seq:text_data_field_size [color="#404040"];
+	graphic_sub_header__seq:graphic_classification_type -> clasnfo__seq [style=bold];
+	graphic_sub_header__seq:encryption_type -> encrypt__seq [style=bold];
+	graphic_sub_header__seq:graphics_extended_sub_header_type -> tre_header__seq [style=bold];
+	image_data_mask__inst__tpxcd_size:tpxcd_size_type -> image_data_mask__seq:tpxcd_size [color="#404040"];
+	image_data_mask__inst__bmrtmr_count:bmrtmr_count_type -> image_data_mask__seq:bmrbnd__repeat [color="#404040"];
+	image_data_mask__inst__bmrtmr_count:bmrtmr_count_type -> image_data_mask__seq:tmrbnd__repeat [color="#404040"];
+	image_data_mask__seq:bmrlnth_type -> image_data_mask__inst__has_bmr [color="#404040"];
+	image_data_mask__seq:tmrlnth_type -> image_data_mask__inst__has_tmr [color="#404040"];
+	image_data_mask__inst__has_tmr:has_tmr_type -> image_data_mask__inst__tmrbnd_size [color="#404040"];
+	image_data_mask__inst__bmrtmr_count:bmrtmr_count_type -> image_data_mask__inst__tmrbnd_size [color="#404040"];
+	image_data_mask__seq:tpxcdlnth_type -> image_data_mask__inst__tpxcd_size [color="#404040"];
+	image_data_mask__seq:tpxcdlnth_type -> image_data_mask__inst__tpxcd_size [color="#404040"];
+	image_data_mask__seq:tpxcdlnth_type -> image_data_mask__inst__tpxcd_size [color="#404040"];
+	image_data_mask__seq:tpxcdlnth_type -> image_data_mask__inst__tpxcd_size [color="#404040"];
+	image_data_mask__inst__tpxcd_size:tpxcd_size_type -> image_data_mask__inst__total_size [color="#404040"];
+	image_data_mask__inst__bmrbnd_size:bmrbnd_size_type -> image_data_mask__inst__total_size [color="#404040"];
+	image_data_mask__inst__tmrbnd_size:tmrbnd_size_type -> image_data_mask__inst__total_size [color="#404040"];
+	image_data_mask__inst__has_bmr:has_bmr_type -> image_data_mask__inst__bmrbnd_size [color="#404040"];
+	image_data_mask__inst__bmrtmr_count:bmrtmr_count_type -> image_data_mask__inst__bmrbnd_size [color="#404040"];
+	image_sub_header__seq:num_blocks_per_row_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	image_sub_header__seq:num_blocks_per_col_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	image_sub_header__seq:img_mode_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	image_sub_header__seq:num_bands_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	image_sub_header__seq:num_bands_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	image_sub_header__seq:num_multispectral_bands_type -> image_data_mask__inst__bmrtmr_count [color="#404040"];
+	graphics_segment__seq:graphic_sub_header_type -> graphic_sub_header__seq [style=bold];
+	length_graphic_info__seq:length_graphic_segment_type -> graphics_segment__seq:graphic_data_field_size [color="#404040"];
+	data_sub_header__seq:des_base_type -> data_sub_header_base__seq [style=bold];
+	data_sub_header__seq:des_defined_subheader_fields_len_type -> data_sub_header__seq:desshf_size [color="#404040"];
+	data_sub_header_base__seq:desid_type -> data_sub_header__inst__tre_ofl [color="#404040"];
+	length_data_info__seq:length_data_extension_subheader_type -> data_extension_segment__seq:data_sub_header_size [color="#404040"];
+	data_extension_segment__seq:data_sub_header_type -> data_sub_header__seq [style=bold];
+	length_data_info__seq:length_data_extension_segment_type -> data_extension_segment__seq:data_data_field_size [color="#404040"];
+	data_sub_header_tre__seq:des_base_type -> data_sub_header_base__seq [style=bold];
+	data_sub_header_tre__seq:des_defined_subheader_fields_len_type -> data_sub_header_tre__seq:des_defined_data_field_size [color="#404040"];
+	image_sub_header__seq:image_date_time_type -> date_time__seq [style=bold];
+	image_sub_header__seq:image_security_classification_type -> clasnfo__seq [style=bold];
+	image_sub_header__seq:encryption_type -> encrypt__seq [style=bold];
+	image_sub_header__seq:img_comments_type -> image_comment__seq [style=bold];
+	image_sub_header__seq:num_img_comments_type -> image_sub_header__seq:img_comments__repeat [color="#404040"];
+	image_sub_header__seq:bands_type -> band_info__seq [style=bold];
+	image_sub_header__seq:num_bands_type -> image_sub_header__seq:bands__repeat [color="#404040"];
+	image_sub_header__seq:num_bands_type -> image_sub_header__seq:bands__repeat [color="#404040"];
+	image_sub_header__seq:num_multispectral_bands_type -> image_sub_header__seq:bands__repeat [color="#404040"];
+	image_sub_header__seq:user_def_img_data_len_type -> image_sub_header__seq:user_def_img_data__repeat [color="#404040"];
+	image_sub_header__seq:image_extended_sub_header_type -> tre_header__seq [style=bold];
+	reserved_sub_header__seq:reclasnfo_type -> clasnfo__seq [style=bold];
+	reserved_sub_header__seq:res_user_defined_subheader_length_type -> reserved_sub_header__seq:res_user_defined_subheader_fields_size [color="#404040"];
+	data_sub_header_base__seq:declasnfo_type -> clasnfo__seq [style=bold];
+	text_sub_header__seq:text_security_class_type -> clasnfo__seq [style=bold];
+	text_sub_header__seq:encryp_type -> encrypt__seq [style=bold];
+	text_sub_header__seq:text_extended_sub_header_type -> tre_header__seq [style=bold];
+	header__seq:file_date_time_type -> date_time__seq [style=bold];
+	header__seq:file_security_type -> clasnfo__seq [style=bold];
+	header__seq:encryption_type -> encrypt__seq [style=bold];
+	header__seq:linfo_type -> length_image_info__seq [style=bold];
+	header__seq:num_image_segments_type -> header__seq:linfo__repeat [color="#404040"];
+	header__seq:lnnfo_type -> length_graphic_info__seq [style=bold];
+	header__seq:num_graphics_segments_type -> header__seq:lnnfo__repeat [color="#404040"];
+	header__seq:ltnfo_type -> length_text_info__seq [style=bold];
+	header__seq:num_text_files_type -> header__seq:ltnfo__repeat [color="#404040"];
+	header__seq:ldnfo_type -> length_data_info__seq [style=bold];
+	header__seq:num_data_extension_type -> header__seq:ldnfo__repeat [color="#404040"];
+	header__seq:lrnfo_type -> length_reserved_info__seq [style=bold];
+	header__seq:num_reserved_extension_type -> header__seq:lrnfo__repeat [color="#404040"];
+	header__seq:user_defined_header_type -> tre_header__seq [style=bold];
+	header__seq:extended_header_type -> tre_header__seq [style=bold];
+	data_sub_header_streaming__seq:des_base_type -> data_sub_header_base__seq [style=bold];
+	data_sub_header_streaming__seq:sfh_l1_type -> data_sub_header_streaming__seq:sfh_dr__repeat [color="#404040"];
+	tre_header__seq:header_data_length_type -> tre_header__seq:header_data__repeat [color="#404040"];
+}

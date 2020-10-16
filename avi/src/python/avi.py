@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Avi(KaitaiStruct):
     """
@@ -46,12 +47,16 @@ class Avi(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic1 = self._io.ensure_fixed_contents(b"\x52\x49\x46\x46")
+        self.magic1 = self._io.read_bytes(4)
+        if not self.magic1 == b"\x52\x49\x46\x46":
+            raise kaitaistruct.ValidationNotEqualError(b"\x52\x49\x46\x46", self.magic1, self._io, u"/seq/0")
         self.file_size = self._io.read_u4le()
-        self.magic2 = self._io.ensure_fixed_contents(b"\x41\x56\x49\x20")
+        self.magic2 = self._io.read_bytes(4)
+        if not self.magic2 == b"\x41\x56\x49\x20":
+            raise kaitaistruct.ValidationNotEqualError(b"\x41\x56\x49\x20", self.magic2, self._io, u"/seq/2")
         self._raw_data = self._io.read_bytes((self.file_size - 4))
-        io = KaitaiStream(BytesIO(self._raw_data))
-        self.data = self._root.Blocks(io, self, self._root)
+        _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+        self.data = Avi.Blocks(_io__raw_data, self, self._root)
 
     class ListBody(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -61,8 +66,8 @@ class Avi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.list_type = self._root.ChunkType(self._io.read_u4le())
-            self.data = self._root.Blocks(self._io, self, self._root)
+            self.list_type = KaitaiStream.resolve_enum(Avi.ChunkType, self._io.read_u4le())
+            self.data = Avi.Blocks(self._io, self, self._root)
 
 
     class Rect(KaitaiStruct):
@@ -90,7 +95,7 @@ class Avi(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.Block(self._io, self, self._root))
+                self.entries.append(Avi.Block(self._io, self, self._root))
                 i += 1
 
 
@@ -129,21 +134,21 @@ class Avi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.four_cc = self._root.ChunkType(self._io.read_u4le())
+            self.four_cc = KaitaiStream.resolve_enum(Avi.ChunkType, self._io.read_u4le())
             self.block_size = self._io.read_u4le()
             _on = self.four_cc
-            if _on == self._root.ChunkType.list:
+            if _on == Avi.ChunkType.list:
                 self._raw_data = self._io.read_bytes(self.block_size)
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.ListBody(io, self, self._root)
-            elif _on == self._root.ChunkType.avih:
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = Avi.ListBody(_io__raw_data, self, self._root)
+            elif _on == Avi.ChunkType.avih:
                 self._raw_data = self._io.read_bytes(self.block_size)
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.AvihBody(io, self, self._root)
-            elif _on == self._root.ChunkType.strh:
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = Avi.AvihBody(_io__raw_data, self, self._root)
+            elif _on == Avi.ChunkType.strh:
                 self._raw_data = self._io.read_bytes(self.block_size)
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.StrhBody(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = Avi.StrhBody(_io__raw_data, self, self._root)
             else:
                 self.data = self._io.read_bytes(self.block_size)
 
@@ -161,8 +166,8 @@ class Avi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.fcc_type = self._root.StreamType(self._io.read_u4le())
-            self.fcc_handler = self._root.HandlerType(self._io.read_u4le())
+            self.fcc_type = KaitaiStream.resolve_enum(Avi.StreamType, self._io.read_u4le())
+            self.fcc_handler = KaitaiStream.resolve_enum(Avi.HandlerType, self._io.read_u4le())
             self.flags = self._io.read_u4le()
             self.priority = self._io.read_u2le()
             self.language = self._io.read_u2le()
@@ -174,7 +179,7 @@ class Avi(KaitaiStruct):
             self.suggested_buffer_size = self._io.read_u4le()
             self.quality = self._io.read_u4le()
             self.sample_size = self._io.read_u4le()
-            self.frame = self._root.Rect(self._io, self, self._root)
+            self.frame = Avi.Rect(self._io, self, self._root)
 
 
     class StrfBody(KaitaiStruct):

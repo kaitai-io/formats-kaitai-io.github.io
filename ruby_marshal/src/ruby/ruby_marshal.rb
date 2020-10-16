@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -52,7 +52,8 @@ class RubyMarshal < Kaitai::Struct::Struct
   end
 
   def _read
-    @version = @_io.ensure_fixed_contents([4, 8].pack('C*'))
+    @version = @_io.read_bytes(2)
+    raise Kaitai::Struct::ValidationNotEqualError.new([4, 8].pack('C*'), version, _io, "/seq/0") if not version == [4, 8].pack('C*')
     @records = Record.new(@_io, self, @_root)
     self
   end
@@ -274,26 +275,26 @@ class RubyMarshal < Kaitai::Struct::Struct
     end
 
     def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(CODES, @_io.read_u1)
+      @code = Kaitai::Struct::Stream::resolve_enum(RubyMarshal::CODES, @_io.read_u1)
       case code
+      when :codes_packed_int
+        @body = PackedInt.new(@_io, self, @_root)
       when :codes_bignum
         @body = Bignum.new(@_io, self, @_root)
-      when :codes_ruby_hash
-        @body = RubyHash.new(@_io, self, @_root)
       when :codes_ruby_array
         @body = RubyArray.new(@_io, self, @_root)
-      when :codes_ruby_symbol
-        @body = RubySymbol.new(@_io, self, @_root)
-      when :codes_instance_var
-        @body = InstanceVar.new(@_io, self, @_root)
-      when :codes_ruby_string
-        @body = RubyString.new(@_io, self, @_root)
-      when :codes_packed_int
+      when :codes_ruby_symbol_link
         @body = PackedInt.new(@_io, self, @_root)
       when :codes_ruby_struct
         @body = RubyStruct.new(@_io, self, @_root)
-      when :codes_ruby_symbol_link
-        @body = PackedInt.new(@_io, self, @_root)
+      when :codes_ruby_string
+        @body = RubyString.new(@_io, self, @_root)
+      when :codes_instance_var
+        @body = InstanceVar.new(@_io, self, @_root)
+      when :codes_ruby_hash
+        @body = RubyHash.new(@_io, self, @_root)
+      when :codes_ruby_symbol
+        @body = RubySymbol.new(@_io, self, @_root)
       end
       self
     end

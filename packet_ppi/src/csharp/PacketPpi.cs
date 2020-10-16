@@ -255,14 +255,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _unused1 = m_io.ReadBitsInt(1) != 0;
-                _aggregateDelimiter = m_io.ReadBitsInt(1) != 0;
-                _moreAggregates = m_io.ReadBitsInt(1) != 0;
-                _aggregate = m_io.ReadBitsInt(1) != 0;
-                _dupRx = m_io.ReadBitsInt(1) != 0;
-                _rxShortGuard = m_io.ReadBitsInt(1) != 0;
-                _isHt40 = m_io.ReadBitsInt(1) != 0;
-                _greenfield = m_io.ReadBitsInt(1) != 0;
+                _unused1 = m_io.ReadBitsIntBe(1) != 0;
+                _aggregateDelimiter = m_io.ReadBitsIntBe(1) != 0;
+                _moreAggregates = m_io.ReadBitsIntBe(1) != 0;
+                _aggregate = m_io.ReadBitsIntBe(1) != 0;
+                _dupRx = m_io.ReadBitsIntBe(1) != 0;
+                _rxShortGuard = m_io.ReadBitsIntBe(1) != 0;
+                _isHt40 = m_io.ReadBitsIntBe(1) != 0;
+                _greenfield = m_io.ReadBitsIntBe(1) != 0;
                 m_io.AlignToByte();
                 _unused2 = m_io.ReadBytes(3);
             }
@@ -528,15 +528,15 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _spectrum2ghz = m_io.ReadBitsInt(1) != 0;
-                    _ofdm = m_io.ReadBitsInt(1) != 0;
-                    _cck = m_io.ReadBitsInt(1) != 0;
-                    _turbo = m_io.ReadBitsInt(1) != 0;
-                    _unused = m_io.ReadBitsInt(8);
-                    _gfsk = m_io.ReadBitsInt(1) != 0;
-                    _dynCckOfdm = m_io.ReadBitsInt(1) != 0;
-                    _onlyPassiveScan = m_io.ReadBitsInt(1) != 0;
-                    _spectrum5ghz = m_io.ReadBitsInt(1) != 0;
+                    _spectrum2ghz = m_io.ReadBitsIntBe(1) != 0;
+                    _ofdm = m_io.ReadBitsIntBe(1) != 0;
+                    _cck = m_io.ReadBitsIntBe(1) != 0;
+                    _turbo = m_io.ReadBitsIntBe(1) != 0;
+                    _unused = m_io.ReadBitsIntBe(8);
+                    _gfsk = m_io.ReadBitsIntBe(1) != 0;
+                    _dynCckOfdm = m_io.ReadBitsIntBe(1) != 0;
+                    _onlyPassiveScan = m_io.ReadBitsIntBe(1) != 0;
+                    _spectrum5ghz = m_io.ReadBitsIntBe(1) != 0;
                 }
                 private bool _spectrum2ghz;
                 private bool _ofdm;

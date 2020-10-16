@@ -300,7 +300,11 @@ section#format-index .row {
             <span class="n">__raw_fields</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Len</span> <span class="p">-</span> <span class="m">5</span><span class="p">));</span>
             <span class="kt">var</span> <span class="n">io___raw_fields</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_fields</span><span class="p">);</span>
             <span class="n">_fields</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ElementsList</span><span class="p">(</span><span class="n">io___raw_fields</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_terminator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+            <span class="n">_terminator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Terminator</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">},</span> <span class="n">Terminator</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/2&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
         <span class="p">}</span>
 
         <span class="c1">/// &lt;summary&gt;</span>
@@ -498,7 +502,11 @@ section#format-index .row {
             <span class="p">{</span>
                 <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
                 <span class="n">_str</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Len</span> <span class="p">-</span> <span class="m">1</span><span class="p">)));</span>
-                <span class="n">_terminator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_terminator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Terminator</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">},</span> <span class="n">Terminator</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/string/seq/2&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">int</span> <span class="n">_len</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">string</span> <span class="n">_str</span><span class="p">;</span>
@@ -555,40 +563,60 @@ section#format-index .row {
                 <span class="n">_typeByte</span> <span class="p">=</span> <span class="p">((</span><span class="n">BsonType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="n">_name</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Cstring</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">TypeByte</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberDouble</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">CodeWithScope</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CodeWithScope</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">ObjectId</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">RegEx</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RegEx</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberDecimal</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">F16</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberDouble</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Symbol</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberInt</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Document</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">ObjectId</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Javascript</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">UtcDatetime</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Boolean</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberLong</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">BinData</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BinData</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">DbPointer</span><span class="p">:</span> <span class="p">{</span>
@@ -599,28 +627,8 @@ section#format-index .row {
                     <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Javascript</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Boolean</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Document</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bson</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">Symbol</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberInt</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">BinData</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BinData</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">case</span> <span class="n">BsonType</span><span class="p">.</span><span class="n">NumberDecimal</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">F16</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="p">}</span>
@@ -764,9 +772,9 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_str</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_exponent</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">15</span><span class="p">);</span>
-                <span class="n">_significandHi</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">49</span><span class="p">);</span>
+                <span class="n">_str</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_exponent</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">15</span><span class="p">);</span>
+                <span class="n">_significandHi</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">49</span><span class="p">);</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="n">_significandLo</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
             <span class="p">}</span>

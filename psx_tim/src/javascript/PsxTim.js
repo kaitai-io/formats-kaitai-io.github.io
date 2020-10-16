@@ -30,7 +30,10 @@ var PsxTim = (function() {
     this._read();
   }
   PsxTim.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([16, 0, 0, 0]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [16, 0, 0, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([16, 0, 0, 0], this.magic, this._io, "/seq/0");
+    }
     this.flags = this._io.readU4le();
     if (this.hasClut) {
       this.clut = new Bitmap(this._io, this, this._root);

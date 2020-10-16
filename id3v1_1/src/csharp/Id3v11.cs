@@ -190,7 +190,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 84, 65, 71 });
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 84, 65, 71 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 84, 65, 71 }, Magic, M_Io, "/types/id3_v1_1_tag/seq/0");
+                }
                 _title = m_io.ReadBytes(30);
                 _artist = m_io.ReadBytes(30);
                 _album = m_io.ReadBytes(30);

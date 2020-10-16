@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -73,14 +73,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic1} = $self->{_io}->ensure_fixed_contents(pack('C*', (80, 65, 75)));
+    $self->{magic1} = $self->{_io}->read_bytes(3);
     $self->{version} = $self->{_io}->read_u1();
     $self->{len_header} = $self->{_io}->read_u4le();
     $self->{len_data} = $self->{_io}->read_u4le();
     $self->{_raw_root_entry} = $self->{_io}->read_bytes(($self->len_header() - 16));
     my $io__raw_root_entry = IO::KaitaiStruct::Stream->new($self->{_raw_root_entry});
     $self->{root_entry} = HeapsPak::Header::Entry->new($io__raw_root_entry, $self, $self->{_root});
-    $self->{magic2} = $self->{_io}->ensure_fixed_contents(pack('C*', (68, 65, 84, 65)));
+    $self->{magic2} = $self->{_io}->read_bytes(4);
 }
 
 sub magic1 {
@@ -210,8 +210,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{unused} = $self->{_io}->read_bits_int(7);
-    $self->{is_dir} = $self->{_io}->read_bits_int(1);
+    $self->{unused} = $self->{_io}->read_bits_int_be(7);
+    $self->{is_dir} = $self->{_io}->read_bits_int_be(1);
 }
 
 sub unused {

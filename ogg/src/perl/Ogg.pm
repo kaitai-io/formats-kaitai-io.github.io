@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Ogg;
@@ -75,12 +75,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sync_code} = $self->{_io}->ensure_fixed_contents(pack('C*', (79, 103, 103, 83)));
-    $self->{version} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
-    $self->{reserved1} = $self->{_io}->read_bits_int(5);
-    $self->{is_end_of_stream} = $self->{_io}->read_bits_int(1);
-    $self->{is_beginning_of_stream} = $self->{_io}->read_bits_int(1);
-    $self->{is_continuation} = $self->{_io}->read_bits_int(1);
+    $self->{sync_code} = $self->{_io}->read_bytes(4);
+    $self->{version} = $self->{_io}->read_bytes(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(5);
+    $self->{is_end_of_stream} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_beginning_of_stream} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_continuation} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{granule_pos} = $self->{_io}->read_u8le();
     $self->{bitstream_serial} = $self->{_io}->read_u4le();

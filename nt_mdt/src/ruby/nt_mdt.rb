@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -191,15 +191,16 @@ class NtMdt < Kaitai::Struct::Struct
   end
 
   def _read
-    @signature = @_io.ensure_fixed_contents([1, 176, 147, 255].pack('C*'))
+    @signature = @_io.read_bytes(4)
+    raise Kaitai::Struct::ValidationNotEqualError.new([1, 176, 147, 255].pack('C*'), signature, _io, "/seq/0") if not signature == [1, 176, 147, 255].pack('C*')
     @size = @_io.read_u4le
     @reserved0 = @_io.read_bytes(4)
     @last_frame = @_io.read_u2le
     @reserved1 = @_io.read_bytes(18)
     @wrond_doc = @_io.read_bytes(1)
     @_raw_frames = @_io.read_bytes(size)
-    io = Kaitai::Struct::Stream.new(@_raw_frames)
-    @frames = Framez.new(io, self, @_root)
+    _io__raw_frames = Kaitai::Struct::Stream.new(@_raw_frames)
+    @frames = Framez.new(_io__raw_frames, self, @_root)
     self
   end
   class Uuid < Kaitai::Struct::Struct
@@ -253,8 +254,8 @@ class NtMdt < Kaitai::Struct::Struct
     def _read
       @size = @_io.read_u4le
       @_raw_main = @_io.read_bytes((size - 4))
-      io = Kaitai::Struct::Stream.new(@_raw_main)
-      @main = FrameMain.new(io, self, @_root)
+      _io__raw_main = Kaitai::Struct::Stream.new(@_raw_main)
+      @main = FrameMain.new(_io__raw_main, self, @_root)
       self
     end
     class Dots < Kaitai::Struct::Struct
@@ -287,8 +288,8 @@ class NtMdt < Kaitai::Struct::Struct
         def _read
           @header_size = @_io.read_s4le
           @_raw_header = @_io.read_bytes(header_size)
-          io = Kaitai::Struct::Stream.new(@_raw_header)
-          @header = Header.new(io, self, @_root)
+          _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+          @header = Header.new(_io__raw_header, self, @_root)
           self
         end
         class Header < Kaitai::Struct::Struct
@@ -300,7 +301,7 @@ class NtMdt < Kaitai::Struct::Struct
           def _read
             @coord_size = @_io.read_s4le
             @version = @_io.read_s4le
-            @xyunits = Kaitai::Struct::Stream::resolve_enum(UNIT, @_io.read_s2le)
+            @xyunits = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
             self
           end
           attr_reader :coord_size
@@ -363,31 +364,31 @@ class NtMdt < Kaitai::Struct::Struct
       end
 
       def _read
-        @type = Kaitai::Struct::Stream::resolve_enum(FRAME_TYPE, @_io.read_u2le)
+        @type = Kaitai::Struct::Stream::resolve_enum(NtMdt::Frame::FRAME_TYPE, @_io.read_u2le)
         @version = Version.new(@_io, self, @_root)
         @date_time = DateTime.new(@_io, self, @_root)
         @var_size = @_io.read_u2le
         case type
-        when :frame_type_scanned
-          @_raw_frame_data = @_io.read_bytes_full
-          io = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdScanned.new(io, self, @_root)
-        when :frame_type_curves_new
-          @_raw_frame_data = @_io.read_bytes_full
-          io = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdCurvesNew.new(io, self, @_root)
         when :frame_type_mda
           @_raw_frame_data = @_io.read_bytes_full
-          io = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdMetaData.new(io, self, @_root)
-        when :frame_type_spectroscopy
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdMetaData.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_curves_new
           @_raw_frame_data = @_io.read_bytes_full
-          io = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdSpectroscopy.new(io, self, @_root)
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdCurvesNew.new(_io__raw_frame_data, self, @_root)
         when :frame_type_curves
           @_raw_frame_data = @_io.read_bytes_full
-          io = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdSpectroscopy.new(io, self, @_root)
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_spectroscopy
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_scanned
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdScanned.new(_io__raw_frame_data, self, @_root)
         else
           @frame_data = @_io.read_bytes_full
         end
@@ -514,26 +515,26 @@ class NtMdt < Kaitai::Struct::Struct
             @items = Array.new(_parent._parent.n_mesurands)
             (_parent._parent.n_mesurands).times { |i|
               case _parent._parent.mesurands[i].data_type
-              when :data_type_uint8
-                @items[i] = @_io.read_u1
-              when :data_type_int8
-                @items[i] = @_io.read_s1
-              when :data_type_int16
-                @items[i] = @_io.read_s2le
               when :data_type_uint64
                 @items[i] = @_io.read_u8le
-              when :data_type_float64
-                @items[i] = @_io.read_f8le
-              when :data_type_int32
-                @items[i] = @_io.read_s4le
+              when :data_type_uint8
+                @items[i] = @_io.read_u1
               when :data_type_float32
                 @items[i] = @_io.read_f4le
+              when :data_type_int8
+                @items[i] = @_io.read_s1
               when :data_type_uint16
                 @items[i] = @_io.read_u2le
               when :data_type_int64
                 @items[i] = @_io.read_s8le
               when :data_type_uint32
                 @items[i] = @_io.read_u4le
+              when :data_type_float64
+                @items[i] = @_io.read_f8le
+              when :data_type_int16
+                @items[i] = @_io.read_s2le
+              when :data_type_int32
+                @items[i] = @_io.read_s4le
               end
             }
             self
@@ -561,7 +562,7 @@ class NtMdt < Kaitai::Struct::Struct
           @scale = @_io.read_f8le
           @min_index = @_io.read_u8le
           @max_index = @_io.read_u8le
-          @data_type = Kaitai::Struct::Stream::resolve_enum(DATA_TYPE, @_io.read_s4le)
+          @data_type = Kaitai::Struct::Stream::resolve_enum(NtMdt::DATA_TYPE, @_io.read_s4le)
           @len_author = @_io.read_u4le
           @name = (@_io.read_bytes(len_name)).force_encoding("utf-8")
           @comment = (@_io.read_bytes(len_comment)).force_encoding("utf-8")
@@ -598,8 +599,8 @@ class NtMdt < Kaitai::Struct::Struct
         _pos = @_io.pos
         @_io.seek(data_offset)
         @_raw_image = @_io.read_bytes(data_size)
-        io = Kaitai::Struct::Stream.new(@_raw_image)
-        @image = Image.new(io, self, @_root)
+        _io__raw_image = Kaitai::Struct::Stream.new(@_raw_image)
+        @image = Image.new(_io__raw_image, self, @_root)
         @_io.seek(_pos)
         @image
       end
@@ -634,8 +635,8 @@ class NtMdt < Kaitai::Struct::Struct
 
       def _read
         @_raw_vars = @_io.read_bytes(_parent.var_size)
-        io = Kaitai::Struct::Stream.new(@_raw_vars)
-        @vars = Vars.new(io, self, @_root)
+        _io__raw_vars = Kaitai::Struct::Stream.new(@_raw_vars)
+        @vars = Vars.new(_io__raw_vars, self, @_root)
         @fm_mode = @_io.read_u2le
         @fm_xres = @_io.read_u2le
         @fm_yres = @_io.read_u2le
@@ -781,7 +782,7 @@ class NtMdt < Kaitai::Struct::Struct
       def _read
         @offset = @_io.read_f4le
         @step = @_io.read_f4le
-        @unit = Kaitai::Struct::Stream::resolve_enum(UNIT, @_io.read_s2le)
+        @unit = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
         self
       end
 
@@ -831,8 +832,8 @@ class NtMdt < Kaitai::Struct::Struct
 
       def _read
         @_raw_vars = @_io.read_bytes(_parent.var_size)
-        io = Kaitai::Struct::Stream.new(@_raw_vars)
-        @vars = Vars.new(io, self, @_root)
+        _io__raw_vars = Kaitai::Struct::Stream.new(@_raw_vars)
+        @vars = Vars.new(_io__raw_vars, self, @_root)
         if false
           @orig_format = @_io.read_u4le
         end
@@ -870,8 +871,8 @@ class NtMdt < Kaitai::Struct::Struct
           @x_scale = AxisScale.new(@_io, self, @_root)
           @y_scale = AxisScale.new(@_io, self, @_root)
           @z_scale = AxisScale.new(@_io, self, @_root)
-          @channel_index = Kaitai::Struct::Stream::resolve_enum(ADC_MODE, @_io.read_u1)
-          @mode = Kaitai::Struct::Stream::resolve_enum(MODE, @_io.read_u1)
+          @channel_index = Kaitai::Struct::Stream::resolve_enum(NtMdt::ADC_MODE, @_io.read_u1)
+          @mode = Kaitai::Struct::Stream::resolve_enum(NtMdt::Frame::FdScanned::MODE, @_io.read_u1)
           @xres = @_io.read_u2le
           @yres = @_io.read_u2le
           @ndacq = @_io.read_u2le
@@ -999,11 +1000,11 @@ class NtMdt < Kaitai::Struct::Struct
         end
 
         def _read
-          @unkn = @_io.read_bits_int(4)
-          @double_pass = @_io.read_bits_int(1) != 0
-          @bottom = @_io.read_bits_int(1) != 0
-          @left = @_io.read_bits_int(1) != 0
-          @horizontal = @_io.read_bits_int(1) != 0
+          @unkn = @_io.read_bits_int_be(4)
+          @double_pass = @_io.read_bits_int_be(1) != 0
+          @bottom = @_io.read_bits_int_be(1) != 0
+          @left = @_io.read_bits_int_be(1) != 0
+          @horizontal = @_io.read_bits_int_be(1) != 0
           self
         end
         attr_reader :unkn

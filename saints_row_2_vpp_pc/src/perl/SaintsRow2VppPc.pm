@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (206, 10, 137, 81, 4)));
+    $self->{magic} = $self->{_io}->read_bytes(5);
     $self->{pad1} = $self->{_io}->read_bytes(335);
     $self->{num_files} = $self->{_io}->read_s4le();
     $self->{container_size} = $self->{_io}->read_s4le();

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Asn1Der(KaitaiStruct):
     """ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
@@ -64,33 +65,33 @@ class Asn1Der(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.type_tag = self._root.TypeTag(self._io.read_u1())
-        self.len = self._root.LenEncoded(self._io, self, self._root)
+        self.type_tag = KaitaiStream.resolve_enum(Asn1Der.TypeTag, self._io.read_u1())
+        self.len = Asn1Der.LenEncoded(self._io, self, self._root)
         _on = self.type_tag
-        if _on == self._root.TypeTag.sequence_30:
+        if _on == Asn1Der.TypeTag.printable_string:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodySequence(io, self, self._root)
-        elif _on == self._root.TypeTag.sequence_10:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodyPrintableString(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.sequence_10:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodySequence(io, self, self._root)
-        elif _on == self._root.TypeTag.utf8string:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.set:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodyUtf8string(io, self, self._root)
-        elif _on == self._root.TypeTag.printable_string:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.sequence_30:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodyPrintableString(io, self, self._root)
-        elif _on == self._root.TypeTag.object_id:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.utf8string:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodyObjectId(io, self, self._root)
-        elif _on == self._root.TypeTag.set:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodyUtf8string(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.object_id:
             self._raw_body = self._io.read_bytes(self.len.result)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.BodySequence(io, self, self._root)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodyObjectId(_io__raw_body, self, self._root)
         else:
             self.body = self._io.read_bytes(self.len.result)
 

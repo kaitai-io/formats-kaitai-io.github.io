@@ -408,14 +408,35 @@ var ShapefileMain = (function() {
       this._read();
     }
     FileHeader.prototype._read = function() {
-      this.fileCode = this._io.ensureFixedContents([0, 0, 39, 10]);
-      this.unusedField1 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField2 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField3 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField4 = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.unusedField5 = this._io.ensureFixedContents([0, 0, 0, 0]);
+      this.fileCode = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.fileCode, [0, 0, 39, 10]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 39, 10], this.fileCode, this._io, "/types/file_header/seq/0");
+      }
+      this.unusedField1 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField1, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField1, this._io, "/types/file_header/seq/1");
+      }
+      this.unusedField2 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField2, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField2, this._io, "/types/file_header/seq/2");
+      }
+      this.unusedField3 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField3, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField3, this._io, "/types/file_header/seq/3");
+      }
+      this.unusedField4 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField4, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField4, this._io, "/types/file_header/seq/4");
+      }
+      this.unusedField5 = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.unusedField5, [0, 0, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.unusedField5, this._io, "/types/file_header/seq/5");
+      }
       this.fileLength = this._io.readS4be();
-      this.version = this._io.ensureFixedContents([232, 3, 0, 0]);
+      this.version = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.version, [232, 3, 0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([232, 3, 0, 0], this.version, this._io, "/types/file_header/seq/7");
+      }
       this.shapeType = this._io.readS4le();
       this.boundingBox = new BoundingBoxXYZM(this._io, this, this._root);
     }
@@ -481,44 +502,44 @@ var ShapefileMain = (function() {
       this.shapeType = this._io.readS4le();
       if (this.shapeType != ShapefileMain.ShapeType.NULL_SHAPE) {
         switch (this.shapeType) {
-        case ShapefileMain.ShapeType.POINT_M:
-          this.shapeParameters = new PointM(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON_Z:
-          this.shapeParameters = new PolygonZ(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.MULTI_POINT_M:
-          this.shapeParameters = new MultiPointM(this._io, this, this._root);
-          break;
         case ShapefileMain.ShapeType.POLY_LINE_Z:
           this.shapeParameters = new PolyLineZ(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.MULTI_POINT_Z:
-          this.shapeParameters = new MultiPointZ(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.MULTI_POINT:
-          this.shapeParameters = new MultiPoint(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON_M:
-          this.shapeParameters = new PolygonM(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON:
-          this.shapeParameters = new Polygon(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POINT:
-          this.shapeParameters = new Point(this._io, this, this._root);
+        case ShapefileMain.ShapeType.MULTI_PATCH:
+          this.shapeParameters = new MultiPatch(this._io, this, this._root);
           break;
         case ShapefileMain.ShapeType.POLY_LINE_M:
           this.shapeParameters = new PolyLineM(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.POLY_LINE:
-          this.shapeParameters = new PolyLine(this._io, this, this._root);
+        case ShapefileMain.ShapeType.POLYGON:
+          this.shapeParameters = new Polygon(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POLYGON_Z:
+          this.shapeParameters = new PolygonZ(this._io, this, this._root);
           break;
         case ShapefileMain.ShapeType.POINT_Z:
           this.shapeParameters = new PointZ(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.MULTI_PATCH:
-          this.shapeParameters = new MultiPatch(this._io, this, this._root);
+        case ShapefileMain.ShapeType.POLY_LINE:
+          this.shapeParameters = new PolyLine(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POINT_M:
+          this.shapeParameters = new PointM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POLYGON_M:
+          this.shapeParameters = new PolygonM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT:
+          this.shapeParameters = new MultiPoint(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POINT:
+          this.shapeParameters = new Point(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT_M:
+          this.shapeParameters = new MultiPointM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT_Z:
+          this.shapeParameters = new MultiPointZ(this._io, this, this._root);
           break;
         }
       }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -364,7 +365,10 @@ public class Warcraft2Pud extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 });
+            this.magic = this._io.readBytes(10);
+            if (!(Arrays.equals(magic(), new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }, magic(), _io(), "/types/section_type/seq/0");
+            }
             this.unused = this._io.readBytes(2);
             this.idTag = this._io.readU4le();
         }

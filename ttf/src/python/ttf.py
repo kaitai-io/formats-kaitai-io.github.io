@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Ttf(KaitaiStruct):
     """A TrueType font file contains data, in table format, that comprises
@@ -22,10 +23,10 @@ class Ttf(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.offset_table = self._root.OffsetTable(self._io, self, self._root)
+        self.offset_table = Ttf.OffsetTable(self._io, self, self._root)
         self.directory_table = [None] * (self.offset_table.num_tables)
         for i in range(self.offset_table.num_tables):
-            self.directory_table[i] = self._root.DirTableEntry(self._io, self, self._root)
+            self.directory_table[i] = Ttf.DirTableEntry(self._io, self, self._root)
 
 
     class Post(KaitaiStruct):
@@ -36,8 +37,8 @@ class Ttf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.format = self._root.Fixed(self._io, self, self._root)
-            self.italic_angle = self._root.Fixed(self._io, self, self._root)
+            self.format = Ttf.Fixed(self._io, self, self._root)
+            self.italic_angle = Ttf.Fixed(self._io, self, self._root)
             self.underline_position = self._io.read_s2be()
             self.underline_thichness = self._io.read_s2be()
             self.is_fixed_pitch = self._io.read_u4be()
@@ -46,7 +47,7 @@ class Ttf(KaitaiStruct):
             self.min_mem_type1 = self._io.read_u4be()
             self.max_mem_type1 = self._io.read_u4be()
             if  ((self.format.major == 2) and (self.format.minor == 0)) :
-                self.format20 = self._root.Post.Format20(self._io, self, self._root)
+                self.format20 = Ttf.Post.Format20(self._io, self, self._root)
 
 
         class Format20(KaitaiStruct):
@@ -65,7 +66,7 @@ class Ttf(KaitaiStruct):
                 self.glyph_names = []
                 i = 0
                 while True:
-                    _ = self._root.Post.Format20.PascalString(self._io, self, self._root)
+                    _ = Ttf.Post.Format20.PascalString(self._io, self, self._root)
                     self.glyph_names.append(_)
                     if _.length == 0:
                         break
@@ -138,7 +139,7 @@ class Ttf(KaitaiStruct):
             self.ofs_strings = self._io.read_u2be()
             self.name_records = [None] * (self.num_name_records)
             for i in range(self.num_name_records):
-                self.name_records[i] = self._root.Name.NameRecord(self._io, self, self._root)
+                self.name_records[i] = Ttf.Name.NameRecord(self._io, self, self._root)
 
 
         class NameRecord(KaitaiStruct):
@@ -149,10 +150,10 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.platform_id = self._root.Name.Platforms(self._io.read_u2be())
+                self.platform_id = KaitaiStream.resolve_enum(Ttf.Name.Platforms, self._io.read_u2be())
                 self.encoding_id = self._io.read_u2be()
                 self.language_id = self._io.read_u2be()
-                self.name_id = self._root.Name.Names(self._io.read_u2be())
+                self.name_id = KaitaiStream.resolve_enum(Ttf.Name.Names, self._io.read_u2be())
                 self.len_str = self._io.read_u2be()
                 self.ofs_str = self._io.read_u2be()
 
@@ -202,11 +203,13 @@ class Ttf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.version = self._root.Fixed(self._io, self, self._root)
-            self.font_revision = self._root.Fixed(self._io, self, self._root)
+            self.version = Ttf.Fixed(self._io, self, self._root)
+            self.font_revision = Ttf.Fixed(self._io, self, self._root)
             self.checksum_adjustment = self._io.read_u4be()
-            self.magic_number = self._io.ensure_fixed_contents(b"\x5F\x0F\x3C\xF5")
-            self.flags = self._root.Head.Flags(self._io.read_u2be())
+            self.magic_number = self._io.read_bytes(4)
+            if not self.magic_number == b"\x5F\x0F\x3C\xF5":
+                raise kaitaistruct.ValidationNotEqualError(b"\x5F\x0F\x3C\xF5", self.magic_number, self._io, u"/types/head/seq/3")
+            self.flags = KaitaiStream.resolve_enum(Ttf.Head.Flags, self._io.read_u2be())
             self.units_per_em = self._io.read_u2be()
             self.created = self._io.read_u8be()
             self.modified = self._io.read_u8be()
@@ -216,7 +219,7 @@ class Ttf(KaitaiStruct):
             self.y_max = self._io.read_s2be()
             self.mac_style = self._io.read_u2be()
             self.lowest_rec_ppem = self._io.read_u2be()
-            self.font_direction_hint = self._root.Head.FontDirectionHint(self._io.read_s2be())
+            self.font_direction_hint = KaitaiStream.resolve_enum(Ttf.Head.FontDirectionHint, self._io.read_s2be())
             self.index_to_loc_format = self._io.read_s2be()
             self.glyph_data_format = self._io.read_s2be()
 
@@ -240,7 +243,7 @@ class Ttf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.version = self._root.Fixed(self._io, self, self._root)
+            self.version = Ttf.Fixed(self._io, self, self._root)
             self.ascender = self._io.read_s2be()
             self.descender = self._io.read_s2be()
             self.line_gap = self._io.read_s2be()
@@ -250,7 +253,9 @@ class Ttf(KaitaiStruct):
             self.x_max_extend = self._io.read_s2be()
             self.caret_slope_rise = self._io.read_s2be()
             self.caret_slope_run = self._io.read_s2be()
-            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
+            self.reserved = self._io.read_bytes(10)
+            if not self.reserved == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", self.reserved, self._io, u"/types/hhea/seq/10")
             self.metric_data_format = self._io.read_s2be()
             self.number_of_hmetrics = self._io.read_u2be()
 
@@ -278,7 +283,7 @@ class Ttf(KaitaiStruct):
             self.subtable_count = self._io.read_u2be()
             self.subtables = [None] * (self.subtable_count)
             for i in range(self.subtable_count):
-                self.subtables[i] = self._root.Kern.Subtable(self._io, self, self._root)
+                self.subtables[i] = Ttf.Kern.Subtable(self._io, self, self._root)
 
 
         class Subtable(KaitaiStruct):
@@ -292,14 +297,14 @@ class Ttf(KaitaiStruct):
                 self.version = self._io.read_u2be()
                 self.length = self._io.read_u2be()
                 self.format = self._io.read_u1()
-                self.reserved = self._io.read_bits_int(4)
-                self.is_override = self._io.read_bits_int(1) != 0
-                self.is_cross_stream = self._io.read_bits_int(1) != 0
-                self.is_minimum = self._io.read_bits_int(1) != 0
-                self.is_horizontal = self._io.read_bits_int(1) != 0
+                self.reserved = self._io.read_bits_int_be(4)
+                self.is_override = self._io.read_bits_int_be(1) != 0
+                self.is_cross_stream = self._io.read_bits_int_be(1) != 0
+                self.is_minimum = self._io.read_bits_int_be(1) != 0
+                self.is_horizontal = self._io.read_bits_int_be(1) != 0
                 self._io.align_to_byte()
                 if self.format == 0:
-                    self.format0 = self._root.Kern.Subtable.Format0(self._io, self, self._root)
+                    self.format0 = Ttf.Kern.Subtable.Format0(self._io, self, self._root)
 
 
             class Format0(KaitaiStruct):
@@ -316,7 +321,7 @@ class Ttf(KaitaiStruct):
                     self.range_shift = self._io.read_u2be()
                     self.kerning_pairs = [None] * (self.pair_count)
                     for i in range(self.pair_count):
-                        self.kerning_pairs[i] = self._root.Kern.Subtable.Format0.KerningPair(self._io, self, self._root)
+                        self.kerning_pairs[i] = Ttf.Kern.Subtable.Format0.KerningPair(self._io, self, self._root)
 
 
                 class KerningPair(KaitaiStruct):
@@ -359,52 +364,52 @@ class Ttf(KaitaiStruct):
             _on = self.tag
             if _on == u"head":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Head(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Head(_io__raw__m_value, self, self._root)
             elif _on == u"cvt ":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Cvt(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Cvt(_io__raw__m_value, self, self._root)
             elif _on == u"prep":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Prep(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Prep(_io__raw__m_value, self, self._root)
             elif _on == u"kern":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Kern(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Kern(_io__raw__m_value, self, self._root)
             elif _on == u"hhea":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Hhea(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Hhea(_io__raw__m_value, self, self._root)
             elif _on == u"post":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Post(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Post(_io__raw__m_value, self, self._root)
             elif _on == u"OS/2":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Os2(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Os2(_io__raw__m_value, self, self._root)
             elif _on == u"name":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Name(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Name(_io__raw__m_value, self, self._root)
             elif _on == u"maxp":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Maxp(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Maxp(_io__raw__m_value, self, self._root)
             elif _on == u"glyf":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Glyf(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Glyf(_io__raw__m_value, self, self._root)
             elif _on == u"fpgm":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Fpgm(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Fpgm(_io__raw__m_value, self, self._root)
             elif _on == u"cmap":
                 self._raw__m_value = io.read_bytes(self.length)
-                io = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Cmap(io, self, self._root)
+                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = Ttf.Cmap(_io__raw__m_value, self, self._root)
             else:
                 self._m_value = io.read_bytes(self.length)
             io.seek(_pos)
@@ -458,9 +463,9 @@ class Ttf(KaitaiStruct):
         def _read(self):
             self.version = self._io.read_u2be()
             self.x_avg_char_width = self._io.read_s2be()
-            self.weight_class = self._root.Os2.WeightClass(self._io.read_u2be())
-            self.width_class = self._root.Os2.WidthClass(self._io.read_u2be())
-            self.fs_type = self._root.Os2.FsType(self._io.read_s2be())
+            self.weight_class = KaitaiStream.resolve_enum(Ttf.Os2.WeightClass, self._io.read_u2be())
+            self.width_class = KaitaiStream.resolve_enum(Ttf.Os2.WidthClass, self._io.read_u2be())
+            self.fs_type = KaitaiStream.resolve_enum(Ttf.Os2.FsType, self._io.read_s2be())
             self.y_subscript_x_size = self._io.read_s2be()
             self.y_subscript_y_size = self._io.read_s2be()
             self.y_subscript_x_offset = self._io.read_s2be()
@@ -472,10 +477,10 @@ class Ttf(KaitaiStruct):
             self.y_strikeout_size = self._io.read_s2be()
             self.y_strikeout_position = self._io.read_s2be()
             self.s_family_class = self._io.read_s2be()
-            self.panose = self._root.Os2.Panose(self._io, self, self._root)
-            self.unicode_range = self._root.Os2.UnicodeRange(self._io, self, self._root)
+            self.panose = Ttf.Os2.Panose(self._io, self, self._root)
+            self.unicode_range = Ttf.Os2.UnicodeRange(self._io, self, self._root)
             self.ach_vend_id = (self._io.read_bytes(4)).decode(u"ascii")
-            self.selection = self._root.Os2.FsSelection(self._io.read_u2be())
+            self.selection = KaitaiStream.resolve_enum(Ttf.Os2.FsSelection, self._io.read_u2be())
             self.first_char_index = self._io.read_u2be()
             self.last_char_index = self._io.read_u2be()
             self.typo_ascender = self._io.read_s2be()
@@ -483,7 +488,7 @@ class Ttf(KaitaiStruct):
             self.typo_line_gap = self._io.read_s2be()
             self.win_ascent = self._io.read_u2be()
             self.win_descent = self._io.read_u2be()
-            self.code_page_range = self._root.Os2.CodePageRange(self._io, self, self._root)
+            self.code_page_range = Ttf.Os2.CodePageRange(self._io, self, self._root)
 
         class Panose(KaitaiStruct):
 
@@ -626,16 +631,16 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.family_type = self._root.Os2.Panose.FamilyKind(self._io.read_u1())
-                self.serif_style = self._root.Os2.Panose.SerifStyle(self._io.read_u1())
-                self.weight = self._root.Os2.Panose.Weight(self._io.read_u1())
-                self.proportion = self._root.Os2.Panose.Proportion(self._io.read_u1())
-                self.contrast = self._root.Os2.Panose.Contrast(self._io.read_u1())
-                self.stroke_variation = self._root.Os2.Panose.StrokeVariation(self._io.read_u1())
-                self.arm_style = self._root.Os2.Panose.ArmStyle(self._io.read_u1())
-                self.letter_form = self._root.Os2.Panose.LetterForm(self._io.read_u1())
-                self.midline = self._root.Os2.Panose.Midline(self._io.read_u1())
-                self.x_height = self._root.Os2.Panose.XHeight(self._io.read_u1())
+                self.family_type = KaitaiStream.resolve_enum(Ttf.Os2.Panose.FamilyKind, self._io.read_u1())
+                self.serif_style = KaitaiStream.resolve_enum(Ttf.Os2.Panose.SerifStyle, self._io.read_u1())
+                self.weight = KaitaiStream.resolve_enum(Ttf.Os2.Panose.Weight, self._io.read_u1())
+                self.proportion = KaitaiStream.resolve_enum(Ttf.Os2.Panose.Proportion, self._io.read_u1())
+                self.contrast = KaitaiStream.resolve_enum(Ttf.Os2.Panose.Contrast, self._io.read_u1())
+                self.stroke_variation = KaitaiStream.resolve_enum(Ttf.Os2.Panose.StrokeVariation, self._io.read_u1())
+                self.arm_style = KaitaiStream.resolve_enum(Ttf.Os2.Panose.ArmStyle, self._io.read_u1())
+                self.letter_form = KaitaiStream.resolve_enum(Ttf.Os2.Panose.LetterForm, self._io.read_u1())
+                self.midline = KaitaiStream.resolve_enum(Ttf.Os2.Panose.Midline, self._io.read_u1())
+                self.x_height = KaitaiStream.resolve_enum(Ttf.Os2.Panose.XHeight, self._io.read_u1())
 
 
         class UnicodeRange(KaitaiStruct):
@@ -646,76 +651,76 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.basic_latin = self._io.read_bits_int(1) != 0
-                self.latin_1_supplement = self._io.read_bits_int(1) != 0
-                self.latin_extended_a = self._io.read_bits_int(1) != 0
-                self.latin_extended_b = self._io.read_bits_int(1) != 0
-                self.ipa_extensions = self._io.read_bits_int(1) != 0
-                self.spacing_modifier_letters = self._io.read_bits_int(1) != 0
-                self.combining_diacritical_marks = self._io.read_bits_int(1) != 0
-                self.basic_greek = self._io.read_bits_int(1) != 0
-                self.greek_symbols_and_coptic = self._io.read_bits_int(1) != 0
-                self.cyrillic = self._io.read_bits_int(1) != 0
-                self.armenian = self._io.read_bits_int(1) != 0
-                self.basic_hebrew = self._io.read_bits_int(1) != 0
-                self.hebrew_extended = self._io.read_bits_int(1) != 0
-                self.basic_arabic = self._io.read_bits_int(1) != 0
-                self.arabic_extended = self._io.read_bits_int(1) != 0
-                self.devanagari = self._io.read_bits_int(1) != 0
-                self.bengali = self._io.read_bits_int(1) != 0
-                self.gurmukhi = self._io.read_bits_int(1) != 0
-                self.gujarati = self._io.read_bits_int(1) != 0
-                self.oriya = self._io.read_bits_int(1) != 0
-                self.tamil = self._io.read_bits_int(1) != 0
-                self.telugu = self._io.read_bits_int(1) != 0
-                self.kannada = self._io.read_bits_int(1) != 0
-                self.malayalam = self._io.read_bits_int(1) != 0
-                self.thai = self._io.read_bits_int(1) != 0
-                self.lao = self._io.read_bits_int(1) != 0
-                self.basic_georgian = self._io.read_bits_int(1) != 0
-                self.georgian_extended = self._io.read_bits_int(1) != 0
-                self.hangul_jamo = self._io.read_bits_int(1) != 0
-                self.latin_extended_additional = self._io.read_bits_int(1) != 0
-                self.greek_extended = self._io.read_bits_int(1) != 0
-                self.general_punctuation = self._io.read_bits_int(1) != 0
-                self.superscripts_and_subscripts = self._io.read_bits_int(1) != 0
-                self.currency_symbols = self._io.read_bits_int(1) != 0
-                self.combining_diacritical_marks_for_symbols = self._io.read_bits_int(1) != 0
-                self.letterlike_symbols = self._io.read_bits_int(1) != 0
-                self.number_forms = self._io.read_bits_int(1) != 0
-                self.arrows = self._io.read_bits_int(1) != 0
-                self.mathematical_operators = self._io.read_bits_int(1) != 0
-                self.miscellaneous_technical = self._io.read_bits_int(1) != 0
-                self.control_pictures = self._io.read_bits_int(1) != 0
-                self.optical_character_recognition = self._io.read_bits_int(1) != 0
-                self.enclosed_alphanumerics = self._io.read_bits_int(1) != 0
-                self.box_drawing = self._io.read_bits_int(1) != 0
-                self.block_elements = self._io.read_bits_int(1) != 0
-                self.geometric_shapes = self._io.read_bits_int(1) != 0
-                self.miscellaneous_symbols = self._io.read_bits_int(1) != 0
-                self.dingbats = self._io.read_bits_int(1) != 0
-                self.cjk_symbols_and_punctuation = self._io.read_bits_int(1) != 0
-                self.hiragana = self._io.read_bits_int(1) != 0
-                self.katakana = self._io.read_bits_int(1) != 0
-                self.bopomofo = self._io.read_bits_int(1) != 0
-                self.hangul_compatibility_jamo = self._io.read_bits_int(1) != 0
-                self.cjk_miscellaneous = self._io.read_bits_int(1) != 0
-                self.enclosed_cjk_letters_and_months = self._io.read_bits_int(1) != 0
-                self.cjk_compatibility = self._io.read_bits_int(1) != 0
-                self.hangul = self._io.read_bits_int(1) != 0
-                self.reserved_for_unicode_subranges1 = self._io.read_bits_int(1) != 0
-                self.reserved_for_unicode_subranges2 = self._io.read_bits_int(1) != 0
-                self.cjk_unified_ideographs = self._io.read_bits_int(1) != 0
-                self.private_use_area = self._io.read_bits_int(1) != 0
-                self.cjk_compatibility_ideographs = self._io.read_bits_int(1) != 0
-                self.alphabetic_presentation_forms = self._io.read_bits_int(1) != 0
-                self.arabic_presentation_forms_a = self._io.read_bits_int(1) != 0
-                self.combining_half_marks = self._io.read_bits_int(1) != 0
-                self.cjk_compatibility_forms = self._io.read_bits_int(1) != 0
-                self.small_form_variants = self._io.read_bits_int(1) != 0
-                self.arabic_presentation_forms_b = self._io.read_bits_int(1) != 0
-                self.halfwidth_and_fullwidth_forms = self._io.read_bits_int(1) != 0
-                self.specials = self._io.read_bits_int(1) != 0
+                self.basic_latin = self._io.read_bits_int_be(1) != 0
+                self.latin_1_supplement = self._io.read_bits_int_be(1) != 0
+                self.latin_extended_a = self._io.read_bits_int_be(1) != 0
+                self.latin_extended_b = self._io.read_bits_int_be(1) != 0
+                self.ipa_extensions = self._io.read_bits_int_be(1) != 0
+                self.spacing_modifier_letters = self._io.read_bits_int_be(1) != 0
+                self.combining_diacritical_marks = self._io.read_bits_int_be(1) != 0
+                self.basic_greek = self._io.read_bits_int_be(1) != 0
+                self.greek_symbols_and_coptic = self._io.read_bits_int_be(1) != 0
+                self.cyrillic = self._io.read_bits_int_be(1) != 0
+                self.armenian = self._io.read_bits_int_be(1) != 0
+                self.basic_hebrew = self._io.read_bits_int_be(1) != 0
+                self.hebrew_extended = self._io.read_bits_int_be(1) != 0
+                self.basic_arabic = self._io.read_bits_int_be(1) != 0
+                self.arabic_extended = self._io.read_bits_int_be(1) != 0
+                self.devanagari = self._io.read_bits_int_be(1) != 0
+                self.bengali = self._io.read_bits_int_be(1) != 0
+                self.gurmukhi = self._io.read_bits_int_be(1) != 0
+                self.gujarati = self._io.read_bits_int_be(1) != 0
+                self.oriya = self._io.read_bits_int_be(1) != 0
+                self.tamil = self._io.read_bits_int_be(1) != 0
+                self.telugu = self._io.read_bits_int_be(1) != 0
+                self.kannada = self._io.read_bits_int_be(1) != 0
+                self.malayalam = self._io.read_bits_int_be(1) != 0
+                self.thai = self._io.read_bits_int_be(1) != 0
+                self.lao = self._io.read_bits_int_be(1) != 0
+                self.basic_georgian = self._io.read_bits_int_be(1) != 0
+                self.georgian_extended = self._io.read_bits_int_be(1) != 0
+                self.hangul_jamo = self._io.read_bits_int_be(1) != 0
+                self.latin_extended_additional = self._io.read_bits_int_be(1) != 0
+                self.greek_extended = self._io.read_bits_int_be(1) != 0
+                self.general_punctuation = self._io.read_bits_int_be(1) != 0
+                self.superscripts_and_subscripts = self._io.read_bits_int_be(1) != 0
+                self.currency_symbols = self._io.read_bits_int_be(1) != 0
+                self.combining_diacritical_marks_for_symbols = self._io.read_bits_int_be(1) != 0
+                self.letterlike_symbols = self._io.read_bits_int_be(1) != 0
+                self.number_forms = self._io.read_bits_int_be(1) != 0
+                self.arrows = self._io.read_bits_int_be(1) != 0
+                self.mathematical_operators = self._io.read_bits_int_be(1) != 0
+                self.miscellaneous_technical = self._io.read_bits_int_be(1) != 0
+                self.control_pictures = self._io.read_bits_int_be(1) != 0
+                self.optical_character_recognition = self._io.read_bits_int_be(1) != 0
+                self.enclosed_alphanumerics = self._io.read_bits_int_be(1) != 0
+                self.box_drawing = self._io.read_bits_int_be(1) != 0
+                self.block_elements = self._io.read_bits_int_be(1) != 0
+                self.geometric_shapes = self._io.read_bits_int_be(1) != 0
+                self.miscellaneous_symbols = self._io.read_bits_int_be(1) != 0
+                self.dingbats = self._io.read_bits_int_be(1) != 0
+                self.cjk_symbols_and_punctuation = self._io.read_bits_int_be(1) != 0
+                self.hiragana = self._io.read_bits_int_be(1) != 0
+                self.katakana = self._io.read_bits_int_be(1) != 0
+                self.bopomofo = self._io.read_bits_int_be(1) != 0
+                self.hangul_compatibility_jamo = self._io.read_bits_int_be(1) != 0
+                self.cjk_miscellaneous = self._io.read_bits_int_be(1) != 0
+                self.enclosed_cjk_letters_and_months = self._io.read_bits_int_be(1) != 0
+                self.cjk_compatibility = self._io.read_bits_int_be(1) != 0
+                self.hangul = self._io.read_bits_int_be(1) != 0
+                self.reserved_for_unicode_subranges1 = self._io.read_bits_int_be(1) != 0
+                self.reserved_for_unicode_subranges2 = self._io.read_bits_int_be(1) != 0
+                self.cjk_unified_ideographs = self._io.read_bits_int_be(1) != 0
+                self.private_use_area = self._io.read_bits_int_be(1) != 0
+                self.cjk_compatibility_ideographs = self._io.read_bits_int_be(1) != 0
+                self.alphabetic_presentation_forms = self._io.read_bits_int_be(1) != 0
+                self.arabic_presentation_forms_a = self._io.read_bits_int_be(1) != 0
+                self.combining_half_marks = self._io.read_bits_int_be(1) != 0
+                self.cjk_compatibility_forms = self._io.read_bits_int_be(1) != 0
+                self.small_form_variants = self._io.read_bits_int_be(1) != 0
+                self.arabic_presentation_forms_b = self._io.read_bits_int_be(1) != 0
+                self.halfwidth_and_fullwidth_forms = self._io.read_bits_int_be(1) != 0
+                self.specials = self._io.read_bits_int_be(1) != 0
                 self._io.align_to_byte()
                 self.reserved = self._io.read_bytes(7)
 
@@ -728,42 +733,42 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.symbol_character_set = self._io.read_bits_int(1) != 0
-                self.oem_character_set = self._io.read_bits_int(1) != 0
-                self.macintosh_character_set = self._io.read_bits_int(1) != 0
-                self.reserved_for_alternate_ansi_oem = self._io.read_bits_int(7)
-                self.cp1361_korean_johab = self._io.read_bits_int(1) != 0
-                self.cp950_chinese_traditional_chars_taiwan_and_hong_kong = self._io.read_bits_int(1) != 0
-                self.cp949_korean_wansung = self._io.read_bits_int(1) != 0
-                self.cp936_chinese_simplified_chars_prc_and_singapore = self._io.read_bits_int(1) != 0
-                self.cp932_jis_japan = self._io.read_bits_int(1) != 0
-                self.cp874_thai = self._io.read_bits_int(1) != 0
-                self.reserved_for_alternate_ansi = self._io.read_bits_int(8)
-                self.cp1257_windows_baltic = self._io.read_bits_int(1) != 0
-                self.cp1256_arabic = self._io.read_bits_int(1) != 0
-                self.cp1255_hebrew = self._io.read_bits_int(1) != 0
-                self.cp1254_turkish = self._io.read_bits_int(1) != 0
-                self.cp1253_greek = self._io.read_bits_int(1) != 0
-                self.cp1251_cyrillic = self._io.read_bits_int(1) != 0
-                self.cp1250_latin_2_eastern_europe = self._io.read_bits_int(1) != 0
-                self.cp1252_latin_1 = self._io.read_bits_int(1) != 0
-                self.cp437_us = self._io.read_bits_int(1) != 0
-                self.cp850_we_latin_1 = self._io.read_bits_int(1) != 0
-                self.cp708_arabic_asmo_708 = self._io.read_bits_int(1) != 0
-                self.cp737_greek_former_437_g = self._io.read_bits_int(1) != 0
-                self.cp775_ms_dos_baltic = self._io.read_bits_int(1) != 0
-                self.cp852_latin_2 = self._io.read_bits_int(1) != 0
-                self.cp855_ibm_cyrillic_primarily_russian = self._io.read_bits_int(1) != 0
-                self.cp857_ibm_turkish = self._io.read_bits_int(1) != 0
-                self.cp860_ms_dos_portuguese = self._io.read_bits_int(1) != 0
-                self.cp861_ms_dos_icelandic = self._io.read_bits_int(1) != 0
-                self.cp862_hebrew = self._io.read_bits_int(1) != 0
-                self.cp863_ms_dos_canadian_french = self._io.read_bits_int(1) != 0
-                self.cp864_arabic = self._io.read_bits_int(1) != 0
-                self.cp865_ms_dos_nordic = self._io.read_bits_int(1) != 0
-                self.cp866_ms_dos_russian = self._io.read_bits_int(1) != 0
-                self.cp869_ibm_greek = self._io.read_bits_int(1) != 0
-                self.reserved_for_oem = self._io.read_bits_int(16)
+                self.symbol_character_set = self._io.read_bits_int_be(1) != 0
+                self.oem_character_set = self._io.read_bits_int_be(1) != 0
+                self.macintosh_character_set = self._io.read_bits_int_be(1) != 0
+                self.reserved_for_alternate_ansi_oem = self._io.read_bits_int_be(7)
+                self.cp1361_korean_johab = self._io.read_bits_int_be(1) != 0
+                self.cp950_chinese_traditional_chars_taiwan_and_hong_kong = self._io.read_bits_int_be(1) != 0
+                self.cp949_korean_wansung = self._io.read_bits_int_be(1) != 0
+                self.cp936_chinese_simplified_chars_prc_and_singapore = self._io.read_bits_int_be(1) != 0
+                self.cp932_jis_japan = self._io.read_bits_int_be(1) != 0
+                self.cp874_thai = self._io.read_bits_int_be(1) != 0
+                self.reserved_for_alternate_ansi = self._io.read_bits_int_be(8)
+                self.cp1257_windows_baltic = self._io.read_bits_int_be(1) != 0
+                self.cp1256_arabic = self._io.read_bits_int_be(1) != 0
+                self.cp1255_hebrew = self._io.read_bits_int_be(1) != 0
+                self.cp1254_turkish = self._io.read_bits_int_be(1) != 0
+                self.cp1253_greek = self._io.read_bits_int_be(1) != 0
+                self.cp1251_cyrillic = self._io.read_bits_int_be(1) != 0
+                self.cp1250_latin_2_eastern_europe = self._io.read_bits_int_be(1) != 0
+                self.cp1252_latin_1 = self._io.read_bits_int_be(1) != 0
+                self.cp437_us = self._io.read_bits_int_be(1) != 0
+                self.cp850_we_latin_1 = self._io.read_bits_int_be(1) != 0
+                self.cp708_arabic_asmo_708 = self._io.read_bits_int_be(1) != 0
+                self.cp737_greek_former_437_g = self._io.read_bits_int_be(1) != 0
+                self.cp775_ms_dos_baltic = self._io.read_bits_int_be(1) != 0
+                self.cp852_latin_2 = self._io.read_bits_int_be(1) != 0
+                self.cp855_ibm_cyrillic_primarily_russian = self._io.read_bits_int_be(1) != 0
+                self.cp857_ibm_turkish = self._io.read_bits_int_be(1) != 0
+                self.cp860_ms_dos_portuguese = self._io.read_bits_int_be(1) != 0
+                self.cp861_ms_dos_icelandic = self._io.read_bits_int_be(1) != 0
+                self.cp862_hebrew = self._io.read_bits_int_be(1) != 0
+                self.cp863_ms_dos_canadian_french = self._io.read_bits_int_be(1) != 0
+                self.cp864_arabic = self._io.read_bits_int_be(1) != 0
+                self.cp865_ms_dos_nordic = self._io.read_bits_int_be(1) != 0
+                self.cp866_ms_dos_russian = self._io.read_bits_int_be(1) != 0
+                self.cp869_ibm_greek = self._io.read_bits_int_be(1) != 0
+                self.reserved_for_oem = self._io.read_bits_int_be(16)
 
 
 
@@ -793,7 +798,7 @@ class Ttf(KaitaiStruct):
             self.x_max = self._io.read_s2be()
             self.y_max = self._io.read_s2be()
             if self.number_of_contours > 0:
-                self.value = self._root.Glyf.SimpleGlyph(self._io, self, self._root)
+                self.value = Ttf.Glyf.SimpleGlyph(self._io, self, self._root)
 
 
         class SimpleGlyph(KaitaiStruct):
@@ -812,7 +817,7 @@ class Ttf(KaitaiStruct):
                 self.instructions = self._io.read_bytes(self.instruction_length)
                 self.flags = [None] * (self.point_count)
                 for i in range(self.point_count):
-                    self.flags[i] = self._root.Glyf.SimpleGlyph.Flag(self._io, self, self._root)
+                    self.flags[i] = Ttf.Glyf.SimpleGlyph.Flag(self._io, self, self._root)
 
 
             class Flag(KaitaiStruct):
@@ -823,13 +828,13 @@ class Ttf(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.read_bits_int(2)
-                    self.y_is_same = self._io.read_bits_int(1) != 0
-                    self.x_is_same = self._io.read_bits_int(1) != 0
-                    self.repeat = self._io.read_bits_int(1) != 0
-                    self.y_short_vector = self._io.read_bits_int(1) != 0
-                    self.x_short_vector = self._io.read_bits_int(1) != 0
-                    self.on_curve = self._io.read_bits_int(1) != 0
+                    self.reserved = self._io.read_bits_int_be(2)
+                    self.y_is_same = self._io.read_bits_int_be(1) != 0
+                    self.x_is_same = self._io.read_bits_int_be(1) != 0
+                    self.repeat = self._io.read_bits_int_be(1) != 0
+                    self.y_short_vector = self._io.read_bits_int_be(1) != 0
+                    self.x_short_vector = self._io.read_bits_int_be(1) != 0
+                    self.on_curve = self._io.read_bits_int_be(1) != 0
                     self._io.align_to_byte()
                     if self.repeat:
                         self.repeat_value = self._io.read_u1()
@@ -872,7 +877,7 @@ class Ttf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.table_version_number = self._root.Fixed(self._io, self, self._root)
+            self.table_version_number = Ttf.Fixed(self._io, self, self._root)
             self.num_glyphs = self._io.read_u2be()
             self.max_points = self._io.read_u2be()
             self.max_contours = self._io.read_u2be()
@@ -897,7 +902,7 @@ class Ttf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.sfnt_version = self._root.Fixed(self._io, self, self._root)
+            self.sfnt_version = Ttf.Fixed(self._io, self, self._root)
             self.num_tables = self._io.read_u2be()
             self.search_range = self._io.read_u2be()
             self.entry_selector = self._io.read_u2be()
@@ -918,7 +923,7 @@ class Ttf(KaitaiStruct):
             self.number_of_encoding_tables = self._io.read_u2be()
             self.tables = [None] * (self.number_of_encoding_tables)
             for i in range(self.number_of_encoding_tables):
-                self.tables[i] = self._root.Cmap.SubtableHeader(self._io, self, self._root)
+                self.tables[i] = Ttf.Cmap.SubtableHeader(self._io, self, self._root)
 
 
         class SubtableHeader(KaitaiStruct):
@@ -941,7 +946,7 @@ class Ttf(KaitaiStruct):
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek(self.subtable_offset)
-                self._m_table = self._root.Cmap.Subtable(io, self, self._root)
+                self._m_table = Ttf.Cmap.Subtable(io, self, self._root)
                 io.seek(_pos)
                 return self._m_table if hasattr(self, '_m_table') else None
 
@@ -960,26 +965,26 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.format = self._root.Cmap.Subtable.SubtableFormat(self._io.read_u2be())
+                self.format = KaitaiStream.resolve_enum(Ttf.Cmap.Subtable.SubtableFormat, self._io.read_u2be())
                 self.length = self._io.read_u2be()
                 self.version = self._io.read_u2be()
                 _on = self.format
-                if _on == self._root.Cmap.Subtable.SubtableFormat.byte_encoding_table:
+                if _on == Ttf.Cmap.Subtable.SubtableFormat.byte_encoding_table:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.ByteEncodingTable(io, self, self._root)
-                elif _on == self._root.Cmap.Subtable.SubtableFormat.high_byte_mapping_through_table:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = Ttf.Cmap.Subtable.ByteEncodingTable(_io__raw_value, self, self._root)
+                elif _on == Ttf.Cmap.Subtable.SubtableFormat.segment_mapping_to_delta_values:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.HighByteMappingThroughTable(io, self, self._root)
-                elif _on == self._root.Cmap.Subtable.SubtableFormat.trimmed_table_mapping:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = Ttf.Cmap.Subtable.SegmentMappingToDeltaValues(_io__raw_value, self, self._root)
+                elif _on == Ttf.Cmap.Subtable.SubtableFormat.high_byte_mapping_through_table:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.TrimmedTableMapping(io, self, self._root)
-                elif _on == self._root.Cmap.Subtable.SubtableFormat.segment_mapping_to_delta_values:
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = Ttf.Cmap.Subtable.HighByteMappingThroughTable(_io__raw_value, self, self._root)
+                elif _on == Ttf.Cmap.Subtable.SubtableFormat.trimmed_table_mapping:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    io = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.SegmentMappingToDeltaValues(io, self, self._root)
+                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = Ttf.Cmap.Subtable.TrimmedTableMapping(_io__raw_value, self, self._root)
                 else:
                     self.value = self._io.read_bytes((self.length - 6))
 

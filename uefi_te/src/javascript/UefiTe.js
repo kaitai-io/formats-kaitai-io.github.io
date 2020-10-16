@@ -142,7 +142,10 @@ var UefiTe = (function() {
       this._read();
     }
     TeHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([86, 90]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [86, 90]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([86, 90], this.magic, this._io, "/types/te_header/seq/0");
+      }
       this.machine = this._io.readU2le();
       this.numSections = this._io.readU1();
       this.subsystem = this._io.readU1();

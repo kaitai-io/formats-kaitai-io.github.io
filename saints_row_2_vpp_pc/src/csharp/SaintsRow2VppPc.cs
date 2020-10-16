@@ -25,7 +25,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 206, 10, 137, 81, 4 });
+            _magic = m_io.ReadBytes(5);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 206, 10, 137, 81, 4 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 206, 10, 137, 81, 4 }, Magic, M_Io, "/seq/0");
+            }
             _pad1 = m_io.ReadBytes(335);
             _numFiles = m_io.ReadS4le();
             _containerSize = m_io.ReadS4le();

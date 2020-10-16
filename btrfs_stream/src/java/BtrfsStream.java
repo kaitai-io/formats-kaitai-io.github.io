@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -146,7 +147,10 @@ public class BtrfsStream extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 });
+            this.magic = this._io.readBytes(13);
+            if (!(Arrays.equals(magic(), new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }, magic(), _io(), "/types/send_stream_header/seq/0");
+            }
             this.version = this._io.readU4le();
         }
         private byte[] magic;
@@ -207,117 +211,124 @@ public class BtrfsStream extends KaitaiStruct {
             private void _read() {
                 this.type = BtrfsStream.Attribute.byId(this._io.readU2le());
                 this.length = this._io.readU2le();
-                switch (type()) {
-                case SIZE: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case OTIME: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Timespec(_io__raw_value, this, _root);
-                    break;
-                }
-                case MODE: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case UUID: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Uuid(_io__raw_value, this, _root);
-                    break;
-                }
-                case CLONE_UUID: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Uuid(_io__raw_value, this, _root);
-                    break;
-                }
-                case ATIME: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Timespec(_io__raw_value, this, _root);
-                    break;
-                }
-                case GID: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case UID: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case CLONE_CTRANSID: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case PATH_TO: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new String(_io__raw_value, this, _root);
-                    break;
-                }
-                case CTRANSID: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case CLONE_LEN: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case MTIME: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Timespec(_io__raw_value, this, _root);
-                    break;
-                }
-                case FILE_OFFSET: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case PATH_LINK: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new String(_io__raw_value, this, _root);
-                    break;
-                }
-                case RDEV: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                case CTIME: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new Timespec(_io__raw_value, this, _root);
-                    break;
-                }
-                case CLONE_PATH: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new String(_io__raw_value, this, _root);
-                    break;
-                }
-                case XATTR_NAME: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new String(_io__raw_value, this, _root);
-                    break;
-                }
-                case PATH: {
-                    this._raw_value = this._io.readBytes(length());
-                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                    this.value = new String(_io__raw_value, this, _root);
-                    break;
-                }
-                case CLONE_OFFSET: {
-                    this.value = (Object) (this._io.readU8le());
-                    break;
-                }
-                default: {
-                    this.value = this._io.readBytes(length());
-                    break;
-                }
+                {
+                    Attribute on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case CTRANSID: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case SIZE: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case CLONE_UUID: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Uuid(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case FILE_OFFSET: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case OTIME: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Timespec(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case UID: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case ATIME: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Timespec(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case CTIME: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Timespec(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case UUID: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Uuid(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case CLONE_LEN: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case XATTR_NAME: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new String(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case CLONE_CTRANSID: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case MODE: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case MTIME: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new Timespec(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case PATH_LINK: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new String(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case RDEV: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case PATH_TO: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new String(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case PATH: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new String(_io__raw_value, this, _root);
+                            break;
+                        }
+                        case CLONE_OFFSET: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case GID: {
+                            this.value = (Object) (this._io.readU8le());
+                            break;
+                        }
+                        case CLONE_PATH: {
+                            this._raw_value = this._io.readBytes(length());
+                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                            this.value = new String(_io__raw_value, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.value = this._io.readBytes(length());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.value = this._io.readBytes(length());
+                    }
                 }
             }
             private Attribute type;

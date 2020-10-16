@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -337,15 +338,20 @@ public class Gif extends KaitaiStruct {
         }
         private void _read() {
             this.blockType = Gif.BlockType.byId(this._io.readU1());
-            switch (blockType()) {
-            case EXTENSION: {
-                this.body = new Extension(this._io, this, _root);
-                break;
-            }
-            case LOCAL_IMAGE_DESCRIPTOR: {
-                this.body = new LocalImageDescriptor(this._io, this, _root);
-                break;
-            }
+            {
+                BlockType on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case EXTENSION: {
+                        this.body = new Extension(this._io, this, _root);
+                        break;
+                    }
+                    case LOCAL_IMAGE_DESCRIPTOR: {
+                        this.body = new LocalImageDescriptor(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private BlockType blockType;
@@ -421,7 +427,10 @@ public class Gif extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 71, 73, 70 });
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(magic(), new byte[] { 71, 73, 70 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 73, 70 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.version = new String(this._io.readBytes(3), Charset.forName("ASCII"));
         }
         private byte[] magic;
@@ -457,11 +466,17 @@ public class Gif extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.blockSize = this._io.ensureFixedContents(new byte[] { 4 });
+            this.blockSize = this._io.readBytes(1);
+            if (!(Arrays.equals(blockSize(), new byte[] { 4 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4 }, blockSize(), _io(), "/types/ext_graphic_control/seq/0");
+            }
             this.flags = this._io.readU1();
             this.delayTime = this._io.readU2le();
             this.transparentIdx = this._io.readU1();
-            this.terminator = this._io.ensureFixedContents(new byte[] { 0 });
+            this.terminator = this._io.readBytes(1);
+            if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/types/ext_graphic_control/seq/4");
+            }
         }
         private Boolean transparentColorFlag;
         public Boolean transparentColorFlag() {
@@ -626,23 +641,30 @@ public class Gif extends KaitaiStruct {
         }
         private void _read() {
             this.label = Gif.ExtensionLabel.byId(this._io.readU1());
-            switch (label()) {
-            case APPLICATION: {
-                this.body = new ExtApplication(this._io, this, _root);
-                break;
-            }
-            case COMMENT: {
-                this.body = new Subblocks(this._io, this, _root);
-                break;
-            }
-            case GRAPHIC_CONTROL: {
-                this.body = new ExtGraphicControl(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.body = new Subblocks(this._io, this, _root);
-                break;
-            }
+            {
+                ExtensionLabel on = label();
+                if (on != null) {
+                    switch (label()) {
+                    case APPLICATION: {
+                        this.body = new ExtApplication(this._io, this, _root);
+                        break;
+                    }
+                    case COMMENT: {
+                        this.body = new Subblocks(this._io, this, _root);
+                        break;
+                    }
+                    case GRAPHIC_CONTROL: {
+                        this.body = new ExtGraphicControl(this._io, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = new Subblocks(this._io, this, _root);
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = new Subblocks(this._io, this, _root);
+                }
             }
         }
         private ExtensionLabel label;

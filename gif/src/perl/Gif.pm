@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -54,7 +54,7 @@ sub _read {
     do {
         $_ = Gif::Block->new($self->{_io}, $self, $self->{_root});
         push @{$self->{blocks}}, $_;
-    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $BLOCK_TYPE_END_OF_FILE)) );
+    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $Gif::BLOCK_TYPE_END_OF_FILE)) );
 }
 
 sub hdr {
@@ -395,10 +395,10 @@ sub _read {
 
     $self->{block_type} = $self->{_io}->read_u1();
     my $_on = $self->block_type();
-    if ($_on == $BLOCK_TYPE_EXTENSION) {
+    if ($_on == $Gif::BLOCK_TYPE_EXTENSION) {
         $self->{body} = Gif::Extension->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
+    elsif ($_on == $Gif::BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
         $self->{body} = Gif::LocalImageDescriptor->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -484,7 +484,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (71, 73, 70)));
+    $self->{magic} = $self->{_io}->read_bytes(3);
     $self->{version} = Encode::decode("ASCII", $self->{_io}->read_bytes(3));
 }
 
@@ -528,11 +528,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{block_size} = $self->{_io}->ensure_fixed_contents(pack('C*', (4)));
+    $self->{block_size} = $self->{_io}->read_bytes(1);
     $self->{flags} = $self->{_io}->read_u1();
     $self->{delay_time} = $self->{_io}->read_u2le();
     $self->{transparent_idx} = $self->{_io}->read_u1();
-    $self->{terminator} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{terminator} = $self->{_io}->read_bytes(1);
 }
 
 sub transparent_color_flag {
@@ -740,13 +740,13 @@ sub _read {
 
     $self->{label} = $self->{_io}->read_u1();
     my $_on = $self->label();
-    if ($_on == $EXTENSION_LABEL_APPLICATION) {
+    if ($_on == $Gif::EXTENSION_LABEL_APPLICATION) {
         $self->{body} = Gif::ExtApplication->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $EXTENSION_LABEL_COMMENT) {
+    elsif ($_on == $Gif::EXTENSION_LABEL_COMMENT) {
         $self->{body} = Gif::Subblocks->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $EXTENSION_LABEL_GRAPHIC_CONTROL) {
+    elsif ($_on == $Gif::EXTENSION_LABEL_GRAPHIC_CONTROL) {
         $self->{body} = Gif::ExtGraphicControl->new($self->{_io}, $self, $self->{_root});
     }
     else {

@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -46,7 +47,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     private void _read() {
         this.hdr = new Header(this._io, this, _root);
-        tracks = new ArrayList<Track>((int) (hdr().numTracks()));
+        tracks = new ArrayList<Track>(((Number) (hdr().numTracks())).intValue());
         for (int i = 0; i < hdr().numTracks(); i++) {
             this.tracks.add(new Track(this._io, this, _root));
         }
@@ -340,7 +341,10 @@ public class StandardMidiFile extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 77, 84, 114, 107 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 77, 84, 114, 107 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 114, 107 }, magic(), _io(), "/types/track/seq/0");
+            }
             this.lenEvents = this._io.readU4be();
             this._raw_events = this._io.readBytes(lenEvents());
             KaitaiStream _io__raw_events = new ByteBufferKaitaiStream(_raw_events);
@@ -474,7 +478,10 @@ public class StandardMidiFile extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 77, 84, 104, 100 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 77, 84, 104, 100 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 104, 100 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.lenHeader = this._io.readU4be();
             this.format = this._io.readU2be();
             this.numTracks = this._io.readU2be();

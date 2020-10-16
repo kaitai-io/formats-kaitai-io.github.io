@@ -55,9 +55,17 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic1 = m_io.EnsureFixedContents(new byte[] { 82, 73, 70, 70 });
+            _magic1 = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 73, 70, 70 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, Magic1, M_Io, "/seq/0");
+            }
             _fileSize = m_io.ReadU4le();
-            _magic2 = m_io.EnsureFixedContents(new byte[] { 65, 86, 73, 32 });
+            _magic2 = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 65, 86, 73, 32 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, Magic2, M_Io, "/seq/2");
+            }
             __raw_data = m_io.ReadBytes((FileSize - 4));
             var io___raw_data = new KaitaiStream(__raw_data);
             _data = new Blocks(io___raw_data, this, m_root);

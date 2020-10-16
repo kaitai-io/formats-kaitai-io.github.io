@@ -55,7 +55,7 @@ var Bcd = (function() {
     for (var i = 0; i < this.numDigits; i++) {
       switch (this.bitsPerDigit) {
       case 4:
-        this.digits[i] = this._io.readBitsInt(4);
+        this.digits[i] = this._io.readBitsIntBe(4);
         break;
       case 8:
         this.digits[i] = this._io.readU1();

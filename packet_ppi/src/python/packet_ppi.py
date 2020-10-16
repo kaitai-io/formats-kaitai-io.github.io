@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from ethernet_frame import EthernetFrame
+import ethernet_frame
 class PacketPpi(KaitaiStruct):
     """PPI is a standard for link layer packet encapsulation, proposed as
     generic extensible container to store both captured in-band data and
@@ -141,19 +142,19 @@ class PacketPpi(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.PacketPpiHeader(self._io, self, self._root)
+        self.header = PacketPpi.PacketPpiHeader(self._io, self, self._root)
         self._raw_fields = self._io.read_bytes((self.header.pph_len - 8))
-        io = KaitaiStream(BytesIO(self._raw_fields))
-        self.fields = self._root.PacketPpiFields(io, self, self._root)
+        _io__raw_fields = KaitaiStream(BytesIO(self._raw_fields))
+        self.fields = PacketPpi.PacketPpiFields(_io__raw_fields, self, self._root)
         _on = self.header.pph_dlt
-        if _on == self._root.Linktype.ppi:
+        if _on == PacketPpi.Linktype.ppi:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = PacketPpi(io)
-        elif _on == self._root.Linktype.ethernet:
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = PacketPpi(_io__raw_body)
+        elif _on == PacketPpi.Linktype.ethernet:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = EthernetFrame(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ethernet_frame.EthernetFrame(_io__raw_body)
         else:
             self.body = self._io.read_bytes_full()
 
@@ -168,7 +169,7 @@ class PacketPpi(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(self._root.PacketPpiField(self._io, self, self._root))
+                self.entries.append(PacketPpi.PacketPpiField(self._io, self, self._root))
                 i += 1
 
 
@@ -185,7 +186,7 @@ class PacketPpi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.flags = self._root.MacFlags(self._io, self, self._root)
+            self.flags = PacketPpi.MacFlags(self._io, self, self._root)
             self.a_mpdu_id = self._io.read_u4le()
             self.num_delimiters = self._io.read_u1()
             self.reserved = self._io.read_bytes(3)
@@ -199,14 +200,14 @@ class PacketPpi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.unused1 = self._io.read_bits_int(1) != 0
-            self.aggregate_delimiter = self._io.read_bits_int(1) != 0
-            self.more_aggregates = self._io.read_bits_int(1) != 0
-            self.aggregate = self._io.read_bits_int(1) != 0
-            self.dup_rx = self._io.read_bits_int(1) != 0
-            self.rx_short_guard = self._io.read_bits_int(1) != 0
-            self.is_ht_40 = self._io.read_bits_int(1) != 0
-            self.greenfield = self._io.read_bits_int(1) != 0
+            self.unused1 = self._io.read_bits_int_be(1) != 0
+            self.aggregate_delimiter = self._io.read_bits_int_be(1) != 0
+            self.more_aggregates = self._io.read_bits_int_be(1) != 0
+            self.aggregate = self._io.read_bits_int_be(1) != 0
+            self.dup_rx = self._io.read_bits_int_be(1) != 0
+            self.rx_short_guard = self._io.read_bits_int_be(1) != 0
+            self.is_ht_40 = self._io.read_bits_int_be(1) != 0
+            self.greenfield = self._io.read_bits_int_be(1) != 0
             self._io.align_to_byte()
             self.unused2 = self._io.read_bytes(3)
 
@@ -226,7 +227,7 @@ class PacketPpi(KaitaiStruct):
             self.pph_version = self._io.read_u1()
             self.pph_flags = self._io.read_u1()
             self.pph_len = self._io.read_u2le()
-            self.pph_dlt = self._root.Linktype(self._io.read_u4le())
+            self.pph_dlt = KaitaiStream.resolve_enum(PacketPpi.Linktype, self._io.read_u4le())
 
 
     class Radio80211CommonBody(KaitaiStruct):
@@ -264,21 +265,21 @@ class PacketPpi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.pfh_type = self._root.PfhType(self._io.read_u2le())
+            self.pfh_type = KaitaiStream.resolve_enum(PacketPpi.PfhType, self._io.read_u2le())
             self.pfh_datalen = self._io.read_u2le()
             _on = self.pfh_type
-            if _on == self._root.PfhType.radio_802_11_common:
+            if _on == PacketPpi.PfhType.radio_802_11_common:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211CommonBody(io, self, self._root)
-            elif _on == self._root.PfhType.radio_802_11n_mac_ext:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = PacketPpi.Radio80211CommonBody(_io__raw_body, self, self._root)
+            elif _on == PacketPpi.PfhType.radio_802_11n_mac_ext:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211nMacExtBody(io, self, self._root)
-            elif _on == self._root.PfhType.radio_802_11n_mac_phy_ext:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = PacketPpi.Radio80211nMacExtBody(_io__raw_body, self, self._root)
+            elif _on == PacketPpi.PfhType.radio_802_11n_mac_phy_ext:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211nMacPhyExtBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = PacketPpi.Radio80211nMacPhyExtBody(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.pfh_datalen)
 
@@ -295,7 +296,7 @@ class PacketPpi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.flags = self._root.MacFlags(self._io, self, self._root)
+            self.flags = PacketPpi.MacFlags(self._io, self, self._root)
             self.a_mpdu_id = self._io.read_u4le()
             self.num_delimiters = self._io.read_u1()
             self.mcs = self._io.read_u1()
@@ -310,10 +311,10 @@ class PacketPpi(KaitaiStruct):
                 self.rssi_ant_ext[i] = self._io.read_u1()
 
             self.ext_channel_freq = self._io.read_u2le()
-            self.ext_channel_flags = self._root.Radio80211nMacPhyExtBody.ChannelFlags(self._io, self, self._root)
+            self.ext_channel_flags = PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags(self._io, self, self._root)
             self.rf_signal_noise = [None] * (4)
             for i in range(4):
-                self.rf_signal_noise[i] = self._root.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root)
+                self.rf_signal_noise[i] = PacketPpi.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root)
 
             self.evm = [None] * (4)
             for i in range(4):
@@ -328,15 +329,15 @@ class PacketPpi(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.spectrum_2ghz = self._io.read_bits_int(1) != 0
-                self.ofdm = self._io.read_bits_int(1) != 0
-                self.cck = self._io.read_bits_int(1) != 0
-                self.turbo = self._io.read_bits_int(1) != 0
-                self.unused = self._io.read_bits_int(8)
-                self.gfsk = self._io.read_bits_int(1) != 0
-                self.dyn_cck_ofdm = self._io.read_bits_int(1) != 0
-                self.only_passive_scan = self._io.read_bits_int(1) != 0
-                self.spectrum_5ghz = self._io.read_bits_int(1) != 0
+                self.spectrum_2ghz = self._io.read_bits_int_be(1) != 0
+                self.ofdm = self._io.read_bits_int_be(1) != 0
+                self.cck = self._io.read_bits_int_be(1) != 0
+                self.turbo = self._io.read_bits_int_be(1) != 0
+                self.unused = self._io.read_bits_int_be(8)
+                self.gfsk = self._io.read_bits_int_be(1) != 0
+                self.dyn_cck_ofdm = self._io.read_bits_int_be(1) != 0
+                self.only_passive_scan = self._io.read_bits_int_be(1) != 0
+                self.spectrum_5ghz = self._io.read_bits_int_be(1) != 0
 
 
         class SignalNoise(KaitaiStruct):

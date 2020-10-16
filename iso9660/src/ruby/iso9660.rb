@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -36,12 +36,15 @@ class Iso9660 < Kaitai::Struct::Struct
     end
 
     def _read
-      @unused1 = @_io.ensure_fixed_contents([0].pack('C*'))
+      @unused1 = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), unused1, _io, "/types/vol_desc_primary/seq/0") if not unused1 == [0].pack('C*')
       @system_id = (@_io.read_bytes(32)).force_encoding("UTF-8")
       @volume_id = (@_io.read_bytes(32)).force_encoding("UTF-8")
-      @unused2 = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
+      @unused2 = @_io.read_bytes(8)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), unused2, _io, "/types/vol_desc_primary/seq/3") if not unused2 == [0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       @vol_space_size = U4bi.new(@_io, self, @_root)
-      @unused3 = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
+      @unused3 = @_io.read_bytes(32)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), unused3, _io, "/types/vol_desc_primary/seq/5") if not unused3 == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       @vol_set_size = U2bi.new(@_io, self, @_root)
       @vol_seq_num = U2bi.new(@_io, self, @_root)
       @logical_block_size = U2bi.new(@_io, self, @_root)
@@ -51,8 +54,8 @@ class Iso9660 < Kaitai::Struct::Struct
       @lba_path_table_be = @_io.read_u4be
       @lba_opt_path_table_be = @_io.read_u4be
       @_raw_root_dir = @_io.read_bytes(34)
-      io = Kaitai::Struct::Stream.new(@_raw_root_dir)
-      @root_dir = DirEntry.new(io, self, @_root)
+      _io__raw_root_dir = Kaitai::Struct::Stream.new(@_raw_root_dir)
+      @root_dir = DirEntry.new(_io__raw_root_dir, self, @_root)
       @vol_set_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
       @publisher_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
       @data_preparer_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
@@ -74,8 +77,8 @@ class Iso9660 < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek((lba_path_table_le * _root.sector_size))
       @_raw_path_table = @_io.read_bytes(path_table_size.le)
-      io = Kaitai::Struct::Stream.new(@_raw_path_table)
-      @path_table = PathTableLe.new(io, self, @_root)
+      _io__raw_path_table = Kaitai::Struct::Stream.new(@_raw_path_table)
+      @path_table = PathTableLe.new(_io__raw_path_table, self, @_root)
       @_io.seek(_pos)
       @path_table
     end
@@ -159,8 +162,8 @@ class Iso9660 < Kaitai::Struct::Struct
       @len = @_io.read_u1
       if len > 0
         @_raw_body = @_io.read_bytes((len - 1))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DirEntryBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DirEntryBody.new(_io__raw_body, self, @_root)
       end
       self
     end
@@ -176,7 +179,8 @@ class Iso9660 < Kaitai::Struct::Struct
 
     def _read
       @type = @_io.read_u1
-      @magic = @_io.ensure_fixed_contents([67, 68, 48, 48, 49].pack('C*'))
+      @magic = @_io.read_bytes(5)
+      raise Kaitai::Struct::ValidationNotEqualError.new([67, 68, 48, 48, 49].pack('C*'), magic, _io, "/types/vol_desc/seq/1") if not magic == [67, 68, 48, 48, 49].pack('C*')
       @version = @_io.read_u1
       if type == 0
         @vol_desc_boot_record = VolDescBootRecord.new(@_io, self, @_root)
@@ -341,8 +345,8 @@ class Iso9660 < Kaitai::Struct::Struct
         _pos = io.pos
         io.seek((lba_extent.le * _root.sector_size))
         @_raw_extent_as_dir = io.read_bytes(size_extent.le)
-        io = Kaitai::Struct::Stream.new(@_raw_extent_as_dir)
-        @extent_as_dir = DirEntries.new(io, self, @_root)
+        _io__raw_extent_as_dir = Kaitai::Struct::Stream.new(@_raw_extent_as_dir)
+        @extent_as_dir = DirEntries.new(_io__raw_extent_as_dir, self, @_root)
         io.seek(_pos)
       end
       @extent_as_dir

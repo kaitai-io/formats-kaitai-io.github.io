@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -147,13 +147,14 @@ class Pcap < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic_number = @_io.ensure_fixed_contents([212, 195, 178, 161].pack('C*'))
+      @magic_number = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([212, 195, 178, 161].pack('C*'), magic_number, _io, "/types/header/seq/0") if not magic_number == [212, 195, 178, 161].pack('C*')
       @version_major = @_io.read_u2le
       @version_minor = @_io.read_u2le
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le
       @snaplen = @_io.read_u4le
-      @network = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
+      @network = Kaitai::Struct::Stream::resolve_enum(Pcap::LINKTYPE, @_io.read_u4le)
       self
     end
     attr_reader :magic_number
@@ -198,12 +199,12 @@ class Pcap < Kaitai::Struct::Struct
       case _root.hdr.network
       when :linktype_ppi
         @_raw_body = @_io.read_bytes(incl_len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PacketPpi.new(io)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PacketPpi.new(_io__raw_body)
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(incl_len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(io)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EthernetFrame.new(_io__raw_body)
       else
         @body = @_io.read_bytes(incl_len)
       end

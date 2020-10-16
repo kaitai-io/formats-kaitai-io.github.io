@@ -210,8 +210,8 @@ namespace Kaitai
                             m_io.Seek((OfsVolumeLabel - 4));
                             _volumeLabelAnsi = System.Text.Encoding.GetEncoding("cp437").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             m_io.Seek(_pos);
+                            f_volumeLabelAnsi = true;
                         }
-                        f_volumeLabelAnsi = true;
                         return _volumeLabelAnsi;
                     }
                 }
@@ -267,8 +267,8 @@ namespace Kaitai
                             m_io.Seek((Header.OfsVolumeId - 4));
                             _volumeId = new VolumeIdSpec(m_io, this, m_root);
                             m_io.Seek(_pos);
+                            f_volumeId = true;
                         }
-                        f_volumeId = true;
                         return _volumeId;
                     }
                 }
@@ -285,8 +285,8 @@ namespace Kaitai
                             m_io.Seek((Header.OfsLocalBasePath - 4));
                             _localBasePath = m_io.ReadBytesTerm(0, false, true, true);
                             m_io.Seek(_pos);
+                            f_localBasePath = true;
                         }
-                        f_localBasePath = true;
                         return _localBasePath;
                     }
                 }
@@ -355,10 +355,10 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.ReadBitsInt(6);
-                    _hasCommonNetRelLink = m_io.ReadBitsInt(1) != 0;
-                    _hasVolumeIdAndLocalBasePath = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(24);
+                    _reserved1 = m_io.ReadBitsIntBe(6);
+                    _hasCommonNetRelLink = m_io.ReadBitsIntBe(1) != 0;
+                    _hasVolumeIdAndLocalBasePath = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(24);
                 }
                 private ulong _reserved1;
                 private bool _hasCommonNetRelLink;
@@ -453,18 +453,18 @@ namespace Kaitai
             }
             private void _read()
             {
-                _isUnicode = m_io.ReadBitsInt(1) != 0;
-                _hasIconLocation = m_io.ReadBitsInt(1) != 0;
-                _hasArguments = m_io.ReadBitsInt(1) != 0;
-                _hasWorkDir = m_io.ReadBitsInt(1) != 0;
-                _hasRelPath = m_io.ReadBitsInt(1) != 0;
-                _hasName = m_io.ReadBitsInt(1) != 0;
-                _hasLinkInfo = m_io.ReadBitsInt(1) != 0;
-                _hasLinkTargetIdList = m_io.ReadBitsInt(1) != 0;
-                __unnamed8 = m_io.ReadBitsInt(16);
-                _reserved = m_io.ReadBitsInt(5);
-                _keepLocalIdListForUncTarget = m_io.ReadBitsInt(1) != 0;
-                __unnamed11 = m_io.ReadBitsInt(2);
+                _isUnicode = m_io.ReadBitsIntBe(1) != 0;
+                _hasIconLocation = m_io.ReadBitsIntBe(1) != 0;
+                _hasArguments = m_io.ReadBitsIntBe(1) != 0;
+                _hasWorkDir = m_io.ReadBitsIntBe(1) != 0;
+                _hasRelPath = m_io.ReadBitsIntBe(1) != 0;
+                _hasName = m_io.ReadBitsIntBe(1) != 0;
+                _hasLinkInfo = m_io.ReadBitsIntBe(1) != 0;
+                _hasLinkTargetIdList = m_io.ReadBitsIntBe(1) != 0;
+                __unnamed8 = m_io.ReadBitsIntBe(16);
+                _reserved = m_io.ReadBitsIntBe(5);
+                _keepLocalIdListForUncTarget = m_io.ReadBitsIntBe(1) != 0;
+                __unnamed11 = m_io.ReadBitsIntBe(2);
             }
             private bool _isUnicode;
             private bool _hasIconLocation;
@@ -514,8 +514,16 @@ namespace Kaitai
             }
             private void _read()
             {
-                _lenHeader = m_io.EnsureFixedContents(new byte[] { 76, 0, 0, 0 });
-                _linkClsid = m_io.EnsureFixedContents(new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70 });
+                _lenHeader = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(LenHeader, new byte[] { 76, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 76, 0, 0, 0 }, LenHeader, M_Io, "/types/file_header/seq/0");
+                }
+                _linkClsid = m_io.ReadBytes(16);
+                if (!((KaitaiStream.ByteArrayCompare(LinkClsid, new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70 }, LinkClsid, M_Io, "/types/file_header/seq/1");
+                }
                 __raw_flags = m_io.ReadBytes(4);
                 var io___raw_flags = new KaitaiStream(__raw_flags);
                 _flags = new LinkFlags(io___raw_flags, this, m_root);
@@ -527,7 +535,11 @@ namespace Kaitai
                 _iconIndex = m_io.ReadS4le();
                 _showCommand = ((WindowsLnkFile.WindowState) m_io.ReadU4le());
                 _hotkey = m_io.ReadU2le();
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                _reserved = m_io.ReadBytes(10);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/file_header/seq/11");
+                }
             }
             private byte[] _lenHeader;
             private byte[] _linkClsid;

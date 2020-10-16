@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -130,7 +130,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (86, 90)));
+    $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{machine} = $self->{_io}->read_u2le();
     $self->{num_sections} = $self->{_io}->read_u1();
     $self->{subsystem} = $self->{_io}->read_u1();

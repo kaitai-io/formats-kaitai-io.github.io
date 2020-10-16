@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -53,14 +54,20 @@ public class HeapsPak extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic1 = this._io.ensureFixedContents(new byte[] { 80, 65, 75 });
+            this.magic1 = this._io.readBytes(3);
+            if (!(Arrays.equals(magic1(), new byte[] { 80, 65, 75 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 65, 75 }, magic1(), _io(), "/types/header/seq/0");
+            }
             this.version = this._io.readU1();
             this.lenHeader = this._io.readU4le();
             this.lenData = this._io.readU4le();
             this._raw_rootEntry = this._io.readBytes((lenHeader() - 16));
             KaitaiStream _io__raw_rootEntry = new ByteBufferKaitaiStream(_raw_rootEntry);
             this.rootEntry = new Entry(_io__raw_rootEntry, this, _root);
-            this.magic2 = this._io.ensureFixedContents(new byte[] { 68, 65, 84, 65 });
+            this.magic2 = this._io.readBytes(4);
+            if (!(Arrays.equals(magic2(), new byte[] { 68, 65, 84, 65 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 65, 84, 65 }, magic2(), _io(), "/types/header/seq/5");
+            }
         }
 
         /**
@@ -119,8 +126,8 @@ public class HeapsPak extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.unused = this._io.readBitsInt(7);
-                    this.isDir = this._io.readBitsInt(1) != 0;
+                    this.unused = this._io.readBitsIntBe(7);
+                    this.isDir = this._io.readBitsIntBe(1) != 0;
                 }
                 private long unused;
                 private boolean isDir;
@@ -211,7 +218,7 @@ public class HeapsPak extends KaitaiStruct {
             }
             private void _read() {
                 this.numEntries = this._io.readU4le();
-                entries = new ArrayList<Entry>((int) (numEntries()));
+                entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
                 for (int i = 0; i < numEntries(); i++) {
                     this.entries.add(new Entry(this._io, this, _root));
                 }

@@ -224,7 +224,11 @@ namespace Kaitai
             {
                 _reserved = m_io.ReadU1();
                 _varName = m_io.ReadU1();
-                _reserved1 = m_io.EnsureFixedContents(new byte[] { 0, 128 });
+                _reserved1 = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved1, new byte[] { 0, 128 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 128 }, Reserved1, M_Io, "/types/array_params/seq/2");
+                }
             }
             private byte _reserved;
             private byte _varName;

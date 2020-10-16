@@ -65,13 +65,13 @@ digraph {
 			</TABLE>>];
 cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:cs_magic_detached_signature</TD><TD PORT="case0">SuperBlob</TD></TR>
-	<TR><TD>:cs_magic_embedded_signature</TD><TD PORT="case1">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_requirement</TD><TD PORT="case0">Requirement</TD></TR>
+	<TR><TD>:cs_magic_code_directory</TD><TD PORT="case1">CodeDirectory</TD></TR>
 	<TR><TD>:cs_magic_entitlement</TD><TD PORT="case2">Entitlement</TD></TR>
-	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case3">BlobWrapper</TD></TR>
-	<TR><TD>:cs_magic_requirement</TD><TD PORT="case4">Requirement</TD></TR>
-	<TR><TD>:cs_magic_code_directory</TD><TD PORT="case5">CodeDirectory</TD></TR>
-	<TR><TD>:cs_magic_requirements</TD><TD PORT="case6">Requirements</TD></TR>
+	<TR><TD>:cs_magic_requirements</TD><TD PORT="case3">Requirements</TD></TR>
+	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case4">BlobWrapper</TD></TR>
+	<TR><TD>:cs_magic_embedded_signature</TD><TD PORT="case5">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_detached_signature</TD><TD PORT="case6">SuperBlob</TD></TR>
 </TABLE>>];
 			subgraph cluster__entitlement {
 				label="MachO::CsBlob::Entitlement";
@@ -150,19 +150,19 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 				</TABLE>>];
 expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:op_enum_cert_generic</TD><TD PORT="case0">CertGenericExpr</TD></TR>
-	<TR><TD>:op_enum_apple_generic_anchor</TD><TD PORT="case1">AppleGenericAnchorExpr</TD></TR>
-	<TR><TD>:op_enum_info_key_field</TD><TD PORT="case2">InfoKeyFieldExpr</TD></TR>
-	<TR><TD>:op_enum_and_op</TD><TD PORT="case3">AndExpr</TD></TR>
-	<TR><TD>:op_enum_anchor_hash</TD><TD PORT="case4">AnchorHashExpr</TD></TR>
-	<TR><TD>:op_enum_info_key_value</TD><TD PORT="case5">Data</TD></TR>
-	<TR><TD>:op_enum_or_op</TD><TD PORT="case6">OrExpr</TD></TR>
+	<TR><TD>:op_enum_ident</TD><TD PORT="case0">IdentExpr</TD></TR>
+	<TR><TD>:op_enum_or_op</TD><TD PORT="case1">OrExpr</TD></TR>
+	<TR><TD>:op_enum_info_key_value</TD><TD PORT="case2">Data</TD></TR>
+	<TR><TD>:op_enum_anchor_hash</TD><TD PORT="case3">AnchorHashExpr</TD></TR>
+	<TR><TD>:op_enum_info_key_field</TD><TD PORT="case4">InfoKeyFieldExpr</TD></TR>
+	<TR><TD>:op_enum_not_op</TD><TD PORT="case5">Expr</TD></TR>
+	<TR><TD>:op_enum_entitlement_field</TD><TD PORT="case6">EntitlementFieldExpr</TD></TR>
 	<TR><TD>:op_enum_trusted_cert</TD><TD PORT="case7">CertSlotExpr</TD></TR>
-	<TR><TD>:op_enum_not_op</TD><TD PORT="case8">Expr</TD></TR>
-	<TR><TD>:op_enum_ident</TD><TD PORT="case9">IdentExpr</TD></TR>
+	<TR><TD>:op_enum_and_op</TD><TD PORT="case8">AndExpr</TD></TR>
+	<TR><TD>:op_enum_cert_generic</TD><TD PORT="case9">CertGenericExpr</TD></TR>
 	<TR><TD>:op_enum_cert_field</TD><TD PORT="case10">CertFieldExpr</TD></TR>
-	<TR><TD>:op_enum_entitlement_field</TD><TD PORT="case11">EntitlementFieldExpr</TD></TR>
-	<TR><TD>:op_enum_cd_hash</TD><TD PORT="case12">Data</TD></TR>
+	<TR><TD>:op_enum_cd_hash</TD><TD PORT="case11">Data</TD></TR>
+	<TR><TD>:op_enum_apple_generic_anchor</TD><TD PORT="case12">AppleGenericAnchorExpr</TD></TR>
 </TABLE>>];
 				subgraph cluster__info_key_field_expr {
 					label="MachO::CsBlob::Expr::InfoKeyFieldExpr";
@@ -676,14 +676,14 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 			vm_prot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="strip_read_pos">0</TD><TD PORT="strip_read_size">1b</TD><TD>BitsType1</TD><TD PORT="strip_read_type">strip_read</TD></TR>
-				<TR><TD PORT="is_mask_pos">0:1</TD><TD PORT="is_mask_size">1b</TD><TD>BitsType1</TD><TD PORT="is_mask_type">is_mask</TD></TR>
-				<TR><TD PORT="reserved0_pos">0:2</TD><TD PORT="reserved0_size">1b</TD><TD>BitsType1</TD><TD PORT="reserved0_type">reserved0</TD></TR>
-				<TR><TD PORT="copy_pos">0:3</TD><TD PORT="copy_size">1b</TD><TD>BitsType1</TD><TD PORT="copy_type">copy</TD></TR>
-				<TR><TD PORT="no_change_pos">0:4</TD><TD PORT="no_change_size">1b</TD><TD>BitsType1</TD><TD PORT="no_change_type">no_change</TD></TR>
-				<TR><TD PORT="execute_pos">0:5</TD><TD PORT="execute_size">1b</TD><TD>BitsType1</TD><TD PORT="execute_type">execute</TD></TR>
-				<TR><TD PORT="write_pos">0:6</TD><TD PORT="write_size">1b</TD><TD>BitsType1</TD><TD PORT="write_type">write</TD></TR>
-				<TR><TD PORT="read_pos">0:7</TD><TD PORT="read_size">1b</TD><TD>BitsType1</TD><TD PORT="read_type">read</TD></TR>
+				<TR><TD PORT="strip_read_pos">0</TD><TD PORT="strip_read_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="strip_read_type">strip_read</TD></TR>
+				<TR><TD PORT="is_mask_pos">0:1</TD><TD PORT="is_mask_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_mask_type">is_mask</TD></TR>
+				<TR><TD PORT="reserved0_pos">0:2</TD><TD PORT="reserved0_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+				<TR><TD PORT="copy_pos">0:3</TD><TD PORT="copy_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="copy_type">copy</TD></TR>
+				<TR><TD PORT="no_change_pos">0:4</TD><TD PORT="no_change_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="no_change_type">no_change</TD></TR>
+				<TR><TD PORT="execute_pos">0:5</TD><TD PORT="execute_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="execute_type">execute</TD></TR>
+				<TR><TD PORT="write_pos">0:6</TD><TD PORT="write_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="write_type">write</TD></TR>
+				<TR><TD PORT="read_pos">0:7</TD><TD PORT="read_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="read_type">read</TD></TR>
 				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">3</TD><TD>b24</TD><TD PORT="reserved1_type">reserved1</TD></TR>
 			</TABLE>>];
 		}
@@ -850,7 +850,7 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				</TABLE>>];
 				bind_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(BIND_OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
+					<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
 				</TABLE>>];
 				bind_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -878,7 +878,7 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 					</TABLE>>];
 					rebase_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
+						<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::RebaseData::OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
 					</TABLE>>];
 					rebase_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -1020,46 +1020,46 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 			</TABLE>>];
 load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:load_command_type_sub_library</TD><TD PORT="case0">SubCommand</TD></TR>
-	<TR><TD>:load_command_type_segment_split_info</TD><TD PORT="case1">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_rpath</TD><TD PORT="case2">RpathCommand</TD></TR>
+	<TR><TD>:load_command_type_id_dylinker</TD><TD PORT="case0">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_reexport_dylib</TD><TD PORT="case1">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_build_version</TD><TD PORT="case2">BuildVersionCommand</TD></TR>
 	<TR><TD>:load_command_type_source_version</TD><TD PORT="case3">SourceVersionCommand</TD></TR>
-	<TR><TD>:load_command_type_encryption_info_64</TD><TD PORT="case4">EncryptionInfoCommand</TD></TR>
-	<TR><TD>:load_command_type_version_min_tvos</TD><TD PORT="case5">VersionMinCommand</TD></TR>
-	<TR><TD>:load_command_type_load_dylinker</TD><TD PORT="case6">DylinkerCommand</TD></TR>
-	<TR><TD>:load_command_type_sub_framework</TD><TD PORT="case7">SubCommand</TD></TR>
-	<TR><TD>:load_command_type_load_weak_dylib</TD><TD PORT="case8">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_build_version</TD><TD PORT="case9">BuildVersionCommand</TD></TR>
-	<TR><TD>:load_command_type_version_min_iphoneos</TD><TD PORT="case10">VersionMinCommand</TD></TR>
-	<TR><TD>:load_command_type_linker_optimization_hint</TD><TD PORT="case11">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_dyld_environment</TD><TD PORT="case12">DylinkerCommand</TD></TR>
-	<TR><TD>:load_command_type_load_upward_dylib</TD><TD PORT="case13">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_dylib_code_sign_drs</TD><TD PORT="case14">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_dyld_info</TD><TD PORT="case15">DyldInfoCommand</TD></TR>
-	<TR><TD>:load_command_type_reexport_dylib</TD><TD PORT="case16">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_symtab</TD><TD PORT="case17">SymtabCommand</TD></TR>
-	<TR><TD>:load_command_type_routines_64</TD><TD PORT="case18">RoutinesCommand64</TD></TR>
-	<TR><TD>:load_command_type_id_dylinker</TD><TD PORT="case19">DylinkerCommand</TD></TR>
-	<TR><TD>:load_command_type_main</TD><TD PORT="case20">EntryPointCommand</TD></TR>
-	<TR><TD>:load_command_type_function_starts</TD><TD PORT="case21">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_version_min_macosx</TD><TD PORT="case22">VersionMinCommand</TD></TR>
-	<TR><TD>:load_command_type_data_in_code</TD><TD PORT="case23">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_version_min_watchos</TD><TD PORT="case24">VersionMinCommand</TD></TR>
-	<TR><TD>:load_command_type_encryption_info</TD><TD PORT="case25">EncryptionInfoCommand</TD></TR>
-	<TR><TD>:load_command_type_sub_umbrella</TD><TD PORT="case26">SubCommand</TD></TR>
-	<TR><TD>:load_command_type_linker_option</TD><TD PORT="case27">LinkerOptionCommand</TD></TR>
-	<TR><TD>:load_command_type_twolevel_hints</TD><TD PORT="case28">TwolevelHintsCommand</TD></TR>
-	<TR><TD>:load_command_type_uuid</TD><TD PORT="case29">UuidCommand</TD></TR>
-	<TR><TD>:load_command_type_dyld_info_only</TD><TD PORT="case30">DyldInfoCommand</TD></TR>
-	<TR><TD>:load_command_type_lazy_load_dylib</TD><TD PORT="case31">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_sub_client</TD><TD PORT="case32">SubCommand</TD></TR>
-	<TR><TD>:load_command_type_segment</TD><TD PORT="case33">SegmentCommand</TD></TR>
-	<TR><TD>:load_command_type_routines</TD><TD PORT="case34">RoutinesCommand</TD></TR>
-	<TR><TD>:load_command_type_code_signature</TD><TD PORT="case35">CodeSignatureCommand</TD></TR>
-	<TR><TD>:load_command_type_dysymtab</TD><TD PORT="case36">DysymtabCommand</TD></TR>
-	<TR><TD>:load_command_type_load_dylib</TD><TD PORT="case37">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_segment_64</TD><TD PORT="case38">SegmentCommand64</TD></TR>
-	<TR><TD>:load_command_type_id_dylib</TD><TD PORT="case39">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_function_starts</TD><TD PORT="case4">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_rpath</TD><TD PORT="case5">RpathCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_framework</TD><TD PORT="case6">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_routines</TD><TD PORT="case7">RoutinesCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_library</TD><TD PORT="case8">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info_only</TD><TD PORT="case9">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_environment</TD><TD PORT="case10">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylinker</TD><TD PORT="case11">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_split_info</TD><TD PORT="case12">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_main</TD><TD PORT="case13">EntryPointCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylib</TD><TD PORT="case14">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info</TD><TD PORT="case15">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_dysymtab</TD><TD PORT="case16">DysymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_twolevel_hints</TD><TD PORT="case17">TwolevelHintsCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info_64</TD><TD PORT="case18">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_option</TD><TD PORT="case19">LinkerOptionCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info</TD><TD PORT="case20">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_tvos</TD><TD PORT="case21">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_load_upward_dylib</TD><TD PORT="case22">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_64</TD><TD PORT="case23">SegmentCommand64</TD></TR>
+	<TR><TD>:load_command_type_segment</TD><TD PORT="case24">SegmentCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_umbrella</TD><TD PORT="case25">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_watchos</TD><TD PORT="case26">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_routines_64</TD><TD PORT="case27">RoutinesCommand64</TD></TR>
+	<TR><TD>:load_command_type_id_dylib</TD><TD PORT="case28">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_client</TD><TD PORT="case29">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_dylib_code_sign_drs</TD><TD PORT="case30">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_symtab</TD><TD PORT="case31">SymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_optimization_hint</TD><TD PORT="case32">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_data_in_code</TD><TD PORT="case33">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_code_signature</TD><TD PORT="case34">CodeSignatureCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_iphoneos</TD><TD PORT="case35">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_load_weak_dylib</TD><TD PORT="case36">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_lazy_load_dylib</TD><TD PORT="case37">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_uuid</TD><TD PORT="case38">UuidCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_macosx</TD><TD PORT="case39">VersionMinCommand</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__uuid_command {
@@ -1188,13 +1188,13 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
 	uleb128__seq:b10_type -> uleb128__inst__value [color="#404040"];
 	cs_blob__seq:body_type -> cs_blob__seq_body_switch [style=bold];
-	cs_blob__seq_body_switch:case0 -> super_blob__seq [style=bold];
-	cs_blob__seq_body_switch:case1 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case0 -> requirement__seq [style=bold];
+	cs_blob__seq_body_switch:case1 -> code_directory__seq [style=bold];
 	cs_blob__seq_body_switch:case2 -> entitlement__seq [style=bold];
-	cs_blob__seq_body_switch:case3 -> blob_wrapper__seq [style=bold];
-	cs_blob__seq_body_switch:case4 -> requirement__seq [style=bold];
-	cs_blob__seq_body_switch:case5 -> code_directory__seq [style=bold];
-	cs_blob__seq_body_switch:case6 -> requirements__seq [style=bold];
+	cs_blob__seq_body_switch:case3 -> requirements__seq [style=bold];
+	cs_blob__seq_body_switch:case4 -> blob_wrapper__seq [style=bold];
+	cs_blob__seq_body_switch:case5 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case6 -> super_blob__seq [style=bold];
 	cs_blob__seq:magic_type -> cs_blob__seq:body_type [color="#404040"];
 	code_directory__seq:ident_offset_type -> code_directory__inst__ident:ident_pos [color="#404040"];
 	code_directory__seq:team_id_offset_type -> code_directory__inst__team_id:team_id_pos [color="#404040"];
@@ -1209,19 +1209,19 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	super_blob__seq:blobs_type -> blob_index__seq [style=bold];
 	super_blob__seq:count_type -> super_blob__seq:blobs__repeat [color="#404040"];
 	expr__seq:data_type -> expr__seq_data_switch [style=bold];
-	expr__seq_data_switch:case0 -> cert_generic_expr__seq [style=bold];
-	expr__seq_data_switch:case1 -> apple_generic_anchor_expr__seq [style=bold];
-	expr__seq_data_switch:case2 -> info_key_field_expr__seq [style=bold];
-	expr__seq_data_switch:case3 -> and_expr__seq [style=bold];
-	expr__seq_data_switch:case4 -> anchor_hash_expr__seq [style=bold];
-	expr__seq_data_switch:case5 -> data__seq [style=bold];
-	expr__seq_data_switch:case6 -> or_expr__seq [style=bold];
+	expr__seq_data_switch:case0 -> ident_expr__seq [style=bold];
+	expr__seq_data_switch:case1 -> or_expr__seq [style=bold];
+	expr__seq_data_switch:case2 -> data__seq [style=bold];
+	expr__seq_data_switch:case3 -> anchor_hash_expr__seq [style=bold];
+	expr__seq_data_switch:case4 -> info_key_field_expr__seq [style=bold];
+	expr__seq_data_switch:case5 -> expr__seq [style=bold];
+	expr__seq_data_switch:case6 -> entitlement_field_expr__seq [style=bold];
 	expr__seq_data_switch:case7 -> cert_slot_expr__seq [style=bold];
-	expr__seq_data_switch:case8 -> expr__seq [style=bold];
-	expr__seq_data_switch:case9 -> ident_expr__seq [style=bold];
+	expr__seq_data_switch:case8 -> and_expr__seq [style=bold];
+	expr__seq_data_switch:case9 -> cert_generic_expr__seq [style=bold];
 	expr__seq_data_switch:case10 -> cert_field_expr__seq [style=bold];
-	expr__seq_data_switch:case11 -> entitlement_field_expr__seq [style=bold];
-	expr__seq_data_switch:case12 -> data__seq [style=bold];
+	expr__seq_data_switch:case11 -> data__seq [style=bold];
+	expr__seq_data_switch:case12 -> apple_generic_anchor_expr__seq [style=bold];
 	expr__seq:op_type -> expr__seq:data_type [color="#404040"];
 	info_key_field_expr__seq:data_type -> data__seq [style=bold];
 	info_key_field_expr__seq:match_type -> match__seq [style=bold];
@@ -1356,46 +1356,46 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	section__seq:offset_type -> section__inst__data:data_pos [color="#404040"];
 	section__seq:size_type -> section__inst__data:data_size [color="#404040"];
 	load_command__seq:body_type -> load_command__seq_body_switch [style=bold];
-	load_command__seq_body_switch:case0 -> sub_command__seq [style=bold];
-	load_command__seq_body_switch:case1 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case2 -> rpath_command__seq [style=bold];
+	load_command__seq_body_switch:case0 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case1 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case2 -> build_version_command__seq [style=bold];
 	load_command__seq_body_switch:case3 -> source_version_command__seq [style=bold];
-	load_command__seq_body_switch:case4 -> encryption_info_command__seq [style=bold];
-	load_command__seq_body_switch:case5 -> version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case6 -> dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case7 -> sub_command__seq [style=bold];
-	load_command__seq_body_switch:case8 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case9 -> build_version_command__seq [style=bold];
-	load_command__seq_body_switch:case10 -> version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case11 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case12 -> dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case13 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case14 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case15 -> dyld_info_command__seq [style=bold];
-	load_command__seq_body_switch:case16 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case17 -> symtab_command__seq [style=bold];
-	load_command__seq_body_switch:case18 -> routines_command_64__seq [style=bold];
-	load_command__seq_body_switch:case19 -> dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case20 -> entry_point_command__seq [style=bold];
-	load_command__seq_body_switch:case21 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case22 -> version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case23 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case24 -> version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case25 -> encryption_info_command__seq [style=bold];
-	load_command__seq_body_switch:case26 -> sub_command__seq [style=bold];
-	load_command__seq_body_switch:case27 -> linker_option_command__seq [style=bold];
-	load_command__seq_body_switch:case28 -> twolevel_hints_command__seq [style=bold];
-	load_command__seq_body_switch:case29 -> uuid_command__seq [style=bold];
-	load_command__seq_body_switch:case30 -> dyld_info_command__seq [style=bold];
-	load_command__seq_body_switch:case31 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case32 -> sub_command__seq [style=bold];
-	load_command__seq_body_switch:case33 -> segment_command__seq [style=bold];
-	load_command__seq_body_switch:case34 -> routines_command__seq [style=bold];
-	load_command__seq_body_switch:case35 -> code_signature_command__seq [style=bold];
-	load_command__seq_body_switch:case36 -> dysymtab_command__seq [style=bold];
+	load_command__seq_body_switch:case4 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case5 -> rpath_command__seq [style=bold];
+	load_command__seq_body_switch:case6 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case7 -> routines_command__seq [style=bold];
+	load_command__seq_body_switch:case8 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case9 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case10 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case11 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case12 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case13 -> entry_point_command__seq [style=bold];
+	load_command__seq_body_switch:case14 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case15 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case16 -> dysymtab_command__seq [style=bold];
+	load_command__seq_body_switch:case17 -> twolevel_hints_command__seq [style=bold];
+	load_command__seq_body_switch:case18 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case19 -> linker_option_command__seq [style=bold];
+	load_command__seq_body_switch:case20 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case21 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case22 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case23 -> segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case24 -> segment_command__seq [style=bold];
+	load_command__seq_body_switch:case25 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case26 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case27 -> routines_command_64__seq [style=bold];
+	load_command__seq_body_switch:case28 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case29 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case30 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case31 -> symtab_command__seq [style=bold];
+	load_command__seq_body_switch:case32 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case33 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case34 -> code_signature_command__seq [style=bold];
+	load_command__seq_body_switch:case35 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case36 -> dylib_command__seq [style=bold];
 	load_command__seq_body_switch:case37 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case38 -> segment_command_64__seq [style=bold];
-	load_command__seq_body_switch:case39 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case38 -> uuid_command__seq [style=bold];
+	load_command__seq_body_switch:case39 -> version_min_command__seq [style=bold];
 	load_command__seq:type_type -> load_command__seq:body_type [color="#404040"];
 	symtab_command__seq:sym_off_type -> symtab_command__inst__symbols:symbols_pos [color="#404040"];
 	symtab_command__inst__symbols:symbols_type -> symtab_command__inst__symbols_symbols_switch [style=bold];

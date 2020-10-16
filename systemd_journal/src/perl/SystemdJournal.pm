@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package SystemdJournal;
@@ -123,7 +123,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (76, 80, 75, 83, 72, 72, 82, 72)));
+    $self->{signature} = $self->{_io}->read_bytes(8);
     $self->{compatible_flags} = $self->{_io}->read_u4le();
     $self->{incompatible_flags} = $self->{_io}->read_u4le();
     $self->{state} = $self->{_io}->read_u1();
@@ -346,7 +346,7 @@ sub _read {
     $self->{reserved} = $self->{_io}->read_bytes(6);
     $self->{len_object} = $self->{_io}->read_u8le();
     my $_on = $self->object_type();
-    if ($_on == $OBJECT_TYPES_DATA) {
+    if ($_on == $SystemdJournal::JournalObject::OBJECT_TYPES_DATA) {
         $self->{_raw_payload} = $self->{_io}->read_bytes(($self->len_object() - 16));
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = SystemdJournal::DataObject->new($io__raw_payload, $self, $self->{_root});

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ShapefileMain(KaitaiStruct):
 
@@ -40,11 +41,11 @@ class ShapefileMain(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.FileHeader(self._io, self, self._root)
+        self.header = ShapefileMain.FileHeader(self._io, self, self._root)
         self.records = []
         i = 0
         while not self._io.is_eof():
-            self.records.append(self._root.Record(self._io, self, self._root))
+            self.records.append(ShapefileMain.Record(self._io, self, self._root))
             i += 1
 
 
@@ -56,13 +57,13 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_points = self._io.read_s4le()
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -77,10 +78,10 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.x = self._root.BoundsMinMax(self._io, self, self._root)
-            self.y = self._root.BoundsMinMax(self._io, self, self._root)
-            self.z = self._root.BoundsMinMax(self._io, self, self._root)
-            self.m = self._root.BoundsMinMax(self._io, self, self._root)
+            self.x = ShapefileMain.BoundsMinMax(self._io, self, self._root)
+            self.y = ShapefileMain.BoundsMinMax(self._io, self, self._root)
+            self.z = ShapefileMain.BoundsMinMax(self._io, self, self._root)
+            self.m = ShapefileMain.BoundsMinMax(self._io, self, self._root)
 
 
     class Point(KaitaiStruct):
@@ -103,7 +104,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -112,7 +113,7 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
 
 
@@ -136,7 +137,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -145,7 +146,7 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
 
 
@@ -157,18 +158,18 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_points = self._io.read_s4le()
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.z_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.z_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.z_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.z_values[i] = self._io.read_f8le()
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -183,7 +184,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -192,14 +193,14 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.z_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.z_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.z_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.z_values[i] = self._io.read_f8le()
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -214,7 +215,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -223,14 +224,14 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.z_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.z_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.z_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.z_values[i] = self._io.read_f8le()
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -245,8 +246,8 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.x = self._root.BoundsMinMax(self._io, self, self._root)
-            self.y = self._root.BoundsMinMax(self._io, self, self._root)
+            self.x = ShapefileMain.BoundsMinMax(self._io, self, self._root)
+            self.y = ShapefileMain.BoundsMinMax(self._io, self, self._root)
 
 
     class PointM(KaitaiStruct):
@@ -270,7 +271,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -279,9 +280,9 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -308,11 +309,11 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_points = self._io.read_s4le()
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
 
 
@@ -324,16 +325,30 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_code = self._io.ensure_fixed_contents(b"\x00\x00\x27\x0A")
-            self.unused_field_1 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-            self.unused_field_2 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-            self.unused_field_3 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-            self.unused_field_4 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-            self.unused_field_5 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
+            self.file_code = self._io.read_bytes(4)
+            if not self.file_code == b"\x00\x00\x27\x0A":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x27\x0A", self.file_code, self._io, u"/types/file_header/seq/0")
+            self.unused_field_1 = self._io.read_bytes(4)
+            if not self.unused_field_1 == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_1, self._io, u"/types/file_header/seq/1")
+            self.unused_field_2 = self._io.read_bytes(4)
+            if not self.unused_field_2 == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_2, self._io, u"/types/file_header/seq/2")
+            self.unused_field_3 = self._io.read_bytes(4)
+            if not self.unused_field_3 == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_3, self._io, u"/types/file_header/seq/3")
+            self.unused_field_4 = self._io.read_bytes(4)
+            if not self.unused_field_4 == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_4, self._io, u"/types/file_header/seq/4")
+            self.unused_field_5 = self._io.read_bytes(4)
+            if not self.unused_field_5 == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_5, self._io, u"/types/file_header/seq/5")
             self.file_length = self._io.read_s4be()
-            self.version = self._io.ensure_fixed_contents(b"\xE8\x03\x00\x00")
-            self.shape_type = self._root.ShapeType(self._io.read_s4le())
-            self.bounding_box = self._root.BoundingBoxXYZM(self._io, self, self._root)
+            self.version = self._io.read_bytes(4)
+            if not self.version == b"\xE8\x03\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\xE8\x03\x00\x00", self.version, self._io, u"/types/file_header/seq/7")
+            self.shape_type = KaitaiStream.resolve_enum(ShapefileMain.ShapeType, self._io.read_s4le())
+            self.bounding_box = ShapefileMain.BoundingBoxXYZM(self._io, self, self._root)
 
 
     class PointZ(KaitaiStruct):
@@ -358,8 +373,8 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header = self._root.RecordHeader(self._io, self, self._root)
-            self.contents = self._root.RecordContents(self._io, self, self._root)
+            self.header = ShapefileMain.RecordHeader(self._io, self, self._root)
+            self.contents = ShapefileMain.RecordContents(self._io, self, self._root)
 
 
     class RecordContents(KaitaiStruct):
@@ -370,35 +385,35 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.shape_type = self._root.ShapeType(self._io.read_s4le())
-            if self.shape_type != self._root.ShapeType.null_shape:
+            self.shape_type = KaitaiStream.resolve_enum(ShapefileMain.ShapeType, self._io.read_s4le())
+            if self.shape_type != ShapefileMain.ShapeType.null_shape:
                 _on = self.shape_type
-                if _on == self._root.ShapeType.point_m:
-                    self.shape_parameters = self._root.PointM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon_z:
-                    self.shape_parameters = self._root.PolygonZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point_m:
-                    self.shape_parameters = self._root.MultiPointM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line_z:
-                    self.shape_parameters = self._root.PolyLineZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point_z:
-                    self.shape_parameters = self._root.MultiPointZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point:
-                    self.shape_parameters = self._root.MultiPoint(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon_m:
-                    self.shape_parameters = self._root.PolygonM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon:
-                    self.shape_parameters = self._root.Polygon(self._io, self, self._root)
-                elif _on == self._root.ShapeType.point:
-                    self.shape_parameters = self._root.Point(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line_m:
-                    self.shape_parameters = self._root.PolyLineM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line:
-                    self.shape_parameters = self._root.PolyLine(self._io, self, self._root)
-                elif _on == self._root.ShapeType.point_z:
-                    self.shape_parameters = self._root.PointZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_patch:
-                    self.shape_parameters = self._root.MultiPatch(self._io, self, self._root)
+                if _on == ShapefileMain.ShapeType.poly_line_z:
+                    self.shape_parameters = ShapefileMain.PolyLineZ(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.multi_patch:
+                    self.shape_parameters = ShapefileMain.MultiPatch(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.poly_line_m:
+                    self.shape_parameters = ShapefileMain.PolyLineM(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.polygon:
+                    self.shape_parameters = ShapefileMain.Polygon(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.polygon_z:
+                    self.shape_parameters = ShapefileMain.PolygonZ(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.point_z:
+                    self.shape_parameters = ShapefileMain.PointZ(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.poly_line:
+                    self.shape_parameters = ShapefileMain.PolyLine(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.point_m:
+                    self.shape_parameters = ShapefileMain.PointM(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.polygon_m:
+                    self.shape_parameters = ShapefileMain.PolygonM(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.multi_point:
+                    self.shape_parameters = ShapefileMain.MultiPoint(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.point:
+                    self.shape_parameters = ShapefileMain.Point(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.multi_point_m:
+                    self.shape_parameters = ShapefileMain.MultiPointM(self._io, self, self._root)
+                elif _on == ShapefileMain.ShapeType.multi_point_z:
+                    self.shape_parameters = ShapefileMain.MultiPointZ(self._io, self, self._root)
 
 
 
@@ -410,7 +425,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -419,18 +434,18 @@ class ShapefileMain(KaitaiStruct):
 
             self.part_types = [None] * (self.number_of_parts)
             for i in range(self.number_of_parts):
-                self.part_types[i] = self._root.PartType(self._io.read_s4le())
+                self.part_types[i] = KaitaiStream.resolve_enum(ShapefileMain.PartType, self._io.read_s4le())
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.z_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.z_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.z_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.z_values[i] = self._io.read_f8le()
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()
@@ -445,7 +460,7 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bounding_box = self._root.BoundingBoxXY(self._io, self, self._root)
+            self.bounding_box = ShapefileMain.BoundingBoxXY(self._io, self, self._root)
             self.number_of_parts = self._io.read_s4le()
             self.number_of_points = self._io.read_s4le()
             self.parts = [None] * (self.number_of_parts)
@@ -454,9 +469,9 @@ class ShapefileMain(KaitaiStruct):
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
-                self.points[i] = self._root.Point(self._io, self, self._root)
+                self.points[i] = ShapefileMain.Point(self._io, self, self._root)
 
-            self.m_range = self._root.BoundsMinMax(self._io, self, self._root)
+            self.m_range = ShapefileMain.BoundsMinMax(self._io, self, self._root)
             self.m_values = [None] * (self.number_of_points)
             for i in range(self.number_of_points):
                 self.m_values[i] = self._io.read_f8le()

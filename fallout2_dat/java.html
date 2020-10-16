@@ -142,11 +142,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="fallout2_dat parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="fallout2_dat parsing C# library">C#</a></li>
                 
                 
@@ -375,7 +370,7 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">fileCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="n">files</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">fileCount</span><span class="p">()));</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">fileCount</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
             <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">fileCount</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">files</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
             <span class="p">}</span>
@@ -415,17 +410,39 @@ section#format-index .row {
             <span class="k">this</span><span class="p">.</span><span class="na">sizePacked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">contents</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">contents</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">contents</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contents</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">contentsRaw</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">contentsRaw</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">contentsRaw</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contentsRaw</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">NONE</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">contentsRaw</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sizeUnpacked</span><span class="p">());</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contentsRaw</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">contentsZlib</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">contentsZlib</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">contentsZlib</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contentsZlib</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">ZLIB</span><span class="p">)</span> <span class="p">{</span>
                 <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
                 <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
                 <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">());</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_raw_contents</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sizePacked</span><span class="p">());</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">contents</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">processZlib</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_raw_contents</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_contentsZlib</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sizePacked</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">contentsZlib</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">processZlib</span><span class="p">(</span><span class="n">_raw_contentsZlib</span><span class="p">);</span>
                 <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contentsZlib</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">contents</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">contents</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">contents</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contents</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">ZLIB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">NONE</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">contents</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">==</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">ZLIB</span> <span class="o">?</span> <span class="n">contentsZlib</span><span class="p">()</span> <span class="p">:</span> <span class="n">contentsRaw</span><span class="p">());</span>
             <span class="p">}</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">contents</span><span class="p">;</span>
         <span class="p">}</span>
@@ -436,7 +453,7 @@ section#format-index .row {
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">offset</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Fallout2Dat</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Index</span> <span class="n">_parent</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_contents</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_contentsZlib</span><span class="p">;</span>
         <span class="kd">public</span> <span class="n">Pstr</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Compression</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">sizeUnpacked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sizeUnpacked</span><span class="p">;</span> <span class="p">}</span>
@@ -444,7 +461,7 @@ section#format-index .row {
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">offset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">offset</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Fallout2Dat</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Fallout2Dat</span><span class="p">.</span><span class="na">Index</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_contents</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_contents</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_contentsZlib</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_contentsZlib</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="n">Footer</span> <span class="n">footer</span><span class="p">;</span>
     <span class="kd">public</span> <span class="n">Footer</span> <span class="nf">footer</span><span class="p">()</span> <span class="p">{</span>

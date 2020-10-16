@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -17,8 +17,8 @@ class Ines < Kaitai::Struct::Struct
 
   def _read
     @_raw_header = @_io.read_bytes(16)
-    io = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(io, self, @_root)
+    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+    @header = Header.new(_io__raw_header, self, @_root)
     if header.f6.trainer
       @trainer = @_io.read_bytes(512)
     end
@@ -39,23 +39,25 @@ class Ines < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([78, 69, 83, 26].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([78, 69, 83, 26].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [78, 69, 83, 26].pack('C*')
       @len_prg_rom = @_io.read_u1
       @len_chr_rom = @_io.read_u1
       @_raw_f6 = @_io.read_bytes(1)
-      io = Kaitai::Struct::Stream.new(@_raw_f6)
-      @f6 = F6.new(io, self, @_root)
+      _io__raw_f6 = Kaitai::Struct::Stream.new(@_raw_f6)
+      @f6 = F6.new(_io__raw_f6, self, @_root)
       @_raw_f7 = @_io.read_bytes(1)
-      io = Kaitai::Struct::Stream.new(@_raw_f7)
-      @f7 = F7.new(io, self, @_root)
+      _io__raw_f7 = Kaitai::Struct::Stream.new(@_raw_f7)
+      @f7 = F7.new(_io__raw_f7, self, @_root)
       @len_prg_ram = @_io.read_u1
       @_raw_f9 = @_io.read_bytes(1)
-      io = Kaitai::Struct::Stream.new(@_raw_f9)
-      @f9 = F9.new(io, self, @_root)
+      _io__raw_f9 = Kaitai::Struct::Stream.new(@_raw_f9)
+      @f9 = F9.new(_io__raw_f9, self, @_root)
       @_raw_f10 = @_io.read_bytes(1)
-      io = Kaitai::Struct::Stream.new(@_raw_f10)
-      @f10 = F10.new(io, self, @_root)
-      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0].pack('C*'))
+      _io__raw_f10 = Kaitai::Struct::Stream.new(@_raw_f10)
+      @f10 = F10.new(_io__raw_f10, self, @_root)
+      @reserved = @_io.read_bytes(5)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0].pack('C*'), reserved, _io, "/types/header/seq/8") if not reserved == [0, 0, 0, 0, 0].pack('C*')
       self
     end
 
@@ -74,11 +76,11 @@ class Ines < Kaitai::Struct::Struct
       end
 
       def _read
-        @lower_mapper = @_io.read_bits_int(4)
-        @four_screen = @_io.read_bits_int(1) != 0
-        @trainer = @_io.read_bits_int(1) != 0
-        @has_battery_ram = @_io.read_bits_int(1) != 0
-        @mirroring = Kaitai::Struct::Stream::resolve_enum(MIRRORING, @_io.read_bits_int(1))
+        @lower_mapper = @_io.read_bits_int_be(4)
+        @four_screen = @_io.read_bits_int_be(1) != 0
+        @trainer = @_io.read_bits_int_be(1) != 0
+        @has_battery_ram = @_io.read_bits_int_be(1) != 0
+        @mirroring = Kaitai::Struct::Stream::resolve_enum(MIRRORING, @_io.read_bits_int_be(1))
         self
       end
 
@@ -112,10 +114,10 @@ class Ines < Kaitai::Struct::Struct
       end
 
       def _read
-        @upper_mapper = @_io.read_bits_int(4)
-        @format = @_io.read_bits_int(2)
-        @playchoice10 = @_io.read_bits_int(1) != 0
-        @vs_unisystem = @_io.read_bits_int(1) != 0
+        @upper_mapper = @_io.read_bits_int_be(4)
+        @format = @_io.read_bits_int_be(2)
+        @playchoice10 = @_io.read_bits_int_be(1) != 0
+        @vs_unisystem = @_io.read_bits_int_be(1) != 0
         self
       end
 
@@ -151,8 +153,8 @@ class Ines < Kaitai::Struct::Struct
       end
 
       def _read
-        @reserved = @_io.read_bits_int(7)
-        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int(1))
+        @reserved = @_io.read_bits_int_be(7)
+        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int_be(1))
         self
       end
       attr_reader :reserved
@@ -179,11 +181,11 @@ class Ines < Kaitai::Struct::Struct
       end
 
       def _read
-        @reserved1 = @_io.read_bits_int(2)
-        @bus_conflict = @_io.read_bits_int(1) != 0
-        @prg_ram = @_io.read_bits_int(1) != 0
-        @reserved2 = @_io.read_bits_int(2)
-        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int(2))
+        @reserved1 = @_io.read_bits_int_be(2)
+        @bus_conflict = @_io.read_bits_int_be(1) != 0
+        @prg_ram = @_io.read_bits_int_be(1) != 0
+        @reserved2 = @_io.read_bits_int_be(2)
+        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int_be(2))
         self
       end
       attr_reader :reserved1

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Jpeg < Kaitai::Struct::Struct
@@ -74,29 +74,30 @@ class Jpeg < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic = @_io.ensure_fixed_contents([255].pack('C*'))
+      @magic = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([255].pack('C*'), magic, _io, "/types/segment/seq/0") if not magic == [255].pack('C*')
       @marker = Kaitai::Struct::Stream::resolve_enum(MARKER_ENUM, @_io.read_u1)
       if  ((marker != :marker_enum_soi) && (marker != :marker_enum_eoi)) 
         @length = @_io.read_u2be
       end
       if  ((marker != :marker_enum_soi) && (marker != :marker_enum_eoi)) 
         case marker
-        when :marker_enum_sos
-          @_raw_data = @_io.read_bytes((length - 2))
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSos.new(io, self, @_root)
         when :marker_enum_app1
           @_raw_data = @_io.read_bytes((length - 2))
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp1.new(io, self, @_root)
-        when :marker_enum_sof0
-          @_raw_data = @_io.read_bytes((length - 2))
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSof0.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentApp1.new(_io__raw_data, self, @_root)
         when :marker_enum_app0
           @_raw_data = @_io.read_bytes((length - 2))
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp0.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentApp0.new(_io__raw_data, self, @_root)
+        when :marker_enum_sof0
+          @_raw_data = @_io.read_bytes((length - 2))
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentSof0.new(_io__raw_data, self, @_root)
+        when :marker_enum_sos
+          @_raw_data = @_io.read_bytes((length - 2))
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentSos.new(_io__raw_data, self, @_root)
         else
           @data = @_io.read_bytes((length - 2))
         end
@@ -137,7 +138,7 @@ class Jpeg < Kaitai::Struct::Struct
       end
 
       def _read
-        @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
+        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
         @huffman_table = @_io.read_u1
         self
       end
@@ -209,7 +210,7 @@ class Jpeg < Kaitai::Struct::Struct
       end
 
       def _read
-        @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
+        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
         @sampling_factors = @_io.read_u1
         @quantization_table_id = @_io.read_u1
         self
@@ -244,10 +245,11 @@ class Jpeg < Kaitai::Struct::Struct
     end
 
     def _read
-      @extra_zero = @_io.ensure_fixed_contents([0].pack('C*'))
+      @extra_zero = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), extra_zero, _io, "/types/exif_in_jpeg/seq/0") if not extra_zero == [0].pack('C*')
       @_raw_data = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_data)
-      @data = Exif.new(io)
+      _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+      @data = Exif.new(_io__raw_data)
       self
     end
     attr_reader :extra_zero

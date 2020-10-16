@@ -118,8 +118,8 @@ namespace Kaitai
                         io.Seek(Ofs);
                         _body = io.ReadBytes((NextOfs - Ofs));
                         io.Seek(_pos);
+                        f_body = true;
                     }
-                    f_body = true;
                     return _body;
                 }
             }

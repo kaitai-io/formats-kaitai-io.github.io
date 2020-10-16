@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package RtpPacket;
@@ -71,12 +71,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{version} = $self->{_io}->read_bits_int(2);
-    $self->{has_padding} = $self->{_io}->read_bits_int(1);
-    $self->{has_extension} = $self->{_io}->read_bits_int(1);
-    $self->{csrc_count} = $self->{_io}->read_bits_int(4);
-    $self->{marker} = $self->{_io}->read_bits_int(1);
-    $self->{payload_type} = $self->{_io}->read_bits_int(7);
+    $self->{version} = $self->{_io}->read_bits_int_be(2);
+    $self->{has_padding} = $self->{_io}->read_bits_int_be(1);
+    $self->{has_extension} = $self->{_io}->read_bits_int_be(1);
+    $self->{csrc_count} = $self->{_io}->read_bits_int_be(4);
+    $self->{marker} = $self->{_io}->read_bits_int_be(1);
+    $self->{payload_type} = $self->{_io}->read_bits_int_be(7);
     $self->{_io}->align_to_byte();
     $self->{sequence_number} = $self->{_io}->read_u2be();
     $self->{timestamp} = $self->{_io}->read_u4be();

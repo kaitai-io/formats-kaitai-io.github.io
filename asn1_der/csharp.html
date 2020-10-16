@@ -154,11 +154,6 @@ as:</p>
                 <a href="index.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
@@ -333,13 +328,25 @@ as:</p>
             <span class="n">_typeTag</span> <span class="p">=</span> <span class="p">((</span><span class="n">TypeTag</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
             <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LenEncoded</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
             <span class="k">switch</span> <span class="p">(</span><span class="n">TypeTag</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Sequence30</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">PrintableString</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodyPrintableString</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Sequence10</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodySequence</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Sequence10</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Set</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodySequence</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Sequence30</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodySequence</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
@@ -351,22 +358,10 @@ as:</p>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodyUtf8string</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">PrintableString</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
-                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodyPrintableString</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
             <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">ObjectId</span><span class="p">:</span> <span class="p">{</span>
                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodyObjectId</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">TypeTag</span><span class="p">.</span><span class="n">Set</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
-                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BodySequence</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="k">default</span><span class="p">:</span> <span class="p">{</span>

@@ -8101,7 +8101,10 @@ var Dicom = (function() {
     }
     TFileHeader.prototype._read = function() {
       this.preamble = this._io.readBytes(128);
-      this.magic = this._io.ensureFixedContents([68, 73, 67, 77]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [68, 73, 67, 77]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([68, 73, 67, 77], this.magic, this._io, "/types/t_file_header/seq/1");
+      }
     }
 
     return TFileHeader;
@@ -8296,7 +8299,10 @@ var Dicom = (function() {
       this._read();
     }
     SeqItem.prototype._read = function() {
-      this.tagGroup = this._io.ensureFixedContents([254, 255]);
+      this.tagGroup = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.tagGroup, [254, 255]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([254, 255], this.tagGroup, this._io, "/types/seq_item/seq/0");
+      }
       this.tagElem = this._io.readU2le();
       this.valueLen = this._io.readU4le();
       if (this.valueLen != 4294967295) {

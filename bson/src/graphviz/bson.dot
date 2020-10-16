@@ -9,7 +9,7 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
 			<TR><TD PORT="fields_pos">4</TD><TD PORT="fields_size">(len - 5)</TD><TD>ElementsList</TD><TD PORT="fields_type">fields</TD></TR>
-			<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD>00</TD><TD PORT="terminator_type">terminator</TD></TR>
+			<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD></TD><TD PORT="terminator_type">terminator</TD></TR>
 		</TABLE>>];
 		subgraph cluster__timestamp {
 			label="Bson::Timestamp";
@@ -73,7 +73,7 @@ bin_data__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
 				<TR><TD PORT="str_pos">4</TD><TD PORT="str_size">(len - 1)</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
-				<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD>00</TD><TD PORT="terminator_type">terminator</TD></TR>
+				<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD></TD><TD PORT="terminator_type">terminator</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__element {
@@ -89,17 +89,17 @@ bin_data__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 element__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:bson_type_code_with_scope</TD><TD PORT="case0">CodeWithScope</TD></TR>
-	<TR><TD>:bson_type_object_id</TD><TD PORT="case1">ObjectId</TD></TR>
-	<TR><TD>:bson_type_string</TD><TD PORT="case2">String</TD></TR>
-	<TR><TD>:bson_type_reg_ex</TD><TD PORT="case3">RegEx</TD></TR>
-	<TR><TD>:bson_type_number_decimal</TD><TD PORT="case4">F16</TD></TR>
-	<TR><TD>:bson_type_timestamp</TD><TD PORT="case5">Timestamp</TD></TR>
-	<TR><TD>:bson_type_db_pointer</TD><TD PORT="case6">DbPointer</TD></TR>
-	<TR><TD>:bson_type_array</TD><TD PORT="case7">Bson</TD></TR>
-	<TR><TD>:bson_type_javascript</TD><TD PORT="case8">String</TD></TR>
-	<TR><TD>:bson_type_document</TD><TD PORT="case9">Bson</TD></TR>
-	<TR><TD>:bson_type_symbol</TD><TD PORT="case10">String</TD></TR>
-	<TR><TD>:bson_type_bin_data</TD><TD PORT="case11">BinData</TD></TR>
+	<TR><TD>:bson_type_reg_ex</TD><TD PORT="case1">RegEx</TD></TR>
+	<TR><TD>:bson_type_symbol</TD><TD PORT="case2">String</TD></TR>
+	<TR><TD>:bson_type_timestamp</TD><TD PORT="case3">Timestamp</TD></TR>
+	<TR><TD>:bson_type_document</TD><TD PORT="case4">Bson</TD></TR>
+	<TR><TD>:bson_type_object_id</TD><TD PORT="case5">ObjectId</TD></TR>
+	<TR><TD>:bson_type_javascript</TD><TD PORT="case6">String</TD></TR>
+	<TR><TD>:bson_type_bin_data</TD><TD PORT="case7">BinData</TD></TR>
+	<TR><TD>:bson_type_string</TD><TD PORT="case8">String</TD></TR>
+	<TR><TD>:bson_type_db_pointer</TD><TD PORT="case9">DbPointer</TD></TR>
+	<TR><TD>:bson_type_array</TD><TD PORT="case10">Bson</TD></TR>
+	<TR><TD>:bson_type_number_decimal</TD><TD PORT="case11">F16</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__db_pointer {
@@ -144,7 +144,7 @@ element__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 
 			f16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">1b</TD><TD>BitsType1</TD><TD PORT="str_type">str</TD></TR>
+				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="str_type">str</TD></TR>
 				<TR><TD PORT="exponent_pos">0:1</TD><TD PORT="exponent_size">15b</TD><TD>b15</TD><TD PORT="exponent_type">exponent</TD></TR>
 				<TR><TD PORT="significand_hi_pos">2</TD><TD PORT="significand_hi_size">49b</TD><TD>b49</TD><TD PORT="significand_hi_type">significand_hi</TD></TR>
 				<TR><TD PORT="significand_lo_pos">8:1</TD><TD PORT="significand_lo_size">8</TD><TD>u8le</TD><TD PORT="significand_lo_type">significand_lo</TD></TR>
@@ -184,17 +184,17 @@ element__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	element__seq:name_type -> cstring__seq [style=bold];
 	element__seq:content_type -> element__seq_content_switch [style=bold];
 	element__seq_content_switch:case0 -> code_with_scope__seq [style=bold];
-	element__seq_content_switch:case1 -> object_id__seq [style=bold];
+	element__seq_content_switch:case1 -> reg_ex__seq [style=bold];
 	element__seq_content_switch:case2 -> string__seq [style=bold];
-	element__seq_content_switch:case3 -> reg_ex__seq [style=bold];
-	element__seq_content_switch:case4 -> f16__seq [style=bold];
-	element__seq_content_switch:case5 -> timestamp__seq [style=bold];
-	element__seq_content_switch:case6 -> db_pointer__seq [style=bold];
-	element__seq_content_switch:case7 -> bson__seq [style=bold];
+	element__seq_content_switch:case3 -> timestamp__seq [style=bold];
+	element__seq_content_switch:case4 -> bson__seq [style=bold];
+	element__seq_content_switch:case5 -> object_id__seq [style=bold];
+	element__seq_content_switch:case6 -> string__seq [style=bold];
+	element__seq_content_switch:case7 -> bin_data__seq [style=bold];
 	element__seq_content_switch:case8 -> string__seq [style=bold];
-	element__seq_content_switch:case9 -> bson__seq [style=bold];
-	element__seq_content_switch:case10 -> string__seq [style=bold];
-	element__seq_content_switch:case11 -> bin_data__seq [style=bold];
+	element__seq_content_switch:case9 -> db_pointer__seq [style=bold];
+	element__seq_content_switch:case10 -> bson__seq [style=bold];
+	element__seq_content_switch:case11 -> f16__seq [style=bold];
 	element__seq:type_byte_type -> element__seq:content_type [color="#404040"];
 	db_pointer__seq:namespace_type -> string__seq [style=bold];
 	db_pointer__seq:id_type -> object_id__seq [style=bold];

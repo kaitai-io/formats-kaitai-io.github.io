@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class FtlDat(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -18,7 +19,7 @@ class FtlDat(KaitaiStruct):
         self.num_files = self._io.read_u4le()
         self.files = [None] * (self.num_files)
         for i in range(self.num_files):
-            self.files[i] = self._root.File(self._io, self, self._root)
+            self.files[i] = FtlDat.File(self._io, self, self._root)
 
 
     class File(KaitaiStruct):
@@ -39,7 +40,7 @@ class FtlDat(KaitaiStruct):
             if self.ofs_meta != 0:
                 _pos = self._io.pos()
                 self._io.seek(self.ofs_meta)
-                self._m_meta = self._root.Meta(self._io, self, self._root)
+                self._m_meta = FtlDat.Meta(self._io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_meta if hasattr(self, '_m_meta') else None

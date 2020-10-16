@@ -62,14 +62,42 @@ namespace Kaitai
             }
             private void _read()
             {
-                _fileCode = m_io.EnsureFixedContents(new byte[] { 0, 0, 39, 10 });
-                _unusedField1 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
-                _unusedField2 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
-                _unusedField3 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
-                _unusedField4 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
-                _unusedField5 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
+                _fileCode = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(FileCode, new byte[] { 0, 0, 39, 10 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, FileCode, M_Io, "/types/file_header/seq/0");
+                }
+                _unusedField1 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(UnusedField1, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField1, M_Io, "/types/file_header/seq/1");
+                }
+                _unusedField2 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(UnusedField2, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField2, M_Io, "/types/file_header/seq/2");
+                }
+                _unusedField3 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(UnusedField3, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField3, M_Io, "/types/file_header/seq/3");
+                }
+                _unusedField4 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(UnusedField4, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField4, M_Io, "/types/file_header/seq/4");
+                }
+                _unusedField5 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(UnusedField5, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField5, M_Io, "/types/file_header/seq/5");
+                }
                 _fileLength = m_io.ReadS4be();
-                _version = m_io.EnsureFixedContents(new byte[] { 232, 3, 0, 0 });
+                _version = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Version, new byte[] { 232, 3, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 232, 3, 0, 0 }, Version, M_Io, "/types/file_header/seq/7");
+                }
                 _shapeType = ((ShapefileIndex.ShapeType) m_io.ReadS4le());
                 _boundingBox = new BoundingBoxXYZM(m_io, this, m_root);
             }

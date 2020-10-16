@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use VlqBase128Be;
 
 ########################################################################
@@ -411,7 +411,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (77, 84, 114, 107)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{len_events} = $self->{_io}->read_u4be();
     $self->{_raw_events} = $self->{_io}->read_bytes($self->len_events());
     my $io__raw_events = IO::KaitaiStruct::Stream->new($self->{_raw_events});
@@ -578,7 +578,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (77, 84, 104, 100)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{len_header} = $self->{_io}->read_u4be();
     $self->{format} = $self->{_io}->read_u2be();
     $self->{num_tracks} = $self->{_io}->read_u2be();

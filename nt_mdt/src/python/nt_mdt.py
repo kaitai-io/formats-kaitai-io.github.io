@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class NtMdt(KaitaiStruct):
     """A native file format of NT-MDT scientific software. Usually contains
@@ -179,15 +180,17 @@ class NtMdt(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.signature = self._io.ensure_fixed_contents(b"\x01\xB0\x93\xFF")
+        self.signature = self._io.read_bytes(4)
+        if not self.signature == b"\x01\xB0\x93\xFF":
+            raise kaitaistruct.ValidationNotEqualError(b"\x01\xB0\x93\xFF", self.signature, self._io, u"/seq/0")
         self.size = self._io.read_u4le()
         self.reserved0 = self._io.read_bytes(4)
         self.last_frame = self._io.read_u2le()
         self.reserved1 = self._io.read_bytes(18)
         self.wrond_doc = self._io.read_bytes(1)
         self._raw_frames = self._io.read_bytes(self.size)
-        io = KaitaiStream(BytesIO(self._raw_frames))
-        self.frames = self._root.Framez(io, self, self._root)
+        _io__raw_frames = KaitaiStream(BytesIO(self._raw_frames))
+        self.frames = NtMdt.Framez(_io__raw_frames, self, self._root)
 
     class Uuid(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -213,7 +216,7 @@ class NtMdt(KaitaiStruct):
         def _read(self):
             self.frames = [None] * ((self._root.last_frame + 1))
             for i in range((self._root.last_frame + 1)):
-                self.frames[i] = self._root.Frame(self._io, self, self._root)
+                self.frames[i] = NtMdt.Frame(self._io, self, self._root)
 
 
 
@@ -237,8 +240,8 @@ class NtMdt(KaitaiStruct):
         def _read(self):
             self.size = self._io.read_u4le()
             self._raw_main = self._io.read_bytes((self.size - 4))
-            io = KaitaiStream(BytesIO(self._raw_main))
-            self.main = self._root.Frame.FrameMain(io, self, self._root)
+            _io__raw_main = KaitaiStream(BytesIO(self._raw_main))
+            self.main = NtMdt.Frame.FrameMain(_io__raw_main, self, self._root)
 
         class Dots(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -250,15 +253,15 @@ class NtMdt(KaitaiStruct):
             def _read(self):
                 self.fm_ndots = self._io.read_u2le()
                 if self.fm_ndots > 0:
-                    self.coord_header = self._root.Frame.Dots.DotsHeader(self._io, self, self._root)
+                    self.coord_header = NtMdt.Frame.Dots.DotsHeader(self._io, self, self._root)
 
                 self.coordinates = [None] * (self.fm_ndots)
                 for i in range(self.fm_ndots):
-                    self.coordinates[i] = self._root.Frame.Dots.DotsData(self._io, self, self._root)
+                    self.coordinates[i] = NtMdt.Frame.Dots.DotsData(self._io, self, self._root)
 
                 self.data = [None] * (self.fm_ndots)
                 for i in range(self.fm_ndots):
-                    self.data[i] = self._root.Frame.Dots.DataLinez(i, self._io, self, self._root)
+                    self.data[i] = NtMdt.Frame.Dots.DataLinez(i, self._io, self, self._root)
 
 
             class DotsHeader(KaitaiStruct):
@@ -271,8 +274,8 @@ class NtMdt(KaitaiStruct):
                 def _read(self):
                     self.header_size = self._io.read_s4le()
                     self._raw_header = self._io.read_bytes(self.header_size)
-                    io = KaitaiStream(BytesIO(self._raw_header))
-                    self.header = self._root.Frame.Dots.DotsHeader.Header(io, self, self._root)
+                    _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                    self.header = NtMdt.Frame.Dots.DotsHeader.Header(_io__raw_header, self, self._root)
 
                 class Header(KaitaiStruct):
                     def __init__(self, _io, _parent=None, _root=None):
@@ -284,7 +287,7 @@ class NtMdt(KaitaiStruct):
                     def _read(self):
                         self.coord_size = self._io.read_s4le()
                         self.version = self._io.read_s4le()
-                        self.xyunits = self._root.Unit(self._io.read_s2le())
+                        self.xyunits = KaitaiStream.resolve_enum(NtMdt.Unit, self._io.read_s2le())
 
 
 
@@ -330,31 +333,31 @@ class NtMdt(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.type = self._root.Frame.FrameType(self._io.read_u2le())
-                self.version = self._root.Version(self._io, self, self._root)
-                self.date_time = self._root.Frame.DateTime(self._io, self, self._root)
+                self.type = KaitaiStream.resolve_enum(NtMdt.Frame.FrameType, self._io.read_u2le())
+                self.version = NtMdt.Version(self._io, self, self._root)
+                self.date_time = NtMdt.Frame.DateTime(self._io, self, self._root)
                 self.var_size = self._io.read_u2le()
                 _on = self.type
-                if _on == self._root.Frame.FrameType.scanned:
+                if _on == NtMdt.Frame.FrameType.mda:
                     self._raw_frame_data = self._io.read_bytes_full()
-                    io = KaitaiStream(BytesIO(self._raw_frame_data))
-                    self.frame_data = self._root.Frame.FdScanned(io, self, self._root)
-                elif _on == self._root.Frame.FrameType.curves_new:
+                    _io__raw_frame_data = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = NtMdt.Frame.FdMetaData(_io__raw_frame_data, self, self._root)
+                elif _on == NtMdt.Frame.FrameType.curves_new:
                     self._raw_frame_data = self._io.read_bytes_full()
-                    io = KaitaiStream(BytesIO(self._raw_frame_data))
-                    self.frame_data = self._root.Frame.FdCurvesNew(io, self, self._root)
-                elif _on == self._root.Frame.FrameType.mda:
+                    _io__raw_frame_data = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = NtMdt.Frame.FdCurvesNew(_io__raw_frame_data, self, self._root)
+                elif _on == NtMdt.Frame.FrameType.curves:
                     self._raw_frame_data = self._io.read_bytes_full()
-                    io = KaitaiStream(BytesIO(self._raw_frame_data))
-                    self.frame_data = self._root.Frame.FdMetaData(io, self, self._root)
-                elif _on == self._root.Frame.FrameType.spectroscopy:
+                    _io__raw_frame_data = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = NtMdt.Frame.FdSpectroscopy(_io__raw_frame_data, self, self._root)
+                elif _on == NtMdt.Frame.FrameType.spectroscopy:
                     self._raw_frame_data = self._io.read_bytes_full()
-                    io = KaitaiStream(BytesIO(self._raw_frame_data))
-                    self.frame_data = self._root.Frame.FdSpectroscopy(io, self, self._root)
-                elif _on == self._root.Frame.FrameType.curves:
+                    _io__raw_frame_data = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = NtMdt.Frame.FdSpectroscopy(_io__raw_frame_data, self, self._root)
+                elif _on == NtMdt.Frame.FrameType.scanned:
                     self._raw_frame_data = self._io.read_bytes_full()
-                    io = KaitaiStream(BytesIO(self._raw_frame_data))
-                    self.frame_data = self._root.Frame.FdSpectroscopy(io, self, self._root)
+                    _io__raw_frame_data = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = NtMdt.Frame.FdScanned(_io__raw_frame_data, self, self._root)
                 else:
                     self.frame_data = self._io.read_bytes_full()
 
@@ -370,7 +373,7 @@ class NtMdt(KaitaiStruct):
                 self.block_count = self._io.read_u4le()
                 self.blocks_headers = [None] * (self.block_count)
                 for i in range(self.block_count):
-                    self.blocks_headers[i] = self._root.Frame.FdCurvesNew.BlockDescr(self._io, self, self._root)
+                    self.blocks_headers[i] = NtMdt.Frame.FdCurvesNew.BlockDescr(self._io, self, self._root)
 
                 self.blocks_names = [None] * (self.block_count)
                 for i in range(self.block_count):
@@ -406,7 +409,7 @@ class NtMdt(KaitaiStruct):
                 self.tot_len = self._io.read_u4le()
                 self.guids = [None] * (2)
                 for i in range(2):
-                    self.guids[i] = self._root.Uuid(self._io, self, self._root)
+                    self.guids[i] = NtMdt.Uuid(self._io, self, self._root)
 
                 self.frame_status = self._io.read_bytes(4)
                 self.name_size = self._io.read_u4le()
@@ -426,11 +429,11 @@ class NtMdt(KaitaiStruct):
                 self.n_mesurands = self._io.read_u4le()
                 self.dimensions = [None] * (self.n_dimensions)
                 for i in range(self.n_dimensions):
-                    self.dimensions[i] = self._root.Frame.FdMetaData.Calibration(self._io, self, self._root)
+                    self.dimensions[i] = NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root)
 
                 self.mesurands = [None] * (self.n_mesurands)
                 for i in range(self.n_mesurands):
-                    self.mesurands[i] = self._root.Frame.FdMetaData.Calibration(self._io, self, self._root)
+                    self.mesurands[i] = NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root)
 
 
             class Image(KaitaiStruct):
@@ -444,7 +447,7 @@ class NtMdt(KaitaiStruct):
                     self.image = []
                     i = 0
                     while not self._io.is_eof():
-                        self.image.append(self._root.Frame.FdMetaData.Image.Vec(self._io, self, self._root))
+                        self.image.append(NtMdt.Frame.FdMetaData.Image.Vec(self._io, self, self._root))
                         i += 1
 
 
@@ -459,26 +462,26 @@ class NtMdt(KaitaiStruct):
                         self.items = [None] * (self._parent._parent.n_mesurands)
                         for i in range(self._parent._parent.n_mesurands):
                             _on = self._parent._parent.mesurands[i].data_type
-                            if _on == self._root.DataType.uint8:
-                                self.items[i] = self._io.read_u1()
-                            elif _on == self._root.DataType.int8:
-                                self.items[i] = self._io.read_s1()
-                            elif _on == self._root.DataType.int16:
-                                self.items[i] = self._io.read_s2le()
-                            elif _on == self._root.DataType.uint64:
+                            if _on == NtMdt.DataType.uint64:
                                 self.items[i] = self._io.read_u8le()
-                            elif _on == self._root.DataType.float64:
-                                self.items[i] = self._io.read_f8le()
-                            elif _on == self._root.DataType.int32:
-                                self.items[i] = self._io.read_s4le()
-                            elif _on == self._root.DataType.float32:
+                            elif _on == NtMdt.DataType.uint8:
+                                self.items[i] = self._io.read_u1()
+                            elif _on == NtMdt.DataType.float32:
                                 self.items[i] = self._io.read_f4le()
-                            elif _on == self._root.DataType.uint16:
+                            elif _on == NtMdt.DataType.int8:
+                                self.items[i] = self._io.read_s1()
+                            elif _on == NtMdt.DataType.uint16:
                                 self.items[i] = self._io.read_u2le()
-                            elif _on == self._root.DataType.int64:
+                            elif _on == NtMdt.DataType.int64:
                                 self.items[i] = self._io.read_s8le()
-                            elif _on == self._root.DataType.uint32:
+                            elif _on == NtMdt.DataType.uint32:
                                 self.items[i] = self._io.read_u4le()
+                            elif _on == NtMdt.DataType.float64:
+                                self.items[i] = self._io.read_f8le()
+                            elif _on == NtMdt.DataType.int16:
+                                self.items[i] = self._io.read_s2le()
+                            elif _on == NtMdt.DataType.int32:
+                                self.items[i] = self._io.read_s4le()
 
 
 
@@ -503,7 +506,7 @@ class NtMdt(KaitaiStruct):
                     self.scale = self._io.read_f8le()
                     self.min_index = self._io.read_u8le()
                     self.max_index = self._io.read_u8le()
-                    self.data_type = self._root.DataType(self._io.read_s4le())
+                    self.data_type = KaitaiStream.resolve_enum(NtMdt.DataType, self._io.read_s4le())
                     self.len_author = self._io.read_u4le()
                     self.name = (self._io.read_bytes(self.len_name)).decode(u"utf-8")
                     self.comment = (self._io.read_bytes(self.len_comment)).decode(u"utf-8")
@@ -527,8 +530,8 @@ class NtMdt(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek(self.data_offset)
                 self._raw__m_image = self._io.read_bytes(self.data_size)
-                io = KaitaiStream(BytesIO(self._raw__m_image))
-                self._m_image = self._root.Frame.FdMetaData.Image(io, self, self._root)
+                _io__raw__m_image = KaitaiStream(BytesIO(self._raw__m_image))
+                self._m_image = NtMdt.Frame.FdMetaData.Image(_io__raw__m_image, self, self._root)
                 self._io.seek(_pos)
                 return self._m_image if hasattr(self, '_m_image') else None
 
@@ -542,18 +545,18 @@ class NtMdt(KaitaiStruct):
 
             def _read(self):
                 self._raw_vars = self._io.read_bytes(self._parent.var_size)
-                io = KaitaiStream(BytesIO(self._raw_vars))
-                self.vars = self._root.Frame.FdSpectroscopy.Vars(io, self, self._root)
+                _io__raw_vars = KaitaiStream(BytesIO(self._raw_vars))
+                self.vars = NtMdt.Frame.FdSpectroscopy.Vars(_io__raw_vars, self, self._root)
                 self.fm_mode = self._io.read_u2le()
                 self.fm_xres = self._io.read_u2le()
                 self.fm_yres = self._io.read_u2le()
-                self.dots = self._root.Frame.Dots(self._io, self, self._root)
+                self.dots = NtMdt.Frame.Dots(self._io, self, self._root)
                 self.data = [None] * ((self.fm_xres * self.fm_yres))
                 for i in range((self.fm_xres * self.fm_yres)):
                     self.data[i] = self._io.read_s2le()
 
-                self.title = self._root.Title(self._io, self, self._root)
-                self.xml = self._root.Xml(self._io, self, self._root)
+                self.title = NtMdt.Title(self._io, self, self._root)
+                self.xml = NtMdt.Xml(self._io, self, self._root)
 
             class Vars(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -563,9 +566,9 @@ class NtMdt(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.x_scale = self._root.Frame.AxisScale(self._io, self, self._root)
-                    self.y_scale = self._root.Frame.AxisScale(self._io, self, self._root)
-                    self.z_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.x_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
+                    self.y_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
+                    self.z_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
                     self.sp_mode = self._io.read_u2le()
                     self.sp_filter = self._io.read_u2le()
                     self.u_begin = self._io.read_f4le()
@@ -594,8 +597,8 @@ class NtMdt(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.date = self._root.Frame.DateTime.Date(self._io, self, self._root)
-                self.time = self._root.Frame.DateTime.Time(self._io, self, self._root)
+                self.date = NtMdt.Frame.DateTime.Date(self._io, self, self._root)
+                self.time = NtMdt.Frame.DateTime.Time(self._io, self, self._root)
 
             class Date(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -634,7 +637,7 @@ class NtMdt(KaitaiStruct):
             def _read(self):
                 self.offset = self._io.read_f4le()
                 self.step = self._io.read_f4le()
-                self.unit = self._root.Unit(self._io.read_s2le())
+                self.unit = KaitaiStream.resolve_enum(NtMdt.Unit, self._io.read_s2le())
 
 
         class FdScanned(KaitaiStruct):
@@ -663,13 +666,13 @@ class NtMdt(KaitaiStruct):
 
             def _read(self):
                 self._raw_vars = self._io.read_bytes(self._parent.var_size)
-                io = KaitaiStream(BytesIO(self._raw_vars))
-                self.vars = self._root.Frame.FdScanned.Vars(io, self, self._root)
+                _io__raw_vars = KaitaiStream(BytesIO(self._raw_vars))
+                self.vars = NtMdt.Frame.FdScanned.Vars(_io__raw_vars, self, self._root)
                 if False:
                     self.orig_format = self._io.read_u4le()
 
                 if False:
-                    self.tune = self._root.Frame.FdScanned.LiftMode(self._io.read_u4le())
+                    self.tune = KaitaiStream.resolve_enum(NtMdt.Frame.FdScanned.LiftMode, self._io.read_u4le())
 
                 if False:
                     self.feedback_gain = self._io.read_f8le()
@@ -683,13 +686,13 @@ class NtMdt(KaitaiStruct):
                 self.fm_mode = self._io.read_u2le()
                 self.fm_xres = self._io.read_u2le()
                 self.fm_yres = self._io.read_u2le()
-                self.dots = self._root.Frame.Dots(self._io, self, self._root)
+                self.dots = NtMdt.Frame.Dots(self._io, self, self._root)
                 self.image = [None] * ((self.fm_xres * self.fm_yres))
                 for i in range((self.fm_xres * self.fm_yres)):
                     self.image[i] = self._io.read_s2le()
 
-                self.title = self._root.Title(self._io, self, self._root)
-                self.xml = self._root.Xml(self._io, self, self._root)
+                self.title = NtMdt.Title(self._io, self, self._root)
+                self.xml = NtMdt.Xml(self._io, self, self._root)
 
             class Vars(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -699,11 +702,11 @@ class NtMdt(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.x_scale = self._root.Frame.AxisScale(self._io, self, self._root)
-                    self.y_scale = self._root.Frame.AxisScale(self._io, self, self._root)
-                    self.z_scale = self._root.Frame.AxisScale(self._io, self, self._root)
-                    self.channel_index = self._root.AdcMode(self._io.read_u1())
-                    self.mode = self._root.Frame.FdScanned.Mode(self._io.read_u1())
+                    self.x_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
+                    self.y_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
+                    self.z_scale = NtMdt.Frame.AxisScale(self._io, self, self._root)
+                    self.channel_index = KaitaiStream.resolve_enum(NtMdt.AdcMode, self._io.read_u1())
+                    self.mode = KaitaiStream.resolve_enum(NtMdt.Frame.FdScanned.Mode, self._io.read_u1())
                     self.xres = self._io.read_u2le()
                     self.yres = self._io.read_u2le()
                     self.ndacq = self._io.read_u2le()
@@ -713,7 +716,7 @@ class NtMdt(KaitaiStruct):
                     self.adc_index = self._io.read_u1()
                     self.input_signal_or_version = self._io.read_u1()
                     self.substr_plane_order_or_pass_num = self._io.read_u1()
-                    self.scan_dir = self._root.Frame.FdScanned.ScanDir(self._io, self, self._root)
+                    self.scan_dir = NtMdt.Frame.FdScanned.ScanDir(self._io, self, self._root)
                     self.power_of_2 = self._io.read_u1()
                     self.velocity = self._io.read_f4le()
                     self.setpoint = self._io.read_f4le()
@@ -745,11 +748,11 @@ class NtMdt(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.unkn = self._io.read_bits_int(4)
-                    self.double_pass = self._io.read_bits_int(1) != 0
-                    self.bottom = self._io.read_bits_int(1) != 0
-                    self.left = self._io.read_bits_int(1) != 0
-                    self.horizontal = self._io.read_bits_int(1) != 0
+                    self.unkn = self._io.read_bits_int_be(4)
+                    self.double_pass = self._io.read_bits_int_be(1) != 0
+                    self.bottom = self._io.read_bits_int_be(1) != 0
+                    self.left = self._io.read_bits_int_be(1) != 0
+                    self.horizontal = self._io.read_bits_int_be(1) != 0
 
 
 

@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-from vlq_base128_le import VlqBase128Le
+import vlq_base128_le
 class Dex(KaitaiStruct):
     """Android OS applications executables are typically stored in its own
     format, optimized for more efficient execution in Dalvik virtual
@@ -40,7 +41,7 @@ class Dex(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.HeaderItem(self._io, self, self._root)
+        self.header = Dex.HeaderItem(self._io, self, self._root)
 
     class HeaderItem(KaitaiStruct):
 
@@ -54,13 +55,15 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x64\x65\x78\x0A")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x64\x65\x78\x0A":
+                raise kaitaistruct.ValidationNotEqualError(b"\x64\x65\x78\x0A", self.magic, self._io, u"/types/header_item/seq/0")
             self.version_str = (KaitaiStream.bytes_terminate(self._io.read_bytes(4), 0, False)).decode(u"ascii")
             self.checksum = self._io.read_u4le()
             self.signature = self._io.read_bytes(20)
             self.file_size = self._io.read_u4le()
             self.header_size = self._io.read_u4le()
-            self.endian_tag = self._root.HeaderItem.EndianConstant(self._io.read_u4le())
+            self.endian_tag = KaitaiStream.resolve_enum(Dex.HeaderItem.EndianConstant, self._io.read_u4le())
             self.link_size = self._io.read_u4le()
             self.link_off = self._io.read_u4le()
             self.map_off = self._io.read_u4le()
@@ -91,7 +94,7 @@ class Dex(KaitaiStruct):
             self.size = self._io.read_u4le()
             self.list = [None] * (self.size)
             for i in range(self.size):
-                self.list[i] = self._root.MapItem(self._io, self, self._root)
+                self.list[i] = Dex.MapItem(self._io, self, self._root)
 
 
 
@@ -123,42 +126,42 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.value_arg = self._io.read_bits_int(3)
-            self.value_type = self._root.EncodedValue.ValueTypeEnum(self._io.read_bits_int(5))
+            self.value_arg = self._io.read_bits_int_be(3)
+            self.value_type = KaitaiStream.resolve_enum(Dex.EncodedValue.ValueTypeEnum, self._io.read_bits_int_be(5))
             self._io.align_to_byte()
             _on = self.value_type
-            if _on == self._root.EncodedValue.ValueTypeEnum.double:
-                self.value = self._io.read_f8le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.annotation:
-                self.value = self._root.EncodedAnnotation(self._io, self, self._root)
-            elif _on == self._root.EncodedValue.ValueTypeEnum.type:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.char:
-                self.value = self._io.read_u2le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.method_handle:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.array:
-                self.value = self._root.EncodedArray(self._io, self, self._root)
-            elif _on == self._root.EncodedValue.ValueTypeEnum.byte:
-                self.value = self._io.read_s1()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.method:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.method_type:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.short:
-                self.value = self._io.read_s2le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.string:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.int:
+            if _on == Dex.EncodedValue.ValueTypeEnum.int:
                 self.value = self._io.read_s4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.field:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.long:
+            elif _on == Dex.EncodedValue.ValueTypeEnum.annotation:
+                self.value = Dex.EncodedAnnotation(self._io, self, self._root)
+            elif _on == Dex.EncodedValue.ValueTypeEnum.long:
                 self.value = self._io.read_s8le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.float:
-                self.value = self._io.read_f4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.enum:
+            elif _on == Dex.EncodedValue.ValueTypeEnum.method_handle:
                 self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.byte:
+                self.value = self._io.read_s1()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.array:
+                self.value = Dex.EncodedArray(self._io, self, self._root)
+            elif _on == Dex.EncodedValue.ValueTypeEnum.method_type:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.short:
+                self.value = self._io.read_s2le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.method:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.double:
+                self.value = self._io.read_f8le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.float:
+                self.value = self._io.read_f4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.type:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.enum:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.field:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.string:
+                self.value = self._io.read_u4le()
+            elif _on == Dex.EncodedValue.ValueTypeEnum.char:
+                self.value = self._io.read_u2le()
 
 
     class CallSiteIdItem(KaitaiStruct):
@@ -258,8 +261,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.name_idx = VlqBase128Le(self._io)
-            self.value = self._root.EncodedValue(self._io, self, self._root)
+            self.name_idx = vlq_base128_le.VlqBase128Le(self._io)
+            self.value = Dex.EncodedValue(self._io, self, self._root)
 
 
     class EncodedField(KaitaiStruct):
@@ -270,8 +273,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.field_idx_diff = VlqBase128Le(self._io)
-            self.access_flags = VlqBase128Le(self._io)
+            self.field_idx_diff = vlq_base128_le.VlqBase128Le(self._io)
+            self.access_flags = vlq_base128_le.VlqBase128Le(self._io)
 
 
     class EncodedArrayItem(KaitaiStruct):
@@ -282,7 +285,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.value = self._root.EncodedArray(self._io, self, self._root)
+            self.value = Dex.EncodedArray(self._io, self, self._root)
 
 
     class ClassDataItem(KaitaiStruct):
@@ -293,25 +296,25 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.static_fields_size = VlqBase128Le(self._io)
-            self.instance_fields_size = VlqBase128Le(self._io)
-            self.direct_methods_size = VlqBase128Le(self._io)
-            self.virtual_methods_size = VlqBase128Le(self._io)
+            self.static_fields_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.instance_fields_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.direct_methods_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.virtual_methods_size = vlq_base128_le.VlqBase128Le(self._io)
             self.static_fields = [None] * (self.static_fields_size.value)
             for i in range(self.static_fields_size.value):
-                self.static_fields[i] = self._root.EncodedField(self._io, self, self._root)
+                self.static_fields[i] = Dex.EncodedField(self._io, self, self._root)
 
             self.instance_fields = [None] * (self.instance_fields_size.value)
             for i in range(self.instance_fields_size.value):
-                self.instance_fields[i] = self._root.EncodedField(self._io, self, self._root)
+                self.instance_fields[i] = Dex.EncodedField(self._io, self, self._root)
 
             self.direct_methods = [None] * (self.direct_methods_size.value)
             for i in range(self.direct_methods_size.value):
-                self.direct_methods[i] = self._root.EncodedMethod(self._io, self, self._root)
+                self.direct_methods[i] = Dex.EncodedMethod(self._io, self, self._root)
 
             self.virtual_methods = [None] * (self.virtual_methods_size.value)
             for i in range(self.virtual_methods_size.value):
-                self.virtual_methods[i] = self._root.EncodedMethod(self._io, self, self._root)
+                self.virtual_methods[i] = Dex.EncodedMethod(self._io, self, self._root)
 
 
 
@@ -363,11 +366,11 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type_idx = VlqBase128Le(self._io)
-            self.size = VlqBase128Le(self._io)
+            self.type_idx = vlq_base128_le.VlqBase128Le(self._io)
+            self.size = vlq_base128_le.VlqBase128Le(self._io)
             self.elements = [None] * (self.size.value)
             for i in range(self.size.value):
-                self.elements[i] = self._root.AnnotationElement(self._io, self, self._root)
+                self.elements[i] = Dex.AnnotationElement(self._io, self, self._root)
 
 
 
@@ -380,7 +383,7 @@ class Dex(KaitaiStruct):
 
         def _read(self):
             self.class_idx = self._io.read_u4le()
-            self.access_flags = self._root.ClassAccessFlags(self._io.read_u4le())
+            self.access_flags = KaitaiStream.resolve_enum(Dex.ClassAccessFlags, self._io.read_u4le())
             self.superclass_idx = self._io.read_u4le()
             self.interfaces_off = self._io.read_u4le()
             self.source_file_idx = self._io.read_u4le()
@@ -404,7 +407,7 @@ class Dex(KaitaiStruct):
             if self.class_data_off != 0:
                 _pos = self._io.pos()
                 self._io.seek(self.class_data_off)
-                self._m_class_data = self._root.ClassDataItem(self._io, self, self._root)
+                self._m_class_data = Dex.ClassDataItem(self._io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_class_data if hasattr(self, '_m_class_data') else None
@@ -417,7 +420,7 @@ class Dex(KaitaiStruct):
             if self.static_values_off != 0:
                 _pos = self._io.pos()
                 self._io.seek(self.static_values_off)
-                self._m_static_values = self._root.EncodedArrayItem(self._io, self, self._root)
+                self._m_static_values = Dex.EncodedArrayItem(self._io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_static_values if hasattr(self, '_m_static_values') else None
@@ -434,7 +437,7 @@ class Dex(KaitaiStruct):
             self.size = self._io.read_u4le()
             self.list = [None] * (self.size)
             for i in range(self.size):
-                self.list[i] = self._root.TypeItem(self._io, self, self._root)
+                self.list[i] = Dex.TypeItem(self._io, self, self._root)
 
 
 
@@ -456,7 +459,7 @@ class Dex(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.utf16_size = VlqBase128Le(self._io)
+                self.utf16_size = vlq_base128_le.VlqBase128Le(self._io)
                 self.data = (self._io.read_bytes(self.utf16_size.value)).decode(u"ascii")
 
 
@@ -467,7 +470,7 @@ class Dex(KaitaiStruct):
 
             _pos = self._io.pos()
             self._io.seek(self.string_data_off)
-            self._m_value = self._root.StringIdItem.StringDataItem(self._io, self, self._root)
+            self._m_value = Dex.StringIdItem.StringDataItem(self._io, self, self._root)
             self._io.seek(_pos)
             return self._m_value if hasattr(self, '_m_value') else None
 
@@ -503,7 +506,7 @@ class Dex(KaitaiStruct):
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self.parameters_off)
-                self._m_params_types = self._root.TypeList(io, self, self._root)
+                self._m_params_types = Dex.TypeList(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_params_types if hasattr(self, '_m_params_types') else None
@@ -526,9 +529,9 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.method_idx_diff = VlqBase128Le(self._io)
-            self.access_flags = VlqBase128Le(self._io)
-            self.code_off = VlqBase128Le(self._io)
+            self.method_idx_diff = vlq_base128_le.VlqBase128Le(self._io)
+            self.access_flags = vlq_base128_le.VlqBase128Le(self._io)
+            self.code_off = vlq_base128_le.VlqBase128Le(self._io)
 
 
     class MapItem(KaitaiStruct):
@@ -561,7 +564,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.MapItem.MapItemType(self._io.read_u2le())
+            self.type = KaitaiStream.resolve_enum(Dex.MapItem.MapItemType, self._io.read_u2le())
             self.unused = self._io.read_u2le()
             self.size = self._io.read_u4le()
             self.offset = self._io.read_u4le()
@@ -575,10 +578,10 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.size = VlqBase128Le(self._io)
+            self.size = vlq_base128_le.VlqBase128Le(self._io)
             self.values = [None] * (self.size.value)
             for i in range(self.size.value):
-                self.values[i] = self._root.EncodedValue(self._io, self, self._root)
+                self.values[i] = Dex.EncodedValue(self._io, self, self._root)
 
 
 
@@ -599,7 +602,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.string_ids_off)
         self._m_string_ids = [None] * (self.header.string_ids_size)
         for i in range(self.header.string_ids_size):
-            self._m_string_ids[i] = self._root.StringIdItem(self._io, self, self._root)
+            self._m_string_ids[i] = Dex.StringIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_string_ids if hasattr(self, '_m_string_ids') else None
@@ -624,7 +627,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.method_ids_off)
         self._m_method_ids = [None] * (self.header.method_ids_size)
         for i in range(self.header.method_ids_size):
-            self._m_method_ids[i] = self._root.MethodIdItem(self._io, self, self._root)
+            self._m_method_ids[i] = Dex.MethodIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_method_ids if hasattr(self, '_m_method_ids') else None
@@ -654,7 +657,7 @@ class Dex(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(self.header.map_off)
-        self._m_map = self._root.MapList(self._io, self, self._root)
+        self._m_map = Dex.MapList(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_map if hasattr(self, '_m_map') else None
 
@@ -675,7 +678,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.class_defs_off)
         self._m_class_defs = [None] * (self.header.class_defs_size)
         for i in range(self.header.class_defs_size):
-            self._m_class_defs[i] = self._root.ClassDefItem(self._io, self, self._root)
+            self._m_class_defs[i] = Dex.ClassDefItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_class_defs if hasattr(self, '_m_class_defs') else None
@@ -712,7 +715,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.type_ids_off)
         self._m_type_ids = [None] * (self.header.type_ids_size)
         for i in range(self.header.type_ids_size):
-            self._m_type_ids[i] = self._root.TypeIdItem(self._io, self, self._root)
+            self._m_type_ids[i] = Dex.TypeIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_type_ids if hasattr(self, '_m_type_ids') else None
@@ -734,7 +737,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.proto_ids_off)
         self._m_proto_ids = [None] * (self.header.proto_ids_size)
         for i in range(self.header.proto_ids_size):
-            self._m_proto_ids[i] = self._root.ProtoIdItem(self._io, self, self._root)
+            self._m_proto_ids[i] = Dex.ProtoIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_proto_ids if hasattr(self, '_m_proto_ids') else None
@@ -758,7 +761,7 @@ class Dex(KaitaiStruct):
         self._io.seek(self.header.field_ids_off)
         self._m_field_ids = [None] * (self.header.field_ids_size)
         for i in range(self.header.field_ids_size):
-            self._m_field_ids[i] = self._root.FieldIdItem(self._io, self, self._root)
+            self._m_field_ids[i] = Dex.FieldIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
         return self._m_field_ids if hasattr(self, '_m_field_ids') else None

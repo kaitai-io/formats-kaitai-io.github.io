@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -41,7 +41,7 @@ class SudoersTs < Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(TS_TYPE, @_io.read_u2le)
+      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
       @flags = TsFlag.new(@_io, self, @_root)
       @auth_uid = @_io.read_u4le
       @sid = @_io.read_u4le
@@ -95,10 +95,10 @@ class SudoersTs < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved0 = @_io.read_bits_int(6)
-      @anyuid = @_io.read_bits_int(1) != 0
-      @disabled = @_io.read_bits_int(1) != 0
-      @reserved1 = @_io.read_bits_int(8)
+      @reserved0 = @_io.read_bits_int_be(6)
+      @anyuid = @_io.read_bits_int_be(1) != 0
+      @disabled = @_io.read_bits_int_be(1) != 0
+      @reserved1 = @_io.read_bits_int_be(8)
       self
     end
 
@@ -125,7 +125,7 @@ class SudoersTs < Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(TS_TYPE, @_io.read_u2le)
+      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
       @flags = TsFlag.new(@_io, self, @_root)
       @auth_uid = @_io.read_u4le
       @sid = @_io.read_u4le
@@ -199,12 +199,12 @@ class SudoersTs < Kaitai::Struct::Struct
       case version
       when 1
         @_raw_payload = @_io.read_bytes((len_record - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV1.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = RecordV1.new(_io__raw_payload, self, @_root)
       when 2
         @_raw_payload = @_io.read_bytes((len_record - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV2.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = RecordV2.new(_io__raw_payload, self, @_root)
       else
         @payload = @_io.read_bytes((len_record - 4))
       end

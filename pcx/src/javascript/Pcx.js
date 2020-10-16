@@ -56,7 +56,10 @@ var Pcx = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([10]);
+      this.magic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [10]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([10], this.magic, this._io, "/types/header/seq/0");
+      }
       this.version = this._io.readU1();
       this.encoding = this._io.readU1();
       this.bitsPerPixel = this._io.readU1();
@@ -67,7 +70,10 @@ var Pcx = (function() {
       this.hdpi = this._io.readU2le();
       this.vdpi = this._io.readU2le();
       this.palette16 = this._io.readBytes(48);
-      this.reserved = this._io.ensureFixedContents([0]);
+      this.reserved = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved, this._io, "/types/header/seq/11");
+      }
       this.numPlanes = this._io.readU1();
       this.bytesPerLine = this._io.readU2le();
       this.paletteInfo = this._io.readU2le();
@@ -95,7 +101,10 @@ var Pcx = (function() {
       this._read();
     }
     TPalette256.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([12]);
+      this.magic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [12]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([12], this.magic, this._io, "/types/t_palette_256/seq/0");
+      }
       this.colors = new Array(256);
       for (var i = 0; i < 256; i++) {
         this.colors[i] = new Rgb(this._io, this, this._root);

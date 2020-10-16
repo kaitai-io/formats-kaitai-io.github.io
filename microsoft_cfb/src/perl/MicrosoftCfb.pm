@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -107,11 +107,11 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (208, 207, 17, 224, 161, 177, 26, 225)));
-    $self->{clsid} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    $self->{signature} = $self->{_io}->read_bytes(8);
+    $self->{clsid} = $self->{_io}->read_bytes(16);
     $self->{version_minor} = $self->{_io}->read_u2le();
     $self->{version_major} = $self->{_io}->read_u2le();
-    $self->{byte_order} = $self->{_io}->ensure_fixed_contents(pack('C*', (254, 255)));
+    $self->{byte_order} = $self->{_io}->read_bytes(2);
     $self->{sector_shift} = $self->{_io}->read_u2le();
     $self->{mini_sector_shift} = $self->{_io}->read_u2le();
     $self->{reserved1} = $self->{_io}->read_bytes(6);
@@ -318,7 +318,7 @@ sub _read {
 sub mini_stream {
     my ($self) = @_;
     return $self->{mini_stream} if ($self->{mini_stream});
-    if ($self->object_type() == $OBJ_TYPE_ROOT_STORAGE) {
+    if ($self->object_type() == $MicrosoftCfb::DirEntry::OBJ_TYPE_ROOT_STORAGE) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
         $io->seek((($self->ofs() + 1) * $self->_root()->sector_size()));

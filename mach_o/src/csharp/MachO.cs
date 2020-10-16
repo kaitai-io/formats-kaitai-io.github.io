@@ -294,30 +294,6 @@ namespace Kaitai
                 _magic = ((CsMagic) m_io.ReadU4be());
                 _length = m_io.ReadU4be();
                 switch (Magic) {
-                case CsMagic.DetachedSignature: {
-                    __raw_body = m_io.ReadBytes((Length - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SuperBlob(io___raw_body, this, m_root);
-                    break;
-                }
-                case CsMagic.EmbeddedSignature: {
-                    __raw_body = m_io.ReadBytes((Length - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SuperBlob(io___raw_body, this, m_root);
-                    break;
-                }
-                case CsMagic.Entitlement: {
-                    __raw_body = m_io.ReadBytes((Length - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Entitlement(io___raw_body, this, m_root);
-                    break;
-                }
-                case CsMagic.BlobWrapper: {
-                    __raw_body = m_io.ReadBytes((Length - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new BlobWrapper(io___raw_body, this, m_root);
-                    break;
-                }
                 case CsMagic.Requirement: {
                     __raw_body = m_io.ReadBytes((Length - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -330,10 +306,34 @@ namespace Kaitai
                     _body = new CodeDirectory(io___raw_body, this, m_root);
                     break;
                 }
+                case CsMagic.Entitlement: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Entitlement(io___raw_body, this, m_root);
+                    break;
+                }
                 case CsMagic.Requirements: {
                     __raw_body = m_io.ReadBytes((Length - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new Requirements(io___raw_body, this, m_root);
+                    break;
+                }
+                case CsMagic.BlobWrapper: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new BlobWrapper(io___raw_body, this, m_root);
+                    break;
+                }
+                case CsMagic.EmbeddedSignature: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SuperBlob(io___raw_body, this, m_root);
+                    break;
+                }
+                case CsMagic.DetachedSignature: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SuperBlob(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -593,56 +593,56 @@ namespace Kaitai
                 {
                     _op = ((OpEnum) m_io.ReadU4be());
                     switch (Op) {
-                    case OpEnum.CertGeneric: {
-                        _data = new CertGenericExpr(m_io, this, m_root);
-                        break;
-                    }
-                    case OpEnum.AppleGenericAnchor: {
-                        _data = new AppleGenericAnchorExpr(m_io, this, m_root);
-                        break;
-                    }
-                    case OpEnum.InfoKeyField: {
-                        _data = new InfoKeyFieldExpr(m_io, this, m_root);
-                        break;
-                    }
-                    case OpEnum.AndOp: {
-                        _data = new AndExpr(m_io, this, m_root);
-                        break;
-                    }
-                    case OpEnum.AnchorHash: {
-                        _data = new AnchorHashExpr(m_io, this, m_root);
-                        break;
-                    }
-                    case OpEnum.InfoKeyValue: {
-                        _data = new Data(m_io, this, m_root);
+                    case OpEnum.Ident: {
+                        _data = new IdentExpr(m_io, this, m_root);
                         break;
                     }
                     case OpEnum.OrOp: {
                         _data = new OrExpr(m_io, this, m_root);
                         break;
                     }
-                    case OpEnum.TrustedCert: {
-                        _data = new CertSlotExpr(m_io, this, m_root);
+                    case OpEnum.InfoKeyValue: {
+                        _data = new Data(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.AnchorHash: {
+                        _data = new AnchorHashExpr(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.InfoKeyField: {
+                        _data = new InfoKeyFieldExpr(m_io, this, m_root);
                         break;
                     }
                     case OpEnum.NotOp: {
                         _data = new Expr(m_io, this, m_root);
                         break;
                     }
-                    case OpEnum.Ident: {
-                        _data = new IdentExpr(m_io, this, m_root);
+                    case OpEnum.EntitlementField: {
+                        _data = new EntitlementFieldExpr(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.TrustedCert: {
+                        _data = new CertSlotExpr(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.AndOp: {
+                        _data = new AndExpr(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.CertGeneric: {
+                        _data = new CertGenericExpr(m_io, this, m_root);
                         break;
                     }
                     case OpEnum.CertField: {
                         _data = new CertFieldExpr(m_io, this, m_root);
                         break;
                     }
-                    case OpEnum.EntitlementField: {
-                        _data = new EntitlementFieldExpr(m_io, this, m_root);
-                        break;
-                    }
                     case OpEnum.CdHash: {
                         _data = new Data(m_io, this, m_root);
+                        break;
+                    }
+                    case OpEnum.AppleGenericAnchor: {
+                        _data = new AppleGenericAnchorExpr(m_io, this, m_root);
                         break;
                     }
                     }
@@ -2373,15 +2373,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _stripRead = m_io.ReadBitsInt(1) != 0;
-                _isMask = m_io.ReadBitsInt(1) != 0;
-                _reserved0 = m_io.ReadBitsInt(1) != 0;
-                _copy = m_io.ReadBitsInt(1) != 0;
-                _noChange = m_io.ReadBitsInt(1) != 0;
-                _execute = m_io.ReadBitsInt(1) != 0;
-                _write = m_io.ReadBitsInt(1) != 0;
-                _read = m_io.ReadBitsInt(1) != 0;
-                _reserved1 = m_io.ReadBitsInt(24);
+                _stripRead = m_io.ReadBitsIntBe(1) != 0;
+                _isMask = m_io.ReadBitsIntBe(1) != 0;
+                _reserved0 = m_io.ReadBitsIntBe(1) != 0;
+                _copy = m_io.ReadBitsIntBe(1) != 0;
+                _noChange = m_io.ReadBitsIntBe(1) != 0;
+                _execute = m_io.ReadBitsIntBe(1) != 0;
+                _write = m_io.ReadBitsIntBe(1) != 0;
+                _read = m_io.ReadBitsIntBe(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(24);
             }
             private bool _stripRead;
             private bool _isMask;
@@ -3500,55 +3500,13 @@ namespace Kaitai
                 _type = ((MachO.LoadCommandType) m_io.ReadU4le());
                 _size = m_io.ReadU4le();
                 switch (Type) {
-                case MachO.LoadCommandType.SubLibrary: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SubCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.SegmentSplitInfo: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Rpath: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new RpathCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.SourceVersion: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SourceVersionCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.EncryptionInfo64: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.VersionMinTvos: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new VersionMinCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LoadDylinker: {
+                case MachO.LoadCommandType.IdDylinker: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylinkerCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.SubFramework: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SubCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LoadWeakDylib: {
+                case MachO.LoadCommandType.ReexportDylib: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylibCommand(io___raw_body, this, m_root);
@@ -3560,70 +3518,10 @@ namespace Kaitai
                     _body = new BuildVersionCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.VersionMinIphoneos: {
+                case MachO.LoadCommandType.SourceVersion: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new VersionMinCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LinkerOptimizationHint: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.DyldEnvironment: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DylinkerCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LoadUpwardDylib: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DylibCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.DylibCodeSignDrs: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.DyldInfo: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DyldInfoCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.ReexportDylib: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DylibCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Symtab: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SymtabCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Routines64: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new RoutinesCommand64(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.IdDylinker: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DylinkerCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Main: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new EntryPointCommand(io___raw_body, this, m_root);
+                    _body = new SourceVersionCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.FunctionStarts: {
@@ -3632,76 +3530,16 @@ namespace Kaitai
                     _body = new LinkeditDataCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.VersionMinMacosx: {
+                case MachO.LoadCommandType.Rpath: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    _body = new RpathCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.DataInCode: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.VersionMinWatchos: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new VersionMinCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.EncryptionInfo: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.SubUmbrella: {
+                case MachO.LoadCommandType.SubFramework: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new SubCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LinkerOption: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new LinkerOptionCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.TwolevelHints: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new TwolevelHintsCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Uuid: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new UuidCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.DyldInfoOnly: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DyldInfoCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.LazyLoadDylib: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DylibCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.SubClient: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SubCommand(io___raw_body, this, m_root);
-                    break;
-                }
-                case MachO.LoadCommandType.Segment: {
-                    __raw_body = m_io.ReadBytes((Size - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SegmentCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.Routines: {
@@ -3710,10 +3548,52 @@ namespace Kaitai
                     _body = new RoutinesCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.CodeSignature: {
+                case MachO.LoadCommandType.SubLibrary: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new CodeSignatureCommand(io___raw_body, this, m_root);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DyldInfoOnly: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DyldInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DyldEnvironment: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylinkerCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadDylinker: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylinkerCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SegmentSplitInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Main: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EntryPointCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.EncryptionInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.Dysymtab: {
@@ -3722,7 +3602,37 @@ namespace Kaitai
                     _body = new DysymtabCommand(io___raw_body, this, m_root);
                     break;
                 }
-                case MachO.LoadCommandType.LoadDylib: {
+                case MachO.LoadCommandType.TwolevelHints: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new TwolevelHintsCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.EncryptionInfo64: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LinkerOption: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkerOptionCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DyldInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DyldInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinTvos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadUpwardDylib: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylibCommand(io___raw_body, this, m_root);
@@ -3734,10 +3644,100 @@ namespace Kaitai
                     _body = new SegmentCommand64(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.Segment: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SegmentCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SubUmbrella: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinWatchos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Routines64: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new RoutinesCommand64(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.IdDylib: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SubClient: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DylibCodeSignDrs: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Symtab: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SymtabCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LinkerOptimizationHint: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DataInCode: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.CodeSignature: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new CodeSignatureCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinIphoneos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadWeakDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LazyLoadDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Uuid: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new UuidCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinMacosx: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -3876,8 +3876,8 @@ namespace Kaitai
                             m_io.Seek((M_Parent.StrOff + Un));
                             _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             m_io.Seek(_pos);
+                            f_name = true;
                         }
-                        f_name = true;
                         return _name;
                     }
                 }
@@ -3931,8 +3931,8 @@ namespace Kaitai
                             m_io.Seek((M_Parent.StrOff + Un));
                             _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             m_io.Seek(_pos);
+                            f_name = true;
                         }
-                        f_name = true;
                         return _name;
                     }
                 }

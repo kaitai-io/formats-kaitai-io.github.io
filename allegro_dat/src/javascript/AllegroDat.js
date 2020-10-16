@@ -40,7 +40,10 @@ var AllegroDat = (function() {
   }
   AllegroDat.prototype._read = function() {
     this.packMagic = this._io.readU4be();
-    this.datMagic = this._io.ensureFixedContents([65, 76, 76, 46]);
+    this.datMagic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.datMagic, [65, 76, 76, 46]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([65, 76, 76, 46], this.datMagic, this._io, "/seq/1");
+    }
     this.numObjects = this._io.readU4be();
     this.objects = new Array(this.numObjects);
     for (var i = 0; i < this.numObjects; i++) {

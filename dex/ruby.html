@@ -254,8 +254,8 @@ fields, annotations, etc.</p>
 
 <span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -305,7 +305,8 @@ fields, annotations, etc.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header_item/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@version_str</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
       <span class="vi">@checksum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
@@ -486,42 +487,42 @@ fields, annotations, etc.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@value_arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-      <span class="vi">@value_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VALUE_TYPE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+      <span class="vi">@value_arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@value_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VALUE_TYPE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
       <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
       <span class="k">case</span> <span class="n">value_type</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_double</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_int</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_annotation</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="no">EncodedAnnotation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_type</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_char</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_long</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8le</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_method_handle</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_array</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="no">EncodedArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_byte</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_method</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_array</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">EncodedArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_method_type</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_short</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_string</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_method</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_int</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_field</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="k">when</span> <span class="ss">:value_type_enum_long</span>
-        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_double</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8le</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_float</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_type</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">when</span> <span class="ss">:value_type_enum_enum</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_field</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_string</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:value_type_enum_char</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
       <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -864,7 +865,7 @@ fields, annotations, etc.</p>
 
     <span class="k">def</span> <span class="nf">_read</span>
       <span class="vi">@class_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@access_flags</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CLASS_ACCESS_FLAGS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@access_flags</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Dex</span><span class="o">::</span><span class="no">CLASS_ACCESS_FLAGS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@superclass_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@interfaces_off</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@source_file_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>

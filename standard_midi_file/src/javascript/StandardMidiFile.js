@@ -213,7 +213,10 @@ var StandardMidiFile = (function() {
       this._read();
     }
     Track.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([77, 84, 114, 107]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 84, 114, 107]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([77, 84, 114, 107], this.magic, this._io, "/types/track/seq/0");
+      }
       this.lenEvents = this._io.readU4be();
       this._raw_events = this._io.readBytes(this.lenEvents);
       var _io__raw_events = new KaitaiStream(this._raw_events);
@@ -299,7 +302,10 @@ var StandardMidiFile = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([77, 84, 104, 100]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 84, 104, 100]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([77, 84, 104, 100], this.magic, this._io, "/types/header/seq/0");
+      }
       this.lenHeader = this._io.readU4be();
       this.format = this._io.readU2be();
       this.numTracks = this._io.readU2be();

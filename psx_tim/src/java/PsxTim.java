@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class PsxTim extends KaitaiStruct {
     public static PsxTim fromFile(String fileName) throws IOException {
@@ -44,7 +45,10 @@ public class PsxTim extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 16, 0, 0, 0 });
+        this.magic = this._io.readBytes(4);
+        if (!(Arrays.equals(magic(), new byte[] { 16, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, magic(), _io(), "/seq/0");
+        }
         this.flags = this._io.readU4le();
         if (hasClut()) {
             this.clut = new Bitmap(this._io, this, _root);

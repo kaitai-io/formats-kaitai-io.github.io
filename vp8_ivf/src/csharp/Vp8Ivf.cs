@@ -30,10 +30,18 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic1 = m_io.EnsureFixedContents(new byte[] { 68, 75, 73, 70 });
+            _magic1 = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 68, 75, 73, 70 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, Magic1, M_Io, "/seq/0");
+            }
             _version = m_io.ReadU2le();
             _lenHeader = m_io.ReadU2le();
-            _codec = m_io.EnsureFixedContents(new byte[] { 86, 80, 56, 48 });
+            _codec = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Codec, new byte[] { 86, 80, 56, 48 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, Codec, M_Io, "/seq/3");
+            }
             _width = m_io.ReadU2le();
             _height = m_io.ReadU2le();
             _framerate = m_io.ReadU4le();

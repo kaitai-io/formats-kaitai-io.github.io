@@ -3,8 +3,8 @@
 require 'kaitai/struct/struct'
 require 'zlib'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -58,19 +58,20 @@ class Swf < Kaitai::Struct::Struct
 
   def _read
     @compression = Kaitai::Struct::Stream::resolve_enum(COMPRESSIONS, @_io.read_u1)
-    @signature = @_io.ensure_fixed_contents([87, 83].pack('C*'))
+    @signature = @_io.read_bytes(2)
+    raise Kaitai::Struct::ValidationNotEqualError.new([87, 83].pack('C*'), signature, _io, "/seq/1") if not signature == [87, 83].pack('C*')
     @version = @_io.read_u1
     @len_file = @_io.read_u4le
     if compression == :compressions_none
       @_raw_plain_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_plain_body)
-      @plain_body = SwfBody.new(io, self, @_root)
+      _io__raw_plain_body = Kaitai::Struct::Stream.new(@_raw_plain_body)
+      @plain_body = SwfBody.new(_io__raw_plain_body, self, @_root)
     end
     if compression == :compressions_zlib
       @_raw__raw_zlib_body = @_io.read_bytes_full
       @_raw_zlib_body = Zlib::Inflate.inflate(@_raw__raw_zlib_body)
-      io = Kaitai::Struct::Stream.new(@_raw_zlib_body)
-      @zlib_body = SwfBody.new(io, self, @_root)
+      _io__raw_zlib_body = Kaitai::Struct::Stream.new(@_raw_zlib_body)
+      @zlib_body = SwfBody.new(_io__raw_zlib_body, self, @_root)
     end
     self
   end
@@ -166,30 +167,30 @@ class Swf < Kaitai::Struct::Struct
     def _read
       @record_header = RecordHeader.new(@_io, self, @_root)
       case record_header.tag_type
-      when :tag_type_set_background_color
-        @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = Rgb.new(io, self, @_root)
-      when :tag_type_script_limits
-        @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = ScriptLimitsBody.new(io, self, @_root)
       when :tag_type_define_sound
         @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = DefineSoundBody.new(io, self, @_root)
-      when :tag_type_export_assets
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = DefineSoundBody.new(_io__raw_tag_body, self, @_root)
+      when :tag_type_set_background_color
         @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = SymbolClassBody.new(io, self, @_root)
-      when :tag_type_symbol_class
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = Rgb.new(_io__raw_tag_body, self, @_root)
+      when :tag_type_script_limits
         @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = SymbolClassBody.new(io, self, @_root)
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = ScriptLimitsBody.new(_io__raw_tag_body, self, @_root)
       when :tag_type_do_abc
         @_raw_tag_body = @_io.read_bytes(record_header.len)
-        io = Kaitai::Struct::Stream.new(@_raw_tag_body)
-        @tag_body = DoAbcBody.new(io, self, @_root)
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = DoAbcBody.new(_io__raw_tag_body, self, @_root)
+      when :tag_type_export_assets
+        @_raw_tag_body = @_io.read_bytes(record_header.len)
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = SymbolClassBody.new(_io__raw_tag_body, self, @_root)
+      when :tag_type_symbol_class
+        @_raw_tag_body = @_io.read_bytes(record_header.len)
+        _io__raw_tag_body = Kaitai::Struct::Stream.new(@_raw_tag_body)
+        @tag_body = SymbolClassBody.new(_io__raw_tag_body, self, @_root)
       else
         @tag_body = @_io.read_bytes(record_header.len)
       end
@@ -258,10 +259,10 @@ class Swf < Kaitai::Struct::Struct
 
     def _read
       @id = @_io.read_u2le
-      @format = @_io.read_bits_int(4)
-      @sampling_rate = Kaitai::Struct::Stream::resolve_enum(SAMPLING_RATES, @_io.read_bits_int(2))
-      @bits_per_sample = Kaitai::Struct::Stream::resolve_enum(BPS, @_io.read_bits_int(1))
-      @num_channels = Kaitai::Struct::Stream::resolve_enum(CHANNELS, @_io.read_bits_int(1))
+      @format = @_io.read_bits_int_be(4)
+      @sampling_rate = Kaitai::Struct::Stream::resolve_enum(SAMPLING_RATES, @_io.read_bits_int_be(2))
+      @bits_per_sample = Kaitai::Struct::Stream::resolve_enum(BPS, @_io.read_bits_int_be(1))
+      @num_channels = Kaitai::Struct::Stream::resolve_enum(CHANNELS, @_io.read_bits_int_be(1))
       @_io.align_to_byte
       @num_samples = @_io.read_u4le
       self
@@ -291,7 +292,7 @@ class Swf < Kaitai::Struct::Struct
     end
     def tag_type
       return @tag_type unless @tag_type.nil?
-      @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE, (tag_code_and_length >> 6))
+      @tag_type = Kaitai::Struct::Stream::resolve_enum(Swf::TAG_TYPE, (tag_code_and_length >> 6))
       @tag_type
     end
     def small_len
@@ -328,6 +329,6 @@ class Swf < Kaitai::Struct::Struct
   attr_reader :plain_body
   attr_reader :zlib_body
   attr_reader :_raw_plain_body
-  attr_reader :_raw__raw_zlib_body
   attr_reader :_raw_zlib_body
+  attr_reader :_raw__raw_zlib_body
 end

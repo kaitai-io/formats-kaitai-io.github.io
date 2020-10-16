@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Cramfs(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -16,7 +17,7 @@ class Cramfs(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.super_block = self._root.SuperBlockStruct(self._io, self, self._root)
+        self.super_block = Cramfs.SuperBlockStruct(self._io, self, self._root)
 
     class SuperBlockStruct(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -26,14 +27,18 @@ class Cramfs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x45\x3D\xCD\x28")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x45\x3D\xCD\x28":
+                raise kaitaistruct.ValidationNotEqualError(b"\x45\x3D\xCD\x28", self.magic, self._io, u"/types/super_block_struct/seq/0")
             self.size = self._io.read_u4le()
             self.flags = self._io.read_u4le()
             self.future = self._io.read_u4le()
-            self.signature = self._io.ensure_fixed_contents(b"\x43\x6F\x6D\x70\x72\x65\x73\x73\x65\x64\x20\x52\x4F\x4D\x46\x53")
-            self.fsid = self._root.Info(self._io, self, self._root)
+            self.signature = self._io.read_bytes(16)
+            if not self.signature == b"\x43\x6F\x6D\x70\x72\x65\x73\x73\x65\x64\x20\x52\x4F\x4D\x46\x53":
+                raise kaitaistruct.ValidationNotEqualError(b"\x43\x6F\x6D\x70\x72\x65\x73\x73\x65\x64\x20\x52\x4F\x4D\x46\x53", self.signature, self._io, u"/types/super_block_struct/seq/4")
+            self.fsid = Cramfs.Info(self._io, self, self._root)
             self.name = (self._io.read_bytes(16)).decode(u"ASCII")
-            self.root = self._root.Inode(self._io, self, self._root)
+            self.root = Cramfs.Inode(self._io, self, self._root)
 
         @property
         def flag_fsid_v2(self):
@@ -130,7 +135,7 @@ class Cramfs(KaitaiStruct):
             io = self._root._io
             _pos = io.pos()
             io.seek(self.offset)
-            self._m_as_reg_file = self._root.ChunkedDataInode(io, self, self._root)
+            self._m_as_reg_file = Cramfs.ChunkedDataInode(io, self, self._root)
             io.seek(_pos)
             return self._m_as_reg_file if hasattr(self, '_m_as_reg_file') else None
 
@@ -150,7 +155,7 @@ class Cramfs(KaitaiStruct):
             io = self._root._io
             _pos = io.pos()
             io.seek(self.offset)
-            self._m_as_symlink = self._root.ChunkedDataInode(io, self, self._root)
+            self._m_as_symlink = Cramfs.ChunkedDataInode(io, self, self._root)
             io.seek(_pos)
             return self._m_as_symlink if hasattr(self, '_m_as_symlink') else None
 
@@ -203,8 +208,8 @@ class Cramfs(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.offset)
             self._raw__m_as_dir = io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw__m_as_dir))
-            self._m_as_dir = self._root.DirInode(io, self, self._root)
+            _io__raw__m_as_dir = KaitaiStream(BytesIO(self._raw__m_as_dir))
+            self._m_as_dir = Cramfs.DirInode(_io__raw__m_as_dir, self, self._root)
             io.seek(_pos)
             return self._m_as_dir if hasattr(self, '_m_as_dir') else None
 
@@ -213,7 +218,7 @@ class Cramfs(KaitaiStruct):
             if hasattr(self, '_m_type'):
                 return self._m_type if hasattr(self, '_m_type') else None
 
-            self._m_type = self._root.Inode.FileType(((self.mode >> 12) & 15))
+            self._m_type = KaitaiStream.resolve_enum(Cramfs.Inode.FileType, ((self.mode >> 12) & 15))
             return self._m_type if hasattr(self, '_m_type') else None
 
         @property
@@ -237,7 +242,7 @@ class Cramfs(KaitaiStruct):
                 self.children = []
                 i = 0
                 while not self._io.is_eof():
-                    self.children.append(self._root.Inode(self._io, self, self._root))
+                    self.children.append(Cramfs.Inode(self._io, self, self._root))
                     i += 1
 
 

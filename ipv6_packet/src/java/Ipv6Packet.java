@@ -25,9 +25,9 @@ public class Ipv6Packet extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.version = this._io.readBitsInt(4);
-        this.trafficClass = this._io.readBitsInt(8);
-        this.flowLabel = this._io.readBitsInt(20);
+        this.version = this._io.readBitsIntBe(4);
+        this.trafficClass = this._io.readBitsIntBe(8);
+        this.flowLabel = this._io.readBitsIntBe(20);
         this._io.alignToByte();
         this.payloadLength = this._io.readU2be();
         this.nextHeaderType = this._io.readU1();

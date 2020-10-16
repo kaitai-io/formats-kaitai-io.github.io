@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Ipv4Packet;
 use Ipv6Packet;
 
@@ -49,19 +49,19 @@ sub _read {
     $self->{dst_mac} = $self->{_io}->read_bytes(6);
     $self->{src_mac} = $self->{_io}->read_bytes(6);
     $self->{ether_type_1} = $self->{_io}->read_u2be();
-    if ($self->ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
+    if ($self->ether_type_1() == $EthernetFrame::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
         $self->{tci} = EthernetFrame::TagControlInfo->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
+    if ($self->ether_type_1() == $EthernetFrame::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
         $self->{ether_type_2} = $self->{_io}->read_u2be();
     }
     my $_on = $self->ether_type();
-    if ($_on == $ETHER_TYPE_ENUM_IPV4) {
+    if ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV4) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Ipv4Packet->new($io__raw_body);
     }
-    elsif ($_on == $ETHER_TYPE_ENUM_IPV6) {
+    elsif ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV6) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Ipv6Packet->new($io__raw_body);
@@ -74,7 +74,7 @@ sub _read {
 sub ether_type {
     my ($self) = @_;
     return $self->{ether_type} if ($self->{ether_type});
-    $self->{ether_type} = ($self->ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID ? $self->ether_type_2() : $self->ether_type_1());
+    $self->{ether_type} = ($self->ether_type_1() == $EthernetFrame::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID ? $self->ether_type_2() : $self->ether_type_1());
     return $self->{ether_type};
 }
 
@@ -143,9 +143,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{priority} = $self->{_io}->read_bits_int(3);
-    $self->{drop_eligible} = $self->{_io}->read_bits_int(1);
-    $self->{vlan_id} = $self->{_io}->read_bits_int(12);
+    $self->{priority} = $self->{_io}->read_bits_int_be(3);
+    $self->{drop_eligible} = $self->{_io}->read_bits_int_be(1);
+    $self->{vlan_id} = $self->{_io}->read_bits_int_be(12);
 }
 
 sub priority {

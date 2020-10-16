@@ -153,7 +153,10 @@ var BtrfsStream = (function() {
       this._read();
     }
     SendStreamHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0]);
+      this.magic = this._io.readBytes(13);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0], this.magic, this._io, "/types/send_stream_header/seq/0");
+      }
       this.version = this._io.readU4le();
     }
 
@@ -189,7 +192,18 @@ var BtrfsStream = (function() {
         this.type = this._io.readU2le();
         this.length = this._io.readU2le();
         switch (this.type) {
+        case BtrfsStream.Attribute.CTRANSID:
+          this.value = this._io.readU8le();
+          break;
         case BtrfsStream.Attribute.SIZE:
+          this.value = this._io.readU8le();
+          break;
+        case BtrfsStream.Attribute.CLONE_UUID:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Uuid(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.FILE_OFFSET:
           this.value = this._io.readU8le();
           break;
         case BtrfsStream.Attribute.OTIME:
@@ -197,51 +211,42 @@ var BtrfsStream = (function() {
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Timespec(_io__raw_value, this, this._root);
           break;
-        case BtrfsStream.Attribute.MODE:
+        case BtrfsStream.Attribute.UID:
           this.value = this._io.readU8le();
-          break;
-        case BtrfsStream.Attribute.UUID:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Uuid(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.CLONE_UUID:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Uuid(_io__raw_value, this, this._root);
           break;
         case BtrfsStream.Attribute.ATIME:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Timespec(_io__raw_value, this, this._root);
           break;
-        case BtrfsStream.Attribute.GID:
+        case BtrfsStream.Attribute.CTIME:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Timespec(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.UUID:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Uuid(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.CLONE_LEN:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.UID:
-          this.value = this._io.readU8le();
-          break;
-        case BtrfsStream.Attribute.CLONE_CTRANSID:
-          this.value = this._io.readU8le();
-          break;
-        case BtrfsStream.Attribute.PATH_TO:
+        case BtrfsStream.Attribute.XATTR_NAME:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new String(_io__raw_value, this, this._root);
           break;
-        case BtrfsStream.Attribute.CTRANSID:
+        case BtrfsStream.Attribute.CLONE_CTRANSID:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.CLONE_LEN:
+        case BtrfsStream.Attribute.MODE:
           this.value = this._io.readU8le();
           break;
         case BtrfsStream.Attribute.MTIME:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Timespec(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.FILE_OFFSET:
-          this.value = this._io.readU8le();
           break;
         case BtrfsStream.Attribute.PATH_LINK:
           this._raw_value = this._io.readBytes(this.length);
@@ -251,17 +256,7 @@ var BtrfsStream = (function() {
         case BtrfsStream.Attribute.RDEV:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.CTIME:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Timespec(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.CLONE_PATH:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new String(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.XATTR_NAME:
+        case BtrfsStream.Attribute.PATH_TO:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new String(_io__raw_value, this, this._root);
@@ -273,6 +268,14 @@ var BtrfsStream = (function() {
           break;
         case BtrfsStream.Attribute.CLONE_OFFSET:
           this.value = this._io.readU8le();
+          break;
+        case BtrfsStream.Attribute.GID:
+          this.value = this._io.readU8le();
+          break;
+        case BtrfsStream.Attribute.CLONE_PATH:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new String(_io__raw_value, this, this._root);
           break;
         default:
           this.value = this._io.readBytes(this.length);

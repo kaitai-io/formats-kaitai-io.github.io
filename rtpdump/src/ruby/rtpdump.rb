@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -34,8 +34,10 @@ class Rtpdump < Kaitai::Struct::Struct
     end
 
     def _read
-      @shebang = @_io.ensure_fixed_contents([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*'))
-      @space = @_io.ensure_fixed_contents([32].pack('C*'))
+      @shebang = @_io.read_bytes(12)
+      raise Kaitai::Struct::ValidationNotEqualError.new([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*'), shebang, _io, "/types/header_t/seq/0") if not shebang == [35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*')
+      @space = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([32].pack('C*'), space, _io, "/types/header_t/seq/1") if not space == [32].pack('C*')
       @ip = (@_io.read_bytes_term(47, false, true, true)).force_encoding("ascii")
       @port = (@_io.read_bytes_term(10, false, true, true)).force_encoding("ascii")
       @start_sec = @_io.read_u4be
@@ -81,8 +83,8 @@ class Rtpdump < Kaitai::Struct::Struct
       @len_body = @_io.read_u2be
       @packet_usec = @_io.read_u4be
       @_raw_body = @_io.read_bytes(len_body)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = RtpPacket.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = RtpPacket.new(_io__raw_body)
       self
     end
 

@@ -47,7 +47,7 @@ public class Stl extends KaitaiStruct {
     private void _read() {
         this.header = this._io.readBytes(80);
         this.numTriangles = this._io.readU4le();
-        triangles = new ArrayList<Triangle>((int) (numTriangles()));
+        triangles = new ArrayList<Triangle>(((Number) (numTriangles())).intValue());
         for (int i = 0; i < numTriangles(); i++) {
             this.triangles.add(new Triangle(this._io, this, _root));
         }
@@ -79,7 +79,7 @@ public class Stl extends KaitaiStruct {
         }
         private void _read() {
             this.normal = new Vec3d(this._io, this, _root);
-            vertices = new ArrayList<Vec3d>((int) (3));
+            vertices = new ArrayList<Vec3d>(((Number) (3)).intValue());
             for (int i = 0; i < 3; i++) {
                 this.vertices.add(new Vec3d(this._io, this, _root));
             }

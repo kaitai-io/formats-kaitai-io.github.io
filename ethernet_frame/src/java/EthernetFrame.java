@@ -65,23 +65,30 @@ public class EthernetFrame extends KaitaiStruct {
         if (etherType1() == EtherTypeEnum.IEEE_802_1Q_TPID) {
             this.etherType2 = EtherTypeEnum.byId(this._io.readU2be());
         }
-        switch (etherType()) {
-        case IPV4: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new Ipv4Packet(_io__raw_body);
-            break;
-        }
-        case IPV6: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new Ipv6Packet(_io__raw_body);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytesFull();
-            break;
-        }
+        {
+            EtherTypeEnum on = etherType();
+            if (on != null) {
+                switch (etherType()) {
+                case IPV4: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new Ipv4Packet(_io__raw_body);
+                    break;
+                }
+                case IPV6: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new Ipv6Packet(_io__raw_body);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytesFull();
+                    break;
+                }
+                }
+            } else {
+                this.body = this._io.readBytesFull();
+            }
         }
     }
 
@@ -109,9 +116,9 @@ public class EthernetFrame extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.priority = this._io.readBitsInt(3);
-            this.dropEligible = this._io.readBitsInt(1) != 0;
-            this.vlanId = this._io.readBitsInt(12);
+            this.priority = this._io.readBitsIntBe(3);
+            this.dropEligible = this._io.readBitsIntBe(1) != 0;
+            this.vlanId = this._io.readBitsIntBe(12);
         }
         private long priority;
         private boolean dropEligible;

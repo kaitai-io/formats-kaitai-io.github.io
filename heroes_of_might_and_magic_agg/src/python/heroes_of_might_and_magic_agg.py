@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class HeroesOfMightAndMagicAgg(KaitaiStruct):
     """
@@ -22,7 +23,7 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
         self.num_files = self._io.read_u2le()
         self.entries = [None] * (self.num_files)
         for i in range(self.num_files):
-            self.entries[i] = self._root.Entry(self._io, self, self._root)
+            self.entries[i] = HeroesOfMightAndMagicAgg.Entry(self._io, self, self._root)
 
 
     class Entry(KaitaiStruct):
@@ -72,8 +73,8 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
         self._m_filenames = [None] * (self.num_files)
         for i in range(self.num_files):
             self._raw__m_filenames[i] = self._io.read_bytes(15)
-            io = KaitaiStream(BytesIO(self._raw__m_filenames[i]))
-            self._m_filenames[i] = self._root.Filename(io, self, self._root)
+            _io__raw__m_filenames = KaitaiStream(BytesIO(self._raw__m_filenames[i]))
+            self._m_filenames[i] = HeroesOfMightAndMagicAgg.Filename(_io__raw__m_filenames, self, self._root)
 
         self._io.seek(_pos)
         return self._m_filenames if hasattr(self, '_m_filenames') else None

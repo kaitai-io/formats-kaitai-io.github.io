@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 
 /**
@@ -122,27 +123,32 @@ public class Dcmp0 extends KaitaiStruct {
         }
         private void _read() {
             this.tag = this._io.readU1();
-            switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))) {
-            case END: {
-                this.body = new EndBody(this._io, this, _root);
-                break;
-            }
-            case LITERAL: {
-                this.body = new LiteralBody(this._io, this, _root, tag());
-                break;
-            }
-            case BACKREFERENCE: {
-                this.body = new BackreferenceBody(this._io, this, _root, tag());
-                break;
-            }
-            case TABLE_LOOKUP: {
-                this.body = new TableLookupBody(this._io, this, _root, tag());
-                break;
-            }
-            case EXTENDED: {
-                this.body = new ExtendedBody(this._io, this, _root);
-                break;
-            }
+            {
+                TagKind on = ( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))));
+                if (on != null) {
+                    switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))) {
+                    case EXTENDED: {
+                        this.body = new ExtendedBody(this._io, this, _root);
+                        break;
+                    }
+                    case LITERAL: {
+                        this.body = new LiteralBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    case END: {
+                        this.body = new EndBody(this._io, this, _root);
+                        break;
+                    }
+                    case TABLE_LOOKUP: {
+                        this.body = new TableLookupBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    case BACKREFERENCE: {
+                        this.body = new BackreferenceBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    }
+                }
             }
         }
 
@@ -610,7 +616,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.segmentNumberRaw = new DcmpVariableLengthInteger(this._io);
                     this.numAddressesRaw = new DcmpVariableLengthInteger(this._io);
-                    addressesRaw = new ArrayList<DcmpVariableLengthInteger>((int) (numAddresses()));
+                    addressesRaw = new ArrayList<DcmpVariableLengthInteger>(((Number) (numAddresses())).intValue());
                     for (int i = 0; i < numAddresses(); i++) {
                         this.addressesRaw.add(new DcmpVariableLengthInteger(this._io));
                     }
@@ -822,7 +828,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
                     this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    deltas = new ArrayList<Byte>((int) (numDeltas()));
+                    deltas = new ArrayList<Byte>(((Number) (numDeltas())).intValue());
                     for (int i = 0; i < numDeltas(); i++) {
                         this.deltas.add(this._io.readS1());
                     }
@@ -915,7 +921,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
                     this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    deltasRaw = new ArrayList<DcmpVariableLengthInteger>((int) (numDeltas()));
+                    deltasRaw = new ArrayList<DcmpVariableLengthInteger>(((Number) (numDeltas())).intValue());
                     for (int i = 0; i < numDeltas(); i++) {
                         this.deltasRaw.add(new DcmpVariableLengthInteger(this._io));
                     }

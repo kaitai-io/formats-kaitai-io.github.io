@@ -127,8 +127,8 @@ var RtcpPayload = (function() {
     }
     PsfbAfbRembPacket.prototype._read = function() {
       this.numSsrc = this._io.readU1();
-      this.brExp = this._io.readBitsInt(6);
-      this.brMantissa = this._io.readBitsInt(18);
+      this.brExp = this._io.readBitsIntBe(6);
+      this.brMantissa = this._io.readBitsIntBe(18);
       this._io.alignToByte();
       this.ssrcList = new Array(this.numSsrc);
       for (var i = 0; i < this.numSsrc; i++) {
@@ -207,17 +207,22 @@ var RtcpPayload = (function() {
       this._read();
     }
     RtcpPacket.prototype._read = function() {
-      this.version = this._io.readBitsInt(2);
-      this.padding = this._io.readBitsInt(1) != 0;
-      this.subtype = this._io.readBitsInt(5);
+      this.version = this._io.readBitsIntBe(2);
+      this.padding = this._io.readBitsIntBe(1) != 0;
+      this.subtype = this._io.readBitsIntBe(5);
       this._io.alignToByte();
       this.payloadType = this._io.readU1();
       this.length = this._io.readU2be();
       switch (this.payloadType) {
-      case RtcpPayload.PayloadType.SDES:
+      case RtcpPayload.PayloadType.SR:
         this._raw_body = this._io.readBytes((4 * this.length));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SdesPacket(_io__raw_body, this, this._root);
+        this.body = new SrPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.PSFB:
+        this._raw_body = this._io.readBytes((4 * this.length));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new PsfbPacket(_io__raw_body, this, this._root);
         break;
       case RtcpPayload.PayloadType.RR:
         this._raw_body = this._io.readBytes((4 * this.length));
@@ -229,15 +234,10 @@ var RtcpPayload = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new RtpfbPacket(_io__raw_body, this, this._root);
         break;
-      case RtcpPayload.PayloadType.PSFB:
+      case RtcpPayload.PayloadType.SDES:
         this._raw_body = this._io.readBytes((4 * this.length));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PsfbPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.SR:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SrPacket(_io__raw_body, this, this._root);
+        this.body = new SdesPacket(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((4 * this.length));
@@ -479,18 +479,18 @@ var RtcpPayload = (function() {
       this._read();
     }
     PacketStatusChunk.prototype._read = function() {
-      this.t = this._io.readBitsInt(1) != 0;
+      this.t = this._io.readBitsIntBe(1) != 0;
       if ((this.t | 0) == 0) {
-        this.s2 = this._io.readBitsInt(2);
+        this.s2 = this._io.readBitsIntBe(2);
       }
       if ((this.t | 0) == 1) {
-        this.s1 = this._io.readBitsInt(1) != 0;
+        this.s1 = this._io.readBitsIntBe(1) != 0;
       }
       if ((this.t | 0) == 0) {
-        this.rle = this._io.readBitsInt(13);
+        this.rle = this._io.readBitsIntBe(13);
       }
       if ((this.t | 0) == 1) {
-        this.symbolList = this._io.readBitsInt(14);
+        this.symbolList = this._io.readBitsIntBe(14);
       }
     }
     Object.defineProperty(PacketStatusChunk.prototype, 's', {

@@ -94,17 +94,41 @@ var Fallout2Dat = (function() {
       this.sizePacked = this._io.readU4le();
       this.offset = this._io.readU4le();
     }
-    Object.defineProperty(File.prototype, 'contents', {
+    Object.defineProperty(File.prototype, 'contentsRaw', {
       get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
+        if (this._m_contentsRaw !== undefined)
+          return this._m_contentsRaw;
+        if (this.flags == Fallout2Dat.Compression.NONE) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.offset);
+          this._m_contentsRaw = io.readBytes(this.sizeUnpacked);
+          io.seek(_pos);
+        }
+        return this._m_contentsRaw;
+      }
+    });
+    Object.defineProperty(File.prototype, 'contentsZlib', {
+      get: function() {
+        if (this._m_contentsZlib !== undefined)
+          return this._m_contentsZlib;
         if (this.flags == Fallout2Dat.Compression.ZLIB) {
           var io = this._root._io;
           var _pos = io.pos;
           io.seek(this.offset);
-          this._raw__m_contents = io.readBytes(this.sizePacked);
-          this._m_contents = KaitaiStream.processZlib(this._raw__m_contents);
+          this._raw__m_contentsZlib = io.readBytes(this.sizePacked);
+          this._m_contentsZlib = KaitaiStream.processZlib(this._raw__m_contentsZlib);
           io.seek(_pos);
+        }
+        return this._m_contentsZlib;
+      }
+    });
+    Object.defineProperty(File.prototype, 'contents', {
+      get: function() {
+        if (this._m_contents !== undefined)
+          return this._m_contents;
+        if ( ((this.flags == Fallout2Dat.Compression.ZLIB) || (this.flags == Fallout2Dat.Compression.NONE)) ) {
+          this._m_contents = (this.flags == Fallout2Dat.Compression.ZLIB ? this.contentsZlib : this.contentsRaw);
         }
         return this._m_contents;
       }

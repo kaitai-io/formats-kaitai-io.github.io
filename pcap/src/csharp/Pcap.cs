@@ -166,7 +166,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magicNumber = m_io.EnsureFixedContents(new byte[] { 212, 195, 178, 161 });
+                _magicNumber = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(MagicNumber, new byte[] { 212, 195, 178, 161 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 212, 195, 178, 161 }, MagicNumber, M_Io, "/types/header/seq/0");
+                }
                 _versionMajor = m_io.ReadU2le();
                 _versionMinor = m_io.ReadU2le();
                 _thiszone = m_io.ReadS4le();

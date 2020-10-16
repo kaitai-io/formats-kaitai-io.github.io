@@ -29,7 +29,10 @@ var Bson = (function() {
     this._raw_fields = this._io.readBytes((this.len - 5));
     var _io__raw_fields = new KaitaiStream(this._raw_fields);
     this.fields = new ElementsList(_io__raw_fields, this, this._root);
-    this.terminator = this._io.ensureFixedContents([0]);
+    this.terminator = this._io.readBytes(1);
+    if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/seq/2");
+    }
   }
 
   /**
@@ -170,7 +173,10 @@ var Bson = (function() {
     String.prototype._read = function() {
       this.len = this._io.readS4le();
       this.str = KaitaiStream.bytesToStr(this._io.readBytes((this.len - 1)), "UTF-8");
-      this.terminator = this._io.ensureFixedContents([0]);
+      this.terminator = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/types/string/seq/2");
+      }
     }
 
     return String;
@@ -236,32 +242,47 @@ var Bson = (function() {
       this.typeByte = this._io.readU1();
       this.name = new Cstring(this._io, this, this._root);
       switch (this.typeByte) {
-      case Bson.Element.BsonType.NUMBER_DOUBLE:
-        this.content = this._io.readF8le();
-        break;
       case Bson.Element.BsonType.CODE_WITH_SCOPE:
         this.content = new CodeWithScope(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.OBJECT_ID:
-        this.content = new ObjectId(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.STRING:
-        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.REG_EX:
         this.content = new RegEx(this._io, this, this._root);
         break;
-      case Bson.Element.BsonType.NUMBER_DECIMAL:
-        this.content = new F16(this._io, this, this._root);
+      case Bson.Element.BsonType.NUMBER_DOUBLE:
+        this.content = this._io.readF8le();
+        break;
+      case Bson.Element.BsonType.SYMBOL:
+        this.content = new String(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.TIMESTAMP:
+        this.content = new Timestamp(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.NUMBER_INT:
+        this.content = this._io.readS4le();
+        break;
+      case Bson.Element.BsonType.DOCUMENT:
+        this.content = new Bson(this._io, this, null);
+        break;
+      case Bson.Element.BsonType.OBJECT_ID:
+        this.content = new ObjectId(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.JAVASCRIPT:
+        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.UTC_DATETIME:
         this.content = this._io.readS8le();
         break;
+      case Bson.Element.BsonType.BOOLEAN:
+        this.content = this._io.readU1();
+        break;
       case Bson.Element.BsonType.NUMBER_LONG:
         this.content = this._io.readS8le();
         break;
-      case Bson.Element.BsonType.TIMESTAMP:
-        this.content = new Timestamp(this._io, this, this._root);
+      case Bson.Element.BsonType.BIN_DATA:
+        this.content = new BinData(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.STRING:
+        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.DB_POINTER:
         this.content = new DbPointer(this._io, this, this._root);
@@ -269,23 +290,8 @@ var Bson = (function() {
       case Bson.Element.BsonType.ARRAY:
         this.content = new Bson(this._io, this, null);
         break;
-      case Bson.Element.BsonType.JAVASCRIPT:
-        this.content = new String(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.BOOLEAN:
-        this.content = this._io.readU1();
-        break;
-      case Bson.Element.BsonType.DOCUMENT:
-        this.content = new Bson(this._io, this, null);
-        break;
-      case Bson.Element.BsonType.SYMBOL:
-        this.content = new String(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.NUMBER_INT:
-        this.content = this._io.readS4le();
-        break;
-      case Bson.Element.BsonType.BIN_DATA:
-        this.content = new BinData(this._io, this, this._root);
+      case Bson.Element.BsonType.NUMBER_DECIMAL:
+        this.content = new F16(this._io, this, this._root);
         break;
       }
     }
@@ -372,9 +378,9 @@ var Bson = (function() {
       this._read();
     }
     F16.prototype._read = function() {
-      this.str = this._io.readBitsInt(1) != 0;
-      this.exponent = this._io.readBitsInt(15);
-      this.significandHi = this._io.readBitsInt(49);
+      this.str = this._io.readBitsIntBe(1) != 0;
+      this.exponent = this._io.readBitsIntBe(15);
+      this.significandHi = this._io.readBitsIntBe(49);
       this._io.alignToByte();
       this.significandLo = this._io.readU8le();
     }

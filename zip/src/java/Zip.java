@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 
 /**
@@ -202,29 +203,36 @@ public class Zip extends KaitaiStruct {
         private void _read() {
             this.code = Zip.ExtraCodes.byId(this._io.readU2le());
             this.lenBody = this._io.readU2le();
-            switch (code()) {
-            case NTFS: {
-                this._raw_body = this._io.readBytes(lenBody());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Ntfs(_io__raw_body, this, _root);
-                break;
-            }
-            case EXTENDED_TIMESTAMP: {
-                this._raw_body = this._io.readBytes(lenBody());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
-                break;
-            }
-            case INFOZIP_UNIX_VAR_SIZE: {
-                this._raw_body = this._io.readBytes(lenBody());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(lenBody());
-                break;
-            }
+            {
+                ExtraCodes on = code();
+                if (on != null) {
+                    switch (code()) {
+                    case NTFS: {
+                        this._raw_body = this._io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Ntfs(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case EXTENDED_TIMESTAMP: {
+                        this._raw_body = this._io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case INFOZIP_UNIX_VAR_SIZE: {
+                        this._raw_body = this._io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(lenBody());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(lenBody());
+                }
             }
         }
 
@@ -598,7 +606,10 @@ public class Zip extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 80, 75 });
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(magic(), new byte[] { 80, 75 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 75 }, magic(), _io(), "/types/pk_section/seq/0");
+            }
             this.sectionType = this._io.readU2le();
             switch (sectionType()) {
             case 513: {

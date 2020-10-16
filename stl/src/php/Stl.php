@@ -20,27 +20,29 @@
  * describes binary version.
  */
 
-class Stl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_header = $this->_io->readBytes(80);
-        $this->_m_numTriangles = $this->_io->readU4le();
-        $this->_m_triangles = [];
-        $n = $this->numTriangles();
-        for ($i = 0; $i < $n; $i++) {
-            $this->_m_triangles[] = new \Stl\Triangle($this->_io, $this, $this->_root);
+namespace {
+    class Stl extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Stl $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
         }
+
+        private function _read() {
+            $this->_m_header = $this->_io->readBytes(80);
+            $this->_m_numTriangles = $this->_io->readU4le();
+            $this->_m_triangles = [];
+            $n = $this->numTriangles();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_triangles[] = new \Stl\Triangle($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_header;
+        protected $_m_numTriangles;
+        protected $_m_triangles;
+        public function header() { return $this->_m_header; }
+        public function numTriangles() { return $this->_m_numTriangles; }
+        public function triangles() { return $this->_m_triangles; }
     }
-    protected $_m_header;
-    protected $_m_numTriangles;
-    protected $_m_triangles;
-    public function header() { return $this->_m_header; }
-    public function numTriangles() { return $this->_m_numTriangles; }
-    public function triangles() { return $this->_m_triangles; }
 }
 
 /**
@@ -49,59 +51,59 @@ class Stl extends \Kaitai\Struct\Struct {
  * "inside" and "outside" of the model.
  */
 
-namespace \Stl;
-
-class Triangle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Stl $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_normal = new \Stl\Vec3d($this->_io, $this, $this->_root);
-        $this->_m_vertices = [];
-        $n = 3;
-        for ($i = 0; $i < $n; $i++) {
-            $this->_m_vertices[] = new \Stl\Vec3d($this->_io, $this, $this->_root);
+namespace Stl {
+    class Triangle extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Stl $_parent = null, \Stl $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
         }
-        $this->_m_abr = $this->_io->readU2le();
-    }
-    protected $_m_normal;
-    protected $_m_vertices;
-    protected $_m_abr;
-    public function normal() { return $this->_m_normal; }
-    public function vertices() { return $this->_m_vertices; }
 
-    /**
-     * In theory (per standard), it's "attribute byte count" with
-     * no other details given on what "attribute" is and what
-     * should be stored in this field.
-     * 
-     * In practice, software dealing with STL either expected to
-     * see 0 here, or uses this 16-bit field per se to store
-     * additional attributes (such as RGB color of a vertex or
-     * color index).
-     */
-    public function abr() { return $this->_m_abr; }
+        private function _read() {
+            $this->_m_normal = new \Stl\Vec3d($this->_io, $this, $this->_root);
+            $this->_m_vertices = [];
+            $n = 3;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_vertices[] = new \Stl\Vec3d($this->_io, $this, $this->_root);
+            }
+            $this->_m_abr = $this->_io->readU2le();
+        }
+        protected $_m_normal;
+        protected $_m_vertices;
+        protected $_m_abr;
+        public function normal() { return $this->_m_normal; }
+        public function vertices() { return $this->_m_vertices; }
+
+        /**
+         * In theory (per standard), it's "attribute byte count" with
+         * no other details given on what "attribute" is and what
+         * should be stored in this field.
+         * 
+         * In practice, software dealing with STL either expected to
+         * see 0 here, or uses this 16-bit field per se to store
+         * additional attributes (such as RGB color of a vertex or
+         * color index).
+         */
+        public function abr() { return $this->_m_abr; }
+    }
 }
 
-namespace \Stl;
+namespace Stl {
+    class Vec3d extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Stl\Triangle $_parent = null, \Stl $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-class Vec3d extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Stl\Triangle $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
+        private function _read() {
+            $this->_m_x = $this->_io->readF4le();
+            $this->_m_y = $this->_io->readF4le();
+            $this->_m_z = $this->_io->readF4le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+        protected $_m_z;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+        public function z() { return $this->_m_z; }
     }
-
-    private function _read() {
-        $this->_m_x = $this->_io->readF4le();
-        $this->_m_y = $this->_io->readF4le();
-        $this->_m_z = $this->_io->readF4le();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    protected $_m_z;
-    public function x() { return $this->_m_x; }
-    public function y() { return $this->_m_y; }
-    public function z() { return $this->_m_z; }
 }

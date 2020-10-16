@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './EthernetFrame', './WindowsSystemtime'], factory);
+    define(['kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./WindowsSystemtime'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
   } else {
-    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.EthernetFrame, root.WindowsSystemtime);
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
   }
-}(this, function (KaitaiStream, EthernetFrame, WindowsSystemtime) {
+}(this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured
@@ -242,7 +242,10 @@ var MicrosoftNetworkMonitorV2 = (function() {
     this._read();
   }
   MicrosoftNetworkMonitorV2.prototype._read = function() {
-    this.signature = this._io.ensureFixedContents([71, 77, 66, 85]);
+    this.signature = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.signature, [71, 77, 66, 85]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([71, 77, 66, 85], this.signature, this._io, "/seq/0");
+    }
     this.versionMinor = this._io.readU1();
     this.versionMajor = this._io.readU1();
     this.macType = this._io.readU2le();

@@ -142,7 +142,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _signature = m_io.EnsureFixedContents(new byte[] { 71, 77, 66, 85 });
+            _signature = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 71, 77, 66, 85 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, Signature, M_Io, "/seq/0");
+            }
             _versionMinor = m_io.ReadU1();
             _versionMajor = m_io.ReadU1();
             _macType = ((Linktype) m_io.ReadU2le());

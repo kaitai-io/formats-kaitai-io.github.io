@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -213,23 +214,28 @@ public class ZxSpectrumTap extends KaitaiStruct {
             this.headerType = ZxSpectrumTap.HeaderTypeEnum.byId(this._io.readU1());
             this.filename = KaitaiStream.bytesStripRight(this._io.readBytes(10), (byte) 32);
             this.lenData = this._io.readU2le();
-            switch (headerType()) {
-            case PROGRAM: {
-                this.params = new ProgramParams(this._io, this, _root);
-                break;
-            }
-            case NUM_ARRAY: {
-                this.params = new ArrayParams(this._io, this, _root);
-                break;
-            }
-            case CHAR_ARRAY: {
-                this.params = new ArrayParams(this._io, this, _root);
-                break;
-            }
-            case BYTES: {
-                this.params = new BytesParams(this._io, this, _root);
-                break;
-            }
+            {
+                HeaderTypeEnum on = headerType();
+                if (on != null) {
+                    switch (headerType()) {
+                    case PROGRAM: {
+                        this.params = new ProgramParams(this._io, this, _root);
+                        break;
+                    }
+                    case NUM_ARRAY: {
+                        this.params = new ArrayParams(this._io, this, _root);
+                        break;
+                    }
+                    case CHAR_ARRAY: {
+                        this.params = new ArrayParams(this._io, this, _root);
+                        break;
+                    }
+                    case BYTES: {
+                        this.params = new BytesParams(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
             this.checksum = this._io.readU1();
         }
@@ -274,7 +280,10 @@ public class ZxSpectrumTap extends KaitaiStruct {
         private void _read() {
             this.reserved = this._io.readU1();
             this.varName = this._io.readU1();
-            this.reserved1 = this._io.ensureFixedContents(new byte[] { 0, -128 });
+            this.reserved1 = this._io.readBytes(2);
+            if (!(Arrays.equals(reserved1(), new byte[] { 0, -128 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -128 }, reserved1(), _io(), "/types/array_params/seq/2");
+            }
         }
         private int reserved;
         private int varName;

@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.HashMap;
@@ -149,7 +150,10 @@ public class Regf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 104, 98, 105, 110 });
+            this.signature = this._io.readBytes(4);
+            if (!(Arrays.equals(signature(), new byte[] { 104, 98, 105, 110 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 104, 98, 105, 110 }, signature(), _io(), "/types/hive_bin_header/seq/0");
+            }
             this.offset = this._io.readU4le();
             this.size = this._io.readU4le();
             this.unknown1 = this._io.readU4le();
@@ -381,7 +385,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }
@@ -486,7 +490,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }
@@ -661,7 +665,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }
@@ -782,7 +786,10 @@ public class Regf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 114, 101, 103, 102 });
+            this.signature = this._io.readBytes(4);
+            if (!(Arrays.equals(signature(), new byte[] { 114, 101, 103, 102 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 114, 101, 103, 102 }, signature(), _io(), "/types/file_header/seq/0");
+            }
             this.primarySequenceNumber = this._io.readU4le();
             this.secondarySequenceNumber = this._io.readU4le();
             this.lastModificationDateAndTime = new Filetime(this._io, this, _root);

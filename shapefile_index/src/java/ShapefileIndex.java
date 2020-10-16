@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ShapefileIndex extends KaitaiStruct {
     public static ShapefileIndex fromFile(String fileName) throws IOException {
@@ -85,14 +86,35 @@ public class ShapefileIndex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fileCode = this._io.ensureFixedContents(new byte[] { 0, 0, 39, 10 });
-            this.unusedField1 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField2 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField3 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField4 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField5 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
+            this.fileCode = this._io.readBytes(4);
+            if (!(Arrays.equals(fileCode(), new byte[] { 0, 0, 39, 10 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, fileCode(), _io(), "/types/file_header/seq/0");
+            }
+            this.unusedField1 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField1(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField1(), _io(), "/types/file_header/seq/1");
+            }
+            this.unusedField2 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField2(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField2(), _io(), "/types/file_header/seq/2");
+            }
+            this.unusedField3 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField3(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField3(), _io(), "/types/file_header/seq/3");
+            }
+            this.unusedField4 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField4(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField4(), _io(), "/types/file_header/seq/4");
+            }
+            this.unusedField5 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField5(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField5(), _io(), "/types/file_header/seq/5");
+            }
             this.fileLength = this._io.readS4be();
-            this.version = this._io.ensureFixedContents(new byte[] { -24, 3, 0, 0 });
+            this.version = this._io.readBytes(4);
+            if (!(Arrays.equals(version(), new byte[] { -24, 3, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -24, 3, 0, 0 }, version(), _io(), "/types/file_header/seq/7");
+            }
             this.shapeType = ShapefileIndex.ShapeType.byId(this._io.readS4le());
             this.boundingBox = new BoundingBoxXYZM(this._io, this, _root);
         }

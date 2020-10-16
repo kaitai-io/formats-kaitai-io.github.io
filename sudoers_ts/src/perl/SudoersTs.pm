@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package SudoersTs;
@@ -86,10 +86,10 @@ sub _read {
     $self->{sid} = $self->{_io}->read_u4le();
     $self->{start_time} = SudoersTs::Timespec->new($self->{_io}, $self, $self->{_root});
     $self->{ts} = SudoersTs::Timespec->new($self->{_io}, $self, $self->{_root});
-    if ($self->type() == $TS_TYPE_TTY) {
+    if ($self->type() == $SudoersTs::TS_TYPE_TTY) {
         $self->{ttydev} = $self->{_io}->read_u4le();
     }
-    if ($self->type() == $TS_TYPE_PPID) {
+    if ($self->type() == $SudoersTs::TS_TYPE_PPID) {
         $self->{ppid} = $self->{_io}->read_u4le();
     }
 }
@@ -164,10 +164,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved0} = $self->{_io}->read_bits_int(6);
-    $self->{anyuid} = $self->{_io}->read_bits_int(1);
-    $self->{disabled} = $self->{_io}->read_bits_int(1);
-    $self->{reserved1} = $self->{_io}->read_bits_int(8);
+    $self->{reserved0} = $self->{_io}->read_bits_int_be(6);
+    $self->{anyuid} = $self->{_io}->read_bits_int_be(1);
+    $self->{disabled} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_be(8);
 }
 
 sub reserved0 {
@@ -225,10 +225,10 @@ sub _read {
     $self->{auth_uid} = $self->{_io}->read_u4le();
     $self->{sid} = $self->{_io}->read_u4le();
     $self->{ts} = SudoersTs::Timespec->new($self->{_io}, $self, $self->{_root});
-    if ($self->type() == $TS_TYPE_TTY) {
+    if ($self->type() == $SudoersTs::TS_TYPE_TTY) {
         $self->{ttydev} = $self->{_io}->read_u4le();
     }
-    if ($self->type() == $TS_TYPE_PPID) {
+    if ($self->type() == $SudoersTs::TS_TYPE_PPID) {
         $self->{ppid} = $self->{_io}->read_u4le();
     }
 }

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Ico(KaitaiStruct):
     """Microsoft Windows uses specific file format to store applications
@@ -23,11 +24,13 @@ class Ico(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x00\x00\x01\x00")
+        self.magic = self._io.read_bytes(4)
+        if not self.magic == b"\x00\x00\x01\x00":
+            raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x01\x00", self.magic, self._io, u"/seq/0")
         self.num_images = self._io.read_u2le()
         self.images = [None] * (self.num_images)
         for i in range(self.num_images):
-            self.images[i] = self._root.IconDirEntry(self._io, self, self._root)
+            self.images[i] = Ico.IconDirEntry(self._io, self, self._root)
 
 
     class IconDirEntry(KaitaiStruct):
@@ -41,7 +44,9 @@ class Ico(KaitaiStruct):
             self.width = self._io.read_u1()
             self.height = self._io.read_u1()
             self.num_colors = self._io.read_u1()
-            self.reserved = self._io.ensure_fixed_contents(b"\x00")
+            self.reserved = self._io.read_bytes(1)
+            if not self.reserved == b"\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00", self.reserved, self._io, u"/types/icon_dir_entry/seq/3")
             self.num_planes = self._io.read_u2le()
             self.bpp = self._io.read_u2le()
             self.len_img = self._io.read_u4le()

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -4070,7 +4070,8 @@ class Dicom < Kaitai::Struct::Struct
 
     def _read
       @preamble = @_io.read_bytes(128)
-      @magic = @_io.ensure_fixed_contents([68, 73, 67, 77].pack('C*'))
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([68, 73, 67, 77].pack('C*'), magic, _io, "/types/t_file_header/seq/1") if not magic == [68, 73, 67, 77].pack('C*')
       self
     end
     attr_reader :preamble
@@ -4139,7 +4140,7 @@ class Dicom < Kaitai::Struct::Struct
     end
     def tag
       return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(TAGS, ((tag_group << 16) | tag_elem))
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
       @tag
     end
     attr_reader :tag_group
@@ -4199,7 +4200,7 @@ class Dicom < Kaitai::Struct::Struct
     end
     def tag
       return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(TAGS, ((tag_group << 16) | tag_elem))
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
       @tag
     end
     def is_transfer_syntax_change_explicit
@@ -4238,7 +4239,8 @@ class Dicom < Kaitai::Struct::Struct
     end
 
     def _read
-      @tag_group = @_io.ensure_fixed_contents([254, 255].pack('C*'))
+      @tag_group = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), tag_group, _io, "/types/seq_item/seq/0") if not tag_group == [254, 255].pack('C*')
       @tag_elem = @_io.read_u2le
       @value_len = @_io.read_u4le
       if value_len != 4294967295

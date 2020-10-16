@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AppleSingleDouble(KaitaiStruct):
     """AppleSingle and AppleDouble files are used by certain Mac
@@ -43,13 +44,13 @@ class AppleSingleDouble(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._root.FileType(self._io.read_u4be())
+        self.magic = KaitaiStream.resolve_enum(AppleSingleDouble.FileType, self._io.read_u4be())
         self.version = self._io.read_u4be()
         self.reserved = self._io.read_bytes(16)
         self.num_entries = self._io.read_u2be()
         self.entries = [None] * (self.num_entries)
         for i in range(self.num_entries):
-            self.entries[i] = self._root.Entry(self._io, self, self._root)
+            self.entries[i] = AppleSingleDouble.Entry(self._io, self, self._root)
 
 
     class Entry(KaitaiStruct):
@@ -76,7 +77,7 @@ class AppleSingleDouble(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.Entry.Types(self._io.read_u4be())
+            self.type = KaitaiStream.resolve_enum(AppleSingleDouble.Entry.Types, self._io.read_u4be())
             self.ofs_body = self._io.read_u4be()
             self.len_body = self._io.read_u4be()
 
@@ -88,10 +89,10 @@ class AppleSingleDouble(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.ofs_body)
             _on = self.type
-            if _on == self._root.Entry.Types.finder_info:
+            if _on == AppleSingleDouble.Entry.Types.finder_info:
                 self._raw__m_body = self._io.read_bytes(self.len_body)
-                io = KaitaiStream(BytesIO(self._raw__m_body))
-                self._m_body = self._root.FinderInfo(io, self, self._root)
+                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                self._m_body = AppleSingleDouble.FinderInfo(_io__raw__m_body, self, self._root)
             else:
                 self._m_body = self._io.read_bytes(self.len_body)
             self._io.seek(_pos)
@@ -114,7 +115,7 @@ class AppleSingleDouble(KaitaiStruct):
             self.file_type = self._io.read_bytes(4)
             self.file_creator = self._io.read_bytes(4)
             self.flags = self._io.read_u2be()
-            self.location = self._root.Point(self._io, self, self._root)
+            self.location = AppleSingleDouble.Point(self._io, self, self._root)
             self.folder_id = self._io.read_u2be()
 
 

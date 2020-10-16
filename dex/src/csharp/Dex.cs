@@ -78,7 +78,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 100, 101, 120, 10 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 100, 101, 120, 10 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 100, 101, 120, 10 }, Magic, M_Io, "/types/header_item/seq/0");
+                }
                 _versionStr = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(4), 0, false));
                 _checksum = m_io.ReadU4le();
                 _signature = m_io.ReadBytes(20);
@@ -329,40 +333,32 @@ namespace Kaitai
             }
             private void _read()
             {
-                _valueArg = m_io.ReadBitsInt(3);
-                _valueType = ((ValueTypeEnum) m_io.ReadBitsInt(5));
+                _valueArg = m_io.ReadBitsIntBe(3);
+                _valueType = ((ValueTypeEnum) m_io.ReadBitsIntBe(5));
                 m_io.AlignToByte();
                 switch (ValueType) {
-                case ValueTypeEnum.Double: {
-                    _value = m_io.ReadF8le();
+                case ValueTypeEnum.Int: {
+                    _value = m_io.ReadS4le();
                     break;
                 }
                 case ValueTypeEnum.Annotation: {
                     _value = new EncodedAnnotation(m_io, this, m_root);
                     break;
                 }
-                case ValueTypeEnum.Type: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Char: {
-                    _value = m_io.ReadU2le();
+                case ValueTypeEnum.Long: {
+                    _value = m_io.ReadS8le();
                     break;
                 }
                 case ValueTypeEnum.MethodHandle: {
                     _value = m_io.ReadU4le();
                     break;
                 }
-                case ValueTypeEnum.Array: {
-                    _value = new EncodedArray(m_io, this, m_root);
-                    break;
-                }
                 case ValueTypeEnum.Byte: {
                     _value = m_io.ReadS1();
                     break;
                 }
-                case ValueTypeEnum.Method: {
-                    _value = m_io.ReadU4le();
+                case ValueTypeEnum.Array: {
+                    _value = new EncodedArray(m_io, this, m_root);
                     break;
                 }
                 case ValueTypeEnum.MethodType: {
@@ -373,28 +369,36 @@ namespace Kaitai
                     _value = m_io.ReadS2le();
                     break;
                 }
-                case ValueTypeEnum.String: {
+                case ValueTypeEnum.Method: {
                     _value = m_io.ReadU4le();
                     break;
                 }
-                case ValueTypeEnum.Int: {
-                    _value = m_io.ReadS4le();
-                    break;
-                }
-                case ValueTypeEnum.Field: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Long: {
-                    _value = m_io.ReadS8le();
+                case ValueTypeEnum.Double: {
+                    _value = m_io.ReadF8le();
                     break;
                 }
                 case ValueTypeEnum.Float: {
                     _value = m_io.ReadF4le();
                     break;
                 }
+                case ValueTypeEnum.Type: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
                 case ValueTypeEnum.Enum: {
                     _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Field: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.String: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Char: {
+                    _value = m_io.ReadU2le();
                     break;
                 }
                 }
@@ -1031,8 +1035,8 @@ namespace Kaitai
                         m_io.Seek(ClassDataOff);
                         _classData = new ClassDataItem(m_io, this, m_root);
                         m_io.Seek(_pos);
+                        f_classData = true;
                     }
-                    f_classData = true;
                     return _classData;
                 }
             }
@@ -1049,8 +1053,8 @@ namespace Kaitai
                         m_io.Seek(StaticValuesOff);
                         _staticValues = new EncodedArrayItem(m_io, this, m_root);
                         m_io.Seek(_pos);
+                        f_staticValues = true;
                     }
-                    f_staticValues = true;
                     return _staticValues;
                 }
             }
@@ -1315,8 +1319,8 @@ namespace Kaitai
                         io.Seek(ParametersOff);
                         _paramsTypes = new TypeList(io, this, m_root);
                         io.Seek(_pos);
+                        f_paramsTypes = true;
                     }
-                    f_paramsTypes = true;
                     return _paramsTypes;
                 }
             }

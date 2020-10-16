@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package ShapefileIndex;
@@ -96,14 +96,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_code} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 39, 10)));
-    $self->{unused_field_1} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_2} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_3} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_4} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
-    $self->{unused_field_5} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{file_code} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_1} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_2} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_3} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_4} = $self->{_io}->read_bytes(4);
+    $self->{unused_field_5} = $self->{_io}->read_bytes(4);
     $self->{file_length} = $self->{_io}->read_s4be();
-    $self->{version} = $self->{_io}->ensure_fixed_contents(pack('C*', (232, 3, 0, 0)));
+    $self->{version} = $self->{_io}->read_bytes(4);
     $self->{shape_type} = $self->{_io}->read_s4le();
     $self->{bounding_box} = ShapefileIndex::BoundingBoxXYZM->new($self->{_io}, $self, $self->{_root});
 }

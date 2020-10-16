@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dbf(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -15,10 +16,10 @@ class Dbf(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header1 = self._root.Header1(self._io, self, self._root)
+        self.header1 = Dbf.Header1(self._io, self, self._root)
         self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12))
-        io = KaitaiStream(BytesIO(self._raw_header2))
-        self.header2 = self._root.Header2(io, self, self._root)
+        _io__raw_header2 = KaitaiStream(BytesIO(self._raw_header2))
+        self.header2 = Dbf.Header2(_io__raw_header2, self, self._root)
         self.records = [None] * (self.header1.num_records)
         for i in range(self.header1.num_records):
             self.records[i] = self._io.read_bytes(self.header1.len_record)
@@ -33,14 +34,14 @@ class Dbf(KaitaiStruct):
 
         def _read(self):
             if self._root.header1.dbase_level == 3:
-                self.header_dbase_3 = self._root.HeaderDbase3(self._io, self, self._root)
+                self.header_dbase_3 = Dbf.HeaderDbase3(self._io, self, self._root)
 
             if self._root.header1.dbase_level == 7:
-                self.header_dbase_7 = self._root.HeaderDbase7(self._io, self, self._root)
+                self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
 
             self.fields = [None] * (11)
             for i in range(11):
-                self.fields[i] = self._root.Field(self._io, self, self._root)
+                self.fields[i] = Dbf.Field(self._io, self, self._root)
 
 
 
@@ -114,13 +115,17 @@ class Dbf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved1 = self._io.ensure_fixed_contents(b"\x00\x00")
+            self.reserved1 = self._io.read_bytes(2)
+            if not self.reserved1 == b"\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00", self.reserved1, self._io, u"/types/header_dbase_7/seq/0")
             self.has_incomplete_transaction = self._io.read_u1()
             self.dbase_iv_encryption = self._io.read_u1()
             self.reserved2 = self._io.read_bytes(12)
             self.production_mdx = self._io.read_u1()
             self.language_driver_id = self._io.read_u1()
-            self.reserved3 = self._io.ensure_fixed_contents(b"\x00\x00")
+            self.reserved3 = self._io.read_bytes(2)
+            if not self.reserved3 == b"\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00", self.reserved3, self._io, u"/types/header_dbase_7/seq/6")
             self.language_driver_name = self._io.read_bytes(32)
             self.reserved4 = self._io.read_bytes(4)
 

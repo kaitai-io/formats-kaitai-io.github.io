@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class Dbf extends KaitaiStruct {
     public static Dbf fromFile(String fileName) throws IOException {
@@ -31,7 +32,7 @@ public class Dbf extends KaitaiStruct {
         this._raw_header2 = this._io.readBytes((header1().lenHeader() - 12));
         KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
         this.header2 = new Header2(_io__raw_header2, this, _root);
-        records = new ArrayList<byte[]>((int) (header1().numRecords()));
+        records = new ArrayList<byte[]>(((Number) (header1().numRecords())).intValue());
         for (int i = 0; i < header1().numRecords(); i++) {
             this.records.add(this._io.readBytes(header1().lenRecord()));
         }
@@ -62,7 +63,7 @@ public class Dbf extends KaitaiStruct {
             if (_root.header1().dbaseLevel() == 7) {
                 this.headerDbase7 = new HeaderDbase7(this._io, this, _root);
             }
-            fields = new ArrayList<Field>((int) (11));
+            fields = new ArrayList<Field>(((Number) (11)).intValue());
             for (int i = 0; i < 11; i++) {
                 this.fields.add(new Field(this._io, this, _root));
             }
@@ -248,13 +249,19 @@ public class Dbf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved1 = this._io.ensureFixedContents(new byte[] { 0, 0 });
+            this.reserved1 = this._io.readBytes(2);
+            if (!(Arrays.equals(reserved1(), new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, reserved1(), _io(), "/types/header_dbase_7/seq/0");
+            }
             this.hasIncompleteTransaction = this._io.readU1();
             this.dbaseIvEncryption = this._io.readU1();
             this.reserved2 = this._io.readBytes(12);
             this.productionMdx = this._io.readU1();
             this.languageDriverId = this._io.readU1();
-            this.reserved3 = this._io.ensureFixedContents(new byte[] { 0, 0 });
+            this.reserved3 = this._io.readBytes(2);
+            if (!(Arrays.equals(reserved3(), new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, reserved3(), _io(), "/types/header_dbase_7/seq/6");
+            }
             this.languageDriverName = this._io.readBytes(32);
             this.reserved4 = this._io.readBytes(4);
         }

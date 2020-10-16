@@ -135,7 +135,10 @@ var PythonPyc27 = (function() {
       this._read();
     }
     Assembly.prototype._read = function() {
-      this.stringMagic = this._io.ensureFixedContents([115]);
+      this.stringMagic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.stringMagic, [115]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([115], this.stringMagic, this._io, "/types/assembly/seq/0");
+      }
       this.length = this._io.readU4le();
       this._raw_items = this._io.readBytes(this.length);
       var _io__raw_items = new KaitaiStream(this._raw_items);
@@ -440,32 +443,32 @@ var PythonPyc27 = (function() {
     PyObject.prototype._read = function() {
       this.type = this._io.readU1();
       switch (this.type) {
-      case PythonPyc27.PyObject.ObjectType.NONE:
-        this.value = new PyNone(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
-        this.value = new CodeObject(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.INT:
-        this.value = this._io.readU4le();
-        break;
-      case PythonPyc27.PyObject.ObjectType.STRING_REF:
-        this.value = new StringRef(this._io, this, this._root);
-        break;
       case PythonPyc27.PyObject.ObjectType.STRING:
         this.value = new PyString(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
-        this.value = new PyFalse(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.INTERNED:
-        this.value = new InternedString(this._io, this, this._root);
         break;
       case PythonPyc27.PyObject.ObjectType.TUPLE:
         this.value = new Tuple(this._io, this, this._root);
         break;
+      case PythonPyc27.PyObject.ObjectType.INT:
+        this.value = this._io.readU4le();
+        break;
       case PythonPyc27.PyObject.ObjectType.PY_TRUE:
         this.value = new PyTrue(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
+        this.value = new PyFalse(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.NONE:
+        this.value = new PyNone(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.STRING_REF:
+        this.value = new StringRef(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
+        this.value = new CodeObject(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.INTERNED:
+        this.value = new InternedString(this._io, this, this._root);
         break;
       }
     }

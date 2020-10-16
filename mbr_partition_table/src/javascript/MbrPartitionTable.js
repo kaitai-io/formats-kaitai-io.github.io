@@ -35,7 +35,10 @@ var MbrPartitionTable = (function() {
     for (var i = 0; i < 4; i++) {
       this.partitions[i] = new PartitionEntry(this._io, this, this._root);
     }
-    this.bootSignature = this._io.ensureFixedContents([85, 170]);
+    this.bootSignature = this._io.readBytes(2);
+    if (!((KaitaiStream.byteArrayCompare(this.bootSignature, [85, 170]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([85, 170], this.bootSignature, this._io, "/seq/2");
+    }
   }
 
   var PartitionEntry = MbrPartitionTable.PartitionEntry = (function() {

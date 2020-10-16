@@ -34,7 +34,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 });
+            _magic = m_io.ReadBytes(8);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, Magic, M_Io, "/seq/0");
+            }
             _kernel = new Load(m_io, this, m_root);
             _ramdisk = new Load(m_io, this, m_root);
             _second = new Load(m_io, this, m_root);
@@ -347,8 +351,8 @@ namespace Kaitai
                     m_io.Seek(((((((((PageSize + Kernel.Size) + Ramdisk.Size) + Second.Size) + RecoveryDtbo.Size) + PageSize) - 1) / PageSize) * PageSize));
                     _dtbImg = m_io.ReadBytes(Dtb.Size);
                     m_io.Seek(_pos);
+                    f_dtbImg = true;
                 }
-                f_dtbImg = true;
                 return _dtbImg;
             }
         }
@@ -365,8 +369,8 @@ namespace Kaitai
                     m_io.Seek((((((PageSize + Kernel.Size) + PageSize) - 1) / PageSize) * PageSize));
                     _ramdiskImg = m_io.ReadBytes(Ramdisk.Size);
                     m_io.Seek(_pos);
+                    f_ramdiskImg = true;
                 }
-                f_ramdiskImg = true;
                 return _ramdiskImg;
             }
         }
@@ -383,8 +387,8 @@ namespace Kaitai
                     m_io.Seek(RecoveryDtbo.Offset);
                     _recoveryDtboImg = m_io.ReadBytes(RecoveryDtbo.Size);
                     m_io.Seek(_pos);
+                    f_recoveryDtboImg = true;
                 }
-                f_recoveryDtboImg = true;
                 return _recoveryDtboImg;
             }
         }
@@ -401,8 +405,8 @@ namespace Kaitai
                     m_io.Seek(((((((PageSize + Kernel.Size) + Ramdisk.Size) + PageSize) - 1) / PageSize) * PageSize));
                     _secondImg = m_io.ReadBytes(Second.Size);
                     m_io.Seek(_pos);
+                    f_secondImg = true;
                 }
-                f_secondImg = true;
                 return _secondImg;
             }
         }

@@ -534,14 +534,26 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 215, 205, 198, 154 });
-                _handle = m_io.EnsureFixedContents(new byte[] { 0, 0 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 215, 205, 198, 154 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 215, 205, 198, 154 }, Magic, M_Io, "/types/special_header/seq/0");
+                }
+                _handle = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Handle, new byte[] { 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0 }, Handle, M_Io, "/types/special_header/seq/1");
+                }
                 _left = m_io.ReadS2le();
                 _top = m_io.ReadS2le();
                 _right = m_io.ReadS2le();
                 _bottom = m_io.ReadS2le();
                 _inch = m_io.ReadU2le();
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
+                _reserved = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, Reserved, M_Io, "/types/special_header/seq/7");
+                }
                 _checksum = m_io.ReadU2le();
             }
             private byte[] _magic;
@@ -591,22 +603,22 @@ namespace Kaitai
                     _params = new ParamsSetbkmode(io___raw_params, this, m_root);
                     break;
                 }
+                case Wmf.Func.Polygon: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsPolygon(io___raw_params, this, m_root);
+                    break;
+                }
                 case Wmf.Func.Setbkcolor: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
                     _params = new ColorRef(io___raw_params, this, m_root);
                     break;
                 }
-                case Wmf.Func.Setrop2: {
+                case Wmf.Func.Setpolyfillmode: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsSetrop2(io___raw_params, this, m_root);
-                    break;
-                }
-                case Wmf.Func.Polyline: {
-                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
-                    var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsPolyline(io___raw_params, this, m_root);
+                    _params = new ParamsSetpolyfillmode(io___raw_params, this, m_root);
                     break;
                 }
                 case Wmf.Func.Setwindoworg: {
@@ -615,10 +627,10 @@ namespace Kaitai
                     _params = new ParamsSetwindoworg(io___raw_params, this, m_root);
                     break;
                 }
-                case Wmf.Func.Polygon: {
+                case Wmf.Func.Setrop2: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsPolygon(io___raw_params, this, m_root);
+                    _params = new ParamsSetrop2(io___raw_params, this, m_root);
                     break;
                 }
                 case Wmf.Func.Setwindowext: {
@@ -627,10 +639,10 @@ namespace Kaitai
                     _params = new ParamsSetwindowext(io___raw_params, this, m_root);
                     break;
                 }
-                case Wmf.Func.Setpolyfillmode: {
+                case Wmf.Func.Polyline: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsSetpolyfillmode(io___raw_params, this, m_root);
+                    _params = new ParamsPolyline(io___raw_params, this, m_root);
                     break;
                 }
                 default: {

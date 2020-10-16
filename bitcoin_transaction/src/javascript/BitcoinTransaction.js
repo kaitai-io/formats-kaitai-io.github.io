@@ -53,7 +53,10 @@ var BitcoinTransaction = (function() {
       this._raw_scriptSig = this._io.readBytes(this.lenScript);
       var _io__raw_scriptSig = new KaitaiStream(this._raw_scriptSig);
       this.scriptSig = new ScriptSignature(_io__raw_scriptSig, this, this._root);
-      this.endOfVin = this._io.ensureFixedContents([255, 255, 255, 255]);
+      this.endOfVin = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.endOfVin, [255, 255, 255, 255]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([255, 255, 255, 255], this.endOfVin, this._io, "/types/vin/seq/4");
+      }
     }
 
     var ScriptSignature = Vin.ScriptSignature = (function() {
@@ -93,12 +96,21 @@ var BitcoinTransaction = (function() {
           this._read();
         }
         DerSignature.prototype._read = function() {
-          this.sequence = this._io.ensureFixedContents([48]);
+          this.sequence = this._io.readBytes(1);
+          if (!((KaitaiStream.byteArrayCompare(this.sequence, [48]) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError([48], this.sequence, this._io, "/types/vin/types/script_signature/types/der_signature/seq/0");
+          }
           this.lenSig = this._io.readU1();
-          this.sep1 = this._io.ensureFixedContents([2]);
+          this.sep1 = this._io.readBytes(1);
+          if (!((KaitaiStream.byteArrayCompare(this.sep1, [2]) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError([2], this.sep1, this._io, "/types/vin/types/script_signature/types/der_signature/seq/2");
+          }
           this.lenSigR = this._io.readU1();
           this.sigR = this._io.readBytes(this.lenSigR);
-          this.sep2 = this._io.ensureFixedContents([2]);
+          this.sep2 = this._io.readBytes(1);
+          if (!((KaitaiStream.byteArrayCompare(this.sep2, [2]) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError([2], this.sep2, this._io, "/types/vin/types/script_signature/types/der_signature/seq/5");
+          }
           this.lenSigS = this._io.readU1();
           this.sigS = this._io.readBytes(this.lenSigS);
         }

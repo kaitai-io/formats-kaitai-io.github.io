@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class BlenderBlend(KaitaiStruct):
     """Blender is an open source suite for 3D modelling, sculpting,
@@ -37,11 +38,11 @@ class BlenderBlend(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.hdr = self._root.Header(self._io, self, self._root)
+        self.hdr = BlenderBlend.Header(self._io, self, self._root)
         self.blocks = []
         i = 0
         while not self._io.is_eof():
-            self.blocks.append(self._root.FileBlock(self._io, self, self._root))
+            self.blocks.append(BlenderBlend.FileBlock(self._io, self, self._root))
             i += 1
 
 
@@ -60,7 +61,7 @@ class BlenderBlend(KaitaiStruct):
             self.num_fields = self._io.read_u2le()
             self.fields = [None] * (self.num_fields)
             for i in range(self.num_fields):
-                self.fields[i] = self._root.DnaField(self._io, self, self._root)
+                self.fields[i] = BlenderBlend.DnaField(self._io, self, self._root)
 
 
         @property
@@ -88,8 +89,8 @@ class BlenderBlend(KaitaiStruct):
             _on = self.code
             if _on == u"DNA1":
                 self._raw_body = self._io.read_bytes(self.len_body)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Dna1Body(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = BlenderBlend.Dna1Body(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len_body)
 
@@ -127,32 +128,42 @@ class BlenderBlend(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.id = self._io.ensure_fixed_contents(b"\x53\x44\x4E\x41")
-            self.name_magic = self._io.ensure_fixed_contents(b"\x4E\x41\x4D\x45")
+            self.id = self._io.read_bytes(4)
+            if not self.id == b"\x53\x44\x4E\x41":
+                raise kaitaistruct.ValidationNotEqualError(b"\x53\x44\x4E\x41", self.id, self._io, u"/types/dna1_body/seq/0")
+            self.name_magic = self._io.read_bytes(4)
+            if not self.name_magic == b"\x4E\x41\x4D\x45":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4E\x41\x4D\x45", self.name_magic, self._io, u"/types/dna1_body/seq/1")
             self.num_names = self._io.read_u4le()
             self.names = [None] * (self.num_names)
             for i in range(self.num_names):
                 self.names[i] = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
 
             self.padding_1 = self._io.read_bytes(((4 - self._io.pos()) % 4))
-            self.type_magic = self._io.ensure_fixed_contents(b"\x54\x59\x50\x45")
+            self.type_magic = self._io.read_bytes(4)
+            if not self.type_magic == b"\x54\x59\x50\x45":
+                raise kaitaistruct.ValidationNotEqualError(b"\x54\x59\x50\x45", self.type_magic, self._io, u"/types/dna1_body/seq/5")
             self.num_types = self._io.read_u4le()
             self.types = [None] * (self.num_types)
             for i in range(self.num_types):
                 self.types[i] = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
 
             self.padding_2 = self._io.read_bytes(((4 - self._io.pos()) % 4))
-            self.tlen_magic = self._io.ensure_fixed_contents(b"\x54\x4C\x45\x4E")
+            self.tlen_magic = self._io.read_bytes(4)
+            if not self.tlen_magic == b"\x54\x4C\x45\x4E":
+                raise kaitaistruct.ValidationNotEqualError(b"\x54\x4C\x45\x4E", self.tlen_magic, self._io, u"/types/dna1_body/seq/9")
             self.lengths = [None] * (self.num_types)
             for i in range(self.num_types):
                 self.lengths[i] = self._io.read_u2le()
 
             self.padding_3 = self._io.read_bytes(((4 - self._io.pos()) % 4))
-            self.strc_magic = self._io.ensure_fixed_contents(b"\x53\x54\x52\x43")
+            self.strc_magic = self._io.read_bytes(4)
+            if not self.strc_magic == b"\x53\x54\x52\x43":
+                raise kaitaistruct.ValidationNotEqualError(b"\x53\x54\x52\x43", self.strc_magic, self._io, u"/types/dna1_body/seq/12")
             self.num_structs = self._io.read_u4le()
             self.structs = [None] * (self.num_structs)
             for i in range(self.num_structs):
-                self.structs[i] = self._root.DnaStruct(self._io, self, self._root)
+                self.structs[i] = BlenderBlend.DnaStruct(self._io, self, self._root)
 
 
 
@@ -164,9 +175,11 @@ class BlenderBlend(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x42\x4C\x45\x4E\x44\x45\x52")
-            self.ptr_size_id = self._root.PtrSize(self._io.read_u1())
-            self.endian = self._root.Endian(self._io.read_u1())
+            self.magic = self._io.read_bytes(7)
+            if not self.magic == b"\x42\x4C\x45\x4E\x44\x45\x52":
+                raise kaitaistruct.ValidationNotEqualError(b"\x42\x4C\x45\x4E\x44\x45\x52", self.magic, self._io, u"/types/header/seq/0")
+            self.ptr_size_id = KaitaiStream.resolve_enum(BlenderBlend.PtrSize, self._io.read_u1())
+            self.endian = KaitaiStream.resolve_enum(BlenderBlend.Endian, self._io.read_u1())
             self.version = (self._io.read_bytes(3)).decode(u"ASCII")
 
         @property
@@ -175,7 +188,7 @@ class BlenderBlend(KaitaiStruct):
             if hasattr(self, '_m_psize'):
                 return self._m_psize if hasattr(self, '_m_psize') else None
 
-            self._m_psize = (8 if self.ptr_size_id == self._root.PtrSize.bits_64 else 4)
+            self._m_psize = (8 if self.ptr_size_id == BlenderBlend.PtrSize.bits_64 else 4)
             return self._m_psize if hasattr(self, '_m_psize') else None
 
 

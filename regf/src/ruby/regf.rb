@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -37,8 +37,8 @@ class Regf < Kaitai::Struct::Struct
     i = 0
     while not @_io.eof?
       @_raw_hive_bins << @_io.read_bytes(4096)
-      io = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
-      @hive_bins << HiveBin.new(io, self, @_root)
+      _io__raw_hive_bins = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
+      @hive_bins << HiveBin.new(_io__raw_hive_bins, self, @_root)
       i += 1
     end
     self
@@ -81,7 +81,8 @@ class Regf < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.ensure_fixed_contents([104, 98, 105, 110].pack('C*'))
+      @signature = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([104, 98, 105, 110].pack('C*'), signature, _io, "/types/hive_bin_header/seq/0") if not signature == [104, 98, 105, 110].pack('C*')
       @offset = @_io.read_u4le
       @size = @_io.read_u4le
       @unknown1 = @_io.read_u4le
@@ -129,32 +130,32 @@ class Regf < Kaitai::Struct::Struct
       case identifier
       when "li"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLi.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLi.new(_io__raw_data, self, @_root)
       when "vk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListVk.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListVk.new(_io__raw_data, self, @_root)
       when "lf"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLhLf.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLhLf.new(_io__raw_data, self, @_root)
       when "ri"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListRi.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListRi.new(_io__raw_data, self, @_root)
       when "lh"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLhLf.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLhLf.new(_io__raw_data, self, @_root)
       when "nk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = NamedKey.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = NamedKey.new(_io__raw_data, self, @_root)
       when "sk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListSk.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListSk.new(_io__raw_data, self, @_root)
       else
         @data = @_io.read_bytes(((cell_size - 2) - 4))
       end
@@ -413,7 +414,8 @@ class Regf < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.ensure_fixed_contents([114, 101, 103, 102].pack('C*'))
+      @signature = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([114, 101, 103, 102].pack('C*'), signature, _io, "/types/file_header/seq/0") if not signature == [114, 101, 103, 102].pack('C*')
       @primary_sequence_number = @_io.read_u4le
       @secondary_sequence_number = @_io.read_u4le
       @last_modification_date_and_time = Filetime.new(@_io, self, @_root)

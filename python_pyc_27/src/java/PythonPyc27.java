@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -186,7 +187,10 @@ public class PythonPyc27 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.stringMagic = this._io.ensureFixedContents(new byte[] { 115 });
+            this.stringMagic = this._io.readBytes(1);
+            if (!(Arrays.equals(stringMagic(), new byte[] { 115 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 115 }, stringMagic(), _io(), "/types/assembly/seq/0");
+            }
             this.length = this._io.readU4le();
             this._raw_items = this._io.readBytes(length());
             KaitaiStream _io__raw_items = new ByteBufferKaitaiStream(_raw_items);
@@ -415,43 +419,48 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         private void _read() {
             this.type = ObjectType.byId(this._io.readU1());
-            switch (type()) {
-            case NONE: {
-                this.value = new PyNone(this._io, this, _root);
-                break;
-            }
-            case CODE_OBJECT: {
-                this.value = new CodeObject(this._io, this, _root);
-                break;
-            }
-            case INT: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case STRING_REF: {
-                this.value = new StringRef(this._io, this, _root);
-                break;
-            }
-            case STRING: {
-                this.value = new PyString(this._io, this, _root);
-                break;
-            }
-            case PY_FALSE: {
-                this.value = new PyFalse(this._io, this, _root);
-                break;
-            }
-            case INTERNED: {
-                this.value = new InternedString(this._io, this, _root);
-                break;
-            }
-            case TUPLE: {
-                this.value = new Tuple(this._io, this, _root);
-                break;
-            }
-            case PY_TRUE: {
-                this.value = new PyTrue(this._io, this, _root);
-                break;
-            }
+            {
+                ObjectType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case STRING: {
+                        this.value = new PyString(this._io, this, _root);
+                        break;
+                    }
+                    case TUPLE: {
+                        this.value = new Tuple(this._io, this, _root);
+                        break;
+                    }
+                    case INT: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case PY_TRUE: {
+                        this.value = new PyTrue(this._io, this, _root);
+                        break;
+                    }
+                    case PY_FALSE: {
+                        this.value = new PyFalse(this._io, this, _root);
+                        break;
+                    }
+                    case NONE: {
+                        this.value = new PyNone(this._io, this, _root);
+                        break;
+                    }
+                    case STRING_REF: {
+                        this.value = new StringRef(this._io, this, _root);
+                        break;
+                    }
+                    case CODE_OBJECT: {
+                        this.value = new CodeObject(this._io, this, _root);
+                        break;
+                    }
+                    case INTERNED: {
+                        this.value = new InternedString(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         public static class PyNone extends KaitaiStruct {
@@ -582,7 +591,7 @@ public class PythonPyc27 extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU4le();
-                items = new ArrayList<PyObject>((int) (count()));
+                items = new ArrayList<PyObject>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new PyObject(this._io, this, _root));
                 }

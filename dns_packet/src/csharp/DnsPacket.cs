@@ -452,13 +452,25 @@ namespace Kaitai
                 _ttl = m_io.ReadS4be();
                 _rdlength = m_io.ReadU2be();
                 switch (Type) {
-                case DnsPacket.TypeType.Mx: {
+                case DnsPacket.TypeType.Srv: {
                     __raw_payload = m_io.ReadBytes(Rdlength);
                     var io___raw_payload = new KaitaiStream(__raw_payload);
-                    _payload = new MxInfo(io___raw_payload, this, m_root);
+                    _payload = new Service(io___raw_payload, this, m_root);
                     break;
                 }
-                case DnsPacket.TypeType.Ptr: {
+                case DnsPacket.TypeType.A: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new Address(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Cname: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new DomainName(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Ns: {
                     __raw_payload = m_io.ReadBytes(Rdlength);
                     var io___raw_payload = new KaitaiStream(__raw_payload);
                     _payload = new DomainName(io___raw_payload, this, m_root);
@@ -470,7 +482,19 @@ namespace Kaitai
                     _payload = new AuthorityInfo(io___raw_payload, this, m_root);
                     break;
                 }
-                case DnsPacket.TypeType.Cname: {
+                case DnsPacket.TypeType.Mx: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new MxInfo(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Txt: {
+                    __raw_payload = m_io.ReadBytes(Rdlength);
+                    var io___raw_payload = new KaitaiStream(__raw_payload);
+                    _payload = new TxtBody(io___raw_payload, this, m_root);
+                    break;
+                }
+                case DnsPacket.TypeType.Ptr: {
                     __raw_payload = m_io.ReadBytes(Rdlength);
                     var io___raw_payload = new KaitaiStream(__raw_payload);
                     _payload = new DomainName(io___raw_payload, this, m_root);
@@ -480,30 +504,6 @@ namespace Kaitai
                     __raw_payload = m_io.ReadBytes(Rdlength);
                     var io___raw_payload = new KaitaiStream(__raw_payload);
                     _payload = new AddressV6(io___raw_payload, this, m_root);
-                    break;
-                }
-                case DnsPacket.TypeType.Txt: {
-                    __raw_payload = m_io.ReadBytes(Rdlength);
-                    var io___raw_payload = new KaitaiStream(__raw_payload);
-                    _payload = new TxtBody(io___raw_payload, this, m_root);
-                    break;
-                }
-                case DnsPacket.TypeType.Ns: {
-                    __raw_payload = m_io.ReadBytes(Rdlength);
-                    var io___raw_payload = new KaitaiStream(__raw_payload);
-                    _payload = new DomainName(io___raw_payload, this, m_root);
-                    break;
-                }
-                case DnsPacket.TypeType.Srv: {
-                    __raw_payload = m_io.ReadBytes(Rdlength);
-                    var io___raw_payload = new KaitaiStream(__raw_payload);
-                    _payload = new Service(io___raw_payload, this, m_root);
-                    break;
-                }
-                case DnsPacket.TypeType.A: {
-                    __raw_payload = m_io.ReadBytes(Rdlength);
-                    var io___raw_payload = new KaitaiStream(__raw_payload);
-                    _payload = new Address(io___raw_payload, this, m_root);
                     break;
                 }
                 default: {

@@ -96,25 +96,25 @@ public class DnsPacket extends KaitaiStruct {
             this.arcount = this._io.readU2be();
         }
         if (flags().isOpcodeValid()) {
-            queries = new ArrayList<Query>((int) (qdcount()));
+            queries = new ArrayList<Query>(((Number) (qdcount())).intValue());
             for (int i = 0; i < qdcount(); i++) {
                 this.queries.add(new Query(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            answers = new ArrayList<Answer>((int) (ancount()));
+            answers = new ArrayList<Answer>(((Number) (ancount())).intValue());
             for (int i = 0; i < ancount(); i++) {
                 this.answers.add(new Answer(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            authorities = new ArrayList<Answer>((int) (nscount()));
+            authorities = new ArrayList<Answer>(((Number) (nscount())).intValue());
             for (int i = 0; i < nscount(); i++) {
                 this.authorities.add(new Answer(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            additionals = new ArrayList<Answer>((int) (arcount()));
+            additionals = new ArrayList<Answer>(((Number) (arcount())).intValue());
             for (int i = 0; i < arcount(); i++) {
                 this.additionals.add(new Answer(this._io, this, _root));
             }
@@ -517,65 +517,72 @@ public class DnsPacket extends KaitaiStruct {
             this.answerClass = DnsPacket.ClassType.byId(this._io.readU2be());
             this.ttl = this._io.readS4be();
             this.rdlength = this._io.readU2be();
-            switch (type()) {
-            case MX: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new MxInfo(_io__raw_payload, this, _root);
-                break;
-            }
-            case PTR: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new DomainName(_io__raw_payload, this, _root);
-                break;
-            }
-            case SOA: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new AuthorityInfo(_io__raw_payload, this, _root);
-                break;
-            }
-            case CNAME: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new DomainName(_io__raw_payload, this, _root);
-                break;
-            }
-            case AAAA: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new AddressV6(_io__raw_payload, this, _root);
-                break;
-            }
-            case TXT: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new TxtBody(_io__raw_payload, this, _root);
-                break;
-            }
-            case NS: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new DomainName(_io__raw_payload, this, _root);
-                break;
-            }
-            case SRV: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new Service(_io__raw_payload, this, _root);
-                break;
-            }
-            case A: {
-                this._raw_payload = this._io.readBytes(rdlength());
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new Address(_io__raw_payload, this, _root);
-                break;
-            }
-            default: {
-                this.payload = this._io.readBytes(rdlength());
-                break;
-            }
+            {
+                TypeType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case SRV: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new Service(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case A: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new Address(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case CNAME: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new DomainName(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case NS: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new DomainName(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case SOA: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new AuthorityInfo(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case MX: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new MxInfo(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case TXT: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new TxtBody(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case PTR: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new DomainName(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    case AAAA: {
+                        this._raw_payload = this._io.readBytes(rdlength());
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new AddressV6(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.payload = this._io.readBytes(rdlength());
+                        break;
+                    }
+                    }
+                } else {
+                    this.payload = this._io.readBytes(rdlength());
+                }
             }
         }
         private DomainName name;

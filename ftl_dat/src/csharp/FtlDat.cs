@@ -57,8 +57,8 @@ namespace Kaitai
                         m_io.Seek(OfsMeta);
                         _meta = new Meta(m_io, this, m_root);
                         m_io.Seek(_pos);
+                        f_meta = true;
                     }
-                    f_meta = true;
                     return _meta;
                 }
             }

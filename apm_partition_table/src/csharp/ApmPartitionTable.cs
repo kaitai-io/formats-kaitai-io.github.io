@@ -45,7 +45,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 80, 77 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 77 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 80, 77 }, Magic, M_Io, "/types/partition_entry/seq/0");
+                }
                 _reserved1 = m_io.ReadBytes(2);
                 _numberOfPartitions = m_io.ReadU4be();
                 _partitionStart = m_io.ReadU4be();
@@ -78,8 +82,8 @@ namespace Kaitai
                         io.Seek((PartitionStart * M_Root.SectorSize));
                         _partition = io.ReadBytes((PartitionSize * M_Root.SectorSize));
                         io.Seek(_pos);
+                        f_partition = true;
                     }
-                    f_partition = true;
                     return _partition;
                 }
             }

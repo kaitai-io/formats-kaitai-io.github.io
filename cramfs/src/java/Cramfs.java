@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map;
@@ -51,11 +52,17 @@ public class Cramfs extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 69, 61, -51, 40 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 69, 61, -51, 40 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 61, -51, 40 }, magic(), _io(), "/types/super_block_struct/seq/0");
+            }
             this.size = this._io.readU4le();
             this.flags = this._io.readU4le();
             this.future = this._io.readU4le();
-            this.signature = this._io.ensureFixedContents(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 });
+            this.signature = this._io.readBytes(16);
+            if (!(Arrays.equals(signature(), new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 }, signature(), _io(), "/types/super_block_struct/seq/4");
+            }
             this.fsid = new Info(this._io, this, _root);
             this.name = new String(this._io.readBytes(16), Charset.forName("ASCII"));
             this.root = new Inode(this._io, this, _root);
@@ -141,7 +148,7 @@ public class Cramfs extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blockEndIndex = new ArrayList<Long>((int) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize())));
+            blockEndIndex = new ArrayList<Long>(((Number) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()))).intValue());
             for (int i = 0; i < (((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()); i++) {
                 this.blockEndIndex.add(this._io.readU4le());
             }

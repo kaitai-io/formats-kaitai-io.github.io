@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidImg(KaitaiStruct):
     """
@@ -19,26 +20,28 @@ class AndroidImg(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x41\x4E\x44\x52\x4F\x49\x44\x21")
-        self.kernel = self._root.Load(self._io, self, self._root)
-        self.ramdisk = self._root.Load(self._io, self, self._root)
-        self.second = self._root.Load(self._io, self, self._root)
+        self.magic = self._io.read_bytes(8)
+        if not self.magic == b"\x41\x4E\x44\x52\x4F\x49\x44\x21":
+            raise kaitaistruct.ValidationNotEqualError(b"\x41\x4E\x44\x52\x4F\x49\x44\x21", self.magic, self._io, u"/seq/0")
+        self.kernel = AndroidImg.Load(self._io, self, self._root)
+        self.ramdisk = AndroidImg.Load(self._io, self, self._root)
+        self.second = AndroidImg.Load(self._io, self, self._root)
         self.tags_load = self._io.read_u4le()
         self.page_size = self._io.read_u4le()
         self.header_version = self._io.read_u4le()
-        self.os_version = self._root.OsVersion(self._io, self, self._root)
+        self.os_version = AndroidImg.OsVersion(self._io, self, self._root)
         self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ASCII")
         self.cmdline = (KaitaiStream.bytes_terminate(self._io.read_bytes(512), 0, False)).decode(u"ASCII")
         self.sha = self._io.read_bytes(32)
         self.extra_cmdline = (KaitaiStream.bytes_terminate(self._io.read_bytes(1024), 0, False)).decode(u"ASCII")
         if self.header_version > 0:
-            self.recovery_dtbo = self._root.SizeOffset(self._io, self, self._root)
+            self.recovery_dtbo = AndroidImg.SizeOffset(self._io, self, self._root)
 
         if self.header_version > 0:
             self.boot_header_size = self._io.read_u4le()
 
         if self.header_version > 1:
-            self.dtb = self._root.LoadLong(self._io, self, self._root)
+            self.dtb = AndroidImg.LoadLong(self._io, self, self._root)
 
 
     class Load(KaitaiStruct):

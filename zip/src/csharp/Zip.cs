@@ -529,7 +529,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 80, 75 });
+                _magic = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 75 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 80, 75 }, Magic, M_Io, "/types/pk_section/seq/0");
+                }
                 _sectionType = m_io.ReadU2le();
                 switch (SectionType) {
                 case 513: {

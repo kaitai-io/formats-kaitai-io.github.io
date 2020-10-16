@@ -166,10 +166,10 @@ public class SudoersTs extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.reserved0 = this._io.readBitsInt(6);
-            this.anyuid = this._io.readBitsInt(1) != 0;
-            this.disabled = this._io.readBitsInt(1) != 0;
-            this.reserved1 = this._io.readBitsInt(8);
+            this.reserved0 = this._io.readBitsIntBe(6);
+            this.anyuid = this._io.readBitsIntBe(1) != 0;
+            this.disabled = this._io.readBitsIntBe(1) != 0;
+            this.reserved1 = this._io.readBitsIntBe(8);
         }
         private long reserved0;
         private boolean anyuid;

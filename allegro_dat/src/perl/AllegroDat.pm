@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -38,7 +38,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{pack_magic} = $self->{_io}->read_u4be();
-    $self->{dat_magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (65, 76, 76, 46)));
+    $self->{dat_magic} = $self->{_io}->read_bytes(4);
     $self->{num_objects} = $self->{_io}->read_u4be();
     $self->{objects} = ();
     my $n_objects = $self->num_objects();

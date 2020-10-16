@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Websocket(KaitaiStruct):
     """The WebSocket protocol establishes a two-way communication channel via TCP.
@@ -38,12 +39,12 @@ class Websocket(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.initial_frame = self._root.InitialFrame(self._io, self, self._root)
+        self.initial_frame = Websocket.InitialFrame(self._io, self, self._root)
         if self.initial_frame.header.finished != True:
             self.trailing_frames = []
             i = 0
             while True:
-                _ = self._root.Dataframe(self._io, self, self._root)
+                _ = Websocket.Dataframe(self._io, self, self._root)
                 self.trailing_frames.append(_)
                 if _.header.finished:
                     break
@@ -58,11 +59,11 @@ class Websocket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.finished = self._io.read_bits_int(1) != 0
-            self.reserved = self._io.read_bits_int(3)
-            self.opcode = self._root.Opcode(self._io.read_bits_int(4))
-            self.is_masked = self._io.read_bits_int(1) != 0
-            self.len_payload_primary = self._io.read_bits_int(7)
+            self.finished = self._io.read_bits_int_be(1) != 0
+            self.reserved = self._io.read_bits_int_be(3)
+            self.opcode = KaitaiStream.resolve_enum(Websocket.Opcode, self._io.read_bits_int_be(4))
+            self.is_masked = self._io.read_bits_int_be(1) != 0
+            self.len_payload_primary = self._io.read_bits_int_be(7)
             self._io.align_to_byte()
             if self.len_payload_primary == 126:
                 self.len_payload_extended_1 = self._io.read_u2be()
@@ -91,11 +92,11 @@ class Websocket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header = self._root.FrameHeader(self._io, self, self._root)
-            if self.header.opcode != self._root.Opcode.text:
+            self.header = Websocket.FrameHeader(self._io, self, self._root)
+            if self.header.opcode != Websocket.Opcode.text:
                 self.payload_bytes = self._io.read_bytes(self.header.len_payload)
 
-            if self.header.opcode == self._root.Opcode.text:
+            if self.header.opcode == Websocket.Opcode.text:
                 self.payload_text = (self._io.read_bytes(self.header.len_payload)).decode(u"UTF-8")
 
 
@@ -108,11 +109,11 @@ class Websocket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header = self._root.FrameHeader(self._io, self, self._root)
-            if self._root.initial_frame.header.opcode != self._root.Opcode.text:
+            self.header = Websocket.FrameHeader(self._io, self, self._root)
+            if self._root.initial_frame.header.opcode != Websocket.Opcode.text:
                 self.payload_bytes = self._io.read_bytes(self.header.len_payload)
 
-            if self._root.initial_frame.header.opcode == self._root.Opcode.text:
+            if self._root.initial_frame.header.opcode == Websocket.Opcode.text:
                 self.payload_text = (self._io.read_bytes(self.header.len_payload)).decode(u"UTF-8")
 
 

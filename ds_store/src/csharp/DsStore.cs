@@ -31,7 +31,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _alignmentHeader = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 1 });
+            _alignmentHeader = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(AlignmentHeader, new byte[] { 0, 0, 0, 1 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 1 }, AlignmentHeader, M_Io, "/seq/0");
+            }
             _buddyAllocatorHeader = new BuddyAllocatorHeader(m_io, this, m_root);
         }
         public partial class BuddyAllocatorHeader : KaitaiStruct
@@ -49,7 +53,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 66, 117, 100, 49 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 117, 100, 49 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 66, 117, 100, 49 }, Magic, M_Io, "/types/buddy_allocator_header/seq/0");
+                }
                 _ofsBookkeepingInfoBlock = m_io.ReadU4be();
                 _lenBookkeepingInfoBlock = m_io.ReadU4be();
                 _copyOfsBookkeepingInfoBlock = m_io.ReadU4be();
@@ -639,8 +647,8 @@ namespace Kaitai
                             io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[BlockId].Offset);
                             _block = new Block(io, this, m_root);
                             io.Seek(_pos);
+                            f_block = true;
                         }
-                        f_block = true;
                         return _block;
                     }
                 }
@@ -673,8 +681,8 @@ namespace Kaitai
                         io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[Mode].Offset);
                         _rightmostBlock = new Block(io, this, m_root);
                         io.Seek(_pos);
+                        f_rightmostBlock = true;
                     }
-                    f_rightmostBlock = true;
                     return _rightmostBlock;
                 }
             }

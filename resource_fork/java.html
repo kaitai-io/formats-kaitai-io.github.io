@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Macintosh resource fork data: Java parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>macOS-specific</li>
+        <li class="active">Macintosh resource fork data</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Macintosh resource fork data:
+            
+            Java parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The data format of Macintosh resource forks,
+used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file's main data (the data fork).
+The kinds of data stored in resource forks include:</p>
+<ul>
+<li>Document resources:
+images, sounds, etc. used by a document</li>
+<li>Application resources:
+graphics, GUI layouts, localizable strings,
+and even code used by an application, a library, or system files</li>
+<li>Common metadata:
+custom icons and version metadata that could be displayed by the Finder</li>
+<li>Application-specific metadata:
+because resource forks follow a common format,
+other applications can store new metadata in them,
+even if the original application does not recognize or understand it</li>
+</ul>
+<p>Macintosh file systems (MFS, HFS, HFS+, APFS) support resource forks natively,
+which allows storing resources along with any file.
+Non-Macintosh file systems and protocols have little or no support for resource forks,
+so the resource fork data must be stored in some other way when using such file systems or protocols.
+Various file formats and tools exist for this purpose,
+such as BinHex, MacBinary, AppleSingle, AppleDouble, or QuickTime RezWack.
+In some cases,
+resource forks are stored as plain data in separate files with a .rsrc extension,
+even on Mac systems that natively support resource forks.</p>
+<p>On modern Mac OS X/macOS systems,
+resource forks are used far less commonly than on classic Mac OS systems,
+because of compatibility issues with other systems and historical limitations in the format.
+Modern macOS APIs and libraries do not use resource forks,
+and the legacy Carbon API that still used them has been deprecated since OS X 10.8.
+Despite this,
+even current macOS systems still use resource forks for certain purposes,
+such as custom file icons.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Mac OS
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["rsrc", "dfont"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q3933446">Wikidata Q3933446</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Resource_Fork">Resource Fork in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Macintosh resource fork data
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Macintosh resource fork data parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Macintosh resource fork data parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Macintosh resource fork data parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="java.html" title="Macintosh resource fork data parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Macintosh resource fork data parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Macintosh resource fork data parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Macintosh resource fork data parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Macintosh resource fork data parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="n">ResourceFork</span> <span class="n">data</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">fromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">rsrc</span><span class="s">&quot;, &quot;</span><span class="n">dfont</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+</pre></div>
+
+<p>Or parse structure from a byte array:</p>
+
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="o">[]</span> <span class="n">someArray</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">ResourceFork</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ResourceFork</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="na">header</span><span class="p">()</span> <span class="c1">// =&gt; The resource file&#39;s header information.</span>
+<span class="n">data</span><span class="p">.</span><span class="na">dataBlocksWithIo</span><span class="p">()</span> <span class="c1">// =&gt; Use `data_blocks` instead,</span>
+<span class="n">unless</span> <span class="n">you</span> <span class="n">need</span> <span class="n">access</span> <span class="n">to</span> <span class="k">this</span> <span class="n">instance</span><span class="err">&#39;</span><span class="n">s</span> <span class="err">`</span><span class="n">_io</span><span class="err">`</span><span class="p">.</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Java source code to parse Macintosh resource fork data
+            
+        </h2>
+
+        
+
+        <h3>ResourceFork.java</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/java/ResourceFork.java" download="ResourceFork.java" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * The data format of Macintosh resource forks,</span>
+<span class="cm"> * used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file&#39;s main data (the data fork).</span>
+<span class="cm"> * The kinds of data stored in resource forks include:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Document resources:</span>
+<span class="cm"> *   images, sounds, etc. used by a document</span>
+<span class="cm"> * * Application resources:</span>
+<span class="cm"> *   graphics, GUI layouts, localizable strings,</span>
+<span class="cm"> *   and even code used by an application, a library, or system files</span>
+<span class="cm"> * * Common metadata:</span>
+<span class="cm"> *   custom icons and version metadata that could be displayed by the Finder</span>
+<span class="cm"> * * Application-specific metadata:</span>
+<span class="cm"> *   because resource forks follow a common format,</span>
+<span class="cm"> *   other applications can store new metadata in them,</span>
+<span class="cm"> *   even if the original application does not recognize or understand it</span>
+<span class="cm"> * </span>
+<span class="cm"> * Macintosh file systems (MFS, HFS, HFS+, APFS) support resource forks natively,</span>
+<span class="cm"> * which allows storing resources along with any file.</span>
+<span class="cm"> * Non-Macintosh file systems and protocols have little or no support for resource forks,</span>
+<span class="cm"> * so the resource fork data must be stored in some other way when using such file systems or protocols.</span>
+<span class="cm"> * Various file formats and tools exist for this purpose,</span>
+<span class="cm"> * such as BinHex, MacBinary, AppleSingle, AppleDouble, or QuickTime RezWack.</span>
+<span class="cm"> * In some cases,</span>
+<span class="cm"> * resource forks are stored as plain data in separate files with a .rsrc extension,</span>
+<span class="cm"> * even on Mac systems that natively support resource forks.</span>
+<span class="cm"> * </span>
+<span class="cm"> * On modern Mac OS X/macOS systems,</span>
+<span class="cm"> * resource forks are used far less commonly than on classic Mac OS systems,</span>
+<span class="cm"> * because of compatibility issues with other systems and historical limitations in the format.</span>
+<span class="cm"> * Modern macOS APIs and libraries do not use resource forks,</span>
+<span class="cm"> * and the legacy Carbon API that still used them has been deprecated since OS X 10.8.</span>
+<span class="cm"> * Despite this,</span>
+<span class="cm"> * even current macOS systems still use resource forks for certain purposes,</span>
+<span class="cm"> * such as custom file icons.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151&quot;&gt;Inside Macintosh, More Macintosh Toolbox, Resource Manager, Resource Manager Reference, Resource File Format&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www.pagetable.com/?p=50&quot;&gt;Inside Macintosh, Volume I, The Resource Manager, Format of a Resource File&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ResourceFork</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ResourceFork</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ResourceFork</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">ResourceFork</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">ResourceFork</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">ResourceFork</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">systemData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">112</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">applicationData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Resource file header,</span>
+<span class="cm">     * containing the offsets and lengths of the resource data area and resource map.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FileHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">FileHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">FileHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsDataBlocks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsResourceMap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenDataBlocks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenResourceMap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsDataBlocks</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsResourceMap</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenDataBlocks</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenResourceMap</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of the resource data area,</span>
+<span class="cm">         * from the start of the resource file.</span>
+<span class="cm">         * </span>
+<span class="cm">         * In practice,</span>
+<span class="cm">         * this should always be `256`,</span>
+<span class="cm">         * i. e. the resource data area should directly follow the application-specific data area.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsDataBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsDataBlocks</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of the resource map,</span>
+<span class="cm">         * from the start of the resource file.</span>
+<span class="cm">         * </span>
+<span class="cm">         * In practice,</span>
+<span class="cm">         * this should always be `ofs_data_blocks + len_data_blocks`,</span>
+<span class="cm">         * i. e. the resource map should directly follow the resource data area.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsResourceMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsResourceMap</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Length of the resource data area.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenDataBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenDataBlocks</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Length of the resource map.</span>
+<span class="cm">         * </span>
+<span class="cm">         * In practice,</span>
+<span class="cm">         * this should always be `_root._io.size - ofs_resource_map`,</span>
+<span class="cm">         * i. e. the resource map should extend to the end of the resource file.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenResourceMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenResourceMap</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * A resource data block,</span>
+<span class="cm">     * as stored in the resource data area.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Each data block stores the data contained in a resource,</span>
+<span class="cm">     * along with its length.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DataBlock</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DataBlock</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DataBlock</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DataBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DataBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DataBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The length of the resource data stored in this block.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenData</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The data stored in this block.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Resource map,</span>
+<span class="cm">     * containing information about the resources in the file and where they are located in the data area.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ResourceMap</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ResourceMap</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ResourceMap</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ResourceMap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ResourceMap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ResourceMap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reservedFileHeaderCopy</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reservedNextResourceMapHandle</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reservedFileReferenceNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_fileAttributes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_fileAttributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fileAttributes</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileAttributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileAttributes</span><span class="p">(</span><span class="n">_io__raw_fileAttributes</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsTypeList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsNames</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A resource file&#39;s attributes,</span>
+<span class="cm">         * as stored in the resource map.</span>
+<span class="cm">         * </span>
+<span class="cm">         * These attributes are sometimes also referred to as resource map attributes,</span>
+<span class="cm">         * because of where they are stored in the file.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FileAttributes</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">FileAttributes</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">FileAttributes</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FileAttributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FileAttributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FileAttributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">resourcesLocked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">printerDriverMultifinderCompatible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">noWriteChanges</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">needsCompact</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">mapNeedsWrite</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Integer</span> <span class="n">asInt</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The attributes as a packed integer,</span>
+<span class="cm">             * as they are stored in the file.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">asInt</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">asInt</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">asInt</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">asInt</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">resourcesLocked</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved0</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">printerDriverMultifinderCompatible</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">noWriteChanges</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">needsCompact</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">mapNeedsWrite</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * TODO What does this attribute actually do,</span>
+<span class="cm">             * and how is it different from `read_only`?</span>
+<span class="cm">             * </span>
+<span class="cm">             * This attribute is undocumented and not defined in &lt;CarbonCore/Resources.h&gt;,</span>
+<span class="cm">             * but ResEdit has a checkbox called &quot;Resources Locked&quot; for this attribute.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">resourcesLocked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">resourcesLocked</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * These attributes have no known usage or meaning and should always be zero.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved0</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Indicates that this printer driver is compatible with MultiFinder,</span>
+<span class="cm">             * i. e. can be used simultaneously by multiple applications.</span>
+<span class="cm">             * This attribute is only meant to be set on printer driver resource forks.</span>
+<span class="cm">             * </span>
+<span class="cm">             * This attribute is not documented in Inside Macintosh and is not defined in &lt;CarbonCore/Resources.h&gt;.</span>
+<span class="cm">             * It is documented in technote PR510,</span>
+<span class="cm">             * and ResEdit has a checkbox called &quot;Printer Driver MultiFinder Compatible&quot; for this attribute.</span>
+<span class="cm">             * @see &lt;a href=&quot;https://www.fenestrated.net/mirrors/Apple%20Technotes%20(As%20of%202002)/pr/pr_510.html&quot;&gt;Apple Technical Note PR510 - Printer Driver Q&amp;As, section &#39;&quot;Printer driver is MultiFinder compatible&quot; bit&#39;&lt;/a&gt;</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">printerDriverMultifinderCompatible</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">printerDriverMultifinderCompatible</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Indicates that the Resource Manager should not write any changes from memory into the resource file.</span>
+<span class="cm">             * Any modification operations requested by the application will return successfully,</span>
+<span class="cm">             * but will not actually update the resource file.</span>
+<span class="cm">             * </span>
+<span class="cm">             * TODO Is this attribute supposed to be set on disk or only in memory?</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">noWriteChanges</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">noWriteChanges</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Indicates that the resource file should be compacted the next time it is written by the Resource Manager.</span>
+<span class="cm">             * This attribute is only meant to be set in memory;</span>
+<span class="cm">             * it is cleared when the resource file is written to disk.</span>
+<span class="cm">             * </span>
+<span class="cm">             * This attribute is mainly used internally by the Resource Manager,</span>
+<span class="cm">             * but may also be set manually by the application.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">needsCompact</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">needsCompact</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Indicates that the resource map has been changed in memory and should be written to the resource file on the next update.</span>
+<span class="cm">             * This attribute is only meant to be set in memory;</span>
+<span class="cm">             * it is cleared when the resource file is written to disk.</span>
+<span class="cm">             * </span>
+<span class="cm">             * This attribute is mainly used internally by the Resource Manager,</span>
+<span class="cm">             * but may also be set manually by the application.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">mapNeedsWrite</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mapNeedsWrite</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * These attributes have no known usage or meaning and should always be zero.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Resource type list and storage area for resource reference lists in the resource map.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The two parts are combined into a single type here for technical reasons:</span>
+<span class="cm">         * the start of the resource reference list area is not stored explicitly in the file,</span>
+<span class="cm">         * instead it always starts directly after the resource type list.</span>
+<span class="cm">         * The simplest way to implement this is by placing both types into a single `seq`.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TypeListAndReferenceLists</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">TypeListAndReferenceLists</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">TypeListAndReferenceLists</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">typeList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TypeList</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">referenceLists</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Resource type list in the resource map.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TypeList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="n">TypeList</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="n">TypeList</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">TypeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">TypeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">TypeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">numTypesM1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+                    <span class="n">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">numTypes</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTypes</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">TypeListEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * A single entry in the resource type list.</span>
+<span class="cm">                 * </span>
+<span class="cm">                 * Each entry corresponds to exactly one resource reference list.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TypeListEntry</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="n">TypeListEntry</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="n">TypeListEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">numReferencesM1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">ofsReferenceList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">numReferences</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The number of resources in the reference list for this type.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">numReferences</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">numReferences</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numReferences</span><span class="p">;</span>
+                        <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="n">numReferencesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">65536</span><span class="p">));</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">numReferences</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numReferences</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="n">ReferenceList</span> <span class="n">referenceList</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The resource reference list for this resource type.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="n">ReferenceList</span> <span class="nf">referenceList</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">referenceList</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">referenceList</span><span class="p">;</span>
+                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">().</span><span class="na">_parent</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
+                        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsReferenceList</span><span class="p">());</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">referenceList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReferenceList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">numReferences</span><span class="p">());</span>
+                        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">referenceList</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">type</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numReferencesM1</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">int</span> <span class="n">ofsReferenceList</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span> <span class="n">_parent</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The four-character type code of the resources in the reference list.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">type</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The number of resources in the reference list for this type,</span>
+<span class="cm">                     * minus one.</span>
+<span class="cm">                     * </span>
+<span class="cm">                     * Empty reference lists should never exist.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numReferencesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numReferencesM1</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * Offset of the resource reference list for this resource type,</span>
+<span class="cm">                     * from the start of the resource type list.</span>
+<span class="cm">                     * </span>
+<span class="cm">                     * Although the offset is relative to the start of the type list,</span>
+<span class="cm">                     * it should never point into the type list itself,</span>
+<span class="cm">                     * but into the reference list storage area that directly follows it.</span>
+<span class="cm">                     * That is,</span>
+<span class="cm">                     * it should always be at least `_parent._sizeof`.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ofsReferenceList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsReferenceList</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="n">Integer</span> <span class="n">numTypes</span><span class="p">;</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * The number of resource types in this list.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">numTypes</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">numTypes</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numTypes</span><span class="p">;</span>
+                    <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="n">numTypesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">65536</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">numTypes</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numTypes</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">int</span> <span class="n">numTypesM1</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span> <span class="n">_parent</span><span class="p">;</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * The number of resource types in this list,</span>
+<span class="cm">                 * minus one.</span>
+<span class="cm">                 * </span>
+<span class="cm">                 * If the resource list is empty,</span>
+<span class="cm">                 * the value of this field is `0xffff`,</span>
+<span class="cm">                 * i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numTypesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numTypesM1</span><span class="p">;</span> <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * Entries in the resource type list.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * A resource reference list,</span>
+<span class="cm">             * as stored in the reference list area.</span>
+<span class="cm">             * </span>
+<span class="cm">             * Each reference list has exactly one matching entry in the resource type list,</span>
+<span class="cm">             * and describes all resources of a single type in the file.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ReferenceList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+                <span class="kd">public</span> <span class="nf">ReferenceList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numReferences</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">numReferences</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">ReferenceList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span><span class="p">.</span><span class="na">TypeListEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numReferences</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">numReferences</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">ReferenceList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span><span class="p">.</span><span class="na">TypeListEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numReferences</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">numReferences</span> <span class="o">=</span> <span class="n">numReferences</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="n">references</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Reference</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">numReferences</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numReferences</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">references</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Reference</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * A single resource reference in a resource reference list.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Reference</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Reference</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="n">Reference</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Reference</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Reference</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Reference</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS2be</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">ofsName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_attributes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_attributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_attributes</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">attributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Attributes</span><span class="p">(</span><span class="n">_io__raw_attributes</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">ofsDataBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">reservedHandle</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                    <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * A resource&#39;s attributes,</span>
+<span class="cm">                     * as stored in a resource reference.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Attributes</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Attributes</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                            <span class="k">return</span> <span class="k">new</span> <span class="n">Attributes</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                        <span class="p">}</span>
+
+                        <span class="kd">public</span> <span class="nf">Attributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                        <span class="p">}</span>
+
+                        <span class="kd">public</span> <span class="nf">Attributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                        <span class="p">}</span>
+
+                        <span class="kd">public</span> <span class="nf">Attributes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                            <span class="n">_read</span><span class="p">();</span>
+                        <span class="p">}</span>
+                        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">systemReference</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">loadIntoSystemHeap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">purgeable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">protected</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">preload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">needsWrite</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">compressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">asInt</span><span class="p">;</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * The attributes as a packed integer,</span>
+<span class="cm">                         * as they are stored in the file.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">asInt</span><span class="p">()</span> <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">asInt</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">asInt</span><span class="p">;</span>
+                            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">asInt</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">systemReference</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">loadIntoSystemHeap</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">purgeable</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">locked</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="kd">protected</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">preload</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">needsWrite</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">compressed</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">;</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource reference is a system reference rather than a regular local reference.</span>
+<span class="cm">                         * This attribute is nearly undocumented.</span>
+<span class="cm">                         * For all practical purposes,</span>
+<span class="cm">                         * it should be considered reserved and should always be zero.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute was last documented in the Promotional Edition of Inside Macintosh,</span>
+<span class="cm">                         * in the Resource Manager chapter,</span>
+<span class="cm">                         * on pages 37-41,</span>
+<span class="cm">                         * in a &quot;System References&quot; section that calls itself &quot;of historical interest only&quot;.</span>
+<span class="cm">                         * The final versions of Inside Macintosh only mention this attribute as &quot;reserved for use by the Resource Manager&quot;.</span>
+<span class="cm">                         * &lt;CarbonCore/Resources.h&gt; contains a `resSysRefBit` constant,</span>
+<span class="cm">                         * but no corresponding `resSysRef` constant like for all other resource attributes.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * According to the Inside Macintosh Promotional Edition,</span>
+<span class="cm">                         * a system reference was effectively an alias pointing to a resource stored in the system file,</span>
+<span class="cm">                         * possibly with a different ID and name (but not type) than the system reference.</span>
+<span class="cm">                         * If this attribute is set,</span>
+<span class="cm">                         * `ofs_data_block` is ignored and should be zero,</span>
+<span class="cm">                         * and `reserved_handle` contains</span>
+<span class="cm">                         * (in its high and low two bytes, respectively)</span>
+<span class="cm">                         * the ID and name offset of the real system resource that this system reference points to.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * TODO Do any publicly available Mac OS versions support system references,</span>
+<span class="cm">                         * and do any real files/applications use them?</span>
+<span class="cm">                         * So far the answer seems to be no,</span>
+<span class="cm">                         * but I would like to be proven wrong!</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">systemReference</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">systemReference</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource should be loaded into the system heap if possible,</span>
+<span class="cm">                         * rather than the application heap.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute is only meant to be used by Mac OS itself,</span>
+<span class="cm">                         * for System and Finder resources,</span>
+<span class="cm">                         * and not by normal applications.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute may be set both in memory and on disk,</span>
+<span class="cm">                         * but it only has any meaning while the resource file is loaded into memory.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">loadIntoSystemHeap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">loadIntoSystemHeap</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource&#39;s data should be purgeable by the Mac OS Memory Manager.</span>
+<span class="cm">                         * This allows the resource data to be purged from memory if space is needed on the heap.</span>
+<span class="cm">                         * Purged resources can later be reloaded from disk if their data is needed again.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * If the `locked` attribute is set,</span>
+<span class="cm">                         * this attribute has no effect</span>
+<span class="cm">                         * (i. e. locked resources are never purgeable).</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute may be set both in memory and on disk,</span>
+<span class="cm">                         * but it only has any meaning while the resource file is loaded into memory.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">purgeable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">purgeable</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource&#39;s data should be locked to the Mac OS Memory Manager.</span>
+<span class="cm">                         * This prevents the resource data from being moved when the heap is compacted.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute may be set both in memory and on disk,</span>
+<span class="cm">                         * but it only has any meaning while the resource file is loaded into memory.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">locked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">locked</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource should be protected (i. e. unmodifiable) in memory.</span>
+<span class="cm">                         * This prevents the application from using the Resource Manager to change the resource&#39;s data or metadata,</span>
+<span class="cm">                         * or delete it.</span>
+<span class="cm">                         * The only exception are the resource&#39;s attributes,</span>
+<span class="cm">                         * which can always be changed,</span>
+<span class="cm">                         * even for protected resources.</span>
+<span class="cm">                         * This allows protected resources to be unprotected again by the application.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute may be set both in memory and on disk,</span>
+<span class="cm">                         * but it only has any meaning while the resource file is loaded into memory.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">protected</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="kd">protected</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource&#39;s data should be immediately loaded into memory when the resource file is opened.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute may be set both in memory and on disk,</span>
+<span class="cm">                         * but it only has any meaning when the resource file is first opened.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">preload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">preload</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource&#39;s data has been changed in memory and should be written to the resource file on the next update.</span>
+<span class="cm">                         * This attribute is only meant to be set in memory;</span>
+<span class="cm">                         * it is cleared when the resource file is written to disk.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * This attribute is used internally by the Resource Manager and should not be set manually by the application.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">needsWrite</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">needsWrite</span><span class="p">;</span> <span class="p">}</span>
+
+                        <span class="cm">/**</span>
+<span class="cm">                         * Indicates that this resource&#39;s data is compressed.</span>
+<span class="cm">                         * Compressed resource data is decompressed transparently by the Resource Manager when reading.</span>
+<span class="cm">                         * </span>
+<span class="cm">                         * For a detailed description of the structure of compressed resources as they are stored in the file,</span>
+<span class="cm">                         * see the compressed_resource.ksy spec.</span>
+<span class="cm">                         */</span>
+                        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">compressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compressed</span><span class="p">;</span> <span class="p">}</span>
+                        <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                        <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="n">Name</span> <span class="n">name</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The name (if any) of the resource described by this reference.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="n">Name</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">ofsName</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">65535</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">resourceMap</span><span class="p">().</span><span class="na">namesWithIo</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
+                            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsName</span><span class="p">());</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Name</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="p">}</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="n">DataBlock</span> <span class="n">dataBlock</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * The data block containing the data for the resource described by this reference.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="n">DataBlock</span> <span class="nf">dataBlock</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dataBlock</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlock</span><span class="p">;</span>
+                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">dataBlocksWithIo</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
+                        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsDataBlock</span><span class="p">());</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">dataBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlock</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">short</span> <span class="n">id</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">int</span> <span class="n">ofsName</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">Attributes</span> <span class="n">attributes</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsDataBlock</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">long</span> <span class="n">reservedHandle</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_attributes</span><span class="p">;</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * ID of the resource described by this reference.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">short</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * Offset of the name for the resource described by this reference,</span>
+<span class="cm">                     * from the start of the resource name area.</span>
+<span class="cm">                     * </span>
+<span class="cm">                     * If the resource has no name,</span>
+<span class="cm">                     * the value of this field is `0xffff`</span>
+<span class="cm">                     * i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ofsName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsName</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * Attributes of the resource described by this reference.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="n">Attributes</span> <span class="nf">attributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">attributes</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * Offset of the data block for the resource described by this reference,</span>
+<span class="cm">                     * from the start of the resource data area.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsDataBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsDataBlock</span><span class="p">;</span> <span class="p">}</span>
+
+                    <span class="cm">/**</span>
+<span class="cm">                     * Reserved space for the resource&#39;s handle in memory.</span>
+<span class="cm">                     */</span>
+                    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reservedHandle</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reservedHandle</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_attributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_attributes</span><span class="p">;</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Reference</span><span class="o">&gt;</span> <span class="n">references</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="kt">int</span> <span class="n">numReferences</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span><span class="p">.</span><span class="na">TypeListEntry</span> <span class="n">_parent</span><span class="p">;</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * The resource references in this reference list.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Reference</span><span class="o">&gt;</span> <span class="nf">references</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">references</span><span class="p">;</span> <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * The number of references in this resource reference list.</span>
+<span class="cm">                 * </span>
+<span class="cm">                 * This information needs to be passed in as a parameter,</span>
+<span class="cm">                 * because it is stored in the reference list&#39;s type list entry,</span>
+<span class="cm">                 * and not in the reference list itself.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numReferences</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numReferences</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">TypeList</span><span class="p">.</span><span class="na">TypeListEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">TypeList</span> <span class="n">typeList</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">referenceLists</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The resource map&#39;s resource type list.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="n">TypeList</span> <span class="nf">typeList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">typeList</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Storage area for the resource map&#39;s resource reference lists.</span>
+<span class="cm">             * </span>
+<span class="cm">             * According to Inside Macintosh,</span>
+<span class="cm">             * the reference lists are stored contiguously,</span>
+<span class="cm">             * in the same order as their corresponding resource type list entries.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">referenceLists</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">referenceLists</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A resource name,</span>
+<span class="cm">         * as stored in the resource name storage area in the resource map.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The resource names are not required to appear in any particular order.</span>
+<span class="cm">         * There may be unused space between and around resource names,</span>
+<span class="cm">         * but in practice they are often contiguous.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Name</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Name</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Name</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Name</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Name</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Name</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lenValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenValue</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenValue</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">value</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The length of the resource name, in bytes.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenValue</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The resource name.</span>
+<span class="cm">             * </span>
+<span class="cm">             * This field is exposed as a byte array,</span>
+<span class="cm">             * because there is no universal encoding for resource names.</span>
+<span class="cm">             * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="cm">             * including resource names,</span>
+<span class="cm">             * use the system encoding,</span>
+<span class="cm">             * which varies depending on the system language.</span>
+<span class="cm">             * This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="cm">             * </span>
+<span class="cm">             * Many resource names are plain ASCII,</span>
+<span class="cm">             * meaning that the encoding often does not matter</span>
+<span class="cm">             * (because all Mac OS encodings are ASCII-compatible).</span>
+<span class="cm">             * For non-ASCII resource names,</span>
+<span class="cm">             * the most common encoding is perhaps MacRoman</span>
+<span class="cm">             * (used for English and other Western languages),</span>
+<span class="cm">             * but other encodings are also sometimes used,</span>
+<span class="cm">             * especially for software in non-Western languages.</span>
+<span class="cm">             * </span>
+<span class="cm">             * There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="cm">             * For example,</span>
+<span class="cm">             * localized software may have some (but not all) of its resource names translated.</span>
+<span class="cm">             * For non-Western languages,</span>
+<span class="cm">             * this can lead to some resource names using MacRoman,</span>
+<span class="cm">             * and others using a different encoding.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ResourceFork</span><span class="p">.</span><span class="na">ResourceMap</span><span class="p">.</span><span class="na">TypeListAndReferenceLists</span><span class="p">.</span><span class="na">ReferenceList</span><span class="p">.</span><span class="na">Reference</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">TypeListAndReferenceLists</span> <span class="n">typeListAndReferenceLists</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">TypeListAndReferenceLists</span> <span class="nf">typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">typeListAndReferenceLists</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">typeListAndReferenceLists</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsTypeList</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">ofsNames</span><span class="p">()</span> <span class="o">-</span> <span class="n">ofsTypeList</span><span class="p">()));</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_typeListAndReferenceLists</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">_io__raw_typeListAndReferenceLists</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">typeListAndReferenceLists</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">BytesWithIo</span> <span class="n">namesWithIo</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Use `names` instead,</span>
+<span class="cm">         * unless you need access to this instance&#39;s `_io`.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">BytesWithIo</span> <span class="nf">namesWithIo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">namesWithIo</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">namesWithIo</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsNames</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_namesWithIo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_namesWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_namesWithIo</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">namesWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw_namesWithIo</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">namesWithIo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">names</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Storage area for the names of all resources.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">names</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">names</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">names</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">names</span> <span class="o">=</span> <span class="n">namesWithIo</span><span class="p">().</span><span class="na">data</span><span class="p">();</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">names</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">FileHeader</span> <span class="n">reservedFileHeaderCopy</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reservedNextResourceMapHandle</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">reservedFileReferenceNumber</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">FileAttributes</span> <span class="n">fileAttributes</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">ofsTypeList</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">ofsNames</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_fileAttributes</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_typeListAndReferenceLists</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_namesWithIo</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Reserved space for a copy of the resource file header.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">FileHeader</span> <span class="nf">reservedFileHeaderCopy</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reservedFileHeaderCopy</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Reserved space for a handle to the next loaded resource map in memory.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reservedNextResourceMapHandle</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reservedNextResourceMapHandle</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Reserved space for the resource file&#39;s file reference number.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reservedFileReferenceNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reservedFileReferenceNumber</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The resource file&#39;s attributes.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">FileAttributes</span> <span class="nf">fileAttributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileAttributes</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of the resource type list,</span>
+<span class="cm">         * from the start of the resource map.</span>
+<span class="cm">         * </span>
+<span class="cm">         * In practice,</span>
+<span class="cm">         * this should always be `sizeof&lt;resource_map&gt;`,</span>
+<span class="cm">         * i. e. the resource type list should directly follow the resource map.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ofsTypeList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsTypeList</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of the resource name area,</span>
+<span class="cm">         * from the start of the resource map.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ofsNames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsNames</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_fileAttributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_fileAttributes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_typeListAndReferenceLists</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_namesWithIo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_namesWithIo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">BytesWithIo</span> <span class="n">dataBlocksWithIo</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Use `data_blocks` instead,</span>
+<span class="cm">     * unless you need access to this instance&#39;s `_io`.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">BytesWithIo</span> <span class="nf">dataBlocksWithIo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dataBlocksWithIo</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlocksWithIo</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">ofsDataBlocks</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">lenDataBlocks</span><span class="p">());</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_dataBlocksWithIo</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw_dataBlocksWithIo</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlocksWithIo</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">dataBlocks</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Storage area for the data blocks of all resources.</span>
+<span class="cm">     * </span>
+<span class="cm">     * These data blocks are not required to appear in any particular order,</span>
+<span class="cm">     * and there may be unused space between and around them.</span>
+<span class="cm">     * </span>
+<span class="cm">     * In practice,</span>
+<span class="cm">     * the data blocks in newly created resource files are usually contiguous.</span>
+<span class="cm">     * When existing resources are shortened,</span>
+<span class="cm">     * the Mac OS resource manager leaves unused space where the now removed resource data was,</span>
+<span class="cm">     * as this is quicker than moving the following resource data into the newly freed space.</span>
+<span class="cm">     * Such unused space may be cleaned up later when the resource manager &quot;compacts&quot; the resource file,</span>
+<span class="cm">     * which happens when resources are removed entirely,</span>
+<span class="cm">     * or when resources are added or grown so that more space is needed in the data area.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">dataBlocks</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dataBlocks</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlocks</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">dataBlocks</span> <span class="o">=</span> <span class="n">dataBlocksWithIo</span><span class="p">().</span><span class="na">data</span><span class="p">();</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataBlocks</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ResourceMap</span> <span class="n">resourceMap</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The resource file&#39;s resource map.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">ResourceMap</span> <span class="nf">resourceMap</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">resourceMap</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">resourceMap</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">ofsResourceMap</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_resourceMap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">lenResourceMap</span><span class="p">());</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_resourceMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_resourceMap</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">resourceMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ResourceMap</span><span class="p">(</span><span class="n">_io__raw_resourceMap</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">resourceMap</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">FileHeader</span> <span class="n">header</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">systemData</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">applicationData</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ResourceFork</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_dataBlocksWithIo</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_resourceMap</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The resource file&#39;s header information.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">FileHeader</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * System-reserved data area.</span>
+<span class="cm">     * This field can generally be ignored when reading and writing.</span>
+<span class="cm">     * </span>
+<span class="cm">     * This field is used by the Classic Mac OS Finder as temporary storage space.</span>
+<span class="cm">     * It usually contains parts of the file metadata (name, type/creator code, etc.).</span>
+<span class="cm">     * Any existing data in this field is ignored and overwritten.</span>
+<span class="cm">     * </span>
+<span class="cm">     * In resource files written by Mac OS X,</span>
+<span class="cm">     * this field is set to all zero bytes.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">systemData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">systemData</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Application-specific data area.</span>
+<span class="cm">     * This field can generally be ignored when reading and writing.</span>
+<span class="cm">     * </span>
+<span class="cm">     * According to early revisions of Inside Macintosh,</span>
+<span class="cm">     * this field is &quot;available for application data&quot;.</span>
+<span class="cm">     * In practice, it is almost never used for this purpose,</span>
+<span class="cm">     * and usually contains only junk data.</span>
+<span class="cm">     * </span>
+<span class="cm">     * In resource files written by Mac OS X,</span>
+<span class="cm">     * this field is set to all zero bytes.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">applicationData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">applicationData</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ResourceFork</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_dataBlocksWithIo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_dataBlocksWithIo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_resourceMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_resourceMap</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

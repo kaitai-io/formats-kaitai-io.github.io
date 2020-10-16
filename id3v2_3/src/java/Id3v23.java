@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class Id3v23 extends KaitaiStruct {
     public static Id3v23 fromFile(String fileName) throws IOException {
@@ -49,8 +50,8 @@ public class Id3v23 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.padding = this._io.readBitsInt(1) != 0;
-            this.value = this._io.readBitsInt(7);
+            this.padding = this._io.readBitsIntBe(1) != 0;
+            this.value = this._io.readBitsIntBe(7);
         }
         private boolean padding;
         private long value;
@@ -237,14 +238,14 @@ public class Id3v23 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flagDiscardAlterTag = this._io.readBitsInt(1) != 0;
-                this.flagDiscardAlterFile = this._io.readBitsInt(1) != 0;
-                this.flagReadOnly = this._io.readBitsInt(1) != 0;
-                this.reserved1 = this._io.readBitsInt(5);
-                this.flagCompressed = this._io.readBitsInt(1) != 0;
-                this.flagEncrypted = this._io.readBitsInt(1) != 0;
-                this.flagGrouping = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(5);
+                this.flagDiscardAlterTag = this._io.readBitsIntBe(1) != 0;
+                this.flagDiscardAlterFile = this._io.readBitsIntBe(1) != 0;
+                this.flagReadOnly = this._io.readBitsIntBe(1) != 0;
+                this.reserved1 = this._io.readBitsIntBe(5);
+                this.flagCompressed = this._io.readBitsIntBe(1) != 0;
+                this.flagEncrypted = this._io.readBitsIntBe(1) != 0;
+                this.flagGrouping = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(5);
             }
             private boolean flagDiscardAlterTag;
             private boolean flagDiscardAlterFile;
@@ -340,8 +341,8 @@ public class Id3v23 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flagCrc = this._io.readBitsInt(1) != 0;
-                this.reserved = this._io.readBitsInt(15);
+                this.flagCrc = this._io.readBitsIntBe(1) != 0;
+                this.reserved = this._io.readBitsIntBe(15);
             }
             private boolean flagCrc;
             private long reserved;
@@ -390,7 +391,10 @@ public class Id3v23 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 73, 68, 51 });
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(magic(), new byte[] { 73, 68, 51 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 51 }, magic(), _io(), "/types/header/seq/0");
+            }
             this.versionMajor = this._io.readU1();
             this.versionRevision = this._io.readU1();
             this.flags = new Flags(this._io, this, _root);
@@ -416,10 +420,10 @@ public class Id3v23 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flagUnsynchronization = this._io.readBitsInt(1) != 0;
-                this.flagHeaderex = this._io.readBitsInt(1) != 0;
-                this.flagExperimental = this._io.readBitsInt(1) != 0;
-                this.reserved = this._io.readBitsInt(5);
+                this.flagUnsynchronization = this._io.readBitsIntBe(1) != 0;
+                this.flagHeaderex = this._io.readBitsIntBe(1) != 0;
+                this.flagExperimental = this._io.readBitsIntBe(1) != 0;
+                this.reserved = this._io.readBitsIntBe(5);
             }
             private boolean flagUnsynchronization;
             private boolean flagHeaderex;

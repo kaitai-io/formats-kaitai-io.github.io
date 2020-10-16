@@ -229,7 +229,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 127, 69, 76, 70 });
+            _magic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 127, 69, 76, 70 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 127, 69, 76, 70 }, Magic, M_Io, "/seq/0");
+            }
             _bits = ((Bits) m_io.ReadU1());
             _endian = ((Endian) m_io.ReadU1());
             _eiVersion = m_io.ReadU1();
@@ -1110,7 +1114,7 @@ namespace Kaitai
                 }
 
                 if (m_isLe == null) {
-                    throw new Exception("Unable to decide on endianness");
+                    throw new UndecidedEndiannessError();
                 } else if (m_isLe == true) {
                     _readLE();
                 } else {
@@ -1222,7 +1226,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -1285,7 +1289,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -1454,8 +1458,8 @@ namespace Kaitai
                                 _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
                             }
                             io.Seek(_pos);
+                            f_dynamic = true;
                         }
-                        f_dynamic = true;
                         return _dynamic;
                     }
                 }
@@ -1522,7 +1526,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -1602,8 +1606,8 @@ namespace Kaitai
                             } else {
                                 _flag1Values = new DtFlag1Values(ValueOrPtr, m_io, this, m_root);
                             }
+                            f_flag1Values = true;
                         }
-                        f_flag1Values = true;
                         return _flag1Values;
                     }
                 }
@@ -1638,7 +1642,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -1792,28 +1796,28 @@ namespace Kaitai
                         io.Seek(OfsBody);
                         if (m_isLe == true) {
                             switch (Type) {
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Dynamic: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             case Elf.ShType.Dynsym: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {
@@ -1823,28 +1827,28 @@ namespace Kaitai
                             }
                         } else {
                             switch (Type) {
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Dynamic: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             case Elf.ShType.Dynsym: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {
@@ -1942,7 +1946,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -1997,7 +2001,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -2070,7 +2074,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {
@@ -2131,7 +2135,7 @@ namespace Kaitai
                 {
 
                     if (m_isLe == null) {
-                        throw new Exception("Unable to decide on endianness");
+                        throw new UndecidedEndiannessError();
                     } else if (m_isLe == true) {
                         _readLE();
                     } else {

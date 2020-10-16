@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -351,7 +351,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (87, 65, 82, 50, 32, 77, 65, 80, 0, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(10);
     $self->{unused} = $self->{_io}->read_bytes(2);
     $self->{id_tag} = $self->{_io}->read_u4le();
 }
@@ -601,7 +601,7 @@ sub _read {
 sub resource {
     my ($self) = @_;
     return $self->{resource} if ($self->{resource});
-    if ( (($self->u_type() == $UNIT_TYPE_GOLD_MINE) || ($self->u_type() == $UNIT_TYPE_HUMAN_OIL_WELL) || ($self->u_type() == $UNIT_TYPE_ORC_OIL_WELL) || ($self->u_type() == $UNIT_TYPE_OIL_PATCH)) ) {
+    if ( (($self->u_type() == $Warcraft2Pud::UNIT_TYPE_GOLD_MINE) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_HUMAN_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_ORC_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_OIL_PATCH)) ) {
         $self->{resource} = ($self->options() * 2500);
     }
     return $self->{resource};

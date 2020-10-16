@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GenmidiOp2(KaitaiStruct):
     """GENMIDI.OP2 is a sound bank file used by players based on DMX sound
@@ -28,10 +29,12 @@ class GenmidiOp2(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(b"\x23\x4F\x50\x4C\x5F\x49\x49\x23")
+        self.magic = self._io.read_bytes(8)
+        if not self.magic == b"\x23\x4F\x50\x4C\x5F\x49\x49\x23":
+            raise kaitaistruct.ValidationNotEqualError(b"\x23\x4F\x50\x4C\x5F\x49\x49\x23", self.magic, self._io, u"/seq/0")
         self.instruments = [None] * (175)
         for i in range(175):
-            self.instruments[i] = self._root.InstrumentEntry(self._io, self, self._root)
+            self.instruments[i] = GenmidiOp2.InstrumentEntry(self._io, self, self._root)
 
         self.instrument_names = [None] * (175)
         for i in range(175):
@@ -51,7 +54,7 @@ class GenmidiOp2(KaitaiStruct):
             self.note = self._io.read_u1()
             self.instruments = [None] * (2)
             for i in range(2):
-                self.instruments[i] = self._root.Instrument(self._io, self, self._root)
+                self.instruments[i] = GenmidiOp2.Instrument(self._io, self, self._root)
 
 
 
@@ -63,9 +66,9 @@ class GenmidiOp2(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.op1 = self._root.OpSettings(self._io, self, self._root)
+            self.op1 = GenmidiOp2.OpSettings(self._io, self, self._root)
             self.feedback = self._io.read_u1()
-            self.op2 = self._root.OpSettings(self._io, self, self._root)
+            self.op2 = GenmidiOp2.OpSettings(self._io, self, self._root)
             self.unused = self._io.read_u1()
             self.base_note = self._io.read_s2le()
 

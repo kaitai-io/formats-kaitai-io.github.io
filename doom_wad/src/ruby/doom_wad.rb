@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class DoomWad < Kaitai::Struct::Struct
@@ -383,40 +383,40 @@ class DoomWad < Kaitai::Struct::Struct
       case name
       when "SECTORS"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Sectors.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Sectors.new(_io__raw_contents, self, @_root)
       when "TEXTURE1"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Texture12.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(_io__raw_contents, self, @_root)
       when "VERTEXES"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Vertexes.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Vertexes.new(_io__raw_contents, self, @_root)
       when "BLOCKMAP"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Blockmap.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Blockmap.new(_io__raw_contents, self, @_root)
       when "PNAMES"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Pnames.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Pnames.new(_io__raw_contents, self, @_root)
       when "TEXTURE2"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Texture12.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(_io__raw_contents, self, @_root)
       when "THINGS"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Things.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Things.new(_io__raw_contents, self, @_root)
       when "LINEDEFS"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Linedefs.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Linedefs.new(_io__raw_contents, self, @_root)
       when "SIDEDEFS"
         @_raw_contents = io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = Sidedefs.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Sidedefs.new(_io__raw_contents, self, @_root)
       else
         @contents = io.read_bytes(size)
       end

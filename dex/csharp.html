@@ -330,7 +330,11 @@ fields, annotations, etc.</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">100</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">120</span><span class="p">,</span> <span class="m">10</span> <span class="p">});</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">100</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">120</span><span class="p">,</span> <span class="m">10</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">100</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">120</span><span class="p">,</span> <span class="m">10</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header_item/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
                 <span class="n">_versionStr</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
                 <span class="n">_checksum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">20</span><span class="p">);</span>
@@ -581,40 +585,32 @@ fields, annotations, etc.</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_valueArg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
-                <span class="n">_valueType</span> <span class="p">=</span> <span class="p">((</span><span class="n">ValueTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>
+                <span class="n">_valueArg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+                <span class="n">_valueType</span> <span class="p">=</span> <span class="p">((</span><span class="n">ValueTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">ValueType</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">();</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Annotation</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncodedAnnotation</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Type</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Char</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">MethodHandle</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Array</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncodedArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Byte</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Method</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Array</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncodedArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">MethodType</span><span class="p">:</span> <span class="p">{</span>
@@ -625,28 +621,36 @@ fields, annotations, etc.</p>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Method</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Field</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Type</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Enum</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Field</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">ValueTypeEnum</span><span class="p">.</span><span class="n">Char</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="p">}</span>
@@ -1283,8 +1287,8 @@ fields, annotations, etc.</p>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">ClassDataOff</span><span class="p">);</span>
                         <span class="n">_classData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClassDataItem</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_classData</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_classData</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_classData</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -1301,8 +1305,8 @@ fields, annotations, etc.</p>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">StaticValuesOff</span><span class="p">);</span>
                         <span class="n">_staticValues</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EncodedArrayItem</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_staticValues</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_staticValues</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_staticValues</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -1567,8 +1571,8 @@ fields, annotations, etc.</p>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">ParametersOff</span><span class="p">);</span>
                         <span class="n">_paramsTypes</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TypeList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_paramsTypes</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="n">f_paramsTypes</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_paramsTypes</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>

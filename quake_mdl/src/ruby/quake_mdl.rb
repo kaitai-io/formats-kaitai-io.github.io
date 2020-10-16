@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class QuakeMdl < Kaitai::Struct::Struct
@@ -72,8 +72,10 @@ class QuakeMdl < Kaitai::Struct::Struct
     end
 
     def _read
-      @ident = @_io.ensure_fixed_contents([73, 68, 80, 79].pack('C*'))
-      @version_must_be_6 = @_io.ensure_fixed_contents([6, 0, 0, 0].pack('C*'))
+      @ident = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 79].pack('C*'), ident, _io, "/types/mdl_header/seq/0") if not ident == [73, 68, 80, 79].pack('C*')
+      @version_must_be_6 = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([6, 0, 0, 0].pack('C*'), version_must_be_6, _io, "/types/mdl_header/seq/1") if not version_must_be_6 == [6, 0, 0, 0].pack('C*')
       @scale = Vec3.new(@_io, self, @_root)
       @origin = Vec3.new(@_io, self, @_root)
       @radius = @_io.read_f4le

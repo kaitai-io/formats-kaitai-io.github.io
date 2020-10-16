@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -27,11 +28,17 @@ public class GranTurismoVol extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 });
+        this.magic = this._io.readBytes(8);
+        if (!(Arrays.equals(magic(), new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }, magic(), _io(), "/seq/0");
+        }
         this.numFiles = this._io.readU2le();
         this.numEntries = this._io.readU2le();
-        this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-        offsets = new ArrayList<Long>((int) (numFiles()));
+        this.reserved = this._io.readBytes(4);
+        if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, reserved(), _io(), "/seq/3");
+        }
+        offsets = new ArrayList<Long>(((Number) (numFiles())).intValue());
         for (int i = 0; i < numFiles(); i++) {
             this.offsets.add(this._io.readU4le());
         }
@@ -124,7 +131,7 @@ public class GranTurismoVol extends KaitaiStruct {
             return this.files;
         long _pos = this._io.pos();
         this._io.seek((ofsDir() & 4294965248L));
-        files = new ArrayList<FileInfo>((int) (_root.numEntries()));
+        files = new ArrayList<FileInfo>(((Number) (_root.numEntries())).intValue());
         for (int i = 0; i < _root.numEntries(); i++) {
             this.files.add(new FileInfo(this._io, this, _root));
         }

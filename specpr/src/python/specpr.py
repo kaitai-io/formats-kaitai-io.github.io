@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Specpr(KaitaiStruct):
     """Specpr records are fixed format, 1536 bytes/record. Record number
@@ -35,7 +36,7 @@ class Specpr(KaitaiStruct):
         self.records = []
         i = 0
         while not self._io.is_eof():
-            self.records.append(self._root.Record(self._io, self, self._root))
+            self.records.append(Specpr.Record(self._io, self, self._root))
             i += 1
 
 
@@ -47,12 +48,12 @@ class Specpr(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ids = self._root.Identifiers(self._io, self, self._root)
-            self.iscta = self._root.CoarseTimestamp(self._io, self, self._root)
-            self.isctb = self._root.CoarseTimestamp(self._io, self, self._root)
+            self.ids = Specpr.Identifiers(self._io, self, self._root)
+            self.iscta = Specpr.CoarseTimestamp(self._io, self, self._root)
+            self.isctb = Specpr.CoarseTimestamp(self._io, self, self._root)
             self.jdatea = self._io.read_s4be()
             self.jdateb = self._io.read_s4be()
-            self.istb = self._root.CoarseTimestamp(self._io, self, self._root)
+            self.istb = Specpr.CoarseTimestamp(self._io, self, self._root)
             self.isra = self._io.read_s4be()
             self.isdec = self._io.read_s4be()
             self.itchan = self._io.read_s4be()
@@ -72,8 +73,8 @@ class Specpr(KaitaiStruct):
                 self.mhist[i] = (self._io.read_bytes(74)).decode(u"ascii")
 
             self.nruns = self._io.read_s4be()
-            self.siangl = self._root.IllumAngle(self._io, self, self._root)
-            self.seangl = self._root.IllumAngle(self._io, self, self._root)
+            self.siangl = Specpr.IllumAngle(self._io, self, self._root)
+            self.seangl = Specpr.IllumAngle(self._io, self, self._root)
             self.sphase = self._io.read_s4be()
             self.iwtrns = self._io.read_s4be()
             self.itimch = self._io.read_s4be()
@@ -124,20 +125,20 @@ class Specpr(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved = self._io.read_bits_int(26)
-            self.isctb_type = self._io.read_bits_int(1) != 0
-            self.iscta_type = self._io.read_bits_int(1) != 0
-            self.coordinate_mode = self._io.read_bits_int(1) != 0
-            self.errors = self._io.read_bits_int(1) != 0
-            self.text = self._io.read_bits_int(1) != 0
-            self.continuation = self._io.read_bits_int(1) != 0
+            self.reserved = self._io.read_bits_int_be(26)
+            self.isctb_type = self._io.read_bits_int_be(1) != 0
+            self.iscta_type = self._io.read_bits_int_be(1) != 0
+            self.coordinate_mode = self._io.read_bits_int_be(1) != 0
+            self.errors = self._io.read_bits_int_be(1) != 0
+            self.text = self._io.read_bits_int_be(1) != 0
+            self.continuation = self._io.read_bits_int_be(1) != 0
 
         @property
         def type(self):
             if hasattr(self, '_m_type'):
                 return self._m_type if hasattr(self, '_m_type') else None
 
-            self._m_type = self._root.RecordType(((int(self.text) * 1) + (int(self.continuation) * 2)))
+            self._m_type = KaitaiStream.resolve_enum(Specpr.RecordType, ((int(self.text) * 1) + (int(self.continuation) * 2)))
             return self._m_type if hasattr(self, '_m_type') else None
 
 
@@ -210,7 +211,7 @@ class Specpr(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ids = self._root.Identifiers(self._io, self, self._root)
+            self.ids = Specpr.Identifiers(self._io, self, self._root)
             self.itxtpt = self._io.read_u4be()
             self.itxtch = self._io.read_s4be()
             self.itext = (self._io.read_bytes(1476)).decode(u"ascii")
@@ -224,24 +225,24 @@ class Specpr(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.icflag = self._root.Icflag(self._io, self, self._root)
+            self.icflag = Specpr.Icflag(self._io, self, self._root)
             _on = self.icflag.type
-            if _on == self._root.RecordType.data_initial:
+            if _on == Specpr.RecordType.data_initial:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.DataInitial(io, self, self._root)
-            elif _on == self._root.RecordType.data_continuation:
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = Specpr.DataInitial(_io__raw_content, self, self._root)
+            elif _on == Specpr.RecordType.data_continuation:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.DataContinuation(io, self, self._root)
-            elif _on == self._root.RecordType.text_continuation:
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = Specpr.DataContinuation(_io__raw_content, self, self._root)
+            elif _on == Specpr.RecordType.text_continuation:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.TextContinuation(io, self, self._root)
-            elif _on == self._root.RecordType.text_initial:
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = Specpr.TextContinuation(_io__raw_content, self, self._root)
+            elif _on == Specpr.RecordType.text_initial:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.TextInitial(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = Specpr.TextInitial(_io__raw_content, self, self._root)
             else:
                 self.content = self._io.read_bytes((1536 - 4))
 

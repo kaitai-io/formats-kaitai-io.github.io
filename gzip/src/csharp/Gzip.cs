@@ -57,7 +57,11 @@ namespace Kaitai
         }
         private void _read()
         {
-            _magic = m_io.EnsureFixedContents(new byte[] { 31, 139 });
+            _magic = m_io.ReadBytes(2);
+            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 31, 139 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 31, 139 }, Magic, M_Io, "/seq/0");
+            }
             _compressionMethod = ((CompressionMethods) m_io.ReadU1());
             _flags = new Flags(m_io, this, m_root);
             _modTime = m_io.ReadU4le();
@@ -99,12 +103,12 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved1 = m_io.ReadBitsInt(3);
-                _hasComment = m_io.ReadBitsInt(1) != 0;
-                _hasName = m_io.ReadBitsInt(1) != 0;
-                _hasExtra = m_io.ReadBitsInt(1) != 0;
-                _hasHeaderCrc = m_io.ReadBitsInt(1) != 0;
-                _isText = m_io.ReadBitsInt(1) != 0;
+                _reserved1 = m_io.ReadBitsIntBe(3);
+                _hasComment = m_io.ReadBitsIntBe(1) != 0;
+                _hasName = m_io.ReadBitsIntBe(1) != 0;
+                _hasExtra = m_io.ReadBitsIntBe(1) != 0;
+                _hasHeaderCrc = m_io.ReadBitsIntBe(1) != 0;
+                _isText = m_io.ReadBitsIntBe(1) != 0;
             }
             private ulong _reserved1;
             private bool _hasComment;

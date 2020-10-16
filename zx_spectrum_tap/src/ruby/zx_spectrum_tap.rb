@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -52,7 +52,7 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
 
     def _read
       @len_block = @_io.read_u2le
-      @flag = Kaitai::Struct::Stream::resolve_enum(FLAG_ENUM, @_io.read_u1)
+      @flag = Kaitai::Struct::Stream::resolve_enum(ZxSpectrumTap::FLAG_ENUM, @_io.read_u1)
       if  ((len_block == 19) && (flag == :flag_enum_header)) 
         @header = Header.new(@_io, self, @_root)
       end
@@ -105,7 +105,7 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     end
 
     def _read
-      @header_type = Kaitai::Struct::Stream::resolve_enum(HEADER_TYPE_ENUM, @_io.read_u1)
+      @header_type = Kaitai::Struct::Stream::resolve_enum(ZxSpectrumTap::HEADER_TYPE_ENUM, @_io.read_u1)
       @filename = Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(10), 32)
       @len_data = @_io.read_u2le
       case header_type
@@ -139,7 +139,8 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     def _read
       @reserved = @_io.read_u1
       @var_name = @_io.read_u1
-      @reserved1 = @_io.ensure_fixed_contents([0, 128].pack('C*'))
+      @reserved1 = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 128].pack('C*'), reserved1, _io, "/types/array_params/seq/2") if not reserved1 == [0, 128].pack('C*')
       self
     end
     attr_reader :reserved

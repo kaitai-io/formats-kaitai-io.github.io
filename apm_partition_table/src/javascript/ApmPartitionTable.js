@@ -33,7 +33,10 @@ var ApmPartitionTable = (function() {
       this._read();
     }
     PartitionEntry.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([80, 77]);
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 77]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([80, 77], this.magic, this._io, "/types/partition_entry/seq/0");
+      }
       this.reserved1 = this._io.readBytes(2);
       this.numberOfPartitions = this._io.readU4be();
       this.partitionStart = this._io.readU4be();

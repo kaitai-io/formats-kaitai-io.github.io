@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -241,18 +241,18 @@ class Specpr < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved = @_io.read_bits_int(26)
-      @isctb_type = @_io.read_bits_int(1) != 0
-      @iscta_type = @_io.read_bits_int(1) != 0
-      @coordinate_mode = @_io.read_bits_int(1) != 0
-      @errors = @_io.read_bits_int(1) != 0
-      @text = @_io.read_bits_int(1) != 0
-      @continuation = @_io.read_bits_int(1) != 0
+      @reserved = @_io.read_bits_int_be(26)
+      @isctb_type = @_io.read_bits_int_be(1) != 0
+      @iscta_type = @_io.read_bits_int_be(1) != 0
+      @coordinate_mode = @_io.read_bits_int_be(1) != 0
+      @errors = @_io.read_bits_int_be(1) != 0
+      @text = @_io.read_bits_int_be(1) != 0
+      @continuation = @_io.read_bits_int_be(1) != 0
       self
     end
     def type
       return @type unless @type.nil?
-      @type = Kaitai::Struct::Stream::resolve_enum(RECORD_TYPE, (((text ? 1 : 0) * 1) + ((continuation ? 1 : 0) * 2)))
+      @type = Kaitai::Struct::Stream::resolve_enum(Specpr::RECORD_TYPE, (((text ? 1 : 0) * 1) + ((continuation ? 1 : 0) * 2)))
       @type
     end
     attr_reader :reserved
@@ -400,20 +400,20 @@ class Specpr < Kaitai::Struct::Struct
       case icflag.type
       when :record_type_data_initial
         @_raw_content = @_io.read_bytes((1536 - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = DataInitial.new(io, self, @_root)
+        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
+        @content = DataInitial.new(_io__raw_content, self, @_root)
       when :record_type_data_continuation
         @_raw_content = @_io.read_bytes((1536 - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = DataContinuation.new(io, self, @_root)
+        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
+        @content = DataContinuation.new(_io__raw_content, self, @_root)
       when :record_type_text_continuation
         @_raw_content = @_io.read_bytes((1536 - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = TextContinuation.new(io, self, @_root)
+        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
+        @content = TextContinuation.new(_io__raw_content, self, @_root)
       when :record_type_text_initial
         @_raw_content = @_io.read_bytes((1536 - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = TextInitial.new(io, self, @_root)
+        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
+        @content = TextInitial.new(_io__raw_content, self, @_root)
       else
         @content = @_io.read_bytes((1536 - 4))
       end

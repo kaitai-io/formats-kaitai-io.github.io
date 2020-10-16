@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 
 ########################################################################
@@ -35,10 +35,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (71, 84, 70, 83, 0, 0, 0, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(8);
     $self->{num_files} = $self->{_io}->read_u2le();
     $self->{num_entries} = $self->{_io}->read_u2le();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
     $self->{offsets} = ();
     my $n_offsets = $self->num_files();
     for (my $i = 0; $i < $n_offsets; $i++) {

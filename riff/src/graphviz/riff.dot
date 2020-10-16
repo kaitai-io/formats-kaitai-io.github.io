@@ -1,0 +1,198 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__riff {
+		label="Riff";
+		graph[style=dotted];
+
+		riff__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
+		</TABLE>>];
+		riff__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(FOURCC, chunk.id)</TD></TR>
+		</TABLE>>];
+		riff__inst__is_riff_chunk [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_riff_chunk</TD><TD>chunk_id == :fourcc_riff</TD></TR>
+		</TABLE>>];
+		riff__inst__parent_chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="parent_chunk_data_pos">0</TD><TD PORT="parent_chunk_data_size">...</TD><TD>ParentChunkData</TD><TD PORT="parent_chunk_data_type">parent_chunk_data</TD></TR>
+		</TABLE>>];
+		riff__inst__subchunks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="subchunks_pos">0</TD><TD PORT="subchunks_size">...</TD><TD>ChunkType</TD><TD PORT="subchunks_type">subchunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="subchunks__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__list_chunk_data {
+			label="Riff::ListChunkData";
+			graph[style=dotted];
+
+			list_chunk_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="save_parent_chunk_data_ofs_pos">0</TD><TD PORT="save_parent_chunk_data_ofs_size">0</TD><TD></TD><TD PORT="save_parent_chunk_data_ofs_type">save_parent_chunk_data_ofs</TD></TR>
+				<TR><TD PORT="parent_chunk_data_pos">0</TD><TD PORT="parent_chunk_data_size">...</TD><TD>ParentChunkData</TD><TD PORT="parent_chunk_data_type">parent_chunk_data</TD></TR>
+			</TABLE>>];
+			list_chunk_data__inst__parent_chunk_data_ofs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>parent_chunk_data_ofs</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			list_chunk_data__inst__form_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>form_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Riff::FOURCC, parent_chunk_data.form_type)</TD></TR>
+			</TABLE>>];
+			list_chunk_data__inst__form_type_readable [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="form_type_readable_pos">parent_chunk_data_ofs</TD><TD PORT="form_type_readable_size">4</TD><TD>str(ASCII)</TD><TD PORT="form_type_readable_type">form_type_readable</TD></TR>
+			</TABLE>>];
+			list_chunk_data__inst__subchunks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="subchunks_pos">0</TD><TD PORT="subchunks_size">...</TD><TD>switch (form_type)</TD><TD PORT="subchunks_type">subchunks</TD></TR>
+				<TR><TD COLSPAN="4" PORT="subchunks__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+list_chunk_data__inst__subchunks_subchunks_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:fourcc_info</TD><TD PORT="case0">InfoSubchunk</TD></TR>
+	<TR><TD>_</TD><TD PORT="case1">ChunkType</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__chunk {
+			label="Riff::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">4</TD><TD>u4le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="len_pos">4</TD><TD PORT="len_size">4</TD><TD>u4le</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="data_slot_pos">8</TD><TD PORT="data_slot_size">len</TD><TD>Slot</TD><TD PORT="data_slot_type">data_slot</TD></TR>
+				<TR><TD PORT="pad_byte_pos">...</TD><TD PORT="pad_byte_size">(len % 2)</TD><TD></TD><TD PORT="pad_byte_type">pad_byte</TD></TR>
+			</TABLE>>];
+			subgraph cluster__slot {
+				label="Riff::Chunk::Slot";
+				graph[style=dotted];
+
+				slot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__parent_chunk_data {
+			label="Riff::ParentChunkData";
+			graph[style=dotted];
+
+			parent_chunk_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="form_type_pos">0</TD><TD PORT="form_type_size">4</TD><TD>u4le</TD><TD PORT="form_type_type">form_type</TD></TR>
+				<TR><TD PORT="subchunks_slot_pos">4</TD><TD PORT="subchunks_slot_size">⇲</TD><TD>Slot</TD><TD PORT="subchunks_slot_type">subchunks_slot</TD></TR>
+			</TABLE>>];
+			subgraph cluster__slot {
+				label="Riff::ParentChunkData::Slot";
+				graph[style=dotted];
+
+				slot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__info_subchunk {
+			label="Riff::InfoSubchunk";
+			graph[style=dotted];
+
+			info_subchunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="save_chunk_ofs_pos">0</TD><TD PORT="save_chunk_ofs_size">0</TD><TD></TD><TD PORT="save_chunk_ofs_type">save_chunk_ofs</TD></TR>
+				<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
+			</TABLE>>];
+			info_subchunk__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>switch (is_unregistered_tag)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
+			</TABLE>>];
+			info_subchunk__inst__is_unregistered_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_unregistered_tag</TD><TD> (( ((id_chars[0].ord &gt;= 97) &amp;&amp; (id_chars[0].ord &lt;= 122)) ) || ( ((id_chars[1].ord &gt;= 97) &amp;&amp; (id_chars[1].ord &lt;= 122)) ) || ( ((id_chars[2].ord &gt;= 97) &amp;&amp; (id_chars[2].ord &lt;= 122)) ) || ( ((id_chars[3].ord &gt;= 97) &amp;&amp; (id_chars[3].ord &lt;= 122)) )) </TD></TR>
+			</TABLE>>];
+			info_subchunk__inst__id_chars [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_chars_pos">chunk_ofs</TD><TD PORT="id_chars_size">4</TD><TD></TD><TD PORT="id_chars_type">id_chars</TD></TR>
+			</TABLE>>];
+			info_subchunk__inst__chunk_id_readable [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>chunk_id_readable</TD><TD>(id_chars).force_encoding(&quot;ASCII&quot;)</TD></TR>
+			</TABLE>>];
+			info_subchunk__inst__chunk_ofs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>chunk_ofs</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+info_subchunk__inst__chunk_data_chunk_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__chunk_type {
+			label="Riff::ChunkType";
+			graph[style=dotted];
+
+			chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="save_chunk_ofs_pos">0</TD><TD PORT="save_chunk_ofs_size">0</TD><TD></TD><TD PORT="save_chunk_ofs_type">save_chunk_ofs</TD></TR>
+				<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
+			</TABLE>>];
+			chunk_type__inst__chunk_ofs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>chunk_ofs</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			chunk_type__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(Riff::FOURCC, chunk.id)</TD></TR>
+			</TABLE>>];
+			chunk_type__inst__chunk_id_readable [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_id_readable_pos">chunk_ofs</TD><TD PORT="chunk_id_readable_size">4</TD><TD>str(ASCII)</TD><TD PORT="chunk_id_readable_type">chunk_id_readable</TD></TR>
+			</TABLE>>];
+			chunk_type__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>switch (chunk_id)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
+			</TABLE>>];
+chunk_type__inst__chunk_data_chunk_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:fourcc_list</TD><TD PORT="case0">ListChunkData</TD></TR>
+</TABLE>>];
+		}
+	}
+	riff__seq:chunk_type -> chunk__seq [style=bold];
+	chunk__seq:id_type -> riff__inst__chunk_id [color="#404040"];
+	riff__inst__chunk_id:chunk_id_type -> riff__inst__is_riff_chunk [color="#404040"];
+	riff__inst__parent_chunk_data:parent_chunk_data_type -> parent_chunk_data__seq [style=bold];
+	riff__inst__subchunks:subchunks_type -> chunk_type__seq [style=bold];
+	list_chunk_data__seq:parent_chunk_data_type -> parent_chunk_data__seq [style=bold];
+	parent_chunk_data__seq:form_type_type -> list_chunk_data__inst__form_type [color="#404040"];
+	list_chunk_data__inst__parent_chunk_data_ofs:parent_chunk_data_ofs_type -> list_chunk_data__inst__form_type_readable:form_type_readable_pos [color="#404040"];
+	list_chunk_data__inst__subchunks:subchunks_type -> list_chunk_data__inst__subchunks_subchunks_switch [style=bold];
+	list_chunk_data__inst__subchunks_subchunks_switch:case0 -> info_subchunk__seq [style=bold];
+	list_chunk_data__inst__subchunks_subchunks_switch:case1 -> chunk_type__seq [style=bold];
+	list_chunk_data__inst__form_type:form_type_type -> list_chunk_data__inst__subchunks:subchunks_type [color="#404040"];
+	chunk__seq:len_type -> chunk__seq:data_slot_size [color="#404040"];
+	chunk__seq:data_slot_type -> slot__seq [style=bold];
+	chunk__seq:len_type -> chunk__seq:pad_byte_size [color="#404040"];
+	parent_chunk_data__seq:subchunks_slot_type -> slot__seq [style=bold];
+	info_subchunk__seq:chunk_type -> chunk__seq [style=bold];
+	info_subchunk__inst__chunk_data:chunk_data_type -> info_subchunk__inst__chunk_data_chunk_data_switch [style=bold];
+	info_subchunk__inst__is_unregistered_tag:is_unregistered_tag_type -> info_subchunk__inst__chunk_data:chunk_data_type [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__is_unregistered_tag [color="#404040"];
+	info_subchunk__inst__chunk_ofs:chunk_ofs_type -> info_subchunk__inst__id_chars:id_chars_pos [color="#404040"];
+	info_subchunk__inst__id_chars:id_chars_type -> info_subchunk__inst__chunk_id_readable [color="#404040"];
+	chunk_type__seq:chunk_type -> chunk__seq [style=bold];
+	chunk__seq:id_type -> chunk_type__inst__chunk_id [color="#404040"];
+	chunk_type__inst__chunk_ofs:chunk_ofs_type -> chunk_type__inst__chunk_id_readable:chunk_id_readable_pos [color="#404040"];
+	chunk_type__inst__chunk_data:chunk_data_type -> chunk_type__inst__chunk_data_chunk_data_switch [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case0 -> list_chunk_data__seq [style=bold];
+	chunk_type__inst__chunk_id:chunk_id_type -> chunk_type__inst__chunk_data:chunk_data_type [color="#404040"];
+}

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use Compress::Zlib;
 
@@ -234,16 +234,38 @@ sub _read {
     $self->{offset} = $self->{_io}->read_u4le();
 }
 
-sub contents {
+sub contents_raw {
     my ($self) = @_;
-    return $self->{contents} if ($self->{contents});
-    if ($self->flags() == $COMPRESSION_ZLIB) {
+    return $self->{contents_raw} if ($self->{contents_raw});
+    if ($self->flags() == $Fallout2Dat::COMPRESSION_NONE) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
         $io->seek($self->offset());
-        $self->{_raw_contents} = $io->read_bytes($self->size_packed());
-        $self->{contents} = Compress::Zlib::uncompress($self->{_raw_contents});
+        $self->{contents_raw} = $io->read_bytes($self->size_unpacked());
         $io->seek($_pos);
+    }
+    return $self->{contents_raw};
+}
+
+sub contents_zlib {
+    my ($self) = @_;
+    return $self->{contents_zlib} if ($self->{contents_zlib});
+    if ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        $self->{_raw_contents_zlib} = $io->read_bytes($self->size_packed());
+        $self->{contents_zlib} = Compress::Zlib::uncompress($self->{_raw_contents_zlib});
+        $io->seek($_pos);
+    }
+    return $self->{contents_zlib};
+}
+
+sub contents {
+    my ($self) = @_;
+    return $self->{contents} if ($self->{contents});
+    if ( (($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) || ($self->flags() == $Fallout2Dat::COMPRESSION_NONE)) ) {
+        $self->{contents} = ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB ? $self->contents_zlib() : $self->contents_raw());
     }
     return $self->{contents};
 }
@@ -273,9 +295,9 @@ sub offset {
     return $self->{offset};
 }
 
-sub _raw_contents {
+sub _raw_contents_zlib {
     my ($self) = @_;
-    return $self->{_raw_contents};
+    return $self->{_raw_contents_zlib};
 }
 
 1;

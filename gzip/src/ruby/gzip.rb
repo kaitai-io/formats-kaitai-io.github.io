@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
-  raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
+  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -48,7 +48,8 @@ class Gzip < Kaitai::Struct::Struct
   end
 
   def _read
-    @magic = @_io.ensure_fixed_contents([31, 139].pack('C*'))
+    @magic = @_io.read_bytes(2)
+    raise Kaitai::Struct::ValidationNotEqualError.new([31, 139].pack('C*'), magic, _io, "/seq/0") if not magic == [31, 139].pack('C*')
     @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
     @flags = Flags.new(@_io, self, @_root)
     @mod_time = @_io.read_u4le
@@ -81,12 +82,12 @@ class Gzip < Kaitai::Struct::Struct
     end
 
     def _read
-      @reserved1 = @_io.read_bits_int(3)
-      @has_comment = @_io.read_bits_int(1) != 0
-      @has_name = @_io.read_bits_int(1) != 0
-      @has_extra = @_io.read_bits_int(1) != 0
-      @has_header_crc = @_io.read_bits_int(1) != 0
-      @is_text = @_io.read_bits_int(1) != 0
+      @reserved1 = @_io.read_bits_int_be(3)
+      @has_comment = @_io.read_bits_int_be(1) != 0
+      @has_name = @_io.read_bits_int_be(1) != 0
+      @has_extra = @_io.read_bits_int_be(1) != 0
+      @has_header_crc = @_io.read_bits_int_be(1) != 0
+      @is_text = @_io.read_bits_int_be(1) != 0
       self
     end
     attr_reader :reserved1
@@ -182,8 +183,8 @@ class Gzip < Kaitai::Struct::Struct
     def _read
       @len_subfields = @_io.read_u2le
       @_raw_subfields = @_io.read_bytes(len_subfields)
-      io = Kaitai::Struct::Stream.new(@_raw_subfields)
-      @subfields = Subfields.new(io, self, @_root)
+      _io__raw_subfields = Kaitai::Struct::Stream.new(@_raw_subfields)
+      @subfields = Subfields.new(_io__raw_subfields, self, @_root)
       self
     end
     attr_reader :len_subfields

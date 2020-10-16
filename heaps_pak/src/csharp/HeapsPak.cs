@@ -40,14 +40,22 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic1 = m_io.EnsureFixedContents(new byte[] { 80, 65, 75 });
+                _magic1 = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 80, 65, 75 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 80, 65, 75 }, Magic1, M_Io, "/types/header/seq/0");
+                }
                 _version = m_io.ReadU1();
                 _lenHeader = m_io.ReadU4le();
                 _lenData = m_io.ReadU4le();
                 __raw_rootEntry = m_io.ReadBytes((LenHeader - 16));
                 var io___raw_rootEntry = new KaitaiStream(__raw_rootEntry);
                 _rootEntry = new Entry(io___raw_rootEntry, this, m_root);
-                _magic2 = m_io.EnsureFixedContents(new byte[] { 68, 65, 84, 65 });
+                _magic2 = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 68, 65, 84, 65 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 68, 65, 84, 65 }, Magic2, M_Io, "/types/header/seq/5");
+                }
             }
 
             /// <remarks>
@@ -98,8 +106,8 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _unused = m_io.ReadBitsInt(7);
-                        _isDir = m_io.ReadBitsInt(1) != 0;
+                        _unused = m_io.ReadBitsIntBe(7);
+                        _isDir = m_io.ReadBitsIntBe(1) != 0;
                     }
                     private ulong _unused;
                     private bool _isDir;

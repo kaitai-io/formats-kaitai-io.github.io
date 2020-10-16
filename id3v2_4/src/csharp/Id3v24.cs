@@ -36,8 +36,8 @@ namespace Kaitai
             }
             private void _read()
             {
-                _padding = m_io.ReadBitsInt(1) != 0;
-                _value = m_io.ReadBitsInt(7);
+                _padding = m_io.ReadBitsIntBe(1) != 0;
+                _value = m_io.ReadBitsIntBe(7);
             }
             private bool _padding;
             private ulong _value;
@@ -218,11 +218,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.ReadBitsInt(1) != 0;
-                    _flagDiscardAlterTag = m_io.ReadBitsInt(1) != 0;
-                    _flagDiscardAlterFile = m_io.ReadBitsInt(1) != 0;
-                    _flagReadOnly = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(4);
+                    _reserved1 = m_io.ReadBitsIntBe(1) != 0;
+                    _flagDiscardAlterTag = m_io.ReadBitsIntBe(1) != 0;
+                    _flagDiscardAlterFile = m_io.ReadBitsIntBe(1) != 0;
+                    _flagReadOnly = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(4);
                 }
                 private bool _reserved1;
                 private bool _flagDiscardAlterTag;
@@ -254,13 +254,13 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.ReadBitsInt(1) != 0;
-                    _flagGrouping = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(2);
-                    _flagCompressed = m_io.ReadBitsInt(1) != 0;
-                    _flagEncrypted = m_io.ReadBitsInt(1) != 0;
-                    _flagUnsynchronisated = m_io.ReadBitsInt(1) != 0;
-                    _flagIndicator = m_io.ReadBitsInt(1) != 0;
+                    _reserved1 = m_io.ReadBitsIntBe(1) != 0;
+                    _flagGrouping = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(2);
+                    _flagCompressed = m_io.ReadBitsIntBe(1) != 0;
+                    _flagEncrypted = m_io.ReadBitsIntBe(1) != 0;
+                    _flagUnsynchronisated = m_io.ReadBitsIntBe(1) != 0;
+                    _flagIndicator = m_io.ReadBitsIntBe(1) != 0;
                 }
                 private bool _reserved1;
                 private bool _flagGrouping;
@@ -343,11 +343,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _reserved1 = m_io.ReadBitsInt(1) != 0;
-                    _flagUpdate = m_io.ReadBitsInt(1) != 0;
-                    _flagCrc = m_io.ReadBitsInt(1) != 0;
-                    _flagRestrictions = m_io.ReadBitsInt(1) != 0;
-                    _reserved2 = m_io.ReadBitsInt(4);
+                    _reserved1 = m_io.ReadBitsIntBe(1) != 0;
+                    _flagUpdate = m_io.ReadBitsIntBe(1) != 0;
+                    _flagCrc = m_io.ReadBitsIntBe(1) != 0;
+                    _flagRestrictions = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(4);
                 }
                 private bool _reserved1;
                 private bool _flagUpdate;
@@ -390,7 +390,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 73, 68, 51 });
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 73, 68, 51 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 68, 51 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _versionMajor = m_io.ReadU1();
                 _versionRevision = m_io.ReadU1();
                 _flags = new Flags(m_io, this, m_root);
@@ -411,11 +415,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flagUnsynchronization = m_io.ReadBitsInt(1) != 0;
-                    _flagHeaderex = m_io.ReadBitsInt(1) != 0;
-                    _flagExperimental = m_io.ReadBitsInt(1) != 0;
-                    _flagFooter = m_io.ReadBitsInt(1) != 0;
-                    _reserved = m_io.ReadBitsInt(4);
+                    _flagUnsynchronization = m_io.ReadBitsIntBe(1) != 0;
+                    _flagHeaderex = m_io.ReadBitsIntBe(1) != 0;
+                    _flagExperimental = m_io.ReadBitsIntBe(1) != 0;
+                    _flagFooter = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(4);
                 }
                 private bool _flagUnsynchronization;
                 private bool _flagHeaderex;
@@ -486,7 +490,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 51, 68, 73 });
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 51, 68, 73 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 51, 68, 73 }, Magic, M_Io, "/types/footer/seq/0");
+                }
                 _versionMajor = m_io.ReadU1();
                 _versionRevision = m_io.ReadU1();
                 _flags = new Flags(m_io, this, m_root);
@@ -507,11 +515,11 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flagUnsynchronization = m_io.ReadBitsInt(1) != 0;
-                    _flagHeaderex = m_io.ReadBitsInt(1) != 0;
-                    _flagExperimental = m_io.ReadBitsInt(1) != 0;
-                    _flagFooter = m_io.ReadBitsInt(1) != 0;
-                    _reserved = m_io.ReadBitsInt(4);
+                    _flagUnsynchronization = m_io.ReadBitsIntBe(1) != 0;
+                    _flagHeaderex = m_io.ReadBitsIntBe(1) != 0;
+                    _flagExperimental = m_io.ReadBitsIntBe(1) != 0;
+                    _flagFooter = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(4);
                 }
                 private bool _flagUnsynchronization;
                 private bool _flagHeaderex;

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+import kaitaistruct
+from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(ks_version) < parse_version('0.7'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
+if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class UefiTe(KaitaiStruct):
     """This type of executables could be found inside the UEFI firmware. The UEFI 
@@ -39,11 +40,11 @@ class UefiTe(KaitaiStruct):
 
     def _read(self):
         self._raw_te_hdr = self._io.read_bytes(40)
-        io = KaitaiStream(BytesIO(self._raw_te_hdr))
-        self.te_hdr = self._root.TeHeader(io, self, self._root)
+        _io__raw_te_hdr = KaitaiStream(BytesIO(self._raw_te_hdr))
+        self.te_hdr = UefiTe.TeHeader(_io__raw_te_hdr, self, self._root)
         self.sections = [None] * (self.te_hdr.num_sections)
         for i in range(self.te_hdr.num_sections):
-            self.sections[i] = self._root.Section(self._io, self, self._root)
+            self.sections[i] = UefiTe.Section(self._io, self, self._root)
 
 
     class TeHeader(KaitaiStruct):
@@ -96,15 +97,17 @@ class UefiTe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b"\x56\x5A")
-            self.machine = self._root.TeHeader.MachineType(self._io.read_u2le())
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x56\x5A":
+                raise kaitaistruct.ValidationNotEqualError(b"\x56\x5A", self.magic, self._io, u"/types/te_header/seq/0")
+            self.machine = KaitaiStream.resolve_enum(UefiTe.TeHeader.MachineType, self._io.read_u2le())
             self.num_sections = self._io.read_u1()
-            self.subsystem = self._root.TeHeader.SubsystemEnum(self._io.read_u1())
+            self.subsystem = KaitaiStream.resolve_enum(UefiTe.TeHeader.SubsystemEnum, self._io.read_u1())
             self.stripped_size = self._io.read_u2le()
             self.entry_point_addr = self._io.read_u4le()
             self.base_of_code = self._io.read_u4le()
             self.image_base = self._io.read_u8le()
-            self.data_dirs = self._root.HeaderDataDirs(self._io, self, self._root)
+            self.data_dirs = UefiTe.HeaderDataDirs(self._io, self, self._root)
 
 
     class HeaderDataDirs(KaitaiStruct):
@@ -115,8 +118,8 @@ class UefiTe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.base_relocation_table = self._root.DataDir(self._io, self, self._root)
-            self.debug = self._root.DataDir(self._io, self, self._root)
+            self.base_relocation_table = UefiTe.DataDir(self._io, self, self._root)
+            self.debug = UefiTe.DataDir(self._io, self, self._root)
 
 
     class DataDir(KaitaiStruct):

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 public class Jpeg extends KaitaiStruct {
@@ -122,41 +123,51 @@ public class Jpeg extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { -1 });
+            this.magic = this._io.readBytes(1);
+            if (!(Arrays.equals(magic(), new byte[] { -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -1 }, magic(), _io(), "/types/segment/seq/0");
+            }
             this.marker = MarkerEnum.byId(this._io.readU1());
             if ( ((marker() != MarkerEnum.SOI) && (marker() != MarkerEnum.EOI)) ) {
                 this.length = this._io.readU2be();
             }
             if ( ((marker() != MarkerEnum.SOI) && (marker() != MarkerEnum.EOI)) ) {
-                switch (marker()) {
-                case SOS: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentSos(_io__raw_data, this, _root);
-                    break;
-                }
-                case APP1: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentApp1(_io__raw_data, this, _root);
-                    break;
-                }
-                case SOF0: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentSof0(_io__raw_data, this, _root);
-                    break;
-                }
-                case APP0: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentApp0(_io__raw_data, this, _root);
-                    break;
-                }
-                default: {
-                    this.data = this._io.readBytes((length() - 2));
-                    break;
-                }
+                {
+                    MarkerEnum on = marker();
+                    if (on != null) {
+                        switch (marker()) {
+                        case APP1: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentApp1(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case APP0: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentApp0(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case SOF0: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentSof0(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case SOS: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentSos(_io__raw_data, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.data = this._io.readBytes((length() - 2));
+                            break;
+                        }
+                        }
+                    } else {
+                        this.data = this._io.readBytes((length() - 2));
+                    }
                 }
             }
             if (marker() == MarkerEnum.SOS) {
@@ -201,7 +212,7 @@ public class Jpeg extends KaitaiStruct {
         }
         private void _read() {
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>((int) (numComponents()));
+            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }
@@ -341,7 +352,7 @@ public class Jpeg extends KaitaiStruct {
             this.imageHeight = this._io.readU2be();
             this.imageWidth = this._io.readU2be();
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>((int) (numComponents()));
+            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }
@@ -436,7 +447,10 @@ public class Jpeg extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.extraZero = this._io.ensureFixedContents(new byte[] { 0 });
+            this.extraZero = this._io.readBytes(1);
+            if (!(Arrays.equals(extraZero(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, extraZero(), _io(), "/types/exif_in_jpeg/seq/0");
+            }
             this._raw_data = this._io.readBytesFull();
             KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
             this.data = new Exif(_io__raw_data);

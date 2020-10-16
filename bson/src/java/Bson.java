@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ public class Bson extends KaitaiStruct {
         this._raw_fields = this._io.readBytes((len() - 5));
         KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
         this.fields = new ElementsList(_io__raw_fields, this, _root);
-        this.terminator = this._io.ensureFixedContents(new byte[] { 0 });
+        this.terminator = this._io.readBytes(1);
+        if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/seq/2");
+        }
     }
 
     /**
@@ -124,17 +128,24 @@ public class Bson extends KaitaiStruct {
         private void _read() {
             this.len = this._io.readS4le();
             this.subtype = Subtype.byId(this._io.readU1());
-            switch (subtype()) {
-            case BYTE_ARRAY_DEPRECATED: {
-                this._raw_content = this._io.readBytes(len());
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new ByteArrayDeprecated(_io__raw_content, this, _root);
-                break;
-            }
-            default: {
-                this.content = this._io.readBytes(len());
-                break;
-            }
+            {
+                Subtype on = subtype();
+                if (on != null) {
+                    switch (subtype()) {
+                    case BYTE_ARRAY_DEPRECATED: {
+                        this._raw_content = this._io.readBytes(len());
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new ByteArrayDeprecated(_io__raw_content, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.content = this._io.readBytes(len());
+                        break;
+                    }
+                    }
+                } else {
+                    this.content = this._io.readBytes(len());
+                }
             }
         }
 
@@ -277,7 +288,10 @@ public class Bson extends KaitaiStruct {
         private void _read() {
             this.len = this._io.readS4le();
             this.str = new String(this._io.readBytes((len() - 1)), Charset.forName("UTF-8"));
-            this.terminator = this._io.ensureFixedContents(new byte[] { 0 });
+            this.terminator = this._io.readBytes(1);
+            if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/types/string/seq/2");
+            }
         }
         private int len;
         private String str;
@@ -347,75 +361,80 @@ public class Bson extends KaitaiStruct {
         private void _read() {
             this.typeByte = BsonType.byId(this._io.readU1());
             this.name = new Cstring(this._io, this, _root);
-            switch (typeByte()) {
-            case NUMBER_DOUBLE: {
-                this.content = (Object) (this._io.readF8le());
-                break;
-            }
-            case CODE_WITH_SCOPE: {
-                this.content = new CodeWithScope(this._io, this, _root);
-                break;
-            }
-            case OBJECT_ID: {
-                this.content = new ObjectId(this._io, this, _root);
-                break;
-            }
-            case STRING: {
-                this.content = new String(this._io, this, _root);
-                break;
-            }
-            case REG_EX: {
-                this.content = new RegEx(this._io, this, _root);
-                break;
-            }
-            case NUMBER_DECIMAL: {
-                this.content = new F16(this._io, this, _root);
-                break;
-            }
-            case UTC_DATETIME: {
-                this.content = (Object) (this._io.readS8le());
-                break;
-            }
-            case NUMBER_LONG: {
-                this.content = (Object) (this._io.readS8le());
-                break;
-            }
-            case TIMESTAMP: {
-                this.content = new Timestamp(this._io, this, _root);
-                break;
-            }
-            case DB_POINTER: {
-                this.content = new DbPointer(this._io, this, _root);
-                break;
-            }
-            case ARRAY: {
-                this.content = new Bson(this._io);
-                break;
-            }
-            case JAVASCRIPT: {
-                this.content = new String(this._io, this, _root);
-                break;
-            }
-            case BOOLEAN: {
-                this.content = (Object) (this._io.readU1());
-                break;
-            }
-            case DOCUMENT: {
-                this.content = new Bson(this._io);
-                break;
-            }
-            case SYMBOL: {
-                this.content = new String(this._io, this, _root);
-                break;
-            }
-            case NUMBER_INT: {
-                this.content = (Object) (this._io.readS4le());
-                break;
-            }
-            case BIN_DATA: {
-                this.content = new BinData(this._io, this, _root);
-                break;
-            }
+            {
+                BsonType on = typeByte();
+                if (on != null) {
+                    switch (typeByte()) {
+                    case CODE_WITH_SCOPE: {
+                        this.content = new CodeWithScope(this._io, this, _root);
+                        break;
+                    }
+                    case REG_EX: {
+                        this.content = new RegEx(this._io, this, _root);
+                        break;
+                    }
+                    case NUMBER_DOUBLE: {
+                        this.content = (Object) (this._io.readF8le());
+                        break;
+                    }
+                    case SYMBOL: {
+                        this.content = new String(this._io, this, _root);
+                        break;
+                    }
+                    case TIMESTAMP: {
+                        this.content = new Timestamp(this._io, this, _root);
+                        break;
+                    }
+                    case NUMBER_INT: {
+                        this.content = (Object) (this._io.readS4le());
+                        break;
+                    }
+                    case DOCUMENT: {
+                        this.content = new Bson(this._io);
+                        break;
+                    }
+                    case OBJECT_ID: {
+                        this.content = new ObjectId(this._io, this, _root);
+                        break;
+                    }
+                    case JAVASCRIPT: {
+                        this.content = new String(this._io, this, _root);
+                        break;
+                    }
+                    case UTC_DATETIME: {
+                        this.content = (Object) (this._io.readS8le());
+                        break;
+                    }
+                    case BOOLEAN: {
+                        this.content = (Object) (this._io.readU1());
+                        break;
+                    }
+                    case NUMBER_LONG: {
+                        this.content = (Object) (this._io.readS8le());
+                        break;
+                    }
+                    case BIN_DATA: {
+                        this.content = new BinData(this._io, this, _root);
+                        break;
+                    }
+                    case STRING: {
+                        this.content = new String(this._io, this, _root);
+                        break;
+                    }
+                    case DB_POINTER: {
+                        this.content = new DbPointer(this._io, this, _root);
+                        break;
+                    }
+                    case ARRAY: {
+                        this.content = new Bson(this._io);
+                        break;
+                    }
+                    case NUMBER_DECIMAL: {
+                        this.content = new F16(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private BsonType typeByte;
@@ -571,9 +590,9 @@ public class Bson extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.str = this._io.readBitsInt(1) != 0;
-            this.exponent = this._io.readBitsInt(15);
-            this.significandHi = this._io.readBitsInt(49);
+            this.str = this._io.readBitsIntBe(1) != 0;
+            this.exponent = this._io.readBitsIntBe(15);
+            this.significandHi = this._io.readBitsIntBe(49);
             this._io.alignToByte();
             this.significandLo = this._io.readU8le();
         }

@@ -37,7 +37,11 @@ namespace Kaitai
             {
                 _partitions.Add(new PartitionEntry(m_io, this, m_root));
             }
-            _bootSignature = m_io.EnsureFixedContents(new byte[] { 85, 170 });
+            _bootSignature = m_io.ReadBytes(2);
+            if (!((KaitaiStream.ByteArrayCompare(BootSignature, new byte[] { 85, 170 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 85, 170 }, BootSignature, M_Io, "/seq/2");
+            }
         }
         public partial class PartitionEntry : KaitaiStruct
         {

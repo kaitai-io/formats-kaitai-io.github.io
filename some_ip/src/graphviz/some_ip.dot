@@ -1,0 +1,78 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__some_ip {
+		label="SomeIp";
+		graph[style=dotted];
+
+		some_ip__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">16</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="payload_pos">16</TD><TD PORT="payload_size">...</TD><TD>switch (header.message_id.value)</TD><TD PORT="payload_type">payload</TD></TR>
+		</TABLE>>];
+some_ip__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>4294934784</TD><TD PORT="case0">SomeIpSd</TD></TR>
+</TABLE>>];
+		subgraph cluster__header {
+			label="SomeIp::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="message_id_pos">0</TD><TD PORT="message_id_size">4</TD><TD>MessageId</TD><TD PORT="message_id_type">message_id</TD></TR>
+				<TR><TD PORT="length_pos">4</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="request_id_pos">8</TD><TD PORT="request_id_size">4</TD><TD>RequestId</TD><TD PORT="request_id_type">request_id</TD></TR>
+				<TR><TD PORT="protocol_version_pos">12</TD><TD PORT="protocol_version_size">1</TD><TD>u1</TD><TD PORT="protocol_version_type">protocol_version</TD></TR>
+				<TR><TD PORT="interface_version_pos">13</TD><TD PORT="interface_version_size">1</TD><TD>u1</TD><TD PORT="interface_version_type">interface_version</TD></TR>
+				<TR><TD PORT="message_type_pos">14</TD><TD PORT="message_type_size">1</TD><TD>u1→MessageTypeEnum</TD><TD PORT="message_type_type">message_type</TD></TR>
+				<TR><TD PORT="return_code_pos">15</TD><TD PORT="return_code_size">1</TD><TD>u1→ReturnCodeEnum</TD><TD PORT="return_code_type">return_code</TD></TR>
+			</TABLE>>];
+			header__inst__is_valid_service_discovery [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_valid_service_discovery</TD><TD> ((message_id.value == 4294934784) &amp;&amp; (protocol_version == 1) &amp;&amp; (interface_version == 1) &amp;&amp; (message_type == :message_type_enum_notification) &amp;&amp; (return_code == :return_code_enum_ok)) </TD></TR>
+			</TABLE>>];
+			subgraph cluster__message_id {
+				label="SomeIp::Header::MessageId";
+				graph[style=dotted];
+
+				message_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="service_id_pos">0</TD><TD PORT="service_id_size">2</TD><TD>u2be</TD><TD PORT="service_id_type">service_id</TD></TR>
+					<TR><TD PORT="sub_id_pos">2</TD><TD PORT="sub_id_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="sub_id_type">sub_id</TD></TR>
+					<TR><TD PORT="method_id_pos">2:1</TD><TD PORT="method_id_size">15b</TD><TD>b15</TD><TD PORT="method_id_type">method_id</TD></TR>
+					<TR><TD PORT="event_id_pos">4</TD><TD PORT="event_id_size">15b</TD><TD>b15</TD><TD PORT="event_id_type">event_id</TD></TR>
+				</TABLE>>];
+				message_id__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__request_id {
+				label="SomeIp::Header::RequestId";
+				graph[style=dotted];
+
+				request_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="client_id_pos">0</TD><TD PORT="client_id_size">2</TD><TD>u2be</TD><TD PORT="client_id_type">client_id</TD></TR>
+					<TR><TD PORT="session_id_pos">2</TD><TD PORT="session_id_size">2</TD><TD>u2be</TD><TD PORT="session_id_type">session_id</TD></TR>
+				</TABLE>>];
+				request_id__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	some_ip__seq:header_type -> header__seq [style=bold];
+	some_ip__seq:payload_type -> some_ip__seq_payload_switch [style=bold];
+	some_ip__seq_payload_switch:case0 -> some_ip_sd__seq [style=bold];
+	message_id__inst__value:value_type -> some_ip__seq:payload_type [color="#404040"];
+	header__seq:message_id_type -> message_id__seq [style=bold];
+	header__seq:request_id_type -> request_id__seq [style=bold];
+	message_id__inst__value:value_type -> header__inst__is_valid_service_discovery [color="#404040"];
+	header__seq:protocol_version_type -> header__inst__is_valid_service_discovery [color="#404040"];
+	header__seq:interface_version_type -> header__inst__is_valid_service_discovery [color="#404040"];
+	header__seq:message_type_type -> header__inst__is_valid_service_discovery [color="#404040"];
+	header__seq:return_code_type -> header__inst__is_valid_service_discovery [color="#404040"];
+}

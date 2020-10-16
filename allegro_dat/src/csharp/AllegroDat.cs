@@ -42,7 +42,11 @@ namespace Kaitai
         private void _read()
         {
             _packMagic = ((PackEnum) m_io.ReadU4be());
-            _datMagic = m_io.EnsureFixedContents(new byte[] { 65, 76, 76, 46 });
+            _datMagic = m_io.ReadBytes(4);
+            if (!((KaitaiStream.ByteArrayCompare(DatMagic, new byte[] { 65, 76, 76, 46 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, DatMagic, M_Io, "/seq/1");
+            }
             _numObjects = m_io.ReadU4be();
             _objects = new List<DatObject>((int) (NumObjects));
             for (var i = 0; i < NumObjects; i++)

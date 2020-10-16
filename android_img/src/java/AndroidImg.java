@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.nio.charset.Charset;
 
 
@@ -30,7 +31,10 @@ public class AndroidImg extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 });
+        this.magic = this._io.readBytes(8);
+        if (!(Arrays.equals(magic(), new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, magic(), _io(), "/seq/0");
+        }
         this.kernel = new Load(this._io, this, _root);
         this.ramdisk = new Load(this._io, this, _root);
         this.second = new Load(this._io, this, _root);

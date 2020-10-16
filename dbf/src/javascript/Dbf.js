@@ -135,13 +135,19 @@ var Dbf = (function() {
       this._read();
     }
     HeaderDbase7.prototype._read = function() {
-      this.reserved1 = this._io.ensureFixedContents([0, 0]);
+      this.reserved1 = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved1, [0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.reserved1, this._io, "/types/header_dbase_7/seq/0");
+      }
       this.hasIncompleteTransaction = this._io.readU1();
       this.dbaseIvEncryption = this._io.readU1();
       this.reserved2 = this._io.readBytes(12);
       this.productionMdx = this._io.readU1();
       this.languageDriverId = this._io.readU1();
-      this.reserved3 = this._io.ensureFixedContents([0, 0]);
+      this.reserved3 = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved3, [0, 0]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.reserved3, this._io, "/types/header_dbase_7/seq/6");
+      }
       this.languageDriverName = this._io.readBytes(32);
       this.reserved4 = this._io.readBytes(4);
     }

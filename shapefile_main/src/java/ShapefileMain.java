@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ShapefileMain extends KaitaiStruct {
     public static ShapefileMain fromFile(String fileName) throws IOException {
@@ -106,12 +107,12 @@ public class ShapefileMain extends KaitaiStruct {
         private void _read() {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfPoints = this._io.readS4le();
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -224,11 +225,11 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
@@ -303,11 +304,11 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
@@ -349,17 +350,17 @@ public class ShapefileMain extends KaitaiStruct {
         private void _read() {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfPoints = this._io.readS4le();
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.zRange = new BoundsMinMax(this._io, this, _root);
-            zValues = new ArrayList<Double>((int) (numberOfPoints()));
+            zValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.zValues.add(this._io.readF8le());
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -406,21 +407,21 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.zRange = new BoundsMinMax(this._io, this, _root);
-            zValues = new ArrayList<Double>((int) (numberOfPoints()));
+            zValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.zValues.add(this._io.readF8le());
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -471,21 +472,21 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.zRange = new BoundsMinMax(this._io, this, _root);
-            zValues = new ArrayList<Double>((int) (numberOfPoints()));
+            zValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.zValues.add(this._io.readF8le());
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -603,16 +604,16 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -690,7 +691,7 @@ public class ShapefileMain extends KaitaiStruct {
         private void _read() {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfPoints = this._io.readS4le();
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
@@ -726,14 +727,35 @@ public class ShapefileMain extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fileCode = this._io.ensureFixedContents(new byte[] { 0, 0, 39, 10 });
-            this.unusedField1 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField2 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField3 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField4 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-            this.unusedField5 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
+            this.fileCode = this._io.readBytes(4);
+            if (!(Arrays.equals(fileCode(), new byte[] { 0, 0, 39, 10 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, fileCode(), _io(), "/types/file_header/seq/0");
+            }
+            this.unusedField1 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField1(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField1(), _io(), "/types/file_header/seq/1");
+            }
+            this.unusedField2 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField2(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField2(), _io(), "/types/file_header/seq/2");
+            }
+            this.unusedField3 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField3(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField3(), _io(), "/types/file_header/seq/3");
+            }
+            this.unusedField4 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField4(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField4(), _io(), "/types/file_header/seq/4");
+            }
+            this.unusedField5 = this._io.readBytes(4);
+            if (!(Arrays.equals(unusedField5(), new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField5(), _io(), "/types/file_header/seq/5");
+            }
             this.fileLength = this._io.readS4be();
-            this.version = this._io.ensureFixedContents(new byte[] { -24, 3, 0, 0 });
+            this.version = this._io.readBytes(4);
+            if (!(Arrays.equals(version(), new byte[] { -24, 3, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -24, 3, 0, 0 }, version(), _io(), "/types/file_header/seq/7");
+            }
             this.shapeType = ShapefileMain.ShapeType.byId(this._io.readS4le());
             this.boundingBox = new BoundingBoxXYZM(this._io, this, _root);
         }
@@ -866,59 +888,64 @@ public class ShapefileMain extends KaitaiStruct {
         private void _read() {
             this.shapeType = ShapefileMain.ShapeType.byId(this._io.readS4le());
             if (shapeType() != ShapefileMain.ShapeType.NULL_SHAPE) {
-                switch (shapeType()) {
-                case POINT_M: {
-                    this.shapeParameters = new PointM(this._io, this, _root);
-                    break;
-                }
-                case POLYGON_Z: {
-                    this.shapeParameters = new PolygonZ(this._io, this, _root);
-                    break;
-                }
-                case MULTI_POINT_M: {
-                    this.shapeParameters = new MultiPointM(this._io, this, _root);
-                    break;
-                }
-                case POLY_LINE_Z: {
-                    this.shapeParameters = new PolyLineZ(this._io, this, _root);
-                    break;
-                }
-                case MULTI_POINT_Z: {
-                    this.shapeParameters = new MultiPointZ(this._io, this, _root);
-                    break;
-                }
-                case MULTI_POINT: {
-                    this.shapeParameters = new MultiPoint(this._io, this, _root);
-                    break;
-                }
-                case POLYGON_M: {
-                    this.shapeParameters = new PolygonM(this._io, this, _root);
-                    break;
-                }
-                case POLYGON: {
-                    this.shapeParameters = new Polygon(this._io, this, _root);
-                    break;
-                }
-                case POINT: {
-                    this.shapeParameters = new Point(this._io, this, _root);
-                    break;
-                }
-                case POLY_LINE_M: {
-                    this.shapeParameters = new PolyLineM(this._io, this, _root);
-                    break;
-                }
-                case POLY_LINE: {
-                    this.shapeParameters = new PolyLine(this._io, this, _root);
-                    break;
-                }
-                case POINT_Z: {
-                    this.shapeParameters = new PointZ(this._io, this, _root);
-                    break;
-                }
-                case MULTI_PATCH: {
-                    this.shapeParameters = new MultiPatch(this._io, this, _root);
-                    break;
-                }
+                {
+                    ShapeType on = shapeType();
+                    if (on != null) {
+                        switch (shapeType()) {
+                        case POLY_LINE_Z: {
+                            this.shapeParameters = new PolyLineZ(this._io, this, _root);
+                            break;
+                        }
+                        case MULTI_PATCH: {
+                            this.shapeParameters = new MultiPatch(this._io, this, _root);
+                            break;
+                        }
+                        case POLY_LINE_M: {
+                            this.shapeParameters = new PolyLineM(this._io, this, _root);
+                            break;
+                        }
+                        case POLYGON: {
+                            this.shapeParameters = new Polygon(this._io, this, _root);
+                            break;
+                        }
+                        case POLYGON_Z: {
+                            this.shapeParameters = new PolygonZ(this._io, this, _root);
+                            break;
+                        }
+                        case POINT_Z: {
+                            this.shapeParameters = new PointZ(this._io, this, _root);
+                            break;
+                        }
+                        case POLY_LINE: {
+                            this.shapeParameters = new PolyLine(this._io, this, _root);
+                            break;
+                        }
+                        case POINT_M: {
+                            this.shapeParameters = new PointM(this._io, this, _root);
+                            break;
+                        }
+                        case POLYGON_M: {
+                            this.shapeParameters = new PolygonM(this._io, this, _root);
+                            break;
+                        }
+                        case MULTI_POINT: {
+                            this.shapeParameters = new MultiPoint(this._io, this, _root);
+                            break;
+                        }
+                        case POINT: {
+                            this.shapeParameters = new Point(this._io, this, _root);
+                            break;
+                        }
+                        case MULTI_POINT_M: {
+                            this.shapeParameters = new MultiPointM(this._io, this, _root);
+                            break;
+                        }
+                        case MULTI_POINT_Z: {
+                            this.shapeParameters = new MultiPointZ(this._io, this, _root);
+                            break;
+                        }
+                        }
+                    }
                 }
             }
         }
@@ -954,25 +981,25 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            partTypes = new ArrayList<PartType>((int) (numberOfParts()));
+            partTypes = new ArrayList<PartType>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.partTypes.add(ShapefileMain.PartType.byId(this._io.readS4le()));
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.zRange = new BoundsMinMax(this._io, this, _root);
-            zValues = new ArrayList<Double>((int) (numberOfPoints()));
+            zValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.zValues.add(this._io.readF8le());
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }
@@ -1025,16 +1052,16 @@ public class ShapefileMain extends KaitaiStruct {
             this.boundingBox = new BoundingBoxXY(this._io, this, _root);
             this.numberOfParts = this._io.readS4le();
             this.numberOfPoints = this._io.readS4le();
-            parts = new ArrayList<Integer>((int) (numberOfParts()));
+            parts = new ArrayList<Integer>(((Number) (numberOfParts())).intValue());
             for (int i = 0; i < numberOfParts(); i++) {
                 this.parts.add(this._io.readS4le());
             }
-            points = new ArrayList<Point>((int) (numberOfPoints()));
+            points = new ArrayList<Point>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.points.add(new Point(this._io, this, _root));
             }
             this.mRange = new BoundsMinMax(this._io, this, _root);
-            mValues = new ArrayList<Double>((int) (numberOfPoints()));
+            mValues = new ArrayList<Double>(((Number) (numberOfPoints())).intValue());
             for (int i = 0; i < numberOfPoints(); i++) {
                 this.mValues.add(this._io.readF8le());
             }

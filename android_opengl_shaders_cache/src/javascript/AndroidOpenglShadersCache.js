@@ -24,7 +24,10 @@ var AndroidOpenglShadersCache = (function() {
     this._read();
   }
   AndroidOpenglShadersCache.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([69, 71, 76, 36]);
+    this.magic = this._io.readBytes(4);
+    if (!((KaitaiStream.byteArrayCompare(this.magic, [69, 71, 76, 36]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([69, 71, 76, 36], this.magic, this._io, "/seq/0");
+    }
     this.crc32 = this._io.readU4le();
     this._raw_contents = this._io.readBytesFull();
     var _io__raw_contents = new KaitaiStream(this._raw_contents);
@@ -80,7 +83,10 @@ var AndroidOpenglShadersCache = (function() {
       this._read();
     }
     Cache.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([36, 98, 66, 95]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [36, 98, 66, 95]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([36, 98, 66, 95], this.magic, this._io, "/types/cache/seq/0");
+      }
       this.version = this._io.readU4le();
       this.deviceVersion = this._io.readU4le();
       this.numEntries = this._io.readU4le();

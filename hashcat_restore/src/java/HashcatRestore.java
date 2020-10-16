@@ -39,7 +39,7 @@ public class HashcatRestore extends KaitaiStruct {
         this.currentRestorePoint = this._io.readU8le();
         this.argc = this._io.readU4le();
         this.padding2 = this._io.readBytes(12);
-        argv = new ArrayList<String>((int) (argc()));
+        argv = new ArrayList<String>(((Number) (argc())).intValue());
         for (int i = 0; i < argc(); i++) {
             this.argv.add(new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("UTF-8")));
         }

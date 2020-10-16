@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -35,7 +36,10 @@ public class DsStore extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.alignmentHeader = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 1 });
+        this.alignmentHeader = this._io.readBytes(4);
+        if (!(Arrays.equals(alignmentHeader(), new byte[] { 0, 0, 0, 1 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 1 }, alignmentHeader(), _io(), "/seq/0");
+        }
         this.buddyAllocatorHeader = new BuddyAllocatorHeader(this._io, this, _root);
     }
     public static class BuddyAllocatorHeader extends KaitaiStruct {
@@ -58,7 +62,10 @@ public class DsStore extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 66, 117, 100, 49 });
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 66, 117, 100, 49 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 117, 100, 49 }, magic(), _io(), "/types/buddy_allocator_header/seq/0");
+            }
             this.ofsBookkeepingInfoBlock = this._io.readU4be();
             this.lenBookkeepingInfoBlock = this._io.readU4be();
             this.copyOfsBookkeepingInfoBlock = this._io.readU4be();
@@ -114,16 +121,16 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.numBlocks = this._io.readU4be();
             this._unnamed1 = this._io.readBytes(4);
-            blockAddresses = new ArrayList<BlockDescriptor>((int) (numBlockAddresses()));
+            blockAddresses = new ArrayList<BlockDescriptor>(((Number) (numBlockAddresses())).intValue());
             for (int i = 0; i < numBlockAddresses(); i++) {
                 this.blockAddresses.add(new BlockDescriptor(this._io, this, _root));
             }
             this.numDirectories = this._io.readU4be();
-            directoryEntries = new ArrayList<DirectoryEntry>((int) (numDirectories()));
+            directoryEntries = new ArrayList<DirectoryEntry>(((Number) (numDirectories())).intValue());
             for (int i = 0; i < numDirectories(); i++) {
                 this.directoryEntries.add(new DirectoryEntry(this._io, this, _root));
             }
-            freeLists = new ArrayList<FreeList>((int) (numFreeLists()));
+            freeLists = new ArrayList<FreeList>(((Number) (numFreeLists())).intValue());
             for (int i = 0; i < numFreeLists(); i++) {
                 this.freeLists.add(new FreeList(this._io, this, _root));
             }
@@ -229,7 +236,7 @@ public class DsStore extends KaitaiStruct {
             }
             private void _read() {
                 this.counter = this._io.readU4be();
-                offsets = new ArrayList<Long>((int) (counter()));
+                offsets = new ArrayList<Long>(((Number) (counter())).intValue());
                 for (int i = 0; i < counter(); i++) {
                     this.offsets.add(this._io.readU4be());
                 }
@@ -268,7 +275,7 @@ public class DsStore extends KaitaiStruct {
             if (this.directories != null)
                 return this.directories;
             KaitaiStream io = _root._io();
-            directories = new ArrayList<MasterBlockRef>((int) (numDirectories()));
+            directories = new ArrayList<MasterBlockRef>(((Number) (numDirectories())).intValue());
             for (int i = 0; i < numDirectories(); i++) {
                 this.directories.add(new MasterBlockRef(io, this, _root, i));
             }
@@ -445,7 +452,7 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.mode = this._io.readU4be();
             this.counter = this._io.readU4be();
-            data = new ArrayList<BlockData>((int) (counter()));
+            data = new ArrayList<BlockData>(((Number) (counter())).intValue());
             for (int i = 0; i < counter(); i++) {
                 this.data.add(new BlockData(this._io, this, _root, mode()));
             }

@@ -40,10 +40,13 @@ var Hccapx = (function() {
       this._read();
     }
     HccapxRecord.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([72, 67, 80, 88]);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [72, 67, 80, 88]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([72, 67, 80, 88], this.magic, this._io, "/types/hccapx_record/seq/0");
+      }
       this.version = this._io.readU4le();
-      this.ignoreReplayCounter = this._io.readBitsInt(1) != 0;
-      this.messagePair = this._io.readBitsInt(7);
+      this.ignoreReplayCounter = this._io.readBitsIntBe(1) != 0;
+      this.messagePair = this._io.readBitsIntBe(7);
       this._io.alignToByte();
       this.lenEssid = this._io.readU1();
       this.essid = this._io.readBytes(this.lenEssid);

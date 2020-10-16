@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use VlqBase128Le;
 
@@ -202,7 +202,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (100, 101, 120, 10)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{version_str} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(4), 0, 0));
     $self->{checksum} = $self->{_io}->read_u4le();
     $self->{signature} = $self->{_io}->read_bytes(20);
@@ -445,57 +445,57 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{value_arg} = $self->{_io}->read_bits_int(3);
-    $self->{value_type} = $self->{_io}->read_bits_int(5);
+    $self->{value_arg} = $self->{_io}->read_bits_int_be(3);
+    $self->{value_type} = $self->{_io}->read_bits_int_be(5);
     $self->{_io}->align_to_byte();
     my $_on = $self->value_type();
-    if ($_on == $VALUE_TYPE_ENUM_DOUBLE) {
-        $self->{value} = $self->{_io}->read_f8le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_ANNOTATION) {
-        $self->{value} = Dex::EncodedAnnotation->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_TYPE) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_CHAR) {
-        $self->{value} = $self->{_io}->read_u2le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_METHOD_HANDLE) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_ARRAY) {
-        $self->{value} = Dex::EncodedArray->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_BYTE) {
-        $self->{value} = $self->{_io}->read_s1();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_METHOD) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_METHOD_TYPE) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_SHORT) {
-        $self->{value} = $self->{_io}->read_s2le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_STRING) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $VALUE_TYPE_ENUM_INT) {
+    if ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_INT) {
         $self->{value} = $self->{_io}->read_s4le();
     }
-    elsif ($_on == $VALUE_TYPE_ENUM_FIELD) {
-        $self->{value} = $self->{_io}->read_u4le();
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ANNOTATION) {
+        $self->{value} = Dex::EncodedAnnotation->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $VALUE_TYPE_ENUM_LONG) {
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_LONG) {
         $self->{value} = $self->{_io}->read_s8le();
     }
-    elsif ($_on == $VALUE_TYPE_ENUM_FLOAT) {
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD_HANDLE) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_BYTE) {
+        $self->{value} = $self->{_io}->read_s1();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ARRAY) {
+        $self->{value} = Dex::EncodedArray->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD_TYPE) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_SHORT) {
+        $self->{value} = $self->{_io}->read_s2le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_DOUBLE) {
+        $self->{value} = $self->{_io}->read_f8le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_FLOAT) {
         $self->{value} = $self->{_io}->read_f4le();
     }
-    elsif ($_on == $VALUE_TYPE_ENUM_ENUM) {
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_TYPE) {
         $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ENUM) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_FIELD) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_STRING) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_CHAR) {
+        $self->{value} = $self->{_io}->read_u2le();
     }
 }
 

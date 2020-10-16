@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -72,23 +73,29 @@ public class Ogg extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.syncCode = this._io.ensureFixedContents(new byte[] { 79, 103, 103, 83 });
-            this.version = this._io.ensureFixedContents(new byte[] { 0 });
-            this.reserved1 = this._io.readBitsInt(5);
-            this.isEndOfStream = this._io.readBitsInt(1) != 0;
-            this.isBeginningOfStream = this._io.readBitsInt(1) != 0;
-            this.isContinuation = this._io.readBitsInt(1) != 0;
+            this.syncCode = this._io.readBytes(4);
+            if (!(Arrays.equals(syncCode(), new byte[] { 79, 103, 103, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, syncCode(), _io(), "/types/page/seq/0");
+            }
+            this.version = this._io.readBytes(1);
+            if (!(Arrays.equals(version(), new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, version(), _io(), "/types/page/seq/1");
+            }
+            this.reserved1 = this._io.readBitsIntBe(5);
+            this.isEndOfStream = this._io.readBitsIntBe(1) != 0;
+            this.isBeginningOfStream = this._io.readBitsIntBe(1) != 0;
+            this.isContinuation = this._io.readBitsIntBe(1) != 0;
             this._io.alignToByte();
             this.granulePos = this._io.readU8le();
             this.bitstreamSerial = this._io.readU4le();
             this.pageSeqNum = this._io.readU4le();
             this.crc32 = this._io.readU4le();
             this.numSegments = this._io.readU1();
-            lenSegments = new ArrayList<Integer>((int) (numSegments()));
+            lenSegments = new ArrayList<Integer>(((Number) (numSegments())).intValue());
             for (int i = 0; i < numSegments(); i++) {
                 this.lenSegments.add(this._io.readU1());
             }
-            segments = new ArrayList<byte[]>((int) (numSegments()));
+            segments = new ArrayList<byte[]>(((Number) (numSegments())).intValue());
             for (int i = 0; i < numSegments(); i++) {
                 this.segments.add(this._io.readBytes(lenSegments().get((int) i)));
             }

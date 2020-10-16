@@ -321,7 +321,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 114, 107 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 77, 84, 114, 107 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 77, 84, 114, 107 }, Magic, M_Io, "/types/track/seq/0");
+                }
                 _lenEvents = m_io.ReadU4be();
                 __raw_events = m_io.ReadBytes(LenEvents);
                 var io___raw_events = new KaitaiStream(__raw_events);
@@ -431,7 +435,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 104, 100 });
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 77, 84, 104, 100 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 77, 84, 104, 100 }, Magic, M_Io, "/types/header/seq/0");
+                }
                 _lenHeader = m_io.ReadU4be();
                 _format = m_io.ReadU2be();
                 _numTracks = m_io.ReadU2be();

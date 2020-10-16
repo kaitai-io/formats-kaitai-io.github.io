@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 use Encode;
 use List::Util;
 
@@ -471,7 +471,7 @@ sub _read {
     $self->{version} = Ttf::Fixed->new($self->{_io}, $self, $self->{_root});
     $self->{font_revision} = Ttf::Fixed->new($self->{_io}, $self, $self->{_root});
     $self->{checksum_adjustment} = $self->{_io}->read_u4be();
-    $self->{magic_number} = $self->{_io}->ensure_fixed_contents(pack('C*', (95, 15, 60, 245)));
+    $self->{magic_number} = $self->{_io}->read_bytes(4);
     $self->{flags} = $self->{_io}->read_u2be();
     $self->{units_per_em} = $self->{_io}->read_u2be();
     $self->{created} = $self->{_io}->read_u8be();
@@ -650,7 +650,7 @@ sub _read {
     $self->{x_max_extend} = $self->{_io}->read_s2be();
     $self->{caret_slope_rise} = $self->{_io}->read_s2be();
     $self->{caret_slope_run} = $self->{_io}->read_s2be();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    $self->{reserved} = $self->{_io}->read_bytes(10);
     $self->{metric_data_format} = $self->{_io}->read_s2be();
     $self->{number_of_hmetrics} = $self->{_io}->read_u2be();
 }
@@ -845,11 +845,11 @@ sub _read {
     $self->{version} = $self->{_io}->read_u2be();
     $self->{length} = $self->{_io}->read_u2be();
     $self->{format} = $self->{_io}->read_u1();
-    $self->{reserved} = $self->{_io}->read_bits_int(4);
-    $self->{is_override} = $self->{_io}->read_bits_int(1);
-    $self->{is_cross_stream} = $self->{_io}->read_bits_int(1);
-    $self->{is_minimum} = $self->{_io}->read_bits_int(1);
-    $self->{is_horizontal} = $self->{_io}->read_bits_int(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(4);
+    $self->{is_override} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_cross_stream} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_minimum} = $self->{_io}->read_bits_int_be(1);
+    $self->{is_horizontal} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     if ($self->format() == 0) {
         $self->{format0} = Ttf::Kern::Subtable::Format0->new($self->{_io}, $self, $self->{_root});
@@ -1629,76 +1629,76 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{basic_latin} = $self->{_io}->read_bits_int(1);
-    $self->{latin_1_supplement} = $self->{_io}->read_bits_int(1);
-    $self->{latin_extended_a} = $self->{_io}->read_bits_int(1);
-    $self->{latin_extended_b} = $self->{_io}->read_bits_int(1);
-    $self->{ipa_extensions} = $self->{_io}->read_bits_int(1);
-    $self->{spacing_modifier_letters} = $self->{_io}->read_bits_int(1);
-    $self->{combining_diacritical_marks} = $self->{_io}->read_bits_int(1);
-    $self->{basic_greek} = $self->{_io}->read_bits_int(1);
-    $self->{greek_symbols_and_coptic} = $self->{_io}->read_bits_int(1);
-    $self->{cyrillic} = $self->{_io}->read_bits_int(1);
-    $self->{armenian} = $self->{_io}->read_bits_int(1);
-    $self->{basic_hebrew} = $self->{_io}->read_bits_int(1);
-    $self->{hebrew_extended} = $self->{_io}->read_bits_int(1);
-    $self->{basic_arabic} = $self->{_io}->read_bits_int(1);
-    $self->{arabic_extended} = $self->{_io}->read_bits_int(1);
-    $self->{devanagari} = $self->{_io}->read_bits_int(1);
-    $self->{bengali} = $self->{_io}->read_bits_int(1);
-    $self->{gurmukhi} = $self->{_io}->read_bits_int(1);
-    $self->{gujarati} = $self->{_io}->read_bits_int(1);
-    $self->{oriya} = $self->{_io}->read_bits_int(1);
-    $self->{tamil} = $self->{_io}->read_bits_int(1);
-    $self->{telugu} = $self->{_io}->read_bits_int(1);
-    $self->{kannada} = $self->{_io}->read_bits_int(1);
-    $self->{malayalam} = $self->{_io}->read_bits_int(1);
-    $self->{thai} = $self->{_io}->read_bits_int(1);
-    $self->{lao} = $self->{_io}->read_bits_int(1);
-    $self->{basic_georgian} = $self->{_io}->read_bits_int(1);
-    $self->{georgian_extended} = $self->{_io}->read_bits_int(1);
-    $self->{hangul_jamo} = $self->{_io}->read_bits_int(1);
-    $self->{latin_extended_additional} = $self->{_io}->read_bits_int(1);
-    $self->{greek_extended} = $self->{_io}->read_bits_int(1);
-    $self->{general_punctuation} = $self->{_io}->read_bits_int(1);
-    $self->{superscripts_and_subscripts} = $self->{_io}->read_bits_int(1);
-    $self->{currency_symbols} = $self->{_io}->read_bits_int(1);
-    $self->{combining_diacritical_marks_for_symbols} = $self->{_io}->read_bits_int(1);
-    $self->{letterlike_symbols} = $self->{_io}->read_bits_int(1);
-    $self->{number_forms} = $self->{_io}->read_bits_int(1);
-    $self->{arrows} = $self->{_io}->read_bits_int(1);
-    $self->{mathematical_operators} = $self->{_io}->read_bits_int(1);
-    $self->{miscellaneous_technical} = $self->{_io}->read_bits_int(1);
-    $self->{control_pictures} = $self->{_io}->read_bits_int(1);
-    $self->{optical_character_recognition} = $self->{_io}->read_bits_int(1);
-    $self->{enclosed_alphanumerics} = $self->{_io}->read_bits_int(1);
-    $self->{box_drawing} = $self->{_io}->read_bits_int(1);
-    $self->{block_elements} = $self->{_io}->read_bits_int(1);
-    $self->{geometric_shapes} = $self->{_io}->read_bits_int(1);
-    $self->{miscellaneous_symbols} = $self->{_io}->read_bits_int(1);
-    $self->{dingbats} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_symbols_and_punctuation} = $self->{_io}->read_bits_int(1);
-    $self->{hiragana} = $self->{_io}->read_bits_int(1);
-    $self->{katakana} = $self->{_io}->read_bits_int(1);
-    $self->{bopomofo} = $self->{_io}->read_bits_int(1);
-    $self->{hangul_compatibility_jamo} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_miscellaneous} = $self->{_io}->read_bits_int(1);
-    $self->{enclosed_cjk_letters_and_months} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_compatibility} = $self->{_io}->read_bits_int(1);
-    $self->{hangul} = $self->{_io}->read_bits_int(1);
-    $self->{reserved_for_unicode_subranges1} = $self->{_io}->read_bits_int(1);
-    $self->{reserved_for_unicode_subranges2} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_unified_ideographs} = $self->{_io}->read_bits_int(1);
-    $self->{private_use_area} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_compatibility_ideographs} = $self->{_io}->read_bits_int(1);
-    $self->{alphabetic_presentation_forms} = $self->{_io}->read_bits_int(1);
-    $self->{arabic_presentation_forms_a} = $self->{_io}->read_bits_int(1);
-    $self->{combining_half_marks} = $self->{_io}->read_bits_int(1);
-    $self->{cjk_compatibility_forms} = $self->{_io}->read_bits_int(1);
-    $self->{small_form_variants} = $self->{_io}->read_bits_int(1);
-    $self->{arabic_presentation_forms_b} = $self->{_io}->read_bits_int(1);
-    $self->{halfwidth_and_fullwidth_forms} = $self->{_io}->read_bits_int(1);
-    $self->{specials} = $self->{_io}->read_bits_int(1);
+    $self->{basic_latin} = $self->{_io}->read_bits_int_be(1);
+    $self->{latin_1_supplement} = $self->{_io}->read_bits_int_be(1);
+    $self->{latin_extended_a} = $self->{_io}->read_bits_int_be(1);
+    $self->{latin_extended_b} = $self->{_io}->read_bits_int_be(1);
+    $self->{ipa_extensions} = $self->{_io}->read_bits_int_be(1);
+    $self->{spacing_modifier_letters} = $self->{_io}->read_bits_int_be(1);
+    $self->{combining_diacritical_marks} = $self->{_io}->read_bits_int_be(1);
+    $self->{basic_greek} = $self->{_io}->read_bits_int_be(1);
+    $self->{greek_symbols_and_coptic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cyrillic} = $self->{_io}->read_bits_int_be(1);
+    $self->{armenian} = $self->{_io}->read_bits_int_be(1);
+    $self->{basic_hebrew} = $self->{_io}->read_bits_int_be(1);
+    $self->{hebrew_extended} = $self->{_io}->read_bits_int_be(1);
+    $self->{basic_arabic} = $self->{_io}->read_bits_int_be(1);
+    $self->{arabic_extended} = $self->{_io}->read_bits_int_be(1);
+    $self->{devanagari} = $self->{_io}->read_bits_int_be(1);
+    $self->{bengali} = $self->{_io}->read_bits_int_be(1);
+    $self->{gurmukhi} = $self->{_io}->read_bits_int_be(1);
+    $self->{gujarati} = $self->{_io}->read_bits_int_be(1);
+    $self->{oriya} = $self->{_io}->read_bits_int_be(1);
+    $self->{tamil} = $self->{_io}->read_bits_int_be(1);
+    $self->{telugu} = $self->{_io}->read_bits_int_be(1);
+    $self->{kannada} = $self->{_io}->read_bits_int_be(1);
+    $self->{malayalam} = $self->{_io}->read_bits_int_be(1);
+    $self->{thai} = $self->{_io}->read_bits_int_be(1);
+    $self->{lao} = $self->{_io}->read_bits_int_be(1);
+    $self->{basic_georgian} = $self->{_io}->read_bits_int_be(1);
+    $self->{georgian_extended} = $self->{_io}->read_bits_int_be(1);
+    $self->{hangul_jamo} = $self->{_io}->read_bits_int_be(1);
+    $self->{latin_extended_additional} = $self->{_io}->read_bits_int_be(1);
+    $self->{greek_extended} = $self->{_io}->read_bits_int_be(1);
+    $self->{general_punctuation} = $self->{_io}->read_bits_int_be(1);
+    $self->{superscripts_and_subscripts} = $self->{_io}->read_bits_int_be(1);
+    $self->{currency_symbols} = $self->{_io}->read_bits_int_be(1);
+    $self->{combining_diacritical_marks_for_symbols} = $self->{_io}->read_bits_int_be(1);
+    $self->{letterlike_symbols} = $self->{_io}->read_bits_int_be(1);
+    $self->{number_forms} = $self->{_io}->read_bits_int_be(1);
+    $self->{arrows} = $self->{_io}->read_bits_int_be(1);
+    $self->{mathematical_operators} = $self->{_io}->read_bits_int_be(1);
+    $self->{miscellaneous_technical} = $self->{_io}->read_bits_int_be(1);
+    $self->{control_pictures} = $self->{_io}->read_bits_int_be(1);
+    $self->{optical_character_recognition} = $self->{_io}->read_bits_int_be(1);
+    $self->{enclosed_alphanumerics} = $self->{_io}->read_bits_int_be(1);
+    $self->{box_drawing} = $self->{_io}->read_bits_int_be(1);
+    $self->{block_elements} = $self->{_io}->read_bits_int_be(1);
+    $self->{geometric_shapes} = $self->{_io}->read_bits_int_be(1);
+    $self->{miscellaneous_symbols} = $self->{_io}->read_bits_int_be(1);
+    $self->{dingbats} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_symbols_and_punctuation} = $self->{_io}->read_bits_int_be(1);
+    $self->{hiragana} = $self->{_io}->read_bits_int_be(1);
+    $self->{katakana} = $self->{_io}->read_bits_int_be(1);
+    $self->{bopomofo} = $self->{_io}->read_bits_int_be(1);
+    $self->{hangul_compatibility_jamo} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_miscellaneous} = $self->{_io}->read_bits_int_be(1);
+    $self->{enclosed_cjk_letters_and_months} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_compatibility} = $self->{_io}->read_bits_int_be(1);
+    $self->{hangul} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved_for_unicode_subranges1} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved_for_unicode_subranges2} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_unified_ideographs} = $self->{_io}->read_bits_int_be(1);
+    $self->{private_use_area} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_compatibility_ideographs} = $self->{_io}->read_bits_int_be(1);
+    $self->{alphabetic_presentation_forms} = $self->{_io}->read_bits_int_be(1);
+    $self->{arabic_presentation_forms_a} = $self->{_io}->read_bits_int_be(1);
+    $self->{combining_half_marks} = $self->{_io}->read_bits_int_be(1);
+    $self->{cjk_compatibility_forms} = $self->{_io}->read_bits_int_be(1);
+    $self->{small_form_variants} = $self->{_io}->read_bits_int_be(1);
+    $self->{arabic_presentation_forms_b} = $self->{_io}->read_bits_int_be(1);
+    $self->{halfwidth_and_fullwidth_forms} = $self->{_io}->read_bits_int_be(1);
+    $self->{specials} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     $self->{reserved} = $self->{_io}->read_bytes(7);
 }
@@ -2088,42 +2088,42 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{symbol_character_set} = $self->{_io}->read_bits_int(1);
-    $self->{oem_character_set} = $self->{_io}->read_bits_int(1);
-    $self->{macintosh_character_set} = $self->{_io}->read_bits_int(1);
-    $self->{reserved_for_alternate_ansi_oem} = $self->{_io}->read_bits_int(7);
-    $self->{cp1361_korean_johab} = $self->{_io}->read_bits_int(1);
-    $self->{cp950_chinese_traditional_chars_taiwan_and_hong_kong} = $self->{_io}->read_bits_int(1);
-    $self->{cp949_korean_wansung} = $self->{_io}->read_bits_int(1);
-    $self->{cp936_chinese_simplified_chars_prc_and_singapore} = $self->{_io}->read_bits_int(1);
-    $self->{cp932_jis_japan} = $self->{_io}->read_bits_int(1);
-    $self->{cp874_thai} = $self->{_io}->read_bits_int(1);
-    $self->{reserved_for_alternate_ansi} = $self->{_io}->read_bits_int(8);
-    $self->{cp1257_windows_baltic} = $self->{_io}->read_bits_int(1);
-    $self->{cp1256_arabic} = $self->{_io}->read_bits_int(1);
-    $self->{cp1255_hebrew} = $self->{_io}->read_bits_int(1);
-    $self->{cp1254_turkish} = $self->{_io}->read_bits_int(1);
-    $self->{cp1253_greek} = $self->{_io}->read_bits_int(1);
-    $self->{cp1251_cyrillic} = $self->{_io}->read_bits_int(1);
-    $self->{cp1250_latin_2_eastern_europe} = $self->{_io}->read_bits_int(1);
-    $self->{cp1252_latin_1} = $self->{_io}->read_bits_int(1);
-    $self->{cp437_us} = $self->{_io}->read_bits_int(1);
-    $self->{cp850_we_latin_1} = $self->{_io}->read_bits_int(1);
-    $self->{cp708_arabic_asmo_708} = $self->{_io}->read_bits_int(1);
-    $self->{cp737_greek_former_437_g} = $self->{_io}->read_bits_int(1);
-    $self->{cp775_ms_dos_baltic} = $self->{_io}->read_bits_int(1);
-    $self->{cp852_latin_2} = $self->{_io}->read_bits_int(1);
-    $self->{cp855_ibm_cyrillic_primarily_russian} = $self->{_io}->read_bits_int(1);
-    $self->{cp857_ibm_turkish} = $self->{_io}->read_bits_int(1);
-    $self->{cp860_ms_dos_portuguese} = $self->{_io}->read_bits_int(1);
-    $self->{cp861_ms_dos_icelandic} = $self->{_io}->read_bits_int(1);
-    $self->{cp862_hebrew} = $self->{_io}->read_bits_int(1);
-    $self->{cp863_ms_dos_canadian_french} = $self->{_io}->read_bits_int(1);
-    $self->{cp864_arabic} = $self->{_io}->read_bits_int(1);
-    $self->{cp865_ms_dos_nordic} = $self->{_io}->read_bits_int(1);
-    $self->{cp866_ms_dos_russian} = $self->{_io}->read_bits_int(1);
-    $self->{cp869_ibm_greek} = $self->{_io}->read_bits_int(1);
-    $self->{reserved_for_oem} = $self->{_io}->read_bits_int(16);
+    $self->{symbol_character_set} = $self->{_io}->read_bits_int_be(1);
+    $self->{oem_character_set} = $self->{_io}->read_bits_int_be(1);
+    $self->{macintosh_character_set} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved_for_alternate_ansi_oem} = $self->{_io}->read_bits_int_be(7);
+    $self->{cp1361_korean_johab} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp950_chinese_traditional_chars_taiwan_and_hong_kong} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp949_korean_wansung} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp936_chinese_simplified_chars_prc_and_singapore} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp932_jis_japan} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp874_thai} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved_for_alternate_ansi} = $self->{_io}->read_bits_int_be(8);
+    $self->{cp1257_windows_baltic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1256_arabic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1255_hebrew} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1254_turkish} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1253_greek} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1251_cyrillic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1250_latin_2_eastern_europe} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp1252_latin_1} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp437_us} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp850_we_latin_1} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp708_arabic_asmo_708} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp737_greek_former_437_g} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp775_ms_dos_baltic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp852_latin_2} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp855_ibm_cyrillic_primarily_russian} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp857_ibm_turkish} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp860_ms_dos_portuguese} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp861_ms_dos_icelandic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp862_hebrew} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp863_ms_dos_canadian_french} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp864_arabic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp865_ms_dos_nordic} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp866_ms_dos_russian} = $self->{_io}->read_bits_int_be(1);
+    $self->{cp869_ibm_greek} = $self->{_io}->read_bits_int_be(1);
+    $self->{reserved_for_oem} = $self->{_io}->read_bits_int_be(16);
 }
 
 sub symbol_character_set {
@@ -2521,13 +2521,13 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{reserved} = $self->{_io}->read_bits_int(2);
-    $self->{y_is_same} = $self->{_io}->read_bits_int(1);
-    $self->{x_is_same} = $self->{_io}->read_bits_int(1);
-    $self->{repeat} = $self->{_io}->read_bits_int(1);
-    $self->{y_short_vector} = $self->{_io}->read_bits_int(1);
-    $self->{x_short_vector} = $self->{_io}->read_bits_int(1);
-    $self->{on_curve} = $self->{_io}->read_bits_int(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_be(2);
+    $self->{y_is_same} = $self->{_io}->read_bits_int_be(1);
+    $self->{x_is_same} = $self->{_io}->read_bits_int_be(1);
+    $self->{repeat} = $self->{_io}->read_bits_int_be(1);
+    $self->{y_short_vector} = $self->{_io}->read_bits_int_be(1);
+    $self->{x_short_vector} = $self->{_io}->read_bits_int_be(1);
+    $self->{on_curve} = $self->{_io}->read_bits_int_be(1);
     $self->{_io}->align_to_byte();
     if ($self->repeat()) {
         $self->{repeat_value} = $self->{_io}->read_u1();
@@ -2953,25 +2953,25 @@ sub _read {
     $self->{length} = $self->{_io}->read_u2be();
     $self->{version} = $self->{_io}->read_u2be();
     my $_on = $self->format();
-    if ($_on == $SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
+    if ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::ByteEncodingTable->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
+    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
+        $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::HighByteMappingThroughTable->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
+    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::TrimmedTableMapping->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
-        $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues->new($io__raw_value, $self, $self->{_root});
     }
     else {
         $self->{value} = $self->{_io}->read_bytes(($self->length() - 6));

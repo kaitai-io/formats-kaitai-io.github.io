@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.007_000;
+use IO::KaitaiStruct 0.009_000;
 
 ########################################################################
 package Ico;
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 0, 1, 0)));
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{num_images} = $self->{_io}->read_u2le();
     $self->{images} = ();
     my $n_images = $self->num_images();
@@ -91,7 +91,7 @@ sub _read {
     $self->{width} = $self->{_io}->read_u1();
     $self->{height} = $self->{_io}->read_u1();
     $self->{num_colors} = $self->{_io}->read_u1();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0)));
+    $self->{reserved} = $self->{_io}->read_bytes(1);
     $self->{num_planes} = $self->{_io}->read_u2le();
     $self->{bpp} = $self->{_io}->read_u2le();
     $self->{len_img} = $self->{_io}->read_u4le();
