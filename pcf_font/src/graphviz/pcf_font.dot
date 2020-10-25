@@ -1,0 +1,198 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__pcf_font {
+		label="PcfFont";
+		graph[style=dotted];
+
+		pcf_font__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="num_tables_pos">4</TD><TD PORT="num_tables_size">4</TD><TD>u4le</TD><TD PORT="num_tables_type">num_tables</TD></TR>
+			<TR><TD PORT="tables_pos">8</TD><TD PORT="tables_size">16</TD><TD>Table</TD><TD PORT="tables_type">tables</TD></TR>
+			<TR><TD COLSPAN="4" PORT="tables__repeat">repeat num_tables times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__table {
+			label="PcfFont::Table";
+			graph[style=dotted];
+
+			table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4le→Types</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="format_pos">4</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="len_body_pos">8</TD><TD PORT="len_body_size">4</TD><TD>u4le</TD><TD PORT="len_body_type">len_body</TD></TR>
+				<TR><TD PORT="ofs_body_pos">12</TD><TD PORT="ofs_body_size">4</TD><TD>u4le</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
+			</TABLE>>];
+			table__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+table__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:types_properties</TD><TD PORT="case0">Properties</TD></TR>
+	<TR><TD>:types_bdf_encodings</TD><TD PORT="case1">BdfEncodings</TD></TR>
+	<TR><TD>:types_swidths</TD><TD PORT="case2">Swidths</TD></TR>
+	<TR><TD>:types_glyph_names</TD><TD PORT="case3">GlyphNames</TD></TR>
+	<TR><TD>:types_bitmaps</TD><TD PORT="case4">Bitmaps</TD></TR>
+</TABLE>>];
+			subgraph cluster__swidths {
+				label="PcfFont::Table::Swidths";
+				graph[style=dotted];
+
+				swidths__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="num_glyphs_pos">4</TD><TD PORT="num_glyphs_size">4</TD><TD>u4le</TD><TD PORT="num_glyphs_type">num_glyphs</TD></TR>
+					<TR><TD PORT="swidths_pos">8</TD><TD PORT="swidths_size">4</TD><TD>u4le</TD><TD PORT="swidths_type">swidths</TD></TR>
+					<TR><TD COLSPAN="4" PORT="swidths__repeat">repeat num_glyphs times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__properties {
+				label="PcfFont::Table::Properties";
+				graph[style=dotted];
+
+				properties__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="num_props_pos">4</TD><TD PORT="num_props_size">4</TD><TD>u4le</TD><TD PORT="num_props_type">num_props</TD></TR>
+					<TR><TD PORT="props_pos">8</TD><TD PORT="props_size">9</TD><TD>Prop</TD><TD PORT="props_type">props</TD></TR>
+					<TR><TD COLSPAN="4" PORT="props__repeat">repeat num_props times</TD></TR>
+					<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">((num_props &amp; 3) == 0 ? 0 : (4 - (num_props &amp; 3)))</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+					<TR><TD PORT="len_strings_pos">...</TD><TD PORT="len_strings_size">4</TD><TD>u4le</TD><TD PORT="len_strings_type">len_strings</TD></TR>
+					<TR><TD PORT="strings_pos">...</TD><TD PORT="strings_size">len_strings</TD><TD>BytesWithIo</TD><TD PORT="strings_type">strings</TD></TR>
+				</TABLE>>];
+				subgraph cluster__prop {
+					label="PcfFont::Table::Properties::Prop";
+					graph[style=dotted];
+
+					prop__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="ofs_name_pos">0</TD><TD PORT="ofs_name_size">4</TD><TD>u4le</TD><TD PORT="ofs_name_type">ofs_name</TD></TR>
+						<TR><TD PORT="is_string_pos">4</TD><TD PORT="is_string_size">1</TD><TD>u1</TD><TD PORT="is_string_type">is_string</TD></TR>
+						<TR><TD PORT="value_or_ofs_value_pos">5</TD><TD PORT="value_or_ofs_value_size">4</TD><TD>u4le</TD><TD PORT="value_or_ofs_value_type">value_or_ofs_value</TD></TR>
+					</TABLE>>];
+					prop__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+					</TABLE>>];
+					prop__inst__str_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="str_value_pos">value_or_ofs_value</TD><TD PORT="str_value_size">...</TD><TD>str(UTF-8)</TD><TD PORT="str_value_type">str_value</TD></TR>
+					</TABLE>>];
+					prop__inst__int_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>int_value</TD><TD>value_or_ofs_value</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__bdf_encodings {
+				label="PcfFont::Table::BdfEncodings";
+				graph[style=dotted];
+
+				bdf_encodings__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="min_char_or_byte2_pos">4</TD><TD PORT="min_char_or_byte2_size">2</TD><TD>u2le</TD><TD PORT="min_char_or_byte2_type">min_char_or_byte2</TD></TR>
+					<TR><TD PORT="max_char_or_byte2_pos">6</TD><TD PORT="max_char_or_byte2_size">2</TD><TD>u2le</TD><TD PORT="max_char_or_byte2_type">max_char_or_byte2</TD></TR>
+					<TR><TD PORT="min_byte1_pos">8</TD><TD PORT="min_byte1_size">2</TD><TD>u2le</TD><TD PORT="min_byte1_type">min_byte1</TD></TR>
+					<TR><TD PORT="max_byte1_pos">10</TD><TD PORT="max_byte1_size">2</TD><TD>u2le</TD><TD PORT="max_byte1_type">max_byte1</TD></TR>
+					<TR><TD PORT="default_char_pos">12</TD><TD PORT="default_char_size">2</TD><TD>u2le</TD><TD PORT="default_char_type">default_char</TD></TR>
+					<TR><TD PORT="glyph_indexes_pos">14</TD><TD PORT="glyph_indexes_size">2</TD><TD>u2le</TD><TD PORT="glyph_indexes_type">glyph_indexes</TD></TR>
+					<TR><TD COLSPAN="4" PORT="glyph_indexes__repeat">repeat (((max_char_or_byte2 - min_char_or_byte2) + 1) * ((max_byte1 - min_byte1) + 1)) times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__glyph_names {
+				label="PcfFont::Table::GlyphNames";
+				graph[style=dotted];
+
+				glyph_names__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="num_glyphs_pos">4</TD><TD PORT="num_glyphs_size">4</TD><TD>u4le</TD><TD PORT="num_glyphs_type">num_glyphs</TD></TR>
+					<TR><TD PORT="names_pos">8</TD><TD PORT="names_size">4</TD><TD>StringRef</TD><TD PORT="names_type">names</TD></TR>
+					<TR><TD COLSPAN="4" PORT="names__repeat">repeat num_glyphs times</TD></TR>
+					<TR><TD PORT="len_strings_pos">...</TD><TD PORT="len_strings_size">4</TD><TD>u4le</TD><TD PORT="len_strings_type">len_strings</TD></TR>
+					<TR><TD PORT="strings_pos">...</TD><TD PORT="strings_size">len_strings</TD><TD>BytesWithIo</TD><TD PORT="strings_type">strings</TD></TR>
+				</TABLE>>];
+				subgraph cluster__string_ref {
+					label="PcfFont::Table::GlyphNames::StringRef";
+					graph[style=dotted];
+
+					string_ref__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="ofs_string_pos">0</TD><TD PORT="ofs_string_size">4</TD><TD>u4le</TD><TD PORT="ofs_string_type">ofs_string</TD></TR>
+					</TABLE>>];
+					string_ref__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="value_pos">ofs_string</TD><TD PORT="value_size">...</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__bitmaps {
+				label="PcfFont::Table::Bitmaps";
+				graph[style=dotted];
+
+				bitmaps__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>Format</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="num_glyphs_pos">4</TD><TD PORT="num_glyphs_size">4</TD><TD>u4le</TD><TD PORT="num_glyphs_type">num_glyphs</TD></TR>
+					<TR><TD PORT="offsets_pos">8</TD><TD PORT="offsets_size">4</TD><TD>u4le</TD><TD PORT="offsets_type">offsets</TD></TR>
+					<TR><TD COLSPAN="4" PORT="offsets__repeat">repeat num_glyphs times</TD></TR>
+					<TR><TD PORT="bitmap_sizes_pos">...</TD><TD PORT="bitmap_sizes_size">4</TD><TD>u4le</TD><TD PORT="bitmap_sizes_type">bitmap_sizes</TD></TR>
+					<TR><TD COLSPAN="4" PORT="bitmap_sizes__repeat">repeat 4 times</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__format {
+			label="PcfFont::Format";
+			graph[style=dotted];
+
+			format__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="padding1_pos">0</TD><TD PORT="padding1_size">2b</TD><TD>b2</TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="scan_unit_mask_pos">0:2</TD><TD PORT="scan_unit_mask_size">2b</TD><TD>b2</TD><TD PORT="scan_unit_mask_type">scan_unit_mask</TD></TR>
+				<TR><TD PORT="is_most_significant_bit_first_pos">0:4</TD><TD PORT="is_most_significant_bit_first_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_most_significant_bit_first_type">is_most_significant_bit_first</TD></TR>
+				<TR><TD PORT="is_big_endian_pos">0:5</TD><TD PORT="is_big_endian_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_big_endian_type">is_big_endian</TD></TR>
+				<TR><TD PORT="glyph_pad_mask_pos">0:6</TD><TD PORT="glyph_pad_mask_size">2b</TD><TD>b2</TD><TD PORT="glyph_pad_mask_type">glyph_pad_mask</TD></TR>
+				<TR><TD PORT="format_pos">1</TD><TD PORT="format_size">1</TD><TD>u1</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="padding_pos">2</TD><TD PORT="padding_size">2</TD><TD>u2le</TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+	}
+	pcf_font__seq:tables_type -> table__seq [style=bold];
+	pcf_font__seq:num_tables_type -> pcf_font__seq:tables__repeat [color="#404040"];
+	table__seq:format_type -> format__seq [style=bold];
+	table__seq:ofs_body_type -> table__inst__body:body_pos [color="#404040"];
+	table__inst__body:body_type -> table__inst__body_body_switch [style=bold];
+	table__inst__body_body_switch:case0 -> properties__seq [style=bold];
+	table__inst__body_body_switch:case1 -> bdf_encodings__seq [style=bold];
+	table__inst__body_body_switch:case2 -> swidths__seq [style=bold];
+	table__inst__body_body_switch:case3 -> glyph_names__seq [style=bold];
+	table__inst__body_body_switch:case4 -> bitmaps__seq [style=bold];
+	table__seq:type_type -> table__inst__body:body_type [color="#404040"];
+	swidths__seq:format_type -> format__seq [style=bold];
+	swidths__seq:num_glyphs_type -> swidths__seq:swidths__repeat [color="#404040"];
+	properties__seq:format_type -> format__seq [style=bold];
+	properties__seq:props_type -> prop__seq [style=bold];
+	properties__seq:num_props_type -> properties__seq:props__repeat [color="#404040"];
+	properties__seq:num_props_type -> properties__seq:padding_size [color="#404040"];
+	properties__seq:num_props_type -> properties__seq:padding_size [color="#404040"];
+	properties__seq:len_strings_type -> properties__seq:strings_size [color="#404040"];
+	properties__seq:strings_type -> bytes_with_io__seq [style=bold];
+	prop__seq:ofs_name_type -> prop__inst__name:name_pos [color="#404040"];
+	prop__seq:value_or_ofs_value_type -> prop__inst__str_value:str_value_pos [color="#404040"];
+	prop__seq:value_or_ofs_value_type -> prop__inst__int_value [color="#404040"];
+	bdf_encodings__seq:format_type -> format__seq [style=bold];
+	bdf_encodings__seq:max_char_or_byte2_type -> bdf_encodings__seq:glyph_indexes__repeat [color="#404040"];
+	bdf_encodings__seq:min_char_or_byte2_type -> bdf_encodings__seq:glyph_indexes__repeat [color="#404040"];
+	bdf_encodings__seq:max_byte1_type -> bdf_encodings__seq:glyph_indexes__repeat [color="#404040"];
+	bdf_encodings__seq:min_byte1_type -> bdf_encodings__seq:glyph_indexes__repeat [color="#404040"];
+	glyph_names__seq:format_type -> format__seq [style=bold];
+	glyph_names__seq:names_type -> string_ref__seq [style=bold];
+	glyph_names__seq:num_glyphs_type -> glyph_names__seq:names__repeat [color="#404040"];
+	glyph_names__seq:len_strings_type -> glyph_names__seq:strings_size [color="#404040"];
+	glyph_names__seq:strings_type -> bytes_with_io__seq [style=bold];
+	string_ref__seq:ofs_string_type -> string_ref__inst__value:value_pos [color="#404040"];
+	bitmaps__seq:format_type -> format__seq [style=bold];
+	bitmaps__seq:num_glyphs_type -> bitmaps__seq:offsets__repeat [color="#404040"];
+}

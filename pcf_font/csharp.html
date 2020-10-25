@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Portable Compiled Format (PCF) font: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Fonts</li>
+        <li class="active">Portable Compiled Format (PCF) font</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Portable Compiled Format (PCF) font:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Portable Compiled Format (PCF) font is a bitmap font format
+originating from X11 Window System. It matches BDF format (which is
+text-based) closely, but instead being binary and
+platform-independent (as opposed to previously used SNF binary
+format) due to introduced features to handle different endianness
+and bit order.</p>
+<p>The overall composition of the format is straightforward: it's more
+or less classic directory of type-offset-size pointers, pointing to
+what PCF format calls &quot;tables&quot;. Each table carries a certain
+piece of information related to the font (metadata properties,
+metrics, bitmaps, mapping of glyphs to characters, etc).</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pcf
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q3398726">Wikidata Q3398726</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/PCF">PCF in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Portable Compiled Format (PCF) font
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Portable Compiled Format (PCF) font parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Portable Compiled Format (PCF) font parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Portable Compiled Format (PCF) font parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="Portable Compiled Format (PCF) font parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Portable Compiled Format (PCF) font parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Portable Compiled Format (PCF) font parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Portable Compiled Format (PCF) font parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Portable Compiled Format (PCF) font parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Portable Compiled Format (PCF) font parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Portable Compiled Format (PCF) font parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Portable Compiled Format (PCF) font parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Portable Compiled Format (PCF) font parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Portable Compiled Format (PCF) font parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Portable Compiled Format (PCF) font parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.pcf&quot;</span><span class="p">);</span>
+</pre></div>
+
+<p>Or parse structure from a byte array:</p>
+
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PcfFont</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Magic</span> <span class="c1">// =&gt; get magic</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse Portable Compiled Format (PCF) font
+            
+        </h2>
+
+        
+
+        <h3>PcfFont.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/PcfFont.cs" download="PcfFont.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Portable Compiled Format (PCF) font is a bitmap font format</span>
+    <span class="c1">/// originating from X11 Window System. It matches BDF format (which is</span>
+    <span class="c1">/// text-based) closely, but instead being binary and</span>
+    <span class="c1">/// platform-independent (as opposed to previously used SNF binary</span>
+    <span class="c1">/// format) due to introduced features to handle different endianness</span>
+    <span class="c1">/// and bit order.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// The overall composition of the format is straightforward: it&#39;s more</span>
+    <span class="c1">/// or less classic directory of type-offset-size pointers, pointing to</span>
+    <span class="c1">/// what PCF format calls &amp;quot;tables&amp;quot;. Each table carries a certain</span>
+    <span class="c1">/// piece of information related to the font (metadata properties,</span>
+    <span class="c1">/// metrics, bitmaps, mapping of glyphs to characters, etc).</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PcfFont</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">PcfFont</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">PcfFont</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Types</span>
+        <span class="p">{</span>
+            <span class="n">Properties</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Accelerators</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Metrics</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Bitmaps</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">InkMetrics</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">BdfEncodings</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
+            <span class="n">Swidths</span> <span class="p">=</span> <span class="m">64</span><span class="p">,</span>
+            <span class="n">GlyphNames</span> <span class="p">=</span> <span class="m">128</span><span class="p">,</span>
+            <span class="n">BdfAccelerators</span> <span class="p">=</span> <span class="m">256</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">PcfFont</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">99</span><span class="p">,</span> <span class="m">112</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">99</span><span class="p">,</span> <span class="m">112</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">_numTables</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="n">_tables</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Table</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumTables</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumTables</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_tables</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Table</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Table offers a offset + length pointer to a particular</span>
+        <span class="c1">/// table. &amp;quot;Type&amp;quot; of table references certain enum. Applications can</span>
+        <span class="c1">/// ignore enum values which they don&#39;t support.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Table</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Table</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Table</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Table</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+                <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_lenBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Table containing scalable widths of characters.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Swidths</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Swidths</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Swidths</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Swidths</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_numGlyphs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_swidths</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumGlyphs</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumGlyphs</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_swidths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numGlyphs</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">_swidths</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumGlyphs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGlyphs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// The scalable width of a character is the width of the corresponding</span>
+                <span class="c1">/// PostScript character in em-units (1/1000ths of an em).</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">Swidths</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_swidths</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Array of properties (key-value pairs), used to convey different X11</span>
+            <span class="c1">/// settings of a font. Key is always an X font atom.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#properties-table&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Properties</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Properties</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Properties</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Properties</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_numProps</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_props</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Prop</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumProps</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumProps</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_props</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Prop</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">NumProps</span> <span class="p">&amp;</span> <span class="m">3</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">(</span><span class="m">4</span> <span class="p">-</span> <span class="p">(</span><span class="n">NumProps</span> <span class="p">&amp;</span> <span class="m">3</span><span class="p">))));</span>
+                    <span class="n">_lenStrings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">__raw_strings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenStrings</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_strings</span><span class="p">);</span>
+                    <span class="n">_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BytesWithIo</span><span class="p">(</span><span class="n">io___raw_strings</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Property is a key-value pair, &amp;quot;key&amp;quot; being always a</span>
+                <span class="c1">/// string and &amp;quot;value&amp;quot; being either a string or a 32-bit</span>
+                <span class="c1">/// integer based on an additinal flag (`is_string`).</span>
+                <span class="c1">/// </span>
+                <span class="c1">/// Simple offset-based mechanism is employed to keep this</span>
+                <span class="c1">/// type&#39;s sequence fixed-sized and thus have simple access</span>
+                <span class="c1">/// to property key/value by index.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Prop</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+                <span class="p">{</span>
+                    <span class="k">public</span> <span class="k">static</span> <span class="n">Prop</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="nf">Prop</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="k">public</span> <span class="nf">Prop</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">Properties</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                        <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                        <span class="n">f_name</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                        <span class="n">f_strValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                        <span class="n">f_intValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                    <span class="p">{</span>
+                        <span class="n">_ofsName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                        <span class="n">_isString</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="n">_valueOrOfsValue</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_name</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// Name of the property addressed in the strings buffer.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span>
+                    <span class="p">{</span>
+                        <span class="k">get</span>
+                        <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
+                            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">Strings</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+                            <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsName</span><span class="p">);</span>
+                            <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                            <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_strValue</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">string</span> <span class="n">_strValue</span><span class="p">;</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// Value of the property addressed in the strings</span>
+                    <span class="c1">/// buffer, if this is a string value.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">string</span> <span class="n">StrValue</span>
+                    <span class="p">{</span>
+                        <span class="k">get</span>
+                        <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">f_strValue</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="n">_strValue</span><span class="p">;</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">IsString</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">Strings</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+                                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                                <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">ValueOrOfsValue</span><span class="p">);</span>
+                                <span class="n">_strValue</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                                <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                                <span class="n">f_strValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">return</span> <span class="n">_strValue</span><span class="p">;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_intValue</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_intValue</span><span class="p">;</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// Value of the property, if this is an integer value.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">uint?</span> <span class="n">IntValue</span>
+                    <span class="p">{</span>
+                        <span class="k">get</span>
+                        <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">f_intValue</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="n">_intValue</span><span class="p">;</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">IsString</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">_intValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">uint</span><span class="p">)</span> <span class="p">(</span><span class="n">ValueOrOfsValue</span><span class="p">);</span>
+                            <span class="p">}</span>
+                            <span class="n">f_intValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                            <span class="k">return</span> <span class="n">_intValue</span><span class="p">;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsName</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span> <span class="n">_isString</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">uint</span> <span class="n">_valueOrOfsValue</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">Properties</span> <span class="n">m_parent</span><span class="p">;</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// Offset to name in the strings buffer.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// Designates if value is an integer (zero) or a string (non-zero).</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span> <span class="n">IsString</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isString</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// If the value is an integer (`is_string` is false),</span>
+                    <span class="c1">/// then it&#39;s stored here. If the value is a string</span>
+                    <span class="c1">/// (`is_string` is true), then it stores offset to the</span>
+                    <span class="c1">/// value in the strings buffer.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">uint</span> <span class="n">ValueOrOfsValue</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_valueOrOfsValue</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">Properties</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numProps</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Prop</span><span class="p">&gt;</span> <span class="n">_props</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_padding</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenStrings</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BytesWithIo</span> <span class="n">_strings</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_strings</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumProps</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numProps</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Prop</span><span class="p">&gt;</span> <span class="n">Props</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_props</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Padding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_padding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenStrings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenStrings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Strings buffer. Never used directly, but instead is</span>
+                <span class="c1">/// addressed by offsets from the properties.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">BytesWithIo</span> <span class="n">Strings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawStrings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_strings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Table that allows mapping of character codes to glyphs present in the</span>
+            <span class="c1">/// font. Supports 1-byte and 2-byte character codes.</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// Note that this mapping is agnostic to character encoding itself - it</span>
+            <span class="c1">/// can represent ASCII, Unicode (ISO/IEC 10646), various single-byte</span>
+            <span class="c1">/// national encodings, etc. If application cares about it, normally</span>
+            <span class="c1">/// encoding will be specified in `properties` table, in the properties named</span>
+            <span class="c1">/// `CHARSET_REGISTRY` / `CHARSET_ENCODING`.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BdfEncodings</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">BdfEncodings</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">BdfEncodings</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">BdfEncodings</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_minCharOrByte2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_maxCharOrByte2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_minByte1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_maxByte1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_defaultChar</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_glyphIndexes</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">ushort</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((</span><span class="n">MaxCharOrByte2</span> <span class="p">-</span> <span class="n">MinCharOrByte2</span><span class="p">)</span> <span class="p">+</span> <span class="m">1</span><span class="p">)</span> <span class="p">*</span> <span class="p">((</span><span class="n">MaxByte1</span> <span class="p">-</span> <span class="n">MinByte1</span><span class="p">)</span> <span class="p">+</span> <span class="m">1</span><span class="p">))));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">(((</span><span class="n">MaxCharOrByte2</span> <span class="p">-</span> <span class="n">MinCharOrByte2</span><span class="p">)</span> <span class="p">+</span> <span class="m">1</span><span class="p">)</span> <span class="p">*</span> <span class="p">((</span><span class="n">MaxByte1</span> <span class="p">-</span> <span class="n">MinByte1</span><span class="p">)</span> <span class="p">+</span> <span class="m">1</span><span class="p">));</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_glyphIndexes</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">());</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_minCharOrByte2</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxCharOrByte2</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_minByte1</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxByte1</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_defaultChar</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">ushort</span><span class="p">&gt;</span> <span class="n">_glyphIndexes</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MinCharOrByte2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minCharOrByte2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaxCharOrByte2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxCharOrByte2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MinByte1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minByte1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaxByte1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxByte1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">DefaultChar</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_defaultChar</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">ushort</span><span class="p">&gt;</span> <span class="n">GlyphIndexes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_glyphIndexes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Table containing character names for every glyph.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">GlyphNames</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">GlyphNames</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">GlyphNames</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">GlyphNames</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_numGlyphs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_names</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StringRef</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumGlyphs</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumGlyphs</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_names</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StringRef</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="n">_lenStrings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">__raw_strings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenStrings</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_strings</span><span class="p">);</span>
+                    <span class="n">_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BytesWithIo</span><span class="p">(</span><span class="n">io___raw_strings</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StringRef</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+                <span class="p">{</span>
+                    <span class="k">public</span> <span class="k">static</span> <span class="n">StringRef</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="nf">StringRef</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="k">public</span> <span class="nf">StringRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">GlyphNames</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                        <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                        <span class="n">f_value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                    <span class="p">{</span>
+                        <span class="n">_ofsString</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">string</span> <span class="n">_value</span><span class="p">;</span>
+                    <span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span>
+                    <span class="p">{</span>
+                        <span class="k">get</span>
+                        <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">Strings</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+                            <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsString</span><span class="p">);</span>
+                            <span class="n">_value</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                            <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsString</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">GlyphNames</span> <span class="n">m_parent</span><span class="p">;</span>
+                    <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsString</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsString</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span><span class="p">.</span><span class="n">GlyphNames</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numGlyphs</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StringRef</span><span class="p">&gt;</span> <span class="n">_names</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenStrings</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BytesWithIo</span> <span class="n">_strings</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_strings</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumGlyphs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGlyphs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Glyph names are represented as string references in strings buffer.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StringRef</span><span class="p">&gt;</span> <span class="n">Names</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_names</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenStrings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenStrings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Strings buffer which contains all glyph names.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">BytesWithIo</span> <span class="n">Strings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawStrings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_strings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Table containing uncompressed glyph bitmaps.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Bitmaps</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Bitmaps</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Bitmaps</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Bitmaps</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_format</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Format</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_numGlyphs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_offsets</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumGlyphs</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumGlyphs</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_offsets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+                    <span class="p">}</span>
+                    <span class="n">_bitmapSizes</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">4</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_bitmapSizes</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numGlyphs</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">_offsets</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">_bitmapSizes</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumGlyphs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGlyphs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">Offsets</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_offsets</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;</span> <span class="n">BitmapSizes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bitmapSizes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Table</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Body</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">Properties</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">BdfEncodings</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BdfEncodings</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">Swidths</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Swidths</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">GlyphNames</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GlyphNames</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">PcfFont</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">Bitmaps</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bitmaps</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Types</span> <span class="n">_type</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Format</span> <span class="n">_format</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Types</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Format</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Table format specifier, always 4 bytes. Original implementation treats</span>
+        <span class="c1">/// it as always little-endian and makes liberal use of bitmasking to parse</span>
+        <span class="c1">/// various parts of it.</span>
+        <span class="c1">/// </span>
+        <span class="c1">/// TODO: this format specification recognizes endianness and bit</span>
+        <span class="c1">/// order format bits, but it does not really takes any parsing</span>
+        <span class="c1">/// decisions based on them.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://fontforge.org/docs/techref/pcf-format.html#file-header&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Format</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Format</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Format</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Format</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">PcfFont</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_padding1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_scanUnitMask</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_isMostSignificantBitFirst</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_isBigEndian</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_glyphPadMask</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+                <span class="n">_format</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_padding1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_scanUnitMask</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMostSignificantBitFirst</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isBigEndian</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_glyphPadMask</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_format</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_padding</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Padding1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_padding1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">ScanUnitMask</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scanUnitMask</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsMostSignificantBitFirst</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isMostSignificantBitFirst</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// If set, then all integers in the table are treated as big-endian</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsBigEndian</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isBigEndian</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">GlyphPadMask</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_glyphPadMask</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Padding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_padding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numTables</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Table</span><span class="p">&gt;</span> <span class="n">_tables</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">PcfFont</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumTables</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTables</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Table</span><span class="p">&gt;</span> <span class="n">Tables</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tables</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">PcfFont</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

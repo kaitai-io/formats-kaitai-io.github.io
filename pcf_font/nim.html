@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Portable Compiled Format (PCF) font: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Fonts</li>
+        <li class="active">Portable Compiled Format (PCF) font</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Portable Compiled Format (PCF) font:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Portable Compiled Format (PCF) font is a bitmap font format
+originating from X11 Window System. It matches BDF format (which is
+text-based) closely, but instead being binary and
+platform-independent (as opposed to previously used SNF binary
+format) due to introduced features to handle different endianness
+and bit order.</p>
+<p>The overall composition of the format is straightforward: it's more
+or less classic directory of type-offset-size pointers, pointing to
+what PCF format calls &quot;tables&quot;. Each table carries a certain
+piece of information related to the font (metadata properties,
+metrics, bitmaps, mapping of glyphs to characters, etc).</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pcf
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q3398726">Wikidata Q3398726</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/PCF">PCF in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Portable Compiled Format (PCF) font
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Portable Compiled Format (PCF) font parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Portable Compiled Format (PCF) font parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Portable Compiled Format (PCF) font parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Portable Compiled Format (PCF) font parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Portable Compiled Format (PCF) font parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Portable Compiled Format (PCF) font parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Portable Compiled Format (PCF) font parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Portable Compiled Format (PCF) font parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Portable Compiled Format (PCF) font parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Portable Compiled Format (PCF) font parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Portable Compiled Format (PCF) font parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Portable Compiled Format (PCF) font parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Portable Compiled Format (PCF) font parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Portable Compiled Format (PCF) font parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Portable Compiled Format (PCF) font
+            
+        </h2>
+
+        
+
+        <h3>pcf_font.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/pcf_font.nim" download="pcf_font.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+<span class="kn">import</span> <span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">bytes_with_io</span>
+
+<span class="kn">import</span> <span class="s">&quot;bytes_with_io&quot;</span>
+<span class="k">type</span>
+  <span class="n">PcfFont</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">numTables</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">tables</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PcfFont_Table</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">PcfFont_Types</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">accelerators</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">bitmaps</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ink_metrics</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">bdf_encodings</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">swidths</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">glyph_names</span> <span class="o">=</span> <span class="mi">128</span>
+    <span class="n">bdf_accelerators</span> <span class="o">=</span> <span class="mi">256</span>
+  <span class="n">PcfFont_Table</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Types</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont</span>
+    <span class="p">`</span><span class="n">rawBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">PcfFont_Table_Swidths</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">swidths</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table</span>
+  <span class="n">PcfFont_Table_Properties</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">numProps</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">props</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PcfFont_Table_Properties_Prop</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">strings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table</span>
+    <span class="p">`</span><span class="n">rawStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">PcfFont_Table_Properties_Prop</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">ofsName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">isString</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">valueOrOfsValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">strValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">intValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+  <span class="n">PcfFont_Table_BdfEncodings</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">minCharOrByte2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">maxCharOrByte2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">minByte1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">maxByte1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">defaultChar</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">glyphIndexes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint16</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table</span>
+  <span class="n">PcfFont_Table_GlyphNames</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">names</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">strings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table</span>
+    <span class="p">`</span><span class="n">rawStrings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">ofsString</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table_GlyphNames</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+  <span class="n">PcfFont_Table_Bitmaps</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
+    <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">offsets</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bitmapSizes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table</span>
+  <span class="n">PcfFont_Format</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">padding1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">scanUnitMask</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">isMostSignificantBitFirst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isBigEndian</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">glyphPadMask</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcfFont</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont): PcfFont_Table</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Swidths], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Swidths</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Properties</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties_Prop], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table_Properties): PcfFont_Table_Properties_Prop</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_BdfEncodings], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_BdfEncodings</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_GlyphNames</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames_StringRef], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table_GlyphNames): PcfFont_Table_GlyphNames_StringRef</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Bitmaps], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Bitmaps</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Format], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcfFont_Format</span>
+
+<span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table</span><span class="p">):</span> <span class="n">KaitaiStruct</span>
+<span class="k">proc </span><span class="nf">name</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="kt">string</span>
+<span class="k">proc </span><span class="nf">strValue</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="kt">string</span>
+<span class="k">proc </span><span class="nf">intValue</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="n">uint32</span>
+<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">):</span> <span class="kt">string</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Portable</span> <span class="n">Compiled</span> <span class="n">Format</span> <span class="p">(</span><span class="n">PCF</span><span class="p">)</span> <span class="n">font</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">bitmap</span> <span class="n">font</span> <span class="n">format</span>
+<span class="n">originating</span> <span class="kn">from</span> <span class="n">X11</span> <span class="n">Window</span> <span class="n">System</span><span class="p">.</span> <span class="n">It</span> <span class="n">matches</span> <span class="n">BDF</span> <span class="n">format</span> <span class="p">(</span><span class="n">which</span> <span class="ow">is</span>
+<span class="n">text</span><span class="o">-</span><span class="n">based</span><span class="p">)</span> <span class="n">closely</span><span class="p">,</span> <span class="n">but</span> <span class="n">instead</span> <span class="n">being</span> <span class="n">binary</span> <span class="ow">and</span>
+<span class="n">platform</span><span class="o">-</span><span class="n">independent</span> <span class="p">(</span><span class="k">as</span> <span class="n">opposed</span> <span class="n">to</span> <span class="n">previously</span> <span class="n">used</span> <span class="n">SNF</span> <span class="n">binary</span>
+<span class="n">format</span><span class="p">)</span> <span class="n">due</span> <span class="n">to</span> <span class="n">introduced</span> <span class="n">features</span> <span class="n">to</span> <span class="n">handle</span> <span class="n">different</span> <span class="n">endianness</span>
+<span class="ow">and</span> <span class="n">bit</span> <span class="n">order</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">overall</span> <span class="n">composition</span> <span class="k">of</span> <span class="n">the</span> <span class="n">format</span> <span class="ow">is</span> <span class="n">straightforward</span><span class="p">:</span> <span class="n">it</span><span class="sc">&#39;s more</span>
+<span class="ow">or</span> <span class="n">less</span> <span class="n">classic</span> <span class="n">directory</span> <span class="k">of</span> <span class="k">type</span><span class="o">-</span><span class="n">offset</span><span class="o">-</span><span class="n">size</span> <span class="n">pointers</span><span class="p">,</span> <span class="n">pointing</span> <span class="n">to</span>
+<span class="n">what</span> <span class="n">PCF</span> <span class="n">format</span> <span class="n">calls</span> <span class="s">&quot;tables&quot;</span><span class="p">.</span> <span class="n">Each</span> <span class="n">table</span> <span class="n">carries</span> <span class="n">a</span> <span class="n">certain</span>
+<span class="n">piece</span> <span class="k">of</span> <span class="n">information</span> <span class="n">related</span> <span class="n">to</span> <span class="n">the</span> <span class="n">font</span> <span class="p">(</span><span class="n">metadata</span> <span class="n">properties</span><span class="p">,</span>
+<span class="n">metrics</span><span class="p">,</span> <span class="n">bitmaps</span><span class="p">,</span> <span class="n">mapping</span> <span class="k">of</span> <span class="n">glyphs</span> <span class="n">to</span> <span class="n">characters</span><span class="p">,</span> <span class="n">etc</span><span class="p">).</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcfFont =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">numTablesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numTables</span> <span class="o">=</span> <span class="n">numTablesExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numTables</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PcfFont_Table</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">tables</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont], filename: string): PcfFont =</span>
+  <span class="n">PcfFont</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">offers</span> <span class="n">a</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">a</span> <span class="n">particular</span>
+<span class="n">table</span><span class="p">.</span> <span class="s">&quot;Type&quot;</span> <span class="k">of</span> <span class="n">table</span> <span class="n">references</span> <span class="n">certain</span> <span class="k">enum</span><span class="p">.</span> <span class="n">Applications</span> <span class="n">can</span>
+<span class="n">ignore</span> <span class="k">enum</span> <span class="n">values</span> <span class="n">which</span> <span class="n">they</span> <span class="n">don</span><span class="sc">&#39;t support.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont): PcfFont_Table =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">PcfFont_Types</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">lenBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBody</span> <span class="o">=</span> <span class="n">lenBodyExpr</span>
+  <span class="k">let</span> <span class="n">ofsBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
+
+<span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">pcf_font</span><span class="p">.</span><span class="n">properties</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">PcfFont_Table_Properties</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">pcf_font</span><span class="p">.</span><span class="n">bdf_encodings</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">PcfFont_Table_BdfEncodings</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">pcf_font</span><span class="p">.</span><span class="n">swidths</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">PcfFont_Table_Swidths</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">pcf_font</span><span class="p">.</span><span class="n">glyph_names</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">PcfFont_Table_GlyphNames</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">pcf_font</span><span class="p">.</span><span class="n">bitmaps</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">PcfFont_Table_Bitmaps</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table], filename: string): PcfFont_Table =</span>
+  <span class="n">PcfFont_Table</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">containing</span> <span class="n">scalable</span> <span class="n">widths</span> <span class="k">of</span> <span class="n">characters</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Swidths], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Swidths =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_Swidths</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">numGlyphsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span> <span class="o">=</span> <span class="n">numGlyphsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">scalable</span> <span class="n">width</span> <span class="k">of</span> <span class="n">a</span> <span class="n">character</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">width</span> <span class="k">of</span> <span class="n">the</span> <span class="n">corresponding</span>
+<span class="n">PostScript</span> <span class="n">character</span> <span class="ow">in</span> <span class="n">em</span><span class="o">-</span><span class="n">units</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">1000</span><span class="err">ths of an em).</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">swidths</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Swidths], filename: string): PcfFont_Table_Swidths =</span>
+  <span class="n">PcfFont_Table_Swidths</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="kt">Array</span> <span class="k">of</span> <span class="n">properties</span> <span class="p">(</span><span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span><span class="p">),</span> <span class="n">used</span> <span class="n">to</span> <span class="n">convey</span> <span class="n">different</span> <span class="n">X11</span>
+<span class="n">settings</span> <span class="k">of</span> <span class="n">a</span> <span class="n">font</span><span class="p">.</span> <span class="n">Key</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">an</span> <span class="n">X</span> <span class="n">font</span> <span class="n">atom</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#properties-table&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Properties =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_Properties</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">numPropsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numProps</span> <span class="o">=</span> <span class="n">numPropsExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numProps</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">props</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">paddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numProps</span> <span class="ow">and</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">0</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numProps</span> <span class="ow">and</span> <span class="mi">3</span><span class="p">)))))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
+  <span class="k">let</span> <span class="n">lenStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenStrings</span> <span class="o">=</span> <span class="n">lenStringsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Strings</span> <span class="n">buffer</span><span class="p">.</span> <span class="n">Never</span> <span class="n">used</span> <span class="n">directly</span><span class="p">,</span> <span class="n">but</span> <span class="n">instead</span> <span class="ow">is</span>
+<span class="n">addressed</span> <span class="n">by</span> <span class="n">offsets</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">properties</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">rawStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenStrings</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawStrings</span> <span class="o">=</span> <span class="n">rawStringsExpr</span>
+  <span class="k">let</span> <span class="n">rawStringsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawStringsExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">stringsExpr</span> <span class="o">=</span> <span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStringsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">strings</span> <span class="o">=</span> <span class="n">stringsExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties], filename: string): PcfFont_Table_Properties =</span>
+  <span class="n">PcfFont_Table_Properties</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Property</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pair</span><span class="p">,</span> <span class="s">&quot;key&quot;</span> <span class="n">being</span> <span class="n">always</span> <span class="n">a</span>
+<span class="kt">string</span> <span class="ow">and</span> <span class="s">&quot;value&quot;</span> <span class="n">being</span> <span class="n">either</span> <span class="n">a</span> <span class="kt">string</span> <span class="ow">or</span> <span class="n">a</span> <span class="mi">32</span><span class="o">-</span><span class="n">bit</span>
+<span class="n">integer</span> <span class="n">based</span> <span class="n">on</span> <span class="n">an</span> <span class="n">additinal</span> <span class="n">flag</span> <span class="p">(`</span><span class="n">is_string</span><span class="p">`).</span>
+
+<span class="n">Simple</span> <span class="n">offset</span><span class="o">-</span><span class="n">based</span> <span class="n">mechanism</span> <span class="ow">is</span> <span class="n">employed</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">this</span>
+<span class="k">type</span><span class="sc">&#39;s sequence fixed-sized and thus have simple access</span>
+<span class="n">to</span> <span class="n">property</span> <span class="n">key</span><span class="o">/</span><span class="n">value</span> <span class="n">by</span> <span class="n">index</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties_Prop], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table_Properties): PcfFont_Table_Properties_Prop =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_Properties_Prop</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Offset</span> <span class="n">to</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">strings</span> <span class="n">buffer</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">ofsNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsName</span> <span class="o">=</span> <span class="n">ofsNameExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Designates</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">integer</span> <span class="p">(</span><span class="n">zero</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="kt">string</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">zero</span><span class="p">).</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">isStringExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isString</span> <span class="o">=</span> <span class="n">isStringExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="n">the</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">integer</span> <span class="p">(`</span><span class="n">is_string</span><span class="p">`</span> <span class="ow">is</span> <span class="kp">false</span><span class="p">),</span>
+<span class="n">then</span> <span class="n">it</span><span class="sc">&#39;s stored here. If the value is a string</span>
+<span class="p">(`</span><span class="n">is_string</span><span class="p">`</span> <span class="ow">is</span> <span class="kp">true</span><span class="p">),</span> <span class="n">then</span> <span class="n">it</span> <span class="n">stores</span> <span class="n">offset</span> <span class="n">to</span> <span class="n">the</span>
+<span class="n">value</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">strings</span> <span class="n">buffer</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">valueOrOfsValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueOrOfsValue</span> <span class="o">=</span> <span class="n">valueOrOfsValueExpr</span>
+
+<span class="k">proc </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Name</span> <span class="k">of</span> <span class="n">the</span> <span class="n">property</span> <span class="n">addressed</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">strings</span> <span class="n">buffer</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsName</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+
+<span class="k">proc </span><span class="nf">strValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">property</span> <span class="n">addressed</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">strings</span>
+<span class="n">buffer</span><span class="p">,</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="kt">string</span> <span class="n">value</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isString</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
+    <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">valueOrOfsValue</span><span class="p">))</span>
+    <span class="k">let</span> <span class="n">strValueInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span> <span class="o">=</span> <span class="n">strValueInstExpr</span>
+    <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span>
+
+<span class="k">proc </span><span class="nf">intValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">property</span><span class="p">,</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">integer</span> <span class="n">value</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isString</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">intValueInstExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">valueOrOfsValue</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">=</span> <span class="n">intValueInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties_Prop], filename: string): PcfFont_Table_Properties_Prop =</span>
+  <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">that</span> <span class="n">allows</span> <span class="n">mapping</span> <span class="k">of</span> <span class="n">character</span> <span class="n">codes</span> <span class="n">to</span> <span class="n">glyphs</span> <span class="n">present</span> <span class="ow">in</span> <span class="n">the</span>
+<span class="n">font</span><span class="p">.</span> <span class="n">Supports</span> <span class="mi">1</span><span class="o">-</span><span class="n">byte</span> <span class="ow">and</span> <span class="mi">2</span><span class="o">-</span><span class="n">byte</span> <span class="n">character</span> <span class="n">codes</span><span class="p">.</span>
+
+<span class="n">Note</span> <span class="n">that</span> <span class="n">this</span> <span class="n">mapping</span> <span class="ow">is</span> <span class="n">agnostic</span> <span class="n">to</span> <span class="n">character</span> <span class="n">encoding</span> <span class="n">itself</span> <span class="o">-</span> <span class="n">it</span>
+<span class="n">can</span> <span class="n">represent</span> <span class="n">ASCII</span><span class="p">,</span> <span class="n">Unicode</span> <span class="p">(</span><span class="n">ISO</span><span class="o">/</span><span class="n">IEC</span> <span class="mi">10646</span><span class="p">),</span> <span class="n">various</span> <span class="n">single</span><span class="o">-</span><span class="n">byte</span>
+<span class="n">national</span> <span class="n">encodings</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span> <span class="k">If</span> <span class="n">application</span> <span class="n">cares</span> <span class="n">about</span> <span class="n">it</span><span class="p">,</span> <span class="n">normally</span>
+<span class="n">encoding</span> <span class="n">will</span> <span class="n">be</span> <span class="n">specified</span> <span class="ow">in</span> <span class="p">`</span><span class="n">properties</span><span class="p">`</span> <span class="n">table</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">properties</span> <span class="n">named</span>
+<span class="p">`</span><span class="n">CHARSET_REGISTRY</span><span class="p">`</span> <span class="o">/</span> <span class="p">`</span><span class="n">CHARSET_ENCODING</span><span class="p">`.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_BdfEncodings], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_BdfEncodings =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_BdfEncodings</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">minCharOrByte2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">minCharOrByte2</span> <span class="o">=</span> <span class="n">minCharOrByte2Expr</span>
+  <span class="k">let</span> <span class="n">maxCharOrByte2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">maxCharOrByte2</span> <span class="o">=</span> <span class="n">maxCharOrByte2Expr</span>
+  <span class="k">let</span> <span class="n">minByte1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">minByte1</span> <span class="o">=</span> <span class="n">minByte1Expr</span>
+  <span class="k">let</span> <span class="n">maxByte1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">maxByte1</span> <span class="o">=</span> <span class="n">maxByte1Expr</span>
+  <span class="k">let</span> <span class="n">defaultCharExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">defaultChar</span> <span class="o">=</span> <span class="n">defaultCharExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">maxCharOrByte2</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">minCharOrByte2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">maxByte1</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">minByte1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">glyphIndexes</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_BdfEncodings], filename: string): PcfFont_Table_BdfEncodings =</span>
+  <span class="n">PcfFont_Table_BdfEncodings</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">containing</span> <span class="n">character</span> <span class="n">names</span> <span class="k">for</span> <span class="n">every</span> <span class="n">glyph</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_GlyphNames =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_GlyphNames</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">numGlyphsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span> <span class="o">=</span> <span class="n">numGlyphsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Glyph</span> <span class="n">names</span> <span class="n">are</span> <span class="n">represented</span> <span class="k">as</span> <span class="kt">string</span> <span class="n">references</span> <span class="ow">in</span> <span class="n">strings</span> <span class="n">buffer</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">names</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">lenStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenStrings</span> <span class="o">=</span> <span class="n">lenStringsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Strings</span> <span class="n">buffer</span> <span class="n">which</span> <span class="n">contains</span> <span class="n">all</span> <span class="n">glyph</span> <span class="n">names</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">rawStringsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenStrings</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawStrings</span> <span class="o">=</span> <span class="n">rawStringsExpr</span>
+  <span class="k">let</span> <span class="n">rawStringsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawStringsExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">stringsExpr</span> <span class="o">=</span> <span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStringsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">strings</span> <span class="o">=</span> <span class="n">stringsExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames], filename: string): PcfFont_Table_GlyphNames =</span>
+  <span class="n">PcfFont_Table_GlyphNames</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames_StringRef], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table_GlyphNames): PcfFont_Table_GlyphNames_StringRef =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">ofsStringExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsString</span> <span class="o">=</span> <span class="n">ofsStringExpr</span>
+
+<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsString</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames_StringRef], filename: string): PcfFont_Table_GlyphNames_StringRef =</span>
+  <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">containing</span> <span class="n">uncompressed</span> <span class="n">glyph</span> <span class="n">bitmaps</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Bitmaps], io: KaitaiStream, root: KaitaiStruct, parent: PcfFont_Table): PcfFont_Table_Bitmaps =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Table_Bitmaps</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">numGlyphsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span> <span class="o">=</span> <span class="n">numGlyphsExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">offsets</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">bitmapSizes</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Bitmaps], filename: string): PcfFont_Table_Bitmaps =</span>
+  <span class="n">PcfFont_Table_Bitmaps</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Table</span> <span class="n">format</span> <span class="n">specifier</span><span class="p">,</span> <span class="n">always</span> <span class="mi">4</span> <span class="n">bytes</span><span class="p">.</span> <span class="n">Original</span> <span class="n">implementation</span> <span class="n">treats</span>
+<span class="n">it</span> <span class="k">as</span> <span class="n">always</span> <span class="n">little</span><span class="o">-</span><span class="n">endian</span> <span class="ow">and</span> <span class="n">makes</span> <span class="n">liberal</span> <span class="n">use</span> <span class="k">of</span> <span class="n">bitmasking</span> <span class="n">to</span> <span class="n">parse</span>
+<span class="n">various</span> <span class="n">parts</span> <span class="k">of</span> <span class="n">it</span><span class="p">.</span>
+
+<span class="n">TODO</span><span class="p">:</span> <span class="n">this</span> <span class="n">format</span> <span class="n">specification</span> <span class="n">recognizes</span> <span class="n">endianness</span> <span class="ow">and</span> <span class="n">bit</span>
+<span class="n">order</span> <span class="n">format</span> <span class="n">bits</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">really</span> <span class="n">takes</span> <span class="n">any</span> <span class="n">parsing</span>
+<span class="n">decisions</span> <span class="n">based</span> <span class="n">on</span> <span class="n">them</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fontforge.org/docs/techref/pcf-format.html#file-header&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Format], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcfFont_Format =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcfFont_Format</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcfFont</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">padding1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">padding1</span> <span class="o">=</span> <span class="n">padding1Expr</span>
+  <span class="k">let</span> <span class="n">scanUnitMaskExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">scanUnitMask</span> <span class="o">=</span> <span class="n">scanUnitMaskExpr</span>
+  <span class="k">let</span> <span class="n">isMostSignificantBitFirstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isMostSignificantBitFirst</span> <span class="o">=</span> <span class="n">isMostSignificantBitFirstExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">If</span> <span class="kt">set</span><span class="p">,</span> <span class="n">then</span> <span class="n">all</span> <span class="n">integers</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">table</span> <span class="n">are</span> <span class="n">treated</span> <span class="k">as</span> <span class="n">big</span><span class="o">-</span><span class="n">endian</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">isBigEndianExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isBigEndian</span> <span class="o">=</span> <span class="n">isBigEndianExpr</span>
+  <span class="k">let</span> <span class="n">glyphPadMaskExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">glyphPadMask</span> <span class="o">=</span> <span class="n">glyphPadMaskExpr</span>
+  <span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">formatExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatExpr</span>
+  <span class="k">let</span> <span class="n">paddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Format], filename: string): PcfFont_Format =</span>
+  <span class="n">PcfFont_Format</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
