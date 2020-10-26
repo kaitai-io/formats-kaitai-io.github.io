@@ -1,0 +1,201 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__mac_os_resource_snd {
+		label="MacOsResourceSnd";
+		graph[style=dotted];
+
+		mac_os_resource_snd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">2</TD><TD>u2be</TD><TD PORT="format_type">format</TD></TR>
+			<TR><TD PORT="num_data_formats_pos">2</TD><TD PORT="num_data_formats_size">2</TD><TD>u2be</TD><TD PORT="num_data_formats_type">num_data_formats</TD></TR>
+			<TR><TD PORT="data_formats_pos">4</TD><TD PORT="data_formats_size">6</TD><TD>DataFormat</TD><TD PORT="data_formats_type">data_formats</TD></TR>
+			<TR><TD COLSPAN="4" PORT="data_formats__repeat">repeat num_data_formats times</TD></TR>
+			<TR><TD PORT="reference_count_pos">...</TD><TD PORT="reference_count_size">2</TD><TD>u2be</TD><TD PORT="reference_count_type">reference_count</TD></TR>
+			<TR><TD PORT="num_sound_commands_pos">...</TD><TD PORT="num_sound_commands_size">2</TD><TD>u2be</TD><TD PORT="num_sound_commands_type">num_sound_commands</TD></TR>
+			<TR><TD PORT="sound_commands_pos">...</TD><TD PORT="sound_commands_size">8</TD><TD>SoundCommand</TD><TD PORT="sound_commands_type">sound_commands</TD></TR>
+			<TR><TD COLSPAN="4" PORT="sound_commands__repeat">repeat num_sound_commands times</TD></TR>
+		</TABLE>>];
+		mac_os_resource_snd__inst__midi_note_to_frequency [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>midi_note_to_frequency</TD><TD>[8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56, 12.25, 12.98, 13.75, 14.57, 15.43, 16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70, 34.65, 36.71, 38.89, 41.20, 43.65, 46.25, 49.00, 51.91, 55.00, 58.27, 61.74, 65.41, 69.30, 73.42, 77.78, 82.41, 87.31, 92.50, 98.00, 103.83, 110.00, 116.54, 123.47, 130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65, 220.00, 233.08, 246.94, 261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25, 554.37, 587.33, 622.25, 659.26, 698.46, 739.99, 783.99, 830.61, 880.00, 932.33, 987.77, 1046.50, 1108.73, 1174.66, 1244.51, 1318.51, 1396.91, 1479.98, 1567.98, 1661.22, 1760.00, 1864.66, 1975.53, 2093.00, 2217.46, 2349.32, 2489.02, 2637.02, 2793.83, 2959.96, 3135.96, 3322.44, 3520.00, 3729.31, 3951.07, 4186.01, 4434.92, 4698.64, 4978.03, 5274.04, 5587.65, 5919.91, 6271.93, 6644.88, 7040.00, 7458.62, 7902.13, 8372.02, 8869.84, 9397.27, 9956.06, 10548.08, 11175.30, 11839.82, 12543.85]</TD></TR>
+		</TABLE>>];
+		subgraph cluster__extended {
+			label="MacOsResourceSnd::Extended";
+			graph[style=dotted];
+
+			extended__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="instrument_chunk_ptr_pos">0</TD><TD PORT="instrument_chunk_ptr_size">4</TD><TD>u4be</TD><TD PORT="instrument_chunk_ptr_type">instrument_chunk_ptr</TD></TR>
+				<TR><TD PORT="aes_recording_ptr_pos">4</TD><TD PORT="aes_recording_ptr_size">4</TD><TD>u4be</TD><TD PORT="aes_recording_ptr_type">aes_recording_ptr</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__sound_header {
+			label="MacOsResourceSnd::SoundHeader";
+			graph[style=dotted];
+
+			sound_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD></TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="sample_ptr_pos">0</TD><TD PORT="sample_ptr_size">4</TD><TD>u4be</TD><TD PORT="sample_ptr_type">sample_ptr</TD></TR>
+				<TR><TD PORT="num_samples_pos">4</TD><TD PORT="num_samples_size">4</TD><TD>u4be</TD><TD PORT="num_samples_type">num_samples</TD></TR>
+				<TR><TD PORT="num_channels_pos">8</TD><TD PORT="num_channels_size">4</TD><TD>u4be</TD><TD PORT="num_channels_type">num_channels</TD></TR>
+				<TR><TD PORT="sample_rate_pos">12</TD><TD PORT="sample_rate_size">4</TD><TD>UnsignedFixedPoint</TD><TD PORT="sample_rate_type">sample_rate</TD></TR>
+				<TR><TD PORT="loop_start_pos">16</TD><TD PORT="loop_start_size">4</TD><TD>u4be</TD><TD PORT="loop_start_type">loop_start</TD></TR>
+				<TR><TD PORT="loop_end_pos">20</TD><TD PORT="loop_end_size">4</TD><TD>u4be</TD><TD PORT="loop_end_type">loop_end</TD></TR>
+				<TR><TD PORT="encode_pos">24</TD><TD PORT="encode_size">1</TD><TD>u1→SoundHeaderType</TD><TD PORT="encode_type">encode</TD></TR>
+				<TR><TD PORT="midi_note_pos">25</TD><TD PORT="midi_note_size">1</TD><TD>u1</TD><TD PORT="midi_note_type">midi_note</TD></TR>
+				<TR><TD PORT="extended_or_compressed_pos">26</TD><TD PORT="extended_or_compressed_size">64</TD><TD>ExtendedOrCompressed</TD><TD PORT="extended_or_compressed_type">extended_or_compressed</TD></TR>
+				<TR><TD PORT="sample_area_pos">90</TD><TD PORT="sample_area_size">(sound_header_type == :sound_header_type_standard ? num_samples : (sound_header_type == :sound_header_type_extended ? (((extended_or_compressed.num_frames * num_channels) * extended_or_compressed.bits_per_sample) / 8) : (_io.size - _io.pos)))</TD><TD></TD><TD PORT="sample_area_type">sample_area</TD></TR>
+			</TABLE>>];
+			sound_header__inst__start_ofs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>start_ofs</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			sound_header__inst__base_freqeuncy [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>base_freqeuncy</TD><TD>_root.midi_note_to_frequency[midi_note]</TD></TR>
+			</TABLE>>];
+			sound_header__inst__sound_header_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sound_header_type_pos">(start_ofs + 20)</TD><TD PORT="sound_header_type_size">1</TD><TD>u1→SoundHeaderType</TD><TD PORT="sound_header_type_type">sound_header_type</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__unsigned_fixed_point {
+			label="MacOsResourceSnd::UnsignedFixedPoint";
+			graph[style=dotted];
+
+			unsigned_fixed_point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="integer_part_pos">0</TD><TD PORT="integer_part_size">2</TD><TD>u2be</TD><TD PORT="integer_part_type">integer_part</TD></TR>
+				<TR><TD PORT="fraction_part_pos">2</TD><TD PORT="fraction_part_size">2</TD><TD>u2be</TD><TD PORT="fraction_part_type">fraction_part</TD></TR>
+			</TABLE>>];
+			unsigned_fixed_point__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(integer_part + (fraction_part / 65535.0))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__sound_command {
+			label="MacOsResourceSnd::SoundCommand";
+			graph[style=dotted];
+
+			sound_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="is_data_offset_pos">0</TD><TD PORT="is_data_offset_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_data_offset_type">is_data_offset</TD></TR>
+				<TR><TD PORT="cmd_pos">0:1</TD><TD PORT="cmd_size">15b</TD><TD>b15→CmdType</TD><TD PORT="cmd_type">cmd</TD></TR>
+				<TR><TD PORT="param1_pos">2</TD><TD PORT="param1_size">2</TD><TD>u2be</TD><TD PORT="param1_type">param1</TD></TR>
+				<TR><TD PORT="param2_pos">4</TD><TD PORT="param2_size">4</TD><TD>u4be</TD><TD PORT="param2_type">param2</TD></TR>
+			</TABLE>>];
+			sound_command__inst__sound_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sound_header_pos">param2</TD><TD PORT="sound_header_size">...</TD><TD>SoundHeader</TD><TD PORT="sound_header_type">sound_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__compressed {
+			label="MacOsResourceSnd::Compressed";
+			graph[style=dotted];
+
+			compressed__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>str(ASCII)</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="reserved_pos">4</TD><TD PORT="reserved_size">4</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="state_vars_ptr_pos">8</TD><TD PORT="state_vars_ptr_size">4</TD><TD>u4be</TD><TD PORT="state_vars_ptr_type">state_vars_ptr</TD></TR>
+				<TR><TD PORT="left_over_samples_ptr_pos">12</TD><TD PORT="left_over_samples_ptr_size">4</TD><TD>u4be</TD><TD PORT="left_over_samples_ptr_type">left_over_samples_ptr</TD></TR>
+				<TR><TD PORT="compression_id_pos">16</TD><TD PORT="compression_id_size">2</TD><TD>s2be</TD><TD PORT="compression_id_type">compression_id</TD></TR>
+				<TR><TD PORT="packet_size_pos">18</TD><TD PORT="packet_size_size">2</TD><TD>u2be</TD><TD PORT="packet_size_type">packet_size</TD></TR>
+				<TR><TD PORT="synthesizer_id_pos">20</TD><TD PORT="synthesizer_id_size">2</TD><TD>u2be</TD><TD PORT="synthesizer_id_type">synthesizer_id</TD></TR>
+			</TABLE>>];
+			compressed__inst__compression_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>compression_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::COMPRESSION_TYPE_ENUM, compression_id)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__extended_or_compressed {
+			label="MacOsResourceSnd::ExtendedOrCompressed";
+			graph[style=dotted];
+
+			extended_or_compressed__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_frames_pos">0</TD><TD PORT="num_frames_size">4</TD><TD>u4be</TD><TD PORT="num_frames_type">num_frames</TD></TR>
+				<TR><TD PORT="aiff_sample_rate_pos">4</TD><TD PORT="aiff_sample_rate_size">10</TD><TD></TD><TD PORT="aiff_sample_rate_type">aiff_sample_rate</TD></TR>
+				<TR><TD PORT="marker_chunk_pos">14</TD><TD PORT="marker_chunk_size">4</TD><TD>u4be</TD><TD PORT="marker_chunk_type">marker_chunk</TD></TR>
+				<TR><TD PORT="extended_pos">18</TD><TD PORT="extended_size">8</TD><TD>Extended</TD><TD PORT="extended_type">extended</TD></TR>
+				<TR><TD PORT="compressed_pos">26</TD><TD PORT="compressed_size">22</TD><TD>Compressed</TD><TD PORT="compressed_type">compressed</TD></TR>
+				<TR><TD PORT="bits_per_sample_pos">48</TD><TD PORT="bits_per_sample_size">2</TD><TD>u2be</TD><TD PORT="bits_per_sample_type">bits_per_sample</TD></TR>
+				<TR><TD PORT="reserved_pos">50</TD><TD PORT="reserved_size">14</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_format {
+			label="MacOsResourceSnd::DataFormat";
+			graph[style=dotted];
+
+			data_format__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2be→DataType</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="options_pos">2</TD><TD PORT="options_size">4</TD><TD>u4be</TD><TD PORT="options_type">options</TD></TR>
+			</TABLE>>];
+			data_format__inst__init_pan_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>init_pan_mask</TD><TD>3</TD></TR>
+			</TABLE>>];
+			data_format__inst__wave_init_channel_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>wave_init_channel_mask</TD><TD>7</TD></TR>
+			</TABLE>>];
+			data_format__inst__init_stereo_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>init_stereo_mask</TD><TD>192</TD></TR>
+			</TABLE>>];
+			data_format__inst__wave_init [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>wave_init</TD><TD>Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::WAVE_INIT_OPTION, (options &amp; wave_init_channel_mask))</TD></TR>
+			</TABLE>>];
+			data_format__inst__pan_init [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>pan_init</TD><TD>Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options &amp; init_pan_mask))</TD></TR>
+			</TABLE>>];
+			data_format__inst__init_comp_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>init_comp_mask</TD><TD>65280</TD></TR>
+			</TABLE>>];
+			data_format__inst__stereo_init [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>stereo_init</TD><TD>Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options &amp; init_stereo_mask))</TD></TR>
+			</TABLE>>];
+			data_format__inst__comp_init [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>comp_init</TD><TD>Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options &amp; init_comp_mask))</TD></TR>
+			</TABLE>>];
+		}
+	}
+	mac_os_resource_snd__seq:data_formats_type -> data_format__seq [style=bold];
+	mac_os_resource_snd__seq:num_data_formats_type -> mac_os_resource_snd__seq:data_formats__repeat [color="#404040"];
+	mac_os_resource_snd__seq:sound_commands_type -> sound_command__seq [style=bold];
+	mac_os_resource_snd__seq:num_sound_commands_type -> mac_os_resource_snd__seq:sound_commands__repeat [color="#404040"];
+	sound_header__seq:sample_rate_type -> unsigned_fixed_point__seq [style=bold];
+	sound_header__seq:extended_or_compressed_type -> extended_or_compressed__seq [style=bold];
+	sound_header__inst__sound_header_type:sound_header_type_type -> sound_header__seq:sample_area_size [color="#404040"];
+	sound_header__seq:num_samples_type -> sound_header__seq:sample_area_size [color="#404040"];
+	sound_header__inst__sound_header_type:sound_header_type_type -> sound_header__seq:sample_area_size [color="#404040"];
+	extended_or_compressed__seq:num_frames_type -> sound_header__seq:sample_area_size [color="#404040"];
+	sound_header__seq:num_channels_type -> sound_header__seq:sample_area_size [color="#404040"];
+	extended_or_compressed__seq:bits_per_sample_type -> sound_header__seq:sample_area_size [color="#404040"];
+	mac_os_resource_snd__inst__midi_note_to_frequency:midi_note_to_frequency_type -> sound_header__inst__base_freqeuncy [color="#404040"];
+	sound_header__seq:midi_note_type -> sound_header__inst__base_freqeuncy [color="#404040"];
+	sound_header__inst__start_ofs:start_ofs_type -> sound_header__inst__sound_header_type:sound_header_type_pos [color="#404040"];
+	unsigned_fixed_point__seq:integer_part_type -> unsigned_fixed_point__inst__value [color="#404040"];
+	unsigned_fixed_point__seq:fraction_part_type -> unsigned_fixed_point__inst__value [color="#404040"];
+	sound_command__seq:param2_type -> sound_command__inst__sound_header:sound_header_pos [color="#404040"];
+	sound_command__inst__sound_header:sound_header_type -> sound_header__seq [style=bold];
+	compressed__seq:compression_id_type -> compressed__inst__compression_type [color="#404040"];
+	extended_or_compressed__seq:extended_type -> extended__seq [style=bold];
+	extended_or_compressed__seq:compressed_type -> compressed__seq [style=bold];
+	data_format__seq:options_type -> data_format__inst__wave_init [color="#404040"];
+	data_format__inst__wave_init_channel_mask:wave_init_channel_mask_type -> data_format__inst__wave_init [color="#404040"];
+	data_format__seq:options_type -> data_format__inst__pan_init [color="#404040"];
+	data_format__inst__init_pan_mask:init_pan_mask_type -> data_format__inst__pan_init [color="#404040"];
+	data_format__seq:options_type -> data_format__inst__stereo_init [color="#404040"];
+	data_format__inst__init_stereo_mask:init_stereo_mask_type -> data_format__inst__stereo_init [color="#404040"];
+	data_format__seq:options_type -> data_format__inst__comp_init [color="#404040"];
+	data_format__inst__init_comp_mask:init_comp_mask_type -> data_format__inst__comp_init [color="#404040"];
+}
