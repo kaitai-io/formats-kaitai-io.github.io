@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Android Dynamic Partitions metadata: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">Android Dynamic Partitions metadata</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Android Dynamic Partitions metadata:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The metadata stored by Android at the beginning of a &quot;super&quot; partition, which
+is what it calls a disk partition that holds one or more Dynamic Partitions.
+Dynamic Partitions do more or less the same thing that LVM does on Linux,
+allowing Android to map ranges of non-contiguous extents to a single logical
+device. This metadata holds that mapping.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Android
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        img
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Android Dynamic Partitions metadata
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Android Dynamic Partitions metadata parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Android Dynamic Partitions metadata parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Android Dynamic Partitions metadata parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Android Dynamic Partitions metadata parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="Android Dynamic Partitions metadata parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Android Dynamic Partitions metadata parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Android Dynamic Partitions metadata parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Android Dynamic Partitions metadata parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Android Dynamic Partitions metadata parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Android Dynamic Partitions metadata parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Android Dynamic Partitions metadata parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Android Dynamic Partitions metadata parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Android Dynamic Partitions metadata parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Android Dynamic Partitions metadata parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse Android Dynamic Partitions metadata
+            
+        </h2>
+
+        
+
+        <h3>android_super.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/android_super.go" download="android_super.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;io&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * The metadata stored by Android at the beginning of a &quot;super&quot; partition, which</span>
+<span class="cm"> * is what it calls a disk partition that holds one or more Dynamic Partitions.</span>
+<span class="cm"> * Dynamic Partitions do more or less the same thing that LVM does on Linux,</span>
+<span class="cm"> * allowing Android to map ranges of non-contiguous extents to a single logical</span>
+<span class="cm"> * device. This metadata holds that mapping.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.android.com/devices/tech/ota/dynamic_partitions&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://android.googlesource.com/platform/system/core/+/refs/tags/android-11.0.0_r8/fs_mgr/liblp/include/liblp/metadata_format.h&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_root</span> <span class="kt">bool</span>
+	<span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="nx">Root</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_root</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp1</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Root</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">root</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_root</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_root</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Root</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">PrimaryGeometry</span> <span class="o">*</span><span class="nx">AndroidSuper_Geometry</span>
+	<span class="nx">BackupGeometry</span> <span class="o">*</span><span class="nx">AndroidSuper_Geometry</span>
+	<span class="nx">PrimaryMetadata</span> <span class="p">[]</span><span class="o">*</span><span class="nx">AndroidSuper_Metadata</span>
+	<span class="nx">BackupMetadata</span> <span class="p">[]</span><span class="o">*</span><span class="nx">AndroidSuper_Metadata</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_raw_PrimaryGeometry</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_BackupGeometry</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_PrimaryMetadata</span> <span class="p">[][]</span><span class="kt">byte</span>
+	<span class="nx">_raw_BackupMetadata</span> <span class="p">[][]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Root</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Root</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4096</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp2</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_PrimaryGeometry</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">_io__raw_PrimaryGeometry</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_PrimaryGeometry</span><span class="p">))</span>
+	<span class="nx">tmp3</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Geometry</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_PrimaryGeometry</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4096</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp4</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_BackupGeometry</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">_io__raw_BackupGeometry</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_BackupGeometry</span><span class="p">))</span>
+	<span class="nx">tmp5</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Geometry</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp5</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_BackupGeometry</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BackupGeometry</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_PrimaryMetadata</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataSlotCount</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryMetadata</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">AndroidSuper_Metadata</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataSlotCount</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryMetadata</span> <span class="p">{</span>
+		<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataMaxSize</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp6</span> <span class="p">=</span> <span class="nx">tmp6</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_PrimaryMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp6</span>
+		<span class="nx">_io__raw_PrimaryMetadata</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_PrimaryMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+		<span class="nx">tmp7</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp7</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_PrimaryMetadata</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp7</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_BackupMetadata</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataSlotCount</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BackupMetadata</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">AndroidSuper_Metadata</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataSlotCount</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BackupMetadata</span> <span class="p">{</span>
+		<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">PrimaryGeometry</span><span class="p">.</span><span class="nx">MetadataMaxSize</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp8</span> <span class="p">=</span> <span class="nx">tmp8</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_BackupMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp8</span>
+		<span class="nx">_io__raw_BackupMetadata</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_BackupMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+		<span class="nx">tmp9</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp9</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_BackupMetadata</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">BackupMetadata</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp9</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Geometry</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">StructSize</span> <span class="kt">uint32</span>
+	<span class="nx">Checksum</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">MetadataMaxSize</span> <span class="kt">uint32</span>
+	<span class="nx">MetadataSlotCount</span> <span class="kt">uint32</span>
+	<span class="nx">LogicalBlockSize</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Geometry</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Geometry</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Geometry</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Geometry</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp10</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">103</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">97</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">103</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">97</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/geometry/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StructSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp12</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Checksum</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MetadataMaxSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
+	<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MetadataSlotCount</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+	<span class="nx">tmp15</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LogicalBlockSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * SHA-256 hash of struct_size bytes from beginning of geometry,</span>
+<span class="cm"> * calculated as if checksum were zeroed out</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_TableKind</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">AndroidSuper_Metadata_TableKind__Partitions</span> <span class="nx">AndroidSuper_Metadata_TableKind</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">AndroidSuper_Metadata_TableKind__Extents</span> <span class="nx">AndroidSuper_Metadata_TableKind</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">AndroidSuper_Metadata_TableKind__Groups</span> <span class="nx">AndroidSuper_Metadata_TableKind</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">AndroidSuper_Metadata_TableKind__BlockDevices</span> <span class="nx">AndroidSuper_Metadata_TableKind</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">MajorVersion</span> <span class="kt">uint16</span>
+	<span class="nx">MinorVersion</span> <span class="kt">uint16</span>
+	<span class="nx">HeaderSize</span> <span class="kt">uint32</span>
+	<span class="nx">HeaderChecksum</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">TablesSize</span> <span class="kt">uint32</span>
+	<span class="nx">TablesChecksum</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Partitions</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+	<span class="nx">Extents</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+	<span class="nx">Groups</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+	<span class="nx">BlockDevices</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Root</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp16</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">48</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">65</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">48</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">65</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/metadata/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MajorVersion</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MinorVersion</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp20</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderChecksum</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TablesSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">)</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp22</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TablesChecksum</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">tmp23</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_TableDescriptor</span><span class="p">(</span><span class="nx">AndroidSuper_Metadata_TableKind__Partitions</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp23</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Partitions</span> <span class="p">=</span> <span class="nx">tmp23</span>
+	<span class="nx">tmp24</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_TableDescriptor</span><span class="p">(</span><span class="nx">AndroidSuper_Metadata_TableKind__Extents</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp24</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Extents</span> <span class="p">=</span> <span class="nx">tmp24</span>
+	<span class="nx">tmp25</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_TableDescriptor</span><span class="p">(</span><span class="nx">AndroidSuper_Metadata_TableKind__Groups</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp25</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span> <span class="p">=</span> <span class="nx">tmp25</span>
+	<span class="nx">tmp26</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_TableDescriptor</span><span class="p">(</span><span class="nx">AndroidSuper_Metadata_TableKind__BlockDevices</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp26</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlockDevices</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * SHA-256 hash of header_size bytes from beginning of metadata,</span>
+<span class="cm"> * calculated as if header_checksum were zeroed out</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * SHA-256 hash of tables_size bytes from end of header</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_BlockDevice</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">FirstLogicalSector</span> <span class="kt">uint64</span>
+	<span class="nx">Alignment</span> <span class="kt">uint32</span>
+	<span class="nx">AlignmentOffset</span> <span class="kt">uint32</span>
+	<span class="nx">Size</span> <span class="kt">uint64</span>
+	<span class="nx">PartitionName</span> <span class="kt">string</span>
+	<span class="nx">FlagSlotSuffixed</span> <span class="kt">bool</span>
+	<span class="nx">FlagsReserved</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata_BlockDevice</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_BlockDevice</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata_BlockDevice</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_BlockDevice</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FirstLogicalSector</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Alignment</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AlignmentOffset</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
+	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Size</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">36</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp31</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PartitionName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FlagSlotSuffixed</span> <span class="p">=</span> <span class="nx">tmp32</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FlagsReserved</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_Extent_TargetType</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">AndroidSuper_Metadata_Extent_TargetType__Linear</span> <span class="nx">AndroidSuper_Metadata_Extent_TargetType</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">AndroidSuper_Metadata_Extent_TargetType__Zero</span> <span class="nx">AndroidSuper_Metadata_Extent_TargetType</span> <span class="p">=</span> <span class="mi">1</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_Extent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumSectors</span> <span class="kt">uint64</span>
+	<span class="nx">TargetType</span> <span class="nx">AndroidSuper_Metadata_Extent_TargetType</span>
+	<span class="nx">TargetData</span> <span class="kt">uint64</span>
+	<span class="nx">TargetSource</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata_Extent</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Extent</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata_Extent</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Extent</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumSectors</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TargetType</span> <span class="p">=</span> <span class="nx">AndroidSuper_Metadata_Extent_TargetType</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TargetData</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
+	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TargetSource</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_TableDescriptor</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Offset</span> <span class="kt">uint32</span>
+	<span class="nx">NumEntries</span> <span class="kt">uint32</span>
+	<span class="nx">EntrySize</span> <span class="kt">uint32</span>
+	<span class="nx">Kind</span> <span class="nx">AndroidSuper_Metadata_TableKind</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata</span>
+	<span class="nx">_raw_table</span> <span class="p">[][]</span><span class="kt">byte</span>
+	<span class="nx">_f_table</span> <span class="kt">bool</span>
+	<span class="nx">table</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata_TableDescriptor</span><span class="p">(</span><span class="nx">kind</span> <span class="nx">AndroidSuper_Metadata_TableKind</span><span class="p">)</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">{</span>
+		<span class="nx">Kind</span><span class="p">:</span> <span class="nx">kind</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Offset</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumEntries</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">)</span> <span class="nx">Table</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_table</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">HeaderSize</span> <span class="o">+</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Offset</span><span class="p">)),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumEntries</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">table</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumEntries</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">table</span> <span class="p">{</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Kind</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">AndroidSuper_Metadata_TableKind__Partitions</span><span class="p">:</span>
+			<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span><span class="p">))</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">tmp41</span> <span class="p">=</span> <span class="nx">tmp41</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp41</span>
+			<span class="nx">_io__raw_table</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+			<span class="nx">tmp42</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_Partition</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp42</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_table</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp42</span>
+		<span class="k">case</span> <span class="nx">AndroidSuper_Metadata_TableKind__Extents</span><span class="p">:</span>
+			<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span><span class="p">))</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">tmp43</span> <span class="p">=</span> <span class="nx">tmp43</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp43</span>
+			<span class="nx">_io__raw_table</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+			<span class="nx">tmp44</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_Extent</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp44</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_table</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp44</span>
+		<span class="k">case</span> <span class="nx">AndroidSuper_Metadata_TableKind__Groups</span><span class="p">:</span>
+			<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span><span class="p">))</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">tmp45</span> <span class="p">=</span> <span class="nx">tmp45</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp45</span>
+			<span class="nx">_io__raw_table</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+			<span class="nx">tmp46</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_Group</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp46</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_table</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp46</span>
+		<span class="k">case</span> <span class="nx">AndroidSuper_Metadata_TableKind__BlockDevices</span><span class="p">:</span>
+			<span class="nx">tmp47</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span><span class="p">))</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">tmp47</span> <span class="p">=</span> <span class="nx">tmp47</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp47</span>
+			<span class="nx">_io__raw_table</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+			<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewAndroidSuper_Metadata_BlockDevice</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_table</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp48</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">EntrySize</span><span class="p">))</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">tmp49</span> <span class="p">=</span> <span class="nx">tmp49</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp49</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_table</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_table</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">table</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_Partition</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">AttrReadonly</span> <span class="kt">bool</span>
+	<span class="nx">AttrSlotSuffixed</span> <span class="kt">bool</span>
+	<span class="nx">AttrUpdated</span> <span class="kt">bool</span>
+	<span class="nx">AttrDisabled</span> <span class="kt">bool</span>
+	<span class="nx">AttrsReserved</span> <span class="kt">uint64</span>
+	<span class="nx">FirstExtentIndex</span> <span class="kt">uint32</span>
+	<span class="nx">NumExtents</span> <span class="kt">uint32</span>
+	<span class="nx">GroupIndex</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata_Partition</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Partition</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata_Partition</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Partition</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">36</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp50</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span>
+	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AttrReadonly</span> <span class="p">=</span> <span class="nx">tmp51</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AttrSlotSuffixed</span> <span class="p">=</span> <span class="nx">tmp52</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AttrUpdated</span> <span class="p">=</span> <span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AttrDisabled</span> <span class="p">=</span> <span class="nx">tmp54</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AttrsReserved</span> <span class="p">=</span> <span class="nx">tmp55</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">AlignToByte</span><span class="p">()</span>
+	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FirstExtentIndex</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp56</span><span class="p">)</span>
+	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumExtents</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp57</span><span class="p">)</span>
+	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">GroupIndex</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp58</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">AndroidSuper_Metadata_Group</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">FlagSlotSuffixed</span> <span class="kt">bool</span>
+	<span class="nx">FlagsReserved</span> <span class="kt">uint64</span>
+	<span class="nx">MaximumSize</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidSuper</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewAndroidSuper_Metadata_Group</span><span class="p">()</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Group</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">AndroidSuper_Metadata_Group</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_Group</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">AndroidSuper_Metadata_TableDescriptor</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">AndroidSuper</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">36</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp59</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp59</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp59</span><span class="p">)</span>
+	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FlagSlotSuffixed</span> <span class="p">=</span> <span class="nx">tmp60</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FlagsReserved</span> <span class="p">=</span> <span class="nx">tmp61</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">AlignToByte</span><span class="p">()</span>
+	<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MaximumSize</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp62</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

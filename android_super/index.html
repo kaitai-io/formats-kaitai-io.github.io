@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Android Dynamic Partitions metadata format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">Android Dynamic Partitions metadata</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Android Dynamic Partitions metadata:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The metadata stored by Android at the beginning of a &quot;super&quot; partition, which
+is what it calls a disk partition that holds one or more Dynamic Partitions.
+Dynamic Partitions do more or less the same thing that LVM does on Linux,
+allowing Android to map ranges of non-contiguous extents to a single logical
+device. This metadata holds that mapping.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Android
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        img
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Android Dynamic Partitions metadata
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Android Dynamic Partitions metadata parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Android Dynamic Partitions metadata parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Android Dynamic Partitions metadata parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Android Dynamic Partitions metadata parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Android Dynamic Partitions metadata parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Android Dynamic Partitions metadata parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Android Dynamic Partitions metadata parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Android Dynamic Partitions metadata parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Android Dynamic Partitions metadata parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Android Dynamic Partitions metadata parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Android Dynamic Partitions metadata parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Android Dynamic Partitions metadata parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Android Dynamic Partitions metadata parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Android Dynamic Partitions metadata parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="android_super.svg">
+            <img class="diagram-img" src="android_super.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">android_super</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Android Dynamic Partitions metadata</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Android</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">bit-endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">The metadata stored by Android at the beginning of a &quot;super&quot; partition, which</span>
+  <span class="no">is what it calls a disk partition that holds one or more Dynamic Partitions.</span>
+  <span class="no">Dynamic Partitions do more or less the same thing that LVM does on Linux,</span>
+  <span class="no">allowing Android to map ranges of non-contiguous extents to a single logical</span>
+  <span class="no">device. This metadata holds that mapping.</span>
+
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://source.android.com/devices/tech/ota/dynamic_partitions</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://android.googlesource.com/platform/system/core/+/refs/tags/android-11.0.0_r8/fs_mgr/liblp/include/liblp/metadata_format.h</span>
+
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">root</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x1000</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root</span>
+
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">root</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_geometry</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x1000</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">geometry</span>
+
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backup_geometry</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">geometry</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x1000</span>
+
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_metadata</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_geometry.metadata_max_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metadata</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_geometry.metadata_slot_count</span>
+
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backup_metadata</span>
+        <span class="c1"># These attributes are intentionally taken from primary_geometry, even</span>
+        <span class="c1"># for backup_metadata. The first non-corrupt geometry specifier dictates</span>
+        <span class="c1"># the layout of both primary and backup metadata.</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_geometry.metadata_max_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metadata</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_geometry.metadata_slot_count</span>
+
+  <span class="nt">geometry</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;gDla&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">struct_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">32</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">SHA-256 hash of struct_size bytes from beginning of geometry,</span>
+          <span class="no">calculated as if checksum were zeroed out</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metadata_max_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metadata_slot_count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">logical_block_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+
+  <span class="nt">metadata</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;0PLA&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major_version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor_version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_checksum</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">32</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">SHA-256 hash of header_size bytes from beginning of metadata,</span>
+          <span class="no">calculated as if header_checksum were zeroed out</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tables_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tables_checksum</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">32</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SHA-256 hash of tables_size bytes from end of header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partitions</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_descriptor(table_kind::partitions)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extents</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_descriptor(table_kind::extents)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">groups</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_descriptor(table_kind::groups)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_devices</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_descriptor(table_kind::block_devices)</span>
+
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">table_kind</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partitions</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extents</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">groups</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_devices</span>
+
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">table_descriptor</span><span class="p">:</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kind</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">table_kind</span>
+            <span class="nt">-affected-by</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">135</span>
+
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">table</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.header_size + offset</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_size</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kind</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;table_kind::partitions&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">partition</span>
+                <span class="s">&#39;table_kind::extents&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">extent</span>
+                <span class="s">&#39;table_kind::groups&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">group</span>
+                <span class="s">&#39;table_kind::block_devices&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">block_device</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries</span>
+
+      <span class="nt">partition</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">36</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attr_readonly</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attr_slot_suffixed</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attr_updated</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attr_disabled</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attrs_reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b28</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_extent_index</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_extents</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group_index</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+
+      <span class="nt">extent</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_sectors</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_type</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_source</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+
+        <span class="nt">enums</span><span class="p">:</span>
+          <span class="nt">target_type</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linear</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zero</span>
+
+      <span class="nt">group</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">36</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag_slot_suffixed</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags_reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b31</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maximum_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+
+      <span class="nt">block_device</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_logical_sector</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alignment</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alignment_offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">36</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag_slot_suffixed</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags_reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b31</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
