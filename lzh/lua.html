@@ -288,6 +288,7 @@ records.</p>
 <span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
 
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;dos_datetime&quot;</span><span class="p">)</span>
 <span class="c1">-- </span>
 <span class="c1">-- LHA (LHarc, LZH) is a file format used by a popular freeware</span>
 <span class="c1">-- eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the</span>
@@ -397,7 +398,9 @@ records.</p>
   <span class="n">self</span><span class="p">.</span><span class="n">method_id</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">file_size_compr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">file_size_uncompr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">file_timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_file_timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_file_timestamp</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">file_timestamp</span> <span class="o">=</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">lha_level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
 <span class="kr">end</span>

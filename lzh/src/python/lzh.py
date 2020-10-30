@@ -8,6 +8,7 @@ from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
+import dos_datetime
 class Lzh(KaitaiStruct):
     """LHA (LHarc, LZH) is a file format used by a popular freeware
     eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the
@@ -100,7 +101,9 @@ class Lzh(KaitaiStruct):
             self.method_id = (self._io.read_bytes(5)).decode(u"ASCII")
             self.file_size_compr = self._io.read_u4le()
             self.file_size_uncompr = self._io.read_u4le()
-            self.file_timestamp = self._io.read_u4le()
+            self._raw_file_timestamp = self._io.read_bytes(4)
+            _io__raw_file_timestamp = KaitaiStream(BytesIO(self._raw_file_timestamp))
+            self.file_timestamp = dos_datetime.DosDatetime(_io__raw_file_timestamp)
             self.attr = self._io.read_u1()
             self.lha_level = self._io.read_u1()
 

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Rar = factory(root.KaitaiStream);
+    root.Rar = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, DosDatetime) {
 /**
  * RAR is a archive format used by popular proprietary RAR archiver,
  * created by Eugene Roshal. There are two major versions of format
@@ -18,7 +18,7 @@
  * blocks. Each block has fixed header and custom body (that depends on
  * block type), so it's possible to skip block even if one doesn't know
  * how to process a certain block type.
- * @see {@link http://acritum.com/winrar/rar-format|}
+ * @see {@link http://acritum.com/winrar/rar-format|Source}
  */
 
 var Rar = (function() {
@@ -102,18 +102,52 @@ var Rar = (function() {
     }
   }
 
-  var BlockV5 = Rar.BlockV5 = (function() {
-    function BlockV5(_io, _parent, _root) {
+  /**
+   * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+   * 8-byte magic (and pretty different block format) for v5+. This
+   * type would parse and validate both versions of signature. Note
+   * that actually this signature is a valid RAR "block": in theory,
+   * one can omit signature reading at all, and read this normally,
+   * as a block, if exact RAR version is known (and thus it's
+   * possible to choose correct block format).
+   */
+
+  var MagicSignature = Rar.MagicSignature = (function() {
+    function MagicSignature(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    BlockV5.prototype._read = function() {
+    MagicSignature.prototype._read = function() {
+      this.magic1 = this._io.readBytes(6);
+      if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 97, 114, 33, 26, 7]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([82, 97, 114, 33, 26, 7], this.magic1, this._io, "/types/magic_signature/seq/0");
+      }
+      this.version = this._io.readU1();
+      if (this.version == 1) {
+        this.magic3 = this._io.readBytes(1);
+        if (!((KaitaiStream.byteArrayCompare(this.magic3, [0]) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError([0], this.magic3, this._io, "/types/magic_signature/seq/2");
+        }
+      }
     }
 
-    return BlockV5;
+    /**
+     * Fixed part of file's magic signature that doesn't change with RAR version
+     */
+
+    /**
+     * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+     * format, 1 means new (RAR 5+) format
+     */
+
+    /**
+     * New format (RAR 5+) magic contains extra byte
+     */
+
+    return MagicSignature;
   })();
 
   /**
@@ -212,7 +246,9 @@ var Rar = (function() {
       this.lowUnpSize = this._io.readU4le();
       this.hostOs = this._io.readU1();
       this.fileCrc32 = this._io.readU4le();
-      this.fileTime = new DosTime(this._io, this, this._root);
+      this._raw_fileTime = this._io.readBytes(4);
+      var _io__raw_fileTime = new KaitaiStream(this._raw_fileTime);
+      this.fileTime = new DosDatetime(_io__raw_fileTime, this, null);
       this.rarVersion = this._io.readU1();
       this.method = this._io.readU1();
       this.nameSize = this._io.readU2le();
@@ -261,116 +297,18 @@ var Rar = (function() {
     return BlockFileHeader;
   })();
 
-  /**
-   * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-   * 8-byte magic (and pretty different block format) for v5+. This
-   * type would parse and validate both versions of signature. Note
-   * that actually this signature is a valid RAR "block": in theory,
-   * one can omit signature reading at all, and read this normally,
-   * as a block, if exact RAR version is known (and thus it's
-   * possible to choose correct block format).
-   */
-
-  var MagicSignature = Rar.MagicSignature = (function() {
-    function MagicSignature(_io, _parent, _root) {
+  var BlockV5 = Rar.BlockV5 = (function() {
+    function BlockV5(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    MagicSignature.prototype._read = function() {
-      this.magic1 = this._io.readBytes(6);
-      if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 97, 114, 33, 26, 7]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([82, 97, 114, 33, 26, 7], this.magic1, this._io, "/types/magic_signature/seq/0");
-      }
-      this.version = this._io.readU1();
-      if (this.version == 1) {
-        this.magic3 = this._io.readBytes(1);
-        if (!((KaitaiStream.byteArrayCompare(this.magic3, [0]) == 0))) {
-          throw new KaitaiStream.ValidationNotEqualError([0], this.magic3, this._io, "/types/magic_signature/seq/2");
-        }
-      }
+    BlockV5.prototype._read = function() {
     }
 
-    /**
-     * Fixed part of file's magic signature that doesn't change with RAR version
-     */
-
-    /**
-     * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-     * format, 1 means new (RAR 5+) format
-     */
-
-    /**
-     * New format (RAR 5+) magic contains extra byte
-     */
-
-    return MagicSignature;
-  })();
-
-  var DosTime = Rar.DosTime = (function() {
-    function DosTime(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DosTime.prototype._read = function() {
-      this.time = this._io.readU2le();
-      this.date = this._io.readU2le();
-    }
-    Object.defineProperty(DosTime.prototype, 'month', {
-      get: function() {
-        if (this._m_month !== undefined)
-          return this._m_month;
-        this._m_month = ((this.date & 480) >>> 5);
-        return this._m_month;
-      }
-    });
-    Object.defineProperty(DosTime.prototype, 'seconds', {
-      get: function() {
-        if (this._m_seconds !== undefined)
-          return this._m_seconds;
-        this._m_seconds = ((this.time & 31) * 2);
-        return this._m_seconds;
-      }
-    });
-    Object.defineProperty(DosTime.prototype, 'year', {
-      get: function() {
-        if (this._m_year !== undefined)
-          return this._m_year;
-        this._m_year = (((this.date & 65024) >>> 9) + 1980);
-        return this._m_year;
-      }
-    });
-    Object.defineProperty(DosTime.prototype, 'minutes', {
-      get: function() {
-        if (this._m_minutes !== undefined)
-          return this._m_minutes;
-        this._m_minutes = ((this.time & 2016) >>> 5);
-        return this._m_minutes;
-      }
-    });
-    Object.defineProperty(DosTime.prototype, 'day', {
-      get: function() {
-        if (this._m_day !== undefined)
-          return this._m_day;
-        this._m_day = (this.date & 31);
-        return this._m_day;
-      }
-    });
-    Object.defineProperty(DosTime.prototype, 'hours', {
-      get: function() {
-        if (this._m_hours !== undefined)
-          return this._m_hours;
-        this._m_hours = ((this.time & 63488) >>> 11);
-        return this._m_hours;
-      }
-    });
-
-    return DosTime;
+    return BlockV5;
   })();
 
   /**

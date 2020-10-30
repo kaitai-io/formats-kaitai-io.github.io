@@ -20,6 +20,9 @@ namespace Kaitai
     /// <remarks>
     /// Reference: <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
     /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Source</a>
+    /// </remarks>
     public partial class Zip : KaitaiStruct
     {
         public static Zip FromFile(string fileName)
@@ -188,7 +191,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191">Source</a>
+            /// Reference: <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
             /// </remarks>
             public partial class Ntfs : KaitaiStruct
             {
@@ -299,7 +302,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817">Source</a>
+            /// Reference: <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817">Source</a>
             /// </remarks>
             public partial class ExtendedTimestamp : KaitaiStruct
             {
@@ -316,31 +319,82 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flags = m_io.ReadU1();
-                    _modTime = m_io.ReadU4le();
-                    if (!(M_Io.IsEof)) {
+                    __raw_flags = m_io.ReadBytes(1);
+                    var io___raw_flags = new KaitaiStream(__raw_flags);
+                    _flags = new InfoFlags(io___raw_flags, this, m_root);
+                    if (Flags.HasModTime) {
+                        _modTime = m_io.ReadU4le();
+                    }
+                    if (Flags.HasAccessTime) {
                         _accessTime = m_io.ReadU4le();
                     }
-                    if (!(M_Io.IsEof)) {
+                    if (Flags.HasCreateTime) {
                         _createTime = m_io.ReadU4le();
                     }
                 }
-                private byte _flags;
-                private uint _modTime;
+                public partial class InfoFlags : KaitaiStruct
+                {
+                    public static InfoFlags FromFile(string fileName)
+                    {
+                        return new InfoFlags(new KaitaiStream(fileName));
+                    }
+
+                    public InfoFlags(KaitaiStream p__io, Zip.ExtraField.ExtendedTimestamp p__parent = null, Zip p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _hasModTime = m_io.ReadBitsIntLe(1) != 0;
+                        _hasAccessTime = m_io.ReadBitsIntLe(1) != 0;
+                        _hasCreateTime = m_io.ReadBitsIntLe(1) != 0;
+                        _reserved = m_io.ReadBitsIntLe(5);
+                    }
+                    private bool _hasModTime;
+                    private bool _hasAccessTime;
+                    private bool _hasCreateTime;
+                    private ulong _reserved;
+                    private Zip m_root;
+                    private Zip.ExtraField.ExtendedTimestamp m_parent;
+                    public bool HasModTime { get { return _hasModTime; } }
+                    public bool HasAccessTime { get { return _hasAccessTime; } }
+                    public bool HasCreateTime { get { return _hasCreateTime; } }
+                    public ulong Reserved { get { return _reserved; } }
+                    public Zip M_Root { get { return m_root; } }
+                    public Zip.ExtraField.ExtendedTimestamp M_Parent { get { return m_parent; } }
+                }
+                private InfoFlags _flags;
+                private uint? _modTime;
                 private uint? _accessTime;
                 private uint? _createTime;
                 private Zip m_root;
                 private Zip.ExtraField m_parent;
-                public byte Flags { get { return _flags; } }
-                public uint ModTime { get { return _modTime; } }
+                private byte[] __raw_flags;
+                public InfoFlags Flags { get { return _flags; } }
+
+                /// <summary>
+                /// Unix timestamp
+                /// </summary>
+                public uint? ModTime { get { return _modTime; } }
+
+                /// <summary>
+                /// Unix timestamp
+                /// </summary>
                 public uint? AccessTime { get { return _accessTime; } }
+
+                /// <summary>
+                /// Unix timestamp
+                /// </summary>
                 public uint? CreateTime { get { return _createTime; } }
                 public Zip M_Root { get { return m_root; } }
                 public Zip.ExtraField M_Parent { get { return m_parent; } }
+                public byte[] M_RawFlags { get { return __raw_flags; } }
             }
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339">Source</a>
+            /// Reference: <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339">Source</a>
             /// </remarks>
             public partial class InfozipUnixVarSize : KaitaiStruct
             {
@@ -435,8 +489,9 @@ namespace Kaitai
                 _versionNeededToExtract = m_io.ReadU2le();
                 _flags = m_io.ReadU2le();
                 _compressionMethod = ((Zip.Compression) m_io.ReadU2le());
-                _lastModFileTime = m_io.ReadU2le();
-                _lastModFileDate = m_io.ReadU2le();
+                __raw_fileModTime = m_io.ReadBytes(4);
+                var io___raw_fileModTime = new KaitaiStream(__raw_fileModTime);
+                _fileModTime = new DosDatetime(io___raw_fileModTime);
                 _crc32 = m_io.ReadU4le();
                 _lenBodyCompressed = m_io.ReadU4le();
                 _lenBodyUncompressed = m_io.ReadU4le();
@@ -473,8 +528,7 @@ namespace Kaitai
             private ushort _versionNeededToExtract;
             private ushort _flags;
             private Compression _compressionMethod;
-            private ushort _lastModFileTime;
-            private ushort _lastModFileDate;
+            private DosDatetime _fileModTime;
             private uint _crc32;
             private uint _lenBodyCompressed;
             private uint _lenBodyUncompressed;
@@ -490,13 +544,13 @@ namespace Kaitai
             private string _comment;
             private Zip m_root;
             private Zip.PkSection m_parent;
+            private byte[] __raw_fileModTime;
             private byte[] __raw_extra;
             public ushort VersionMadeBy { get { return _versionMadeBy; } }
             public ushort VersionNeededToExtract { get { return _versionNeededToExtract; } }
             public ushort Flags { get { return _flags; } }
             public Compression CompressionMethod { get { return _compressionMethod; } }
-            public ushort LastModFileTime { get { return _lastModFileTime; } }
-            public ushort LastModFileDate { get { return _lastModFileDate; } }
+            public DosDatetime FileModTime { get { return _fileModTime; } }
             public uint Crc32 { get { return _crc32; } }
             public uint LenBodyCompressed { get { return _lenBodyCompressed; } }
             public uint LenBodyUncompressed { get { return _lenBodyUncompressed; } }
@@ -512,6 +566,7 @@ namespace Kaitai
             public string Comment { get { return _comment; } }
             public Zip M_Root { get { return m_root; } }
             public Zip.PkSection M_Parent { get { return m_parent; } }
+            public byte[] M_RawFileModTime { get { return __raw_fileModTime; } }
             public byte[] M_RawExtra { get { return __raw_extra; } }
         }
         public partial class PkSection : KaitaiStruct
@@ -612,10 +667,13 @@ namespace Kaitai
             private void _read()
             {
                 _version = m_io.ReadU2le();
-                _flags = m_io.ReadU2le();
+                __raw_flags = m_io.ReadBytes(2);
+                var io___raw_flags = new KaitaiStream(__raw_flags);
+                _flags = new GpFlags(io___raw_flags, this, m_root);
                 _compressionMethod = ((Zip.Compression) m_io.ReadU2le());
-                _fileModTime = m_io.ReadU2le();
-                _fileModDate = m_io.ReadU2le();
+                __raw_fileModTime = m_io.ReadBytes(4);
+                var io___raw_fileModTime = new KaitaiStream(__raw_fileModTime);
+                _fileModTime = new DosDatetime(io___raw_fileModTime);
                 _crc32 = m_io.ReadU4le();
                 _lenBodyCompressed = m_io.ReadU4le();
                 _lenBodyUncompressed = m_io.ReadU4le();
@@ -626,11 +684,151 @@ namespace Kaitai
                 var io___raw_extra = new KaitaiStream(__raw_extra);
                 _extra = new Extras(io___raw_extra, this, m_root);
             }
+
+            /// <remarks>
+            /// Reference: <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.4.4</a>
+            /// </remarks>
+            /// <remarks>
+            /// Reference: <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Local file headers</a>
+            /// </remarks>
+            public partial class GpFlags : KaitaiStruct
+            {
+                public static GpFlags FromFile(string fileName)
+                {
+                    return new GpFlags(new KaitaiStream(fileName));
+                }
+
+
+                public enum DeflateMode
+                {
+                    Normal = 0,
+                    Maximum = 1,
+                    Fast = 2,
+                    SuperFast = 3,
+                }
+                public GpFlags(KaitaiStream p__io, Zip.LocalFileHeader p__parent = null, Zip p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_deflatedMode = false;
+                    f_implodedDictByteSize = false;
+                    f_implodedNumSfTrees = false;
+                    f_lzmaHasEosMarker = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _fileEncrypted = m_io.ReadBitsIntLe(1) != 0;
+                    _compOptionsRaw = m_io.ReadBitsIntLe(2);
+                    _hasDataDescriptor = m_io.ReadBitsIntLe(1) != 0;
+                    _reserved1 = m_io.ReadBitsIntLe(1) != 0;
+                    _compPatchedData = m_io.ReadBitsIntLe(1) != 0;
+                    _strongEncrypt = m_io.ReadBitsIntLe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntLe(4);
+                    _langEncoding = m_io.ReadBitsIntLe(1) != 0;
+                    _reserved3 = m_io.ReadBitsIntLe(1) != 0;
+                    _maskHeaderValues = m_io.ReadBitsIntLe(1) != 0;
+                    _reserved4 = m_io.ReadBitsIntLe(2);
+                }
+                private bool f_deflatedMode;
+                private DeflateMode _deflatedMode;
+                public DeflateMode DeflatedMode
+                {
+                    get
+                    {
+                        if (f_deflatedMode)
+                            return _deflatedMode;
+                        if ( ((M_Parent.CompressionMethod == Zip.Compression.Deflated) || (M_Parent.CompressionMethod == Zip.Compression.EnhancedDeflated)) ) {
+                            _deflatedMode = (DeflateMode) (((DeflateMode) CompOptionsRaw));
+                        }
+                        f_deflatedMode = true;
+                        return _deflatedMode;
+                    }
+                }
+                private bool f_implodedDictByteSize;
+                private int? _implodedDictByteSize;
+
+                /// <summary>
+                /// 8KiB or 4KiB in bytes
+                /// </summary>
+                public int? ImplodedDictByteSize
+                {
+                    get
+                    {
+                        if (f_implodedDictByteSize)
+                            return _implodedDictByteSize;
+                        if (M_Parent.CompressionMethod == Zip.Compression.Imploded) {
+                            _implodedDictByteSize = (int) ((((CompOptionsRaw & 1) != 0 ? 8 : 4) * 1024));
+                        }
+                        f_implodedDictByteSize = true;
+                        return _implodedDictByteSize;
+                    }
+                }
+                private bool f_implodedNumSfTrees;
+                private sbyte? _implodedNumSfTrees;
+                public sbyte? ImplodedNumSfTrees
+                {
+                    get
+                    {
+                        if (f_implodedNumSfTrees)
+                            return _implodedNumSfTrees;
+                        if (M_Parent.CompressionMethod == Zip.Compression.Imploded) {
+                            _implodedNumSfTrees = (sbyte) (((CompOptionsRaw & 2) != 0 ? 3 : 2));
+                        }
+                        f_implodedNumSfTrees = true;
+                        return _implodedNumSfTrees;
+                    }
+                }
+                private bool f_lzmaHasEosMarker;
+                private bool? _lzmaHasEosMarker;
+                public bool? LzmaHasEosMarker
+                {
+                    get
+                    {
+                        if (f_lzmaHasEosMarker)
+                            return _lzmaHasEosMarker;
+                        if (M_Parent.CompressionMethod == Zip.Compression.Lzma) {
+                            _lzmaHasEosMarker = (bool) ((CompOptionsRaw & 1) != 0);
+                        }
+                        f_lzmaHasEosMarker = true;
+                        return _lzmaHasEosMarker;
+                    }
+                }
+                private bool _fileEncrypted;
+                private ulong _compOptionsRaw;
+                private bool _hasDataDescriptor;
+                private bool _reserved1;
+                private bool _compPatchedData;
+                private bool _strongEncrypt;
+                private ulong _reserved2;
+                private bool _langEncoding;
+                private bool _reserved3;
+                private bool _maskHeaderValues;
+                private ulong _reserved4;
+                private Zip m_root;
+                private Zip.LocalFileHeader m_parent;
+                public bool FileEncrypted { get { return _fileEncrypted; } }
+
+                /// <summary>
+                /// internal; access derived value instances instead
+                /// </summary>
+                public ulong CompOptionsRaw { get { return _compOptionsRaw; } }
+                public bool HasDataDescriptor { get { return _hasDataDescriptor; } }
+                public bool Reserved1 { get { return _reserved1; } }
+                public bool CompPatchedData { get { return _compPatchedData; } }
+                public bool StrongEncrypt { get { return _strongEncrypt; } }
+                public ulong Reserved2 { get { return _reserved2; } }
+                public bool LangEncoding { get { return _langEncoding; } }
+                public bool Reserved3 { get { return _reserved3; } }
+                public bool MaskHeaderValues { get { return _maskHeaderValues; } }
+                public ulong Reserved4 { get { return _reserved4; } }
+                public Zip M_Root { get { return m_root; } }
+                public Zip.LocalFileHeader M_Parent { get { return m_parent; } }
+            }
             private ushort _version;
-            private ushort _flags;
+            private GpFlags _flags;
             private Compression _compressionMethod;
-            private ushort _fileModTime;
-            private ushort _fileModDate;
+            private DosDatetime _fileModTime;
             private uint _crc32;
             private uint _lenBodyCompressed;
             private uint _lenBodyUncompressed;
@@ -640,12 +838,13 @@ namespace Kaitai
             private Extras _extra;
             private Zip m_root;
             private Zip.LocalFile m_parent;
+            private byte[] __raw_flags;
+            private byte[] __raw_fileModTime;
             private byte[] __raw_extra;
             public ushort Version { get { return _version; } }
-            public ushort Flags { get { return _flags; } }
+            public GpFlags Flags { get { return _flags; } }
             public Compression CompressionMethod { get { return _compressionMethod; } }
-            public ushort FileModTime { get { return _fileModTime; } }
-            public ushort FileModDate { get { return _fileModDate; } }
+            public DosDatetime FileModTime { get { return _fileModTime; } }
             public uint Crc32 { get { return _crc32; } }
             public uint LenBodyCompressed { get { return _lenBodyCompressed; } }
             public uint LenBodyUncompressed { get { return _lenBodyUncompressed; } }
@@ -655,6 +854,8 @@ namespace Kaitai
             public Extras Extra { get { return _extra; } }
             public Zip M_Root { get { return m_root; } }
             public Zip.LocalFile M_Parent { get { return m_parent; } }
+            public byte[] M_RawFlags { get { return __raw_flags; } }
+            public byte[] M_RawFileModTime { get { return __raw_fileModTime; } }
             public byte[] M_RawExtra { get { return __raw_extra; } }
         }
         public partial class EndOfCentralDir : KaitaiStruct

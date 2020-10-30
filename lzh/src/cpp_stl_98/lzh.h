@@ -5,11 +5,13 @@
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include "dos_datetime.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
+class dos_datetime_t;
 
 /**
  * LHA (LHarc, LZH) is a file format used by a popular freeware
@@ -194,11 +196,13 @@ public:
         std::string m_method_id;
         uint32_t m_file_size_compr;
         uint32_t m_file_size_uncompr;
-        uint32_t m_file_timestamp;
+        dos_datetime_t* m_file_timestamp;
         uint8_t m_attr;
         uint8_t m_lha_level;
         lzh_t* m__root;
         lzh_t::header_t* m__parent;
+        std::string m__raw_file_timestamp;
+        kaitai::kstream* m__io__raw_file_timestamp;
 
     public:
         uint8_t header_checksum() const { return m_header_checksum; }
@@ -217,7 +221,7 @@ public:
         /**
          * Original file date/time
          */
-        uint32_t file_timestamp() const { return m_file_timestamp; }
+        dos_datetime_t* file_timestamp() const { return m_file_timestamp; }
 
         /**
          * File or directory attribute
@@ -226,6 +230,8 @@ public:
         uint8_t lha_level() const { return m_lha_level; }
         lzh_t* _root() const { return m__root; }
         lzh_t::header_t* _parent() const { return m__parent; }
+        std::string _raw_file_timestamp() const { return m__raw_file_timestamp; }
+        kaitai::kstream* _io__raw_file_timestamp() const { return m__io__raw_file_timestamp; }
     };
 
 private:

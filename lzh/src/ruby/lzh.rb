@@ -113,7 +113,9 @@ class Lzh < Kaitai::Struct::Struct
       @method_id = (@_io.read_bytes(5)).force_encoding("ASCII")
       @file_size_compr = @_io.read_u4le
       @file_size_uncompr = @_io.read_u4le
-      @file_timestamp = @_io.read_u4le
+      @_raw_file_timestamp = @_io.read_bytes(4)
+      _io__raw_file_timestamp = Kaitai::Struct::Stream.new(@_raw_file_timestamp)
+      @file_timestamp = DosDatetime.new(_io__raw_file_timestamp)
       @attr = @_io.read_u1
       @lha_level = @_io.read_u1
       self
@@ -137,6 +139,7 @@ class Lzh < Kaitai::Struct::Struct
     # File or directory attribute
     attr_reader :attr
     attr_reader :lha_level
+    attr_reader :_raw_file_timestamp
   end
   attr_reader :entries
 end

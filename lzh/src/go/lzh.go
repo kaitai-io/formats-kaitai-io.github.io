@@ -201,12 +201,13 @@ type Lzh_Header1 struct {
 	MethodId string
 	FileSizeCompr uint32
 	FileSizeUncompr uint32
-	FileTimestamp uint32
+	FileTimestamp *DosDatetime
 	Attr uint8
 	LhaLevel uint8
 	_io *kaitai.Stream
 	_root *Lzh
 	_parent *Lzh_Header
+	_raw_FileTimestamp []byte
 }
 func NewLzh_Header1() *Lzh_Header1 {
 	return &Lzh_Header1{
@@ -239,21 +240,29 @@ func (this *Lzh_Header1) Read(io *kaitai.Stream, parent *Lzh_Header, root *Lzh) 
 		return err
 	}
 	this.FileSizeUncompr = uint32(tmp18)
-	tmp19, err := this._io.ReadU4le()
+	tmp19, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.FileTimestamp = uint32(tmp19)
-	tmp20, err := this._io.ReadU1()
+	tmp19 = tmp19
+	this._raw_FileTimestamp = tmp19
+	_io__raw_FileTimestamp := kaitai.NewStream(bytes.NewReader(this._raw_FileTimestamp))
+	tmp20 := NewDosDatetime()
+	err = tmp20.Read(_io__raw_FileTimestamp, this, nil)
 	if err != nil {
 		return err
 	}
-	this.Attr = tmp20
+	this.FileTimestamp = tmp20
 	tmp21, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LhaLevel = tmp21
+	this.Attr = tmp21
+	tmp22, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LhaLevel = tmp22
 	return err
 }
 

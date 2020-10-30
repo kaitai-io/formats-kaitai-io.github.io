@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Zip = factory(root.KaitaiStream);
+    root.Zip = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, DosDatetime) {
 /**
  * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
  * and originally implemented in PKZIP utility by PKWARE.
@@ -21,6 +21,7 @@
  * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
  * are actually ZIP archives.
  * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|Source}
+ * @see {@link https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html|Source}
  */
 
 var Zip = (function() {
@@ -185,7 +186,7 @@ var Zip = (function() {
     }
 
     /**
-     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191|Source}
+     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191|Source}
      */
 
     var Ntfs = ExtraField.Ntfs = (function() {
@@ -253,7 +254,7 @@ var Zip = (function() {
     })();
 
     /**
-     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817|Source}
+     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817|Source}
      */
 
     var ExtendedTimestamp = ExtraField.ExtendedTimestamp = (function() {
@@ -265,21 +266,55 @@ var Zip = (function() {
         this._read();
       }
       ExtendedTimestamp.prototype._read = function() {
-        this.flags = this._io.readU1();
-        this.modTime = this._io.readU4le();
-        if (!(this._io.isEof())) {
+        this._raw_flags = this._io.readBytes(1);
+        var _io__raw_flags = new KaitaiStream(this._raw_flags);
+        this.flags = new InfoFlags(_io__raw_flags, this, this._root);
+        if (this.flags.hasModTime) {
+          this.modTime = this._io.readU4le();
+        }
+        if (this.flags.hasAccessTime) {
           this.accessTime = this._io.readU4le();
         }
-        if (!(this._io.isEof())) {
+        if (this.flags.hasCreateTime) {
           this.createTime = this._io.readU4le();
         }
       }
+
+      var InfoFlags = ExtendedTimestamp.InfoFlags = (function() {
+        function InfoFlags(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        InfoFlags.prototype._read = function() {
+          this.hasModTime = this._io.readBitsIntLe(1) != 0;
+          this.hasAccessTime = this._io.readBitsIntLe(1) != 0;
+          this.hasCreateTime = this._io.readBitsIntLe(1) != 0;
+          this.reserved = this._io.readBitsIntLe(5);
+        }
+
+        return InfoFlags;
+      })();
+
+      /**
+       * Unix timestamp
+       */
+
+      /**
+       * Unix timestamp
+       */
+
+      /**
+       * Unix timestamp
+       */
 
       return ExtendedTimestamp;
     })();
 
     /**
-     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339|Source}
+     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339|Source}
      */
 
     var InfozipUnixVarSize = ExtraField.InfozipUnixVarSize = (function() {
@@ -341,8 +376,9 @@ var Zip = (function() {
       this.versionNeededToExtract = this._io.readU2le();
       this.flags = this._io.readU2le();
       this.compressionMethod = this._io.readU2le();
-      this.lastModFileTime = this._io.readU2le();
-      this.lastModFileDate = this._io.readU2le();
+      this._raw_fileModTime = this._io.readBytes(4);
+      var _io__raw_fileModTime = new KaitaiStream(this._raw_fileModTime);
+      this.fileModTime = new DosDatetime(_io__raw_fileModTime, this, null);
       this.crc32 = this._io.readU4le();
       this.lenBodyCompressed = this._io.readU4le();
       this.lenBodyUncompressed = this._io.readU4le();
@@ -437,10 +473,13 @@ var Zip = (function() {
     }
     LocalFileHeader.prototype._read = function() {
       this.version = this._io.readU2le();
-      this.flags = this._io.readU2le();
+      this._raw_flags = this._io.readBytes(2);
+      var _io__raw_flags = new KaitaiStream(this._raw_flags);
+      this.flags = new GpFlags(_io__raw_flags, this, this._root);
       this.compressionMethod = this._io.readU2le();
-      this.fileModTime = this._io.readU2le();
-      this.fileModDate = this._io.readU2le();
+      this._raw_fileModTime = this._io.readBytes(4);
+      var _io__raw_fileModTime = new KaitaiStream(this._raw_fileModTime);
+      this.fileModTime = new DosDatetime(_io__raw_fileModTime, this, null);
       this.crc32 = this._io.readU4le();
       this.lenBodyCompressed = this._io.readU4le();
       this.lenBodyUncompressed = this._io.readU4le();
@@ -451,6 +490,96 @@ var Zip = (function() {
       var _io__raw_extra = new KaitaiStream(this._raw_extra);
       this.extra = new Extras(_io__raw_extra, this, this._root);
     }
+
+    /**
+     * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|- 4.4.4}
+     * @see {@link https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html|Local file headers}
+     */
+
+    var GpFlags = LocalFileHeader.GpFlags = (function() {
+      GpFlags.DeflateMode = Object.freeze({
+        NORMAL: 0,
+        MAXIMUM: 1,
+        FAST: 2,
+        SUPER_FAST: 3,
+
+        0: "NORMAL",
+        1: "MAXIMUM",
+        2: "FAST",
+        3: "SUPER_FAST",
+      });
+
+      function GpFlags(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      GpFlags.prototype._read = function() {
+        this.fileEncrypted = this._io.readBitsIntLe(1) != 0;
+        this.compOptionsRaw = this._io.readBitsIntLe(2);
+        this.hasDataDescriptor = this._io.readBitsIntLe(1) != 0;
+        this.reserved1 = this._io.readBitsIntLe(1) != 0;
+        this.compPatchedData = this._io.readBitsIntLe(1) != 0;
+        this.strongEncrypt = this._io.readBitsIntLe(1) != 0;
+        this.reserved2 = this._io.readBitsIntLe(4);
+        this.langEncoding = this._io.readBitsIntLe(1) != 0;
+        this.reserved3 = this._io.readBitsIntLe(1) != 0;
+        this.maskHeaderValues = this._io.readBitsIntLe(1) != 0;
+        this.reserved4 = this._io.readBitsIntLe(2);
+      }
+      Object.defineProperty(GpFlags.prototype, 'deflatedMode', {
+        get: function() {
+          if (this._m_deflatedMode !== undefined)
+            return this._m_deflatedMode;
+          if ( ((this._parent.compressionMethod == Zip.Compression.DEFLATED) || (this._parent.compressionMethod == Zip.Compression.ENHANCED_DEFLATED)) ) {
+            this._m_deflatedMode = this.compOptionsRaw;
+          }
+          return this._m_deflatedMode;
+        }
+      });
+
+      /**
+       * 8KiB or 4KiB in bytes
+       */
+      Object.defineProperty(GpFlags.prototype, 'implodedDictByteSize', {
+        get: function() {
+          if (this._m_implodedDictByteSize !== undefined)
+            return this._m_implodedDictByteSize;
+          if (this._parent.compressionMethod == Zip.Compression.IMPLODED) {
+            this._m_implodedDictByteSize = (((this.compOptionsRaw & 1) != 0 ? 8 : 4) * 1024);
+          }
+          return this._m_implodedDictByteSize;
+        }
+      });
+      Object.defineProperty(GpFlags.prototype, 'implodedNumSfTrees', {
+        get: function() {
+          if (this._m_implodedNumSfTrees !== undefined)
+            return this._m_implodedNumSfTrees;
+          if (this._parent.compressionMethod == Zip.Compression.IMPLODED) {
+            this._m_implodedNumSfTrees = ((this.compOptionsRaw & 2) != 0 ? 3 : 2);
+          }
+          return this._m_implodedNumSfTrees;
+        }
+      });
+      Object.defineProperty(GpFlags.prototype, 'lzmaHasEosMarker', {
+        get: function() {
+          if (this._m_lzmaHasEosMarker !== undefined)
+            return this._m_lzmaHasEosMarker;
+          if (this._parent.compressionMethod == Zip.Compression.LZMA) {
+            this._m_lzmaHasEosMarker = (this.compOptionsRaw & 1) != 0;
+          }
+          return this._m_lzmaHasEosMarker;
+        }
+      });
+
+      /**
+       * internal; access derived value instances instead
+       */
+
+      return GpFlags;
+    })();
 
     return LocalFileHeader;
   })();

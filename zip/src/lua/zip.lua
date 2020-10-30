@@ -7,7 +7,9 @@ require("kaitaistruct")
 local enum = require("enum")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
+local utils = require("utils")
 
+require("dos_datetime")
 -- 
 -- ZIP is a popular archive file format, introduced in 1989 by Phil Katz
 -- and originally implemented in PKZIP utility by PKWARE.
@@ -20,6 +22,7 @@ local str_decode = require("string_decode")
 -- For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
 -- are actually ZIP archives.
 -- See also: Source (https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
+-- See also: Source (https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html)
 Zip = class.class(KaitaiStruct)
 
 Zip.Compression = enum.Enum {
@@ -143,7 +146,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191)
+-- See also: Source (https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191)
 Zip.ExtraField.Ntfs = class.class(KaitaiStruct)
 
 function Zip.ExtraField.Ntfs:_init(io, parent, root)
@@ -204,7 +207,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817)
+-- See also: Source (https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817)
 Zip.ExtraField.ExtendedTimestamp = class.class(KaitaiStruct)
 
 function Zip.ExtraField.ExtendedTimestamp:_init(io, parent, root)
@@ -215,19 +218,46 @@ function Zip.ExtraField.ExtendedTimestamp:_init(io, parent, root)
 end
 
 function Zip.ExtraField.ExtendedTimestamp:_read()
-  self.flags = self._io:read_u1()
-  self.mod_time = self._io:read_u4le()
-  if not(self._io:is_eof()) then
+  self._raw_flags = self._io:read_bytes(1)
+  local _io = KaitaiStream(stringstream(self._raw_flags))
+  self.flags = Zip.ExtraField.ExtendedTimestamp.InfoFlags(_io, self, self._root)
+  if self.flags.has_mod_time then
+    self.mod_time = self._io:read_u4le()
+  end
+  if self.flags.has_access_time then
     self.access_time = self._io:read_u4le()
   end
-  if not(self._io:is_eof()) then
+  if self.flags.has_create_time then
     self.create_time = self._io:read_u4le()
   end
 end
 
+-- 
+-- Unix timestamp.
+-- 
+-- Unix timestamp.
+-- 
+-- Unix timestamp.
+
+Zip.ExtraField.ExtendedTimestamp.InfoFlags = class.class(KaitaiStruct)
+
+function Zip.ExtraField.ExtendedTimestamp.InfoFlags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Zip.ExtraField.ExtendedTimestamp.InfoFlags:_read()
+  self.has_mod_time = self._io:read_bits_int_le(1)
+  self.has_access_time = self._io:read_bits_int_le(1)
+  self.has_create_time = self._io:read_bits_int_le(1)
+  self.reserved = self._io:read_bits_int_le(5)
+end
+
 
 -- 
--- See also: Source (https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339)
+-- See also: Source (https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339)
 Zip.ExtraField.InfozipUnixVarSize = class.class(KaitaiStruct)
 
 function Zip.ExtraField.InfozipUnixVarSize:_init(io, parent, root)
@@ -272,8 +302,9 @@ function Zip.CentralDirEntry:_read()
   self.version_needed_to_extract = self._io:read_u2le()
   self.flags = self._io:read_u2le()
   self.compression_method = Zip.Compression(self._io:read_u2le())
-  self.last_mod_file_time = self._io:read_u2le()
-  self.last_mod_file_date = self._io:read_u2le()
+  self._raw_file_mod_time = self._io:read_bytes(4)
+  local _io = KaitaiStream(stringstream(self._raw_file_mod_time))
+  self.file_mod_time = DosDatetime(_io)
   self.crc32 = self._io:read_u4le()
   self.len_body_compressed = self._io:read_u4le()
   self.len_body_uncompressed = self._io:read_u4le()
@@ -363,10 +394,13 @@ end
 
 function Zip.LocalFileHeader:_read()
   self.version = self._io:read_u2le()
-  self.flags = self._io:read_u2le()
+  self._raw_flags = self._io:read_bytes(2)
+  local _io = KaitaiStream(stringstream(self._raw_flags))
+  self.flags = Zip.LocalFileHeader.GpFlags(_io, self, self._root)
   self.compression_method = Zip.Compression(self._io:read_u2le())
-  self.file_mod_time = self._io:read_u2le()
-  self.file_mod_date = self._io:read_u2le()
+  self._raw_file_mod_time = self._io:read_bytes(4)
+  local _io = KaitaiStream(stringstream(self._raw_file_mod_time))
+  self.file_mod_time = DosDatetime(_io)
   self.crc32 = self._io:read_u4le()
   self.len_body_compressed = self._io:read_u4le()
   self.len_body_uncompressed = self._io:read_u4le()
@@ -378,6 +412,92 @@ function Zip.LocalFileHeader:_read()
   self.extra = Zip.Extras(_io, self, self._root)
 end
 
+
+-- 
+-- See also: - 4.4.4 (https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
+-- See also: Local file headers (https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html)
+Zip.LocalFileHeader.GpFlags = class.class(KaitaiStruct)
+
+Zip.LocalFileHeader.GpFlags.DeflateMode = enum.Enum {
+  normal = 0,
+  maximum = 1,
+  fast = 2,
+  super_fast = 3,
+}
+
+function Zip.LocalFileHeader.GpFlags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Zip.LocalFileHeader.GpFlags:_read()
+  self.file_encrypted = self._io:read_bits_int_le(1)
+  self.comp_options_raw = self._io:read_bits_int_le(2)
+  self.has_data_descriptor = self._io:read_bits_int_le(1)
+  self.reserved_1 = self._io:read_bits_int_le(1)
+  self.comp_patched_data = self._io:read_bits_int_le(1)
+  self.strong_encrypt = self._io:read_bits_int_le(1)
+  self.reserved_2 = self._io:read_bits_int_le(4)
+  self.lang_encoding = self._io:read_bits_int_le(1)
+  self.reserved_3 = self._io:read_bits_int_le(1)
+  self.mask_header_values = self._io:read_bits_int_le(1)
+  self.reserved_4 = self._io:read_bits_int_le(2)
+end
+
+Zip.LocalFileHeader.GpFlags.property.deflated_mode = {}
+function Zip.LocalFileHeader.GpFlags.property.deflated_mode:get()
+  if self._m_deflated_mode ~= nil then
+    return self._m_deflated_mode
+  end
+
+  if  ((self._parent.compression_method == Zip.Compression.deflated) or (self._parent.compression_method == Zip.Compression.enhanced_deflated))  then
+    self._m_deflated_mode = Zip.LocalFileHeader.GpFlags.DeflateMode(self.comp_options_raw)
+  end
+  return self._m_deflated_mode
+end
+
+-- 
+-- 8KiB or 4KiB in bytes.
+Zip.LocalFileHeader.GpFlags.property.imploded_dict_byte_size = {}
+function Zip.LocalFileHeader.GpFlags.property.imploded_dict_byte_size:get()
+  if self._m_imploded_dict_byte_size ~= nil then
+    return self._m_imploded_dict_byte_size
+  end
+
+  if self._parent.compression_method == Zip.Compression.imploded then
+    self._m_imploded_dict_byte_size = (utils.box_unwrap(((self.comp_options_raw & 1) ~= 0) and utils.box_wrap(8) or (4)) * 1024)
+  end
+  return self._m_imploded_dict_byte_size
+end
+
+Zip.LocalFileHeader.GpFlags.property.imploded_num_sf_trees = {}
+function Zip.LocalFileHeader.GpFlags.property.imploded_num_sf_trees:get()
+  if self._m_imploded_num_sf_trees ~= nil then
+    return self._m_imploded_num_sf_trees
+  end
+
+  if self._parent.compression_method == Zip.Compression.imploded then
+    self._m_imploded_num_sf_trees = utils.box_unwrap(((self.comp_options_raw & 2) ~= 0) and utils.box_wrap(3) or (2))
+  end
+  return self._m_imploded_num_sf_trees
+end
+
+Zip.LocalFileHeader.GpFlags.property.lzma_has_eos_marker = {}
+function Zip.LocalFileHeader.GpFlags.property.lzma_has_eos_marker:get()
+  if self._m_lzma_has_eos_marker ~= nil then
+    return self._m_lzma_has_eos_marker
+  end
+
+  if self._parent.compression_method == Zip.Compression.lzma then
+    self._m_lzma_has_eos_marker = (self.comp_options_raw & 1) ~= 0
+  end
+  return self._m_lzma_has_eos_marker
+end
+
+-- 
+-- internal; access derived value instances instead.
 
 Zip.EndOfCentralDir = class.class(KaitaiStruct)
 

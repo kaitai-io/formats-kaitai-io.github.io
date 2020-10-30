@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx">Source</a>
+    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
     /// </remarks>
     public partial class MicrosoftPe : KaitaiStruct
     {

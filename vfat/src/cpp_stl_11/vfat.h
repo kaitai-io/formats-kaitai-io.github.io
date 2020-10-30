@@ -5,11 +5,17 @@
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include "dos_datetime.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
+class dos_datetime_t;
+
+/**
+ * \sa https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc Source
+ */
 
 class vfat_t : public kaitai::kstruct {
 
@@ -393,6 +399,7 @@ public:
     class root_directory_rec_t : public kaitai::kstruct {
 
     public:
+        class attr_flags_t;
 
         root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent = nullptr, vfat_t* p__root = nullptr);
 
@@ -403,27 +410,76 @@ public:
     public:
         ~root_directory_rec_t();
 
+        class attr_flags_t : public kaitai::kstruct {
+
+        public:
+
+            attr_flags_t(kaitai::kstream* p__io, vfat_t::root_directory_rec_t* p__parent = nullptr, vfat_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~attr_flags_t();
+
+        private:
+            bool f_long_name;
+            bool m_long_name;
+
+        public:
+            bool long_name();
+
+        private:
+            bool m_read_only;
+            bool m_hidden;
+            bool m_system;
+            bool m_volume_id;
+            bool m_is_directory;
+            bool m_archive;
+            uint64_t m_reserved;
+            vfat_t* m__root;
+            vfat_t::root_directory_rec_t* m__parent;
+
+        public:
+            bool read_only() const { return m_read_only; }
+            bool hidden() const { return m_hidden; }
+            bool system() const { return m_system; }
+            bool volume_id() const { return m_volume_id; }
+            bool is_directory() const { return m_is_directory; }
+            bool archive() const { return m_archive; }
+            uint64_t reserved() const { return m_reserved; }
+            vfat_t* _root() const { return m__root; }
+            vfat_t::root_directory_rec_t* _parent() const { return m__parent; }
+        };
+
     private:
         std::string m_file_name;
-        uint8_t m_attribute;
+        std::unique_ptr<attr_flags_t> m_attrs;
         std::string m_reserved;
-        uint16_t m_time;
-        uint16_t m_date;
+        std::unique_ptr<dos_datetime_t> m_last_write_time;
         uint16_t m_start_clus;
         uint32_t m_file_size;
         vfat_t* m__root;
         vfat_t::root_directory_t* m__parent;
+        std::string m__raw_attrs;
+        std::unique_ptr<kaitai::kstream> m__io__raw_attrs;
+        std::string m__raw_last_write_time;
+        std::unique_ptr<kaitai::kstream> m__io__raw_last_write_time;
 
     public:
         std::string file_name() const { return m_file_name; }
-        uint8_t attribute() const { return m_attribute; }
+        attr_flags_t* attrs() const { return m_attrs.get(); }
         std::string reserved() const { return m_reserved; }
-        uint16_t time() const { return m_time; }
-        uint16_t date() const { return m_date; }
+        dos_datetime_t* last_write_time() const { return m_last_write_time.get(); }
         uint16_t start_clus() const { return m_start_clus; }
         uint32_t file_size() const { return m_file_size; }
         vfat_t* _root() const { return m__root; }
         vfat_t::root_directory_t* _parent() const { return m__parent; }
+        std::string _raw_attrs() const { return m__raw_attrs; }
+        kaitai::kstream* _io__raw_attrs() const { return m__io__raw_attrs.get(); }
+        std::string _raw_last_write_time() const { return m__raw_last_write_time; }
+        kaitai::kstream* _io__raw_last_write_time() const { return m__io__raw_last_write_time.get(); }
     };
 
     class root_directory_t : public kaitai::kstruct {

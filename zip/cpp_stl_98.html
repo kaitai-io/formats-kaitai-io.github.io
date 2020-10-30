@@ -135,6 +135,10 @@ are actually ZIP archives.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -347,11 +351,13 @@ are actually ZIP archives.</p>
 
 <span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;dos_datetime.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
 <span class="cp">#endif</span>
+<span class="k">class</span> <span class="nc">dos_datetime_t</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * ZIP is a popular archive file format, introduced in 1989 by Phil Katz</span>
@@ -365,6 +371,7 @@ are actually ZIP archives.</p>
 <span class="cm"> * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
 <span class="cm"> * are actually ZIP archives.</span>
 <span class="cm"> * \sa https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT Source</span>
+<span class="cm"> * \sa https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Source</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span> <span class="nc">zip_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -500,7 +507,7 @@ are actually ZIP archives.</p>
         <span class="o">~</span><span class="n">extra_field_t</span><span class="p">();</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191 Source</span>
+<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191 Source</span>
 <span class="cm">         */</span>
 
         <span class="k">class</span> <span class="nc">ntfs_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -598,12 +605,13 @@ are actually ZIP archives.</p>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817 Source</span>
+<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817 Source</span>
 <span class="cm">         */</span>
 
         <span class="k">class</span> <span class="nc">extended_timestamp_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
         <span class="k">public</span><span class="o">:</span>
+            <span class="k">class</span> <span class="nc">info_flags_t</span><span class="p">;</span>
 
             <span class="n">extended_timestamp_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
@@ -614,9 +622,45 @@ are actually ZIP archives.</p>
         <span class="k">public</span><span class="o">:</span>
             <span class="o">~</span><span class="n">extended_timestamp_t</span><span class="p">();</span>
 
+            <span class="k">class</span> <span class="nc">info_flags_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+            <span class="k">public</span><span class="o">:</span>
+
+                <span class="n">info_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+            <span class="k">private</span><span class="o">:</span>
+                <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+                <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+            <span class="k">public</span><span class="o">:</span>
+                <span class="o">~</span><span class="n">info_flags_t</span><span class="p">();</span>
+
+            <span class="k">private</span><span class="o">:</span>
+                <span class="kt">bool</span> <span class="n">m_has_mod_time</span><span class="p">;</span>
+                <span class="kt">bool</span> <span class="n">m_has_access_time</span><span class="p">;</span>
+                <span class="kt">bool</span> <span class="n">m_has_create_time</span><span class="p">;</span>
+                <span class="kt">uint64_t</span> <span class="n">m_reserved</span><span class="p">;</span>
+                <span class="n">zip_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+                <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+            <span class="k">public</span><span class="o">:</span>
+                <span class="kt">bool</span> <span class="n">has_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_has_mod_time</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kt">bool</span> <span class="n">has_access_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_has_access_time</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kt">bool</span> <span class="n">has_create_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_has_create_time</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kt">uint64_t</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+                <span class="n">zip_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+                <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="p">};</span>
+
         <span class="k">private</span><span class="o">:</span>
-            <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+            <span class="n">info_flags_t</span><span class="o">*</span> <span class="n">m_flags</span><span class="p">;</span>
             <span class="kt">uint32_t</span> <span class="n">m_mod_time</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_mod_time</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_mod_time</span><span class="p">()</span> <span class="p">{</span> <span class="n">mod_time</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_mod_time</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
             <span class="kt">uint32_t</span> <span class="n">m_access_time</span><span class="p">;</span>
             <span class="kt">bool</span> <span class="n">n_access_time</span><span class="p">;</span>
 
@@ -633,18 +677,34 @@ are actually ZIP archives.</p>
         <span class="k">private</span><span class="o">:</span>
             <span class="n">zip_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
             <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_flags</span><span class="p">;</span>
+            <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_flags</span><span class="p">;</span>
 
         <span class="k">public</span><span class="o">:</span>
-            <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">info_flags_t</span><span class="o">*</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
             <span class="kt">uint32_t</span> <span class="n">mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mod_time</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
             <span class="kt">uint32_t</span> <span class="n">access_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_access_time</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
             <span class="kt">uint32_t</span> <span class="n">create_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_create_time</span><span class="p">;</span> <span class="p">}</span>
             <span class="n">zip_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
             <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_flags</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339 Source</span>
+<span class="cm">         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339 Source</span>
 <span class="cm">         */</span>
 
         <span class="k">class</span> <span class="nc">infozip_unix_var_size_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -753,8 +813,7 @@ are actually ZIP archives.</p>
         <span class="kt">uint16_t</span> <span class="n">m_version_needed_to_extract</span><span class="p">;</span>
         <span class="kt">uint16_t</span> <span class="n">m_flags</span><span class="p">;</span>
         <span class="n">compression_t</span> <span class="n">m_compression_method</span><span class="p">;</span>
-        <span class="kt">uint16_t</span> <span class="n">m_last_mod_file_time</span><span class="p">;</span>
-        <span class="kt">uint16_t</span> <span class="n">m_last_mod_file_date</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m_file_mod_time</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_crc32</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_len_body_compressed</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_len_body_uncompressed</span><span class="p">;</span>
@@ -770,6 +829,8 @@ are actually ZIP archives.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_comment</span><span class="p">;</span>
         <span class="n">zip_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
         <span class="n">zip_t</span><span class="o">::</span><span class="n">pk_section_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_file_mod_time</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_extra</span><span class="p">;</span>
         <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_extra</span><span class="p">;</span>
 
@@ -778,8 +839,7 @@ are actually ZIP archives.</p>
         <span class="kt">uint16_t</span> <span class="n">version_needed_to_extract</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_needed_to_extract</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint16_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">compression_t</span> <span class="n">compression_method</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_compression_method</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint16_t</span> <span class="n">last_mod_file_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_last_mod_file_time</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint16_t</span> <span class="n">last_mod_file_date</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_last_mod_file_date</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">crc32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_crc32</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">len_body_compressed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_body_compressed</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">len_body_uncompressed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_body_uncompressed</span><span class="p">;</span> <span class="p">}</span>
@@ -795,6 +855,8 @@ are actually ZIP archives.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">comment</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_comment</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">zip_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">zip_t</span><span class="o">::</span><span class="n">pk_section_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_extra</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_extra</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_extra</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_extra</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">};</span>
@@ -860,6 +922,7 @@ are actually ZIP archives.</p>
     <span class="k">class</span> <span class="nc">local_file_header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
     <span class="k">public</span><span class="o">:</span>
+        <span class="k">class</span> <span class="nc">gp_flags_t</span><span class="p">;</span>
 
         <span class="n">local_file_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
@@ -870,12 +933,127 @@ are actually ZIP archives.</p>
     <span class="k">public</span><span class="o">:</span>
         <span class="o">~</span><span class="n">local_file_header_t</span><span class="p">();</span>
 
+        <span class="cm">/**</span>
+<span class="cm">         * \sa https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.4.4</span>
+<span class="cm">         * \sa https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Local file headers</span>
+<span class="cm">         */</span>
+
+        <span class="k">class</span> <span class="nc">gp_flags_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="k">enum</span> <span class="n">deflate_mode_t</span> <span class="p">{</span>
+                <span class="n">DEFLATE_MODE_NORMAL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="n">DEFLATE_MODE_MAXIMUM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">DEFLATE_MODE_FAST</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">DEFLATE_MODE_SUPER_FAST</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="p">};</span>
+
+            <span class="n">gp_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+            <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="o">~</span><span class="n">gp_flags_t</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_deflated_mode</span><span class="p">;</span>
+            <span class="n">deflate_mode_t</span> <span class="n">m_deflated_mode</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_deflated_mode</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_deflated_mode</span><span class="p">()</span> <span class="p">{</span> <span class="n">deflated_mode</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_deflated_mode</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">deflate_mode_t</span> <span class="n">deflated_mode</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_imploded_dict_byte_size</span><span class="p">;</span>
+            <span class="kt">int32_t</span> <span class="n">m_imploded_dict_byte_size</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_imploded_dict_byte_size</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_imploded_dict_byte_size</span><span class="p">()</span> <span class="p">{</span> <span class="n">imploded_dict_byte_size</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_imploded_dict_byte_size</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * 8KiB or 4KiB in bytes</span>
+<span class="cm">             */</span>
+            <span class="kt">int32_t</span> <span class="n">imploded_dict_byte_size</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_imploded_num_sf_trees</span><span class="p">;</span>
+            <span class="kt">int8_t</span> <span class="n">m_imploded_num_sf_trees</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_imploded_num_sf_trees</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_imploded_num_sf_trees</span><span class="p">()</span> <span class="p">{</span> <span class="n">imploded_num_sf_trees</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_imploded_num_sf_trees</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">int8_t</span> <span class="n">imploded_num_sf_trees</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_lzma_has_eos_marker</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_lzma_has_eos_marker</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_lzma_has_eos_marker</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_lzma_has_eos_marker</span><span class="p">()</span> <span class="p">{</span> <span class="n">lzma_has_eos_marker</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_lzma_has_eos_marker</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">lzma_has_eos_marker</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">m_file_encrypted</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_comp_options_raw</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_has_data_descriptor</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_reserved_1</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_comp_patched_data</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_strong_encrypt</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_reserved_2</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_lang_encoding</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_reserved_3</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_mask_header_values</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_reserved_4</span><span class="p">;</span>
+            <span class="n">zip_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+            <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">file_encrypted</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_encrypted</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * internal; access derived value instances instead</span>
+<span class="cm">             */</span>
+            <span class="kt">uint64_t</span> <span class="n">comp_options_raw</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_comp_options_raw</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">has_data_descriptor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_has_data_descriptor</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">reserved_1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved_1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">comp_patched_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_comp_patched_data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">strong_encrypt</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_strong_encrypt</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint64_t</span> <span class="n">reserved_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved_2</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">lang_encoding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lang_encoding</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">reserved_3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved_3</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">bool</span> <span class="n">mask_header_values</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mask_header_values</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint64_t</span> <span class="n">reserved_4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved_4</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">zip_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
+
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">uint16_t</span> <span class="n">m_version</span><span class="p">;</span>
-        <span class="kt">uint16_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="n">gp_flags_t</span><span class="o">*</span> <span class="n">m_flags</span><span class="p">;</span>
         <span class="n">compression_t</span> <span class="n">m_compression_method</span><span class="p">;</span>
-        <span class="kt">uint16_t</span> <span class="n">m_file_mod_time</span><span class="p">;</span>
-        <span class="kt">uint16_t</span> <span class="n">m_file_mod_date</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m_file_mod_time</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_crc32</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_len_body_compressed</span><span class="p">;</span>
         <span class="kt">uint32_t</span> <span class="n">m_len_body_uncompressed</span><span class="p">;</span>
@@ -885,15 +1063,18 @@ are actually ZIP archives.</p>
         <span class="n">extras_t</span><span class="o">*</span> <span class="n">m_extra</span><span class="p">;</span>
         <span class="n">zip_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
         <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_flags</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_flags</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_file_mod_time</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_extra</span><span class="p">;</span>
         <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_extra</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="kt">uint16_t</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint16_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gp_flags_t</span><span class="o">*</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">compression_t</span> <span class="n">compression_method</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_compression_method</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint16_t</span> <span class="n">file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint16_t</span> <span class="n">file_mod_date</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_mod_date</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">crc32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_crc32</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">len_body_compressed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_body_compressed</span><span class="p">;</span> <span class="p">}</span>
         <span class="kt">uint32_t</span> <span class="n">len_body_uncompressed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_body_uncompressed</span><span class="p">;</span> <span class="p">}</span>
@@ -903,6 +1084,10 @@ are actually ZIP archives.</p>
         <span class="n">extras_t</span><span class="o">*</span> <span class="n">extra</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_extra</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">zip_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_file_mod_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_extra</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_extra</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_extra</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_extra</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">};</span>
@@ -1242,6 +1427,8 @@ are actually ZIP archives.</p>
 <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="k">try</span> <span class="p">{</span>
         <span class="n">_read</span><span class="p">();</span>
@@ -1252,15 +1439,21 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m__raw_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_flags</span><span class="p">);</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">info_flags_t</span><span class="p">(</span><span class="n">m__io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">n_mod_time</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_mod_time</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_mod_time</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="p">}</span>
     <span class="n">n_access_time</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_access_time</span><span class="p">())</span> <span class="p">{</span>
         <span class="n">n_access_time</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">m_access_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="n">n_create_time</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_create_time</span><span class="p">())</span> <span class="p">{</span>
         <span class="n">n_create_time</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">m_create_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="p">}</span>
@@ -1271,10 +1464,44 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_flags</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_flags</span><span class="p">;</span> <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_flags</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_flags</span><span class="p">;</span> <span class="n">m_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_mod_time</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_access_time</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_create_time</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">info_flags_t</span><span class="o">::</span><span class="n">info_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">info_flags_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_has_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_has_access_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_has_create_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">info_flags_t</span><span class="o">::~</span><span class="n">info_flags_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">extended_timestamp_t</span><span class="o">::</span><span class="n">info_flags_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">::</span><span class="n">infozip_unix_var_size_t</span><span class="o">::</span><span class="n">infozip_unix_var_size_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">extra_field_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
@@ -1307,6 +1534,8 @@ are actually ZIP archives.</p>
 <span class="n">zip_t</span><span class="o">::</span><span class="n">central_dir_entry_t</span><span class="o">::</span><span class="n">central_dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">pk_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m__io__raw_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m_local_header</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -1325,8 +1554,9 @@ are actually ZIP archives.</p>
     <span class="n">m_version_needed_to_extract</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
     <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
     <span class="n">m_compression_method</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">zip_t</span><span class="o">::</span><span class="n">compression_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
-    <span class="n">m_last_mod_file_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-    <span class="n">m_last_mod_file_date</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m__raw_file_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_file_mod_time</span><span class="p">);</span>
+    <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dos_datetime_t</span><span class="p">(</span><span class="n">m__io__raw_file_mod_time</span><span class="p">);</span>
     <span class="n">m_crc32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="n">m_len_body_compressed</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="n">m_len_body_uncompressed</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
@@ -1349,6 +1579,12 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">central_dir_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_file_mod_time</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span> <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_file_mod_time</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_file_mod_time</span><span class="p">;</span> <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_extra</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">delete</span> <span class="n">m__io__raw_extra</span><span class="p">;</span> <span class="n">m__io__raw_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
@@ -1468,6 +1704,10 @@ are actually ZIP archives.</p>
 <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m__io__raw_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
@@ -1481,10 +1721,13 @@ are actually ZIP archives.</p>
 
 <span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">m_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m__raw_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_flags</span><span class="p">);</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">gp_flags_t</span><span class="p">(</span><span class="n">m__io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
     <span class="n">m_compression_method</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">zip_t</span><span class="o">::</span><span class="n">compression_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
-    <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-    <span class="n">m_file_mod_date</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m__raw_file_mod_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_file_mod_time</span><span class="p">);</span>
+    <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dos_datetime_t</span><span class="p">(</span><span class="n">m__io__raw_file_mod_time</span><span class="p">);</span>
     <span class="n">m_crc32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="n">m_len_body_compressed</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="n">m_len_body_uncompressed</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
@@ -1501,12 +1744,109 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_flags</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_flags</span><span class="p">;</span> <span class="n">m__io__raw_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_flags</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_flags</span><span class="p">;</span> <span class="n">m_flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_file_mod_time</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_file_mod_time</span><span class="p">;</span> <span class="n">m__io__raw_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_file_mod_time</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_file_mod_time</span><span class="p">;</span> <span class="n">m_file_mod_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_extra</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">delete</span> <span class="n">m__io__raw_extra</span><span class="p">;</span> <span class="n">m__io__raw_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m_extra</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">delete</span> <span class="n">m_extra</span><span class="p">;</span> <span class="n">m_extra</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_deflated_mode</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_imploded_dict_byte_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_imploded_num_sf_trees</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_lzma_has_eos_marker</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_file_encrypted</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_comp_options_raw</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">m_has_data_descriptor</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved_1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_comp_patched_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_strong_encrypt</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved_2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m_lang_encoding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved_3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_mask_header_values</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved_4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::~</span><span class="n">gp_flags_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">deflate_mode_t</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">deflated_mode</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_deflated_mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_deflated_mode</span><span class="p">;</span>
+    <span class="n">n_deflated_mode</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">compression_method</span><span class="p">()</span> <span class="o">==</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">COMPRESSION_DEFLATED</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">compression_method</span><span class="p">()</span> <span class="o">==</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">COMPRESSION_ENHANCED_DEFLATED</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_deflated_mode</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_deflated_mode</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">deflate_mode_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">comp_options_raw</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">f_deflated_mode</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_deflated_mode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">imploded_dict_byte_size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_imploded_dict_byte_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_imploded_dict_byte_size</span><span class="p">;</span>
+    <span class="n">n_imploded_dict_byte_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">compression_method</span><span class="p">()</span> <span class="o">==</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">COMPRESSION_IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_imploded_dict_byte_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_imploded_dict_byte_size</span> <span class="o">=</span> <span class="p">((((</span><span class="n">comp_options_raw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_imploded_dict_byte_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_imploded_dict_byte_size</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int8_t</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">imploded_num_sf_trees</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_imploded_num_sf_trees</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_imploded_num_sf_trees</span><span class="p">;</span>
+    <span class="n">n_imploded_num_sf_trees</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">compression_method</span><span class="p">()</span> <span class="o">==</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">COMPRESSION_IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_imploded_num_sf_trees</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_imploded_num_sf_trees</span> <span class="o">=</span> <span class="p">(((</span><span class="n">comp_options_raw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">f_imploded_num_sf_trees</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_imploded_num_sf_trees</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">local_file_header_t</span><span class="o">::</span><span class="n">gp_flags_t</span><span class="o">::</span><span class="n">lzma_has_eos_marker</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_lzma_has_eos_marker</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_lzma_has_eos_marker</span><span class="p">;</span>
+    <span class="n">n_lzma_has_eos_marker</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">compression_method</span><span class="p">()</span> <span class="o">==</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">COMPRESSION_LZMA</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_lzma_has_eos_marker</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_lzma_has_eos_marker</span> <span class="o">=</span> <span class="p">(</span><span class="n">comp_options_raw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">f_lzma_has_eos_marker</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_lzma_has_eos_marker</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">zip_t</span><span class="o">::</span><span class="n">end_of_central_dir_t</span><span class="o">::</span><span class="n">end_of_central_dir_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">::</span><span class="n">pk_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zip_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>

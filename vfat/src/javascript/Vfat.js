@@ -2,13 +2,17 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Vfat = factory(root.KaitaiStream);
+    root.Vfat = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, DosDatetime) {
+/**
+ * @see {@link https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc|Source}
+ */
+
 var Vfat = (function() {
   function Vfat(_io, _parent, _root) {
     this._io = _io;
@@ -35,9 +39,9 @@ var Vfat = (function() {
     }
     ExtBiosParamBlockFat32.prototype._read = function() {
       this.lsPerFat = this._io.readU4le();
-      this.hasActiveFat = this._io.readBitsIntBe(1) != 0;
-      this.reserved1 = this._io.readBitsIntBe(3);
-      this.activeFatId = this._io.readBitsIntBe(4);
+      this.hasActiveFat = this._io.readBitsIntLe(1) != 0;
+      this.reserved1 = this._io.readBitsIntLe(3);
+      this.activeFatId = this._io.readBitsIntLe(4);
       this._io.alignToByte();
       this.reserved2 = this._io.readBytes(1);
       if (!((KaitaiStream.byteArrayCompare(this.reserved2, [0]) == 0))) {
@@ -337,13 +341,45 @@ var Vfat = (function() {
     }
     RootDirectoryRec.prototype._read = function() {
       this.fileName = this._io.readBytes(11);
-      this.attribute = this._io.readU1();
+      this._raw_attrs = this._io.readBytes(1);
+      var _io__raw_attrs = new KaitaiStream(this._raw_attrs);
+      this.attrs = new AttrFlags(_io__raw_attrs, this, this._root);
       this.reserved = this._io.readBytes(10);
-      this.time = this._io.readU2le();
-      this.date = this._io.readU2le();
+      this._raw_lastWriteTime = this._io.readBytes(4);
+      var _io__raw_lastWriteTime = new KaitaiStream(this._raw_lastWriteTime);
+      this.lastWriteTime = new DosDatetime(_io__raw_lastWriteTime, this, null);
       this.startClus = this._io.readU2le();
       this.fileSize = this._io.readU4le();
     }
+
+    var AttrFlags = RootDirectoryRec.AttrFlags = (function() {
+      function AttrFlags(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      AttrFlags.prototype._read = function() {
+        this.readOnly = this._io.readBitsIntLe(1) != 0;
+        this.hidden = this._io.readBitsIntLe(1) != 0;
+        this.system = this._io.readBitsIntLe(1) != 0;
+        this.volumeId = this._io.readBitsIntLe(1) != 0;
+        this.isDirectory = this._io.readBitsIntLe(1) != 0;
+        this.archive = this._io.readBitsIntLe(1) != 0;
+        this.reserved = this._io.readBitsIntLe(2);
+      }
+      Object.defineProperty(AttrFlags.prototype, 'longName', {
+        get: function() {
+          if (this._m_longName !== undefined)
+            return this._m_longName;
+          this._m_longName =  ((this.readOnly) && (this.hidden) && (this.system) && (this.volumeId)) ;
+          return this._m_longName;
+        }
+      });
+
+      return AttrFlags;
+    })();
 
     return RootDirectoryRec;
   })();

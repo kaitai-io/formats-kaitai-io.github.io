@@ -9,6 +9,7 @@ from enum import Enum
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
+import dos_datetime
 class Rar(KaitaiStruct):
     """RAR is a archive format used by popular proprietary RAR archiver,
     created by Eugene Roshal. There are two major versions of format
@@ -20,7 +21,7 @@ class Rar(KaitaiStruct):
     how to process a certain block type.
     
     .. seealso::
-        - http://acritum.com/winrar/rar-format
+       Source - http://acritum.com/winrar/rar-format
     """
 
     class BlockTypes(Enum):
@@ -69,7 +70,15 @@ class Rar(KaitaiStruct):
             i += 1
 
 
-    class BlockV5(KaitaiStruct):
+    class MagicSignature(KaitaiStruct):
+        """RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+        8-byte magic (and pretty different block format) for v5+. This
+        type would parse and validate both versions of signature. Note
+        that actually this signature is a valid RAR "block": in theory,
+        one can omit signature reading at all, and read this normally,
+        as a block, if exact RAR version is known (and thus it's
+        possible to choose correct block format).
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -77,7 +86,15 @@ class Rar(KaitaiStruct):
             self._read()
 
         def _read(self):
-            pass
+            self.magic1 = self._io.read_bytes(6)
+            if not self.magic1 == b"\x52\x61\x72\x21\x1A\x07":
+                raise kaitaistruct.ValidationNotEqualError(b"\x52\x61\x72\x21\x1A\x07", self.magic1, self._io, u"/types/magic_signature/seq/0")
+            self.version = self._io.read_u1()
+            if self.version == 1:
+                self.magic3 = self._io.read_bytes(1)
+                if not self.magic3 == b"\x00":
+                    raise kaitaistruct.ValidationNotEqualError(b"\x00", self.magic3, self._io, u"/types/magic_signature/seq/2")
+
 
 
     class Block(KaitaiStruct):
@@ -147,7 +164,9 @@ class Rar(KaitaiStruct):
             self.low_unp_size = self._io.read_u4le()
             self.host_os = KaitaiStream.resolve_enum(Rar.Oses, self._io.read_u1())
             self.file_crc32 = self._io.read_u4le()
-            self.file_time = Rar.DosTime(self._io, self, self._root)
+            self._raw_file_time = self._io.read_bytes(4)
+            _io__raw_file_time = KaitaiStream(BytesIO(self._raw_file_time))
+            self.file_time = dos_datetime.DosDatetime(_io__raw_file_time)
             self.rar_version = self._io.read_u1()
             self.method = KaitaiStream.resolve_enum(Rar.Methods, self._io.read_u1())
             self.name_size = self._io.read_u2le()
@@ -161,15 +180,7 @@ class Rar(KaitaiStruct):
 
 
 
-    class MagicSignature(KaitaiStruct):
-        """RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-        8-byte magic (and pretty different block format) for v5+. This
-        type would parse and validate both versions of signature. Note
-        that actually this signature is a valid RAR "block": in theory,
-        one can omit signature reading at all, and read this normally,
-        as a block, if exact RAR version is known (and thus it's
-        possible to choose correct block format).
-        """
+    class BlockV5(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -177,75 +188,7 @@ class Rar(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.read_bytes(6)
-            if not self.magic1 == b"\x52\x61\x72\x21\x1A\x07":
-                raise kaitaistruct.ValidationNotEqualError(b"\x52\x61\x72\x21\x1A\x07", self.magic1, self._io, u"/types/magic_signature/seq/0")
-            self.version = self._io.read_u1()
-            if self.version == 1:
-                self.magic3 = self._io.read_bytes(1)
-                if not self.magic3 == b"\x00":
-                    raise kaitaistruct.ValidationNotEqualError(b"\x00", self.magic3, self._io, u"/types/magic_signature/seq/2")
-
-
-
-    class DosTime(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.time = self._io.read_u2le()
-            self.date = self._io.read_u2le()
-
-        @property
-        def month(self):
-            if hasattr(self, '_m_month'):
-                return self._m_month if hasattr(self, '_m_month') else None
-
-            self._m_month = ((self.date & 480) >> 5)
-            return self._m_month if hasattr(self, '_m_month') else None
-
-        @property
-        def seconds(self):
-            if hasattr(self, '_m_seconds'):
-                return self._m_seconds if hasattr(self, '_m_seconds') else None
-
-            self._m_seconds = ((self.time & 31) * 2)
-            return self._m_seconds if hasattr(self, '_m_seconds') else None
-
-        @property
-        def year(self):
-            if hasattr(self, '_m_year'):
-                return self._m_year if hasattr(self, '_m_year') else None
-
-            self._m_year = (((self.date & 65024) >> 9) + 1980)
-            return self._m_year if hasattr(self, '_m_year') else None
-
-        @property
-        def minutes(self):
-            if hasattr(self, '_m_minutes'):
-                return self._m_minutes if hasattr(self, '_m_minutes') else None
-
-            self._m_minutes = ((self.time & 2016) >> 5)
-            return self._m_minutes if hasattr(self, '_m_minutes') else None
-
-        @property
-        def day(self):
-            if hasattr(self, '_m_day'):
-                return self._m_day if hasattr(self, '_m_day') else None
-
-            self._m_day = (self.date & 31)
-            return self._m_day if hasattr(self, '_m_day') else None
-
-        @property
-        def hours(self):
-            if hasattr(self, '_m_hours'):
-                return self._m_hours if hasattr(self, '_m_hours') else None
-
-            self._m_hours = ((self.time & 63488) >> 11)
-            return self._m_hours if hasattr(self, '_m_hours') else None
+            pass
 
 
 

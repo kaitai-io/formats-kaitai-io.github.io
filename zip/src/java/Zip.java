@@ -23,6 +23,7 @@ import java.util.Arrays;
  * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
  * are actually ZIP archives.
  * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
+ * @see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Source</a>
  */
 public class Zip extends KaitaiStruct {
     public static Zip fromFile(String fileName) throws IOException {
@@ -237,7 +238,7 @@ public class Zip extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191">Source</a>
+         * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
          */
         public static class Ntfs extends KaitaiStruct {
             public static Ntfs fromFile(String fileName) throws IOException {
@@ -363,7 +364,7 @@ public class Zip extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817">Source</a>
+         * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817">Source</a>
          */
         public static class ExtendedTimestamp extends KaitaiStruct {
             public static ExtendedTimestamp fromFile(String fileName) throws IOException {
@@ -385,31 +386,87 @@ public class Zip extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.flags = this._io.readU1();
-                this.modTime = this._io.readU4le();
-                if (!(_io().isEof())) {
+                this._raw_flags = this._io.readBytes(1);
+                KaitaiStream _io__raw_flags = new ByteBufferKaitaiStream(_raw_flags);
+                this.flags = new InfoFlags(_io__raw_flags, this, _root);
+                if (flags().hasModTime()) {
+                    this.modTime = this._io.readU4le();
+                }
+                if (flags().hasAccessTime()) {
                     this.accessTime = this._io.readU4le();
                 }
-                if (!(_io().isEof())) {
+                if (flags().hasCreateTime()) {
                     this.createTime = this._io.readU4le();
                 }
             }
-            private int flags;
-            private long modTime;
+            public static class InfoFlags extends KaitaiStruct {
+                public static InfoFlags fromFile(String fileName) throws IOException {
+                    return new InfoFlags(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public InfoFlags(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public InfoFlags(KaitaiStream _io, Zip.ExtraField.ExtendedTimestamp _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public InfoFlags(KaitaiStream _io, Zip.ExtraField.ExtendedTimestamp _parent, Zip _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.hasModTime = this._io.readBitsIntLe(1) != 0;
+                    this.hasAccessTime = this._io.readBitsIntLe(1) != 0;
+                    this.hasCreateTime = this._io.readBitsIntLe(1) != 0;
+                    this.reserved = this._io.readBitsIntLe(5);
+                }
+                private boolean hasModTime;
+                private boolean hasAccessTime;
+                private boolean hasCreateTime;
+                private long reserved;
+                private Zip _root;
+                private Zip.ExtraField.ExtendedTimestamp _parent;
+                public boolean hasModTime() { return hasModTime; }
+                public boolean hasAccessTime() { return hasAccessTime; }
+                public boolean hasCreateTime() { return hasCreateTime; }
+                public long reserved() { return reserved; }
+                public Zip _root() { return _root; }
+                public Zip.ExtraField.ExtendedTimestamp _parent() { return _parent; }
+            }
+            private InfoFlags flags;
+            private Long modTime;
             private Long accessTime;
             private Long createTime;
             private Zip _root;
             private Zip.ExtraField _parent;
-            public int flags() { return flags; }
-            public long modTime() { return modTime; }
+            private byte[] _raw_flags;
+            public InfoFlags flags() { return flags; }
+
+            /**
+             * Unix timestamp
+             */
+            public Long modTime() { return modTime; }
+
+            /**
+             * Unix timestamp
+             */
             public Long accessTime() { return accessTime; }
+
+            /**
+             * Unix timestamp
+             */
             public Long createTime() { return createTime; }
             public Zip _root() { return _root; }
             public Zip.ExtraField _parent() { return _parent; }
+            public byte[] _raw_flags() { return _raw_flags; }
         }
 
         /**
-         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339">Source</a>
+         * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339">Source</a>
          */
         public static class InfozipUnixVarSize extends KaitaiStruct {
             public static InfozipUnixVarSize fromFile(String fileName) throws IOException {
@@ -513,8 +570,9 @@ public class Zip extends KaitaiStruct {
             this.versionNeededToExtract = this._io.readU2le();
             this.flags = this._io.readU2le();
             this.compressionMethod = Zip.Compression.byId(this._io.readU2le());
-            this.lastModFileTime = this._io.readU2le();
-            this.lastModFileDate = this._io.readU2le();
+            this._raw_fileModTime = this._io.readBytes(4);
+            KaitaiStream _io__raw_fileModTime = new ByteBufferKaitaiStream(_raw_fileModTime);
+            this.fileModTime = new DosDatetime(_io__raw_fileModTime);
             this.crc32 = this._io.readU4le();
             this.lenBodyCompressed = this._io.readU4le();
             this.lenBodyUncompressed = this._io.readU4le();
@@ -545,8 +603,7 @@ public class Zip extends KaitaiStruct {
         private int versionNeededToExtract;
         private int flags;
         private Compression compressionMethod;
-        private int lastModFileTime;
-        private int lastModFileDate;
+        private DosDatetime fileModTime;
         private long crc32;
         private long lenBodyCompressed;
         private long lenBodyUncompressed;
@@ -562,13 +619,13 @@ public class Zip extends KaitaiStruct {
         private String comment;
         private Zip _root;
         private Zip.PkSection _parent;
+        private byte[] _raw_fileModTime;
         private byte[] _raw_extra;
         public int versionMadeBy() { return versionMadeBy; }
         public int versionNeededToExtract() { return versionNeededToExtract; }
         public int flags() { return flags; }
         public Compression compressionMethod() { return compressionMethod; }
-        public int lastModFileTime() { return lastModFileTime; }
-        public int lastModFileDate() { return lastModFileDate; }
+        public DosDatetime fileModTime() { return fileModTime; }
         public long crc32() { return crc32; }
         public long lenBodyCompressed() { return lenBodyCompressed; }
         public long lenBodyUncompressed() { return lenBodyUncompressed; }
@@ -584,6 +641,7 @@ public class Zip extends KaitaiStruct {
         public String comment() { return comment; }
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }
+        public byte[] _raw_fileModTime() { return _raw_fileModTime; }
         public byte[] _raw_extra() { return _raw_extra; }
     }
     public static class PkSection extends KaitaiStruct {
@@ -698,10 +756,13 @@ public class Zip extends KaitaiStruct {
         }
         private void _read() {
             this.version = this._io.readU2le();
-            this.flags = this._io.readU2le();
+            this._raw_flags = this._io.readBytes(2);
+            KaitaiStream _io__raw_flags = new ByteBufferKaitaiStream(_raw_flags);
+            this.flags = new GpFlags(_io__raw_flags, this, _root);
             this.compressionMethod = Zip.Compression.byId(this._io.readU2le());
-            this.fileModTime = this._io.readU2le();
-            this.fileModDate = this._io.readU2le();
+            this._raw_fileModTime = this._io.readBytes(4);
+            KaitaiStream _io__raw_fileModTime = new ByteBufferKaitaiStream(_raw_fileModTime);
+            this.fileModTime = new DosDatetime(_io__raw_fileModTime);
             this.crc32 = this._io.readU4le();
             this.lenBodyCompressed = this._io.readU4le();
             this.lenBodyUncompressed = this._io.readU4le();
@@ -712,11 +773,138 @@ public class Zip extends KaitaiStruct {
             KaitaiStream _io__raw_extra = new ByteBufferKaitaiStream(_raw_extra);
             this.extra = new Extras(_io__raw_extra, this, _root);
         }
+
+        /**
+         * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.4.4</a>
+         * @see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Local file headers</a>
+         */
+        public static class GpFlags extends KaitaiStruct {
+            public static GpFlags fromFile(String fileName) throws IOException {
+                return new GpFlags(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public enum DeflateMode {
+                NORMAL(0),
+                MAXIMUM(1),
+                FAST(2),
+                SUPER_FAST(3);
+
+                private final long id;
+                DeflateMode(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, DeflateMode> byId = new HashMap<Long, DeflateMode>(4);
+                static {
+                    for (DeflateMode e : DeflateMode.values())
+                        byId.put(e.id(), e);
+                }
+                public static DeflateMode byId(long id) { return byId.get(id); }
+            }
+
+            public GpFlags(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public GpFlags(KaitaiStream _io, Zip.LocalFileHeader _parent) {
+                this(_io, _parent, null);
+            }
+
+            public GpFlags(KaitaiStream _io, Zip.LocalFileHeader _parent, Zip _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.fileEncrypted = this._io.readBitsIntLe(1) != 0;
+                this.compOptionsRaw = this._io.readBitsIntLe(2);
+                this.hasDataDescriptor = this._io.readBitsIntLe(1) != 0;
+                this.reserved1 = this._io.readBitsIntLe(1) != 0;
+                this.compPatchedData = this._io.readBitsIntLe(1) != 0;
+                this.strongEncrypt = this._io.readBitsIntLe(1) != 0;
+                this.reserved2 = this._io.readBitsIntLe(4);
+                this.langEncoding = this._io.readBitsIntLe(1) != 0;
+                this.reserved3 = this._io.readBitsIntLe(1) != 0;
+                this.maskHeaderValues = this._io.readBitsIntLe(1) != 0;
+                this.reserved4 = this._io.readBitsIntLe(2);
+            }
+            private DeflateMode deflatedMode;
+            public DeflateMode deflatedMode() {
+                if (this.deflatedMode != null)
+                    return this.deflatedMode;
+                if ( ((_parent().compressionMethod() == Zip.Compression.DEFLATED) || (_parent().compressionMethod() == Zip.Compression.ENHANCED_DEFLATED)) ) {
+                    this.deflatedMode = DeflateMode.byId(compOptionsRaw());
+                }
+                return this.deflatedMode;
+            }
+            private Integer implodedDictByteSize;
+
+            /**
+             * 8KiB or 4KiB in bytes
+             */
+            public Integer implodedDictByteSize() {
+                if (this.implodedDictByteSize != null)
+                    return this.implodedDictByteSize;
+                if (_parent().compressionMethod() == Zip.Compression.IMPLODED) {
+                    int _tmp = (int) ((((compOptionsRaw() & 1) != 0 ? 8 : 4) * 1024));
+                    this.implodedDictByteSize = _tmp;
+                }
+                return this.implodedDictByteSize;
+            }
+            private Byte implodedNumSfTrees;
+            public Byte implodedNumSfTrees() {
+                if (this.implodedNumSfTrees != null)
+                    return this.implodedNumSfTrees;
+                if (_parent().compressionMethod() == Zip.Compression.IMPLODED) {
+                    byte _tmp = (byte) (((compOptionsRaw() & 2) != 0 ? 3 : 2));
+                    this.implodedNumSfTrees = _tmp;
+                }
+                return this.implodedNumSfTrees;
+            }
+            private Boolean lzmaHasEosMarker;
+            public Boolean lzmaHasEosMarker() {
+                if (this.lzmaHasEosMarker != null)
+                    return this.lzmaHasEosMarker;
+                if (_parent().compressionMethod() == Zip.Compression.LZMA) {
+                    boolean _tmp = (boolean) ((compOptionsRaw() & 1) != 0);
+                    this.lzmaHasEosMarker = _tmp;
+                }
+                return this.lzmaHasEosMarker;
+            }
+            private boolean fileEncrypted;
+            private long compOptionsRaw;
+            private boolean hasDataDescriptor;
+            private boolean reserved1;
+            private boolean compPatchedData;
+            private boolean strongEncrypt;
+            private long reserved2;
+            private boolean langEncoding;
+            private boolean reserved3;
+            private boolean maskHeaderValues;
+            private long reserved4;
+            private Zip _root;
+            private Zip.LocalFileHeader _parent;
+            public boolean fileEncrypted() { return fileEncrypted; }
+
+            /**
+             * internal; access derived value instances instead
+             */
+            public long compOptionsRaw() { return compOptionsRaw; }
+            public boolean hasDataDescriptor() { return hasDataDescriptor; }
+            public boolean reserved1() { return reserved1; }
+            public boolean compPatchedData() { return compPatchedData; }
+            public boolean strongEncrypt() { return strongEncrypt; }
+            public long reserved2() { return reserved2; }
+            public boolean langEncoding() { return langEncoding; }
+            public boolean reserved3() { return reserved3; }
+            public boolean maskHeaderValues() { return maskHeaderValues; }
+            public long reserved4() { return reserved4; }
+            public Zip _root() { return _root; }
+            public Zip.LocalFileHeader _parent() { return _parent; }
+        }
         private int version;
-        private int flags;
+        private GpFlags flags;
         private Compression compressionMethod;
-        private int fileModTime;
-        private int fileModDate;
+        private DosDatetime fileModTime;
         private long crc32;
         private long lenBodyCompressed;
         private long lenBodyUncompressed;
@@ -726,12 +914,13 @@ public class Zip extends KaitaiStruct {
         private Extras extra;
         private Zip _root;
         private Zip.LocalFile _parent;
+        private byte[] _raw_flags;
+        private byte[] _raw_fileModTime;
         private byte[] _raw_extra;
         public int version() { return version; }
-        public int flags() { return flags; }
+        public GpFlags flags() { return flags; }
         public Compression compressionMethod() { return compressionMethod; }
-        public int fileModTime() { return fileModTime; }
-        public int fileModDate() { return fileModDate; }
+        public DosDatetime fileModTime() { return fileModTime; }
         public long crc32() { return crc32; }
         public long lenBodyCompressed() { return lenBodyCompressed; }
         public long lenBodyUncompressed() { return lenBodyUncompressed; }
@@ -741,6 +930,8 @@ public class Zip extends KaitaiStruct {
         public Extras extra() { return extra; }
         public Zip _root() { return _root; }
         public Zip.LocalFile _parent() { return _parent; }
+        public byte[] _raw_flags() { return _raw_flags; }
+        public byte[] _raw_fileModTime() { return _raw_fileModTime; }
         public byte[] _raw_extra() { return _raw_extra; }
     }
     public static class EndOfCentralDir extends KaitaiStruct {

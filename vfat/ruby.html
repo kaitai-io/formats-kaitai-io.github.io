@@ -120,7 +120,35 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
                     
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/FAT12">FAT12 in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -269,6 +297,9 @@ section#format-index .row {
   <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
+
+<span class="c1">##</span>
+<span class="c1"># @see https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc Source</span>
 <span class="k">class</span> <span class="nc">Vfat</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
     <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -290,9 +321,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="nf">_read</span>
       <span class="vi">@ls_per_fat</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@has_active_fat</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-      <span class="vi">@active_fat_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@has_active_fat</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@active_fat_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
       <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
       <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">reserved2</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/ext_bios_param_block_fat32/seq/4&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">reserved2</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
@@ -560,21 +591,54 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="nf">_read</span>
       <span class="vi">@file_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
-      <span class="vi">@attribute</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@_raw_attrs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">_io__raw_attrs</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_attrs</span><span class="p">)</span>
+      <span class="vi">@attrs</span> <span class="o">=</span> <span class="no">AttrFlags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_attrs</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-      <span class="vi">@time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="vi">@date</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@_raw_last_write_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="n">_io__raw_last_write_time</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_last_write_time</span><span class="p">)</span>
+      <span class="vi">@last_write_time</span> <span class="o">=</span> <span class="no">DosDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_last_write_time</span><span class="p">)</span>
       <span class="vi">@start_clus</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
       <span class="vi">@file_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="nb">self</span>
     <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">AttrFlags</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@read_only</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@hidden</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@system</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@volume_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@is_directory</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@archive</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">long_name</span>
+        <span class="k">return</span> <span class="vi">@long_name</span> <span class="k">unless</span> <span class="vi">@long_name</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@long_name</span> <span class="o">=</span>  <span class="p">((</span><span class="n">read_only</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">hidden</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">system</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">volume_id</span><span class="p">))</span> 
+        <span class="vi">@long_name</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:read_only</span>
+      <span class="kp">attr_reader</span> <span class="ss">:hidden</span>
+      <span class="kp">attr_reader</span> <span class="ss">:system</span>
+      <span class="kp">attr_reader</span> <span class="ss">:volume_id</span>
+      <span class="kp">attr_reader</span> <span class="ss">:is_directory</span>
+      <span class="kp">attr_reader</span> <span class="ss">:archive</span>
+      <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:file_name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:attribute</span>
+    <span class="kp">attr_reader</span> <span class="ss">:attrs</span>
     <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
-    <span class="kp">attr_reader</span> <span class="ss">:time</span>
-    <span class="kp">attr_reader</span> <span class="ss">:date</span>
+    <span class="kp">attr_reader</span> <span class="ss">:last_write_time</span>
     <span class="kp">attr_reader</span> <span class="ss">:start_clus</span>
     <span class="kp">attr_reader</span> <span class="ss">:file_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_attrs</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_last_write_time</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">RootDirectory</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>

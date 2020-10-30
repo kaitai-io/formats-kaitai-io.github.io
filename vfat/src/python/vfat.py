@@ -8,7 +8,12 @@ from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
+import dos_datetime
 class Vfat(KaitaiStruct):
+    """
+    .. seealso::
+       Source - https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -28,9 +33,9 @@ class Vfat(KaitaiStruct):
 
         def _read(self):
             self.ls_per_fat = self._io.read_u4le()
-            self.has_active_fat = self._io.read_bits_int_be(1) != 0
-            self.reserved1 = self._io.read_bits_int_be(3)
-            self.active_fat_id = self._io.read_bits_int_be(4)
+            self.has_active_fat = self._io.read_bits_int_le(1) != 0
+            self.reserved1 = self._io.read_bits_int_le(3)
+            self.active_fat_id = self._io.read_bits_int_le(4)
             self._io.align_to_byte()
             self.reserved2 = self._io.read_bytes(1)
             if not self.reserved2 == b"\x00":
@@ -168,12 +173,40 @@ class Vfat(KaitaiStruct):
 
         def _read(self):
             self.file_name = self._io.read_bytes(11)
-            self.attribute = self._io.read_u1()
+            self._raw_attrs = self._io.read_bytes(1)
+            _io__raw_attrs = KaitaiStream(BytesIO(self._raw_attrs))
+            self.attrs = Vfat.RootDirectoryRec.AttrFlags(_io__raw_attrs, self, self._root)
             self.reserved = self._io.read_bytes(10)
-            self.time = self._io.read_u2le()
-            self.date = self._io.read_u2le()
+            self._raw_last_write_time = self._io.read_bytes(4)
+            _io__raw_last_write_time = KaitaiStream(BytesIO(self._raw_last_write_time))
+            self.last_write_time = dos_datetime.DosDatetime(_io__raw_last_write_time)
             self.start_clus = self._io.read_u2le()
             self.file_size = self._io.read_u4le()
+
+        class AttrFlags(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.read_only = self._io.read_bits_int_le(1) != 0
+                self.hidden = self._io.read_bits_int_le(1) != 0
+                self.system = self._io.read_bits_int_le(1) != 0
+                self.volume_id = self._io.read_bits_int_le(1) != 0
+                self.is_directory = self._io.read_bits_int_le(1) != 0
+                self.archive = self._io.read_bits_int_le(1) != 0
+                self.reserved = self._io.read_bits_int_le(2)
+
+            @property
+            def long_name(self):
+                if hasattr(self, '_m_long_name'):
+                    return self._m_long_name if hasattr(self, '_m_long_name') else None
+
+                self._m_long_name =  ((self.read_only) and (self.hidden) and (self.system) and (self.volume_id)) 
+                return self._m_long_name if hasattr(self, '_m_long_name') else None
+
 
 
     class RootDirectory(KaitaiStruct):

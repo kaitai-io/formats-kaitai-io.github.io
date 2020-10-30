@@ -1,6 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
+import /common/dos_datetime
 
+import "dos_datetime"
 type
   Vfat* = ref object of KaitaiStruct
     `bootSector`*: Vfat_BootSector
@@ -56,13 +58,24 @@ type
     `parent`*: Vfat_BootSector
   Vfat_RootDirectoryRec* = ref object of KaitaiStruct
     `fileName`*: seq[byte]
-    `attribute`*: uint8
+    `attrs`*: Vfat_RootDirectoryRec_AttrFlags
     `reserved`*: seq[byte]
-    `time`*: uint16
-    `date`*: uint16
+    `lastWriteTime`*: DosDatetime
     `startClus`*: uint16
     `fileSize`*: uint32
     `parent`*: Vfat_RootDirectory
+    `rawAttrs`*: seq[byte]
+    `rawLastWriteTime`*: seq[byte]
+  Vfat_RootDirectoryRec_AttrFlags* = ref object of KaitaiStruct
+    `readOnly`*: bool
+    `hidden`*: bool
+    `system`*: bool
+    `volumeId`*: bool
+    `isDirectory`*: bool
+    `archive`*: bool
+    `reserved`*: uint64
+    `parent`*: Vfat_RootDirectoryRec
+    `longNameInst`*: bool
   Vfat_RootDirectory* = ref object of KaitaiStruct
     `records`*: seq[Vfat_RootDirectoryRec]
     `parent`*: Vfat
@@ -80,6 +93,7 @@ proc read*(_: typedesc[Vfat_ExtBiosParamBlockFat32], io: KaitaiStream, root: Kai
 proc read*(_: typedesc[Vfat_BootSector], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_BootSector
 proc read*(_: typedesc[Vfat_BiosParamBlock], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_BiosParamBlock
 proc read*(_: typedesc[Vfat_RootDirectoryRec], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectory): Vfat_RootDirectoryRec
+proc read*(_: typedesc[Vfat_RootDirectoryRec_AttrFlags], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectoryRec): Vfat_RootDirectoryRec_AttrFlags
 proc read*(_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory
 proc read*(_: typedesc[Vfat_ExtBiosParamBlockFat16], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat16
 
@@ -92,7 +106,12 @@ proc isFat32*(this: Vfat_BootSector): bool
 proc sizeFat*(this: Vfat_BootSector): int
 proc posRootDir*(this: Vfat_BootSector): int
 proc sizeRootDir*(this: Vfat_BootSector): int
+proc longName*(this: Vfat_RootDirectoryRec_AttrFlags): bool
 
+
+##[
+@see <a href="https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc">Source</a>
+]##
 proc read*(_: typedesc[Vfat], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Vfat =
   template this: untyped = result
   this = new(Vfat)
@@ -160,9 +179,9 @@ the old entry `ls_per_fat` in the DOS 2.0 BPB).
 usual.
 
   ]##
-  let hasActiveFatExpr = this.io.readBitsIntBe(1) != 0
+  let hasActiveFatExpr = this.io.readBitsIntLe(1) != 0
   this.hasActiveFat = hasActiveFatExpr
-  let reserved1Expr = this.io.readBitsIntBe(3)
+  let reserved1Expr = this.io.readBitsIntLe(3)
   this.reserved1 = reserved1Expr
 
   ##[
@@ -170,7 +189,7 @@ usual.
 attribute is true.
 
   ]##
-  let activeFatIdExpr = this.io.readBitsIntBe(4)
+  let activeFatIdExpr = this.io.readBitsIntLe(4)
   this.activeFatId = activeFatIdExpr
   alignToByte(this.io)
   let reserved2Expr = this.io.readBytes(int(1))
@@ -488,14 +507,18 @@ proc read*(_: typedesc[Vfat_RootDirectoryRec], io: KaitaiStream, root: KaitaiStr
 
   let fileNameExpr = this.io.readBytes(int(11))
   this.fileName = fileNameExpr
-  let attributeExpr = this.io.readU1()
-  this.attribute = attributeExpr
+  let rawAttrsExpr = this.io.readBytes(int(1))
+  this.rawAttrs = rawAttrsExpr
+  let rawAttrsIo = newKaitaiStream(rawAttrsExpr)
+  let attrsExpr = Vfat_RootDirectoryRec_AttrFlags.read(rawAttrsIo, this.root, this)
+  this.attrs = attrsExpr
   let reservedExpr = this.io.readBytes(int(10))
   this.reserved = reservedExpr
-  let timeExpr = this.io.readU2le()
-  this.time = timeExpr
-  let dateExpr = this.io.readU2le()
-  this.date = dateExpr
+  let rawLastWriteTimeExpr = this.io.readBytes(int(4))
+  this.rawLastWriteTime = rawLastWriteTimeExpr
+  let rawLastWriteTimeIo = newKaitaiStream(rawLastWriteTimeExpr)
+  let lastWriteTimeExpr = DosDatetime.read(rawLastWriteTimeIo, this.root, this)
+  this.lastWriteTime = lastWriteTimeExpr
   let startClusExpr = this.io.readU2le()
   this.startClus = startClusExpr
   let fileSizeExpr = this.io.readU4le()
@@ -503,6 +526,40 @@ proc read*(_: typedesc[Vfat_RootDirectoryRec], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[Vfat_RootDirectoryRec], filename: string): Vfat_RootDirectoryRec =
   Vfat_RootDirectoryRec.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vfat_RootDirectoryRec_AttrFlags], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectoryRec): Vfat_RootDirectoryRec_AttrFlags =
+  template this: untyped = result
+  this = new(Vfat_RootDirectoryRec_AttrFlags)
+  let root = if root == nil: cast[Vfat](this) else: cast[Vfat](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let readOnlyExpr = this.io.readBitsIntLe(1) != 0
+  this.readOnly = readOnlyExpr
+  let hiddenExpr = this.io.readBitsIntLe(1) != 0
+  this.hidden = hiddenExpr
+  let systemExpr = this.io.readBitsIntLe(1) != 0
+  this.system = systemExpr
+  let volumeIdExpr = this.io.readBitsIntLe(1) != 0
+  this.volumeId = volumeIdExpr
+  let isDirectoryExpr = this.io.readBitsIntLe(1) != 0
+  this.isDirectory = isDirectoryExpr
+  let archiveExpr = this.io.readBitsIntLe(1) != 0
+  this.archive = archiveExpr
+  let reservedExpr = this.io.readBitsIntLe(2)
+  this.reserved = reservedExpr
+
+proc longName(this: Vfat_RootDirectoryRec_AttrFlags): bool = 
+  if this.longNameInst != nil:
+    return this.longNameInst
+  let longNameInstExpr = bool( ((this.readOnly) and (this.hidden) and (this.system) and (this.volumeId)) )
+  this.longNameInst = longNameInstExpr
+  if this.longNameInst != nil:
+    return this.longNameInst
+
+proc fromFile*(_: typedesc[Vfat_RootDirectoryRec_AttrFlags], filename: string): Vfat_RootDirectoryRec_AttrFlags =
+  Vfat_RootDirectoryRec_AttrFlags.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory =
   template this: untyped = result

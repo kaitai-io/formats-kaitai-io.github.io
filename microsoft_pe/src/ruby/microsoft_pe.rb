@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx Source
+# @see https://docs.microsoft.com/en-us/windows/win32/debug/pe-format Source
 class MicrosoftPe < Kaitai::Struct::Struct
 
   PE_FORMAT = {

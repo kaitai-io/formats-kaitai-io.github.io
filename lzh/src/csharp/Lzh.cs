@@ -175,7 +175,9 @@ namespace Kaitai
                 _methodId = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(5));
                 _fileSizeCompr = m_io.ReadU4le();
                 _fileSizeUncompr = m_io.ReadU4le();
-                _fileTimestamp = m_io.ReadU4le();
+                __raw_fileTimestamp = m_io.ReadBytes(4);
+                var io___raw_fileTimestamp = new KaitaiStream(__raw_fileTimestamp);
+                _fileTimestamp = new DosDatetime(io___raw_fileTimestamp);
                 _attr = m_io.ReadU1();
                 _lhaLevel = m_io.ReadU1();
             }
@@ -183,11 +185,12 @@ namespace Kaitai
             private string _methodId;
             private uint _fileSizeCompr;
             private uint _fileSizeUncompr;
-            private uint _fileTimestamp;
+            private DosDatetime _fileTimestamp;
             private byte _attr;
             private byte _lhaLevel;
             private Lzh m_root;
             private Lzh.Header m_parent;
+            private byte[] __raw_fileTimestamp;
             public byte HeaderChecksum { get { return _headerChecksum; } }
             public string MethodId { get { return _methodId; } }
 
@@ -204,7 +207,7 @@ namespace Kaitai
             /// <summary>
             /// Original file date/time
             /// </summary>
-            public uint FileTimestamp { get { return _fileTimestamp; } }
+            public DosDatetime FileTimestamp { get { return _fileTimestamp; } }
 
             /// <summary>
             /// File or directory attribute
@@ -213,6 +216,7 @@ namespace Kaitai
             public byte LhaLevel { get { return _lhaLevel; } }
             public Lzh M_Root { get { return m_root; } }
             public Lzh.Header M_Parent { get { return m_parent; } }
+            public byte[] M_RawFileTimestamp { get { return __raw_fileTimestamp; } }
         }
         private List<Record> _entries;
         private Lzh m_root;

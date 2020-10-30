@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see {@link http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx|Source}
+ * @see {@link https://docs.microsoft.com/en-us/windows/win32/debug/pe-format|Source}
  */
 
 var MicrosoftPe = (function() {

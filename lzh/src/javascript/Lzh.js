@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Lzh = factory(root.KaitaiStream);
+    root.Lzh = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, DosDatetime) {
 /**
  * LHA (LHarc, LZH) is a file format used by a popular freeware
  * eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the
@@ -122,7 +122,9 @@ var Lzh = (function() {
       this.methodId = KaitaiStream.bytesToStr(this._io.readBytes(5), "ASCII");
       this.fileSizeCompr = this._io.readU4le();
       this.fileSizeUncompr = this._io.readU4le();
-      this.fileTimestamp = this._io.readU4le();
+      this._raw_fileTimestamp = this._io.readBytes(4);
+      var _io__raw_fileTimestamp = new KaitaiStream(this._raw_fileTimestamp);
+      this.fileTimestamp = new DosDatetime(_io__raw_fileTimestamp, this, null);
       this.attr = this._io.readU1();
       this.lhaLevel = this._io.readU1();
     }

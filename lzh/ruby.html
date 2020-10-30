@@ -420,7 +420,9 @@ records.</p>
       <span class="vi">@method_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
       <span class="vi">@file_size_compr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@file_size_uncompr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@file_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_raw_file_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="n">_io__raw_file_timestamp</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_file_timestamp</span><span class="p">)</span>
+      <span class="vi">@file_timestamp</span> <span class="o">=</span> <span class="no">DosDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_file_timestamp</span><span class="p">)</span>
       <span class="vi">@attr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="vi">@lha_level</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="nb">self</span>
@@ -444,6 +446,7 @@ records.</p>
     <span class="c1"># File or directory attribute</span>
     <span class="kp">attr_reader</span> <span class="ss">:attr</span>
     <span class="kp">attr_reader</span> <span class="ss">:lha_level</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_file_timestamp</span>
   <span class="k">end</span>
   <span class="kp">attr_reader</span> <span class="ss">:entries</span>
 <span class="k">end</span>

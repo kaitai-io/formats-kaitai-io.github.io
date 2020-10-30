@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
 use Encode;
+use DosDatetime;
 
 ########################################################################
 package Lzh;
@@ -263,7 +264,9 @@ sub _read {
     $self->{method_id} = Encode::decode("ASCII", $self->{_io}->read_bytes(5));
     $self->{file_size_compr} = $self->{_io}->read_u4le();
     $self->{file_size_uncompr} = $self->{_io}->read_u4le();
-    $self->{file_timestamp} = $self->{_io}->read_u4le();
+    $self->{_raw_file_timestamp} = $self->{_io}->read_bytes(4);
+    my $io__raw_file_timestamp = IO::KaitaiStruct::Stream->new($self->{_raw_file_timestamp});
+    $self->{file_timestamp} = DosDatetime->new($io__raw_file_timestamp);
     $self->{attr} = $self->{_io}->read_u1();
     $self->{lha_level} = $self->{_io}->read_u1();
 }
@@ -301,6 +304,11 @@ sub attr {
 sub lha_level {
     my ($self) = @_;
     return $self->{lha_level};
+}
+
+sub _raw_file_timestamp {
+    my ($self) = @_;
+    return $self->{_raw_file_timestamp};
 }
 
 1;

@@ -1,6 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
+import /common/dos_datetime
 
+import "dos_datetime"
 type
   Lzh* = ref object of KaitaiStruct
     `entries`*: seq[Lzh_Record]
@@ -28,10 +30,11 @@ type
     `methodId`*: string
     `fileSizeCompr`*: uint32
     `fileSizeUncompr`*: uint32
-    `fileTimestamp`*: uint32
+    `fileTimestamp`*: DosDatetime
     `attr`*: uint8
     `lhaLevel`*: uint8
     `parent`*: Lzh_Header
+    `rawFileTimestamp`*: seq[byte]
 
 proc read*(_: typedesc[Lzh], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Lzh
 proc read*(_: typedesc[Lzh_Record], io: KaitaiStream, root: KaitaiStruct, parent: Lzh): Lzh_Record
@@ -170,7 +173,10 @@ proc read*(_: typedesc[Lzh_Header1], io: KaitaiStream, root: KaitaiStruct, paren
   ##[
   Original file date/time
   ]##
-  let fileTimestampExpr = this.io.readU4le()
+  let rawFileTimestampExpr = this.io.readBytes(int(4))
+  this.rawFileTimestamp = rawFileTimestampExpr
+  let rawFileTimestampIo = newKaitaiStream(rawFileTimestampExpr)
+  let fileTimestampExpr = DosDatetime.read(rawFileTimestampIo, this.root, this)
   this.fileTimestamp = fileTimestampExpr
 
   ##[

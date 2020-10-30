@@ -1,6 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
+import /common/dos_datetime
 
+import "dos_datetime"
 type
   Rar* = ref object of KaitaiStruct
     `magic`*: Rar_MagicSignature
@@ -31,7 +33,10 @@ type
     normal = 51
     good = 52
     best = 53
-  Rar_BlockV5* = ref object of KaitaiStruct
+  Rar_MagicSignature* = ref object of KaitaiStruct
+    `magic1`*: seq[byte]
+    `version`*: uint8
+    `magic3`*: seq[byte]
     `parent`*: Rar
   Rar_Block* = ref object of KaitaiStruct
     `crc16`*: uint16
@@ -50,7 +55,7 @@ type
     `lowUnpSize`*: uint32
     `hostOs`*: Rar_Oses
     `fileCrc32`*: uint32
-    `fileTime`*: Rar_DosTime
+    `fileTime`*: DosDatetime
     `rarVersion`*: uint8
     `method`*: Rar_Methods
     `nameSize`*: uint16
@@ -59,38 +64,19 @@ type
     `fileName`*: seq[byte]
     `salt`*: uint64
     `parent`*: Rar_Block
-  Rar_MagicSignature* = ref object of KaitaiStruct
-    `magic1`*: seq[byte]
-    `version`*: uint8
-    `magic3`*: seq[byte]
+    `rawFileTime`*: seq[byte]
+  Rar_BlockV5* = ref object of KaitaiStruct
     `parent`*: Rar
-  Rar_DosTime* = ref object of KaitaiStruct
-    `time`*: uint16
-    `date`*: uint16
-    `parent`*: Rar_BlockFileHeader
-    `monthInst`*: int
-    `secondsInst`*: int
-    `yearInst`*: int
-    `minutesInst`*: int
-    `dayInst`*: int
-    `hoursInst`*: int
 
 proc read*(_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar
-proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5
+proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature
 proc read*(_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_Block
 proc read*(_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Rar_Block): Rar_BlockFileHeader
-proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature
-proc read*(_: typedesc[Rar_DosTime], io: KaitaiStream, root: KaitaiStruct, parent: Rar_BlockFileHeader): Rar_DosTime
+proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5
 
 proc hasAdd*(this: Rar_Block): bool
 proc headerSize*(this: Rar_Block): int8
 proc bodySize*(this: Rar_Block): int
-proc month*(this: Rar_DosTime): int
-proc seconds*(this: Rar_DosTime): int
-proc year*(this: Rar_DosTime): int
-proc minutes*(this: Rar_DosTime): int
-proc day*(this: Rar_DosTime): int
-proc hours*(this: Rar_DosTime): int
 
 
 ##[
@@ -103,7 +89,7 @@ blocks. Each block has fixed header and custom body (that depends on
 block type), so it's possible to skip block even if one doesn't know
 how to process a certain block type.
 
-@see <a href="http://acritum.com/winrar/rar-format"></a>
+@see <a href="http://acritum.com/winrar/rar-format">Source</a>
 ]##
 proc read*(_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar =
   template this: untyped = result
@@ -139,17 +125,49 @@ proc read*(_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 proc fromFile*(_: typedesc[Rar], filename: string): Rar =
   Rar.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5 =
+
+##[
+RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+8-byte magic (and pretty different block format) for v5+. This
+type would parse and validate both versions of signature. Note
+that actually this signature is a valid RAR "block": in theory,
+one can omit signature reading at all, and read this normally,
+as a block, if exact RAR version is known (and thus it's
+possible to choose correct block format).
+
+]##
+proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =
   template this: untyped = result
-  this = new(Rar_BlockV5)
+  this = new(Rar_MagicSignature)
   let root = if root == nil: cast[Rar](this) else: cast[Rar](root)
   this.io = io
   this.root = root
   this.parent = parent
 
 
-proc fromFile*(_: typedesc[Rar_BlockV5], filename: string): Rar_BlockV5 =
-  Rar_BlockV5.read(newKaitaiFileStream(filename), nil, nil)
+  ##[
+  Fixed part of file's magic signature that doesn't change with RAR version
+  ]##
+  let magic1Expr = this.io.readBytes(int(6))
+  this.magic1 = magic1Expr
+
+  ##[
+  Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+format, 1 means new (RAR 5+) format
+
+  ]##
+  let versionExpr = this.io.readU1()
+  this.version = versionExpr
+
+  ##[
+  New format (RAR 5+) magic contains extra byte
+  ]##
+  if this.version == 1:
+    let magic3Expr = this.io.readBytes(int(1))
+    this.magic3 = magic3Expr
+
+proc fromFile*(_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =
+  Rar_MagicSignature.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -265,7 +283,10 @@ proc read*(_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruc
   ##[
   Date and time in standard MS DOS format
   ]##
-  let fileTimeExpr = Rar_DosTime.read(this.io, this.root, this)
+  let rawFileTimeExpr = this.io.readBytes(int(4))
+  this.rawFileTime = rawFileTimeExpr
+  let rawFileTimeIo = newKaitaiStream(rawFileTimeExpr)
+  let fileTimeExpr = DosDatetime.read(rawFileTimeIo, this.root, this)
   this.fileTime = fileTimeExpr
 
   ##[
@@ -307,111 +328,15 @@ proc read*(_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruc
 proc fromFile*(_: typedesc[Rar_BlockFileHeader], filename: string): Rar_BlockFileHeader =
   Rar_BlockFileHeader.read(newKaitaiFileStream(filename), nil, nil)
 
-
-##[
-RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-8-byte magic (and pretty different block format) for v5+. This
-type would parse and validate both versions of signature. Note
-that actually this signature is a valid RAR "block": in theory,
-one can omit signature reading at all, and read this normally,
-as a block, if exact RAR version is known (and thus it's
-possible to choose correct block format).
-
-]##
-proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =
+proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5 =
   template this: untyped = result
-  this = new(Rar_MagicSignature)
+  this = new(Rar_BlockV5)
   let root = if root == nil: cast[Rar](this) else: cast[Rar](root)
   this.io = io
   this.root = root
   this.parent = parent
 
 
-  ##[
-  Fixed part of file's magic signature that doesn't change with RAR version
-  ]##
-  let magic1Expr = this.io.readBytes(int(6))
-  this.magic1 = magic1Expr
-
-  ##[
-  Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-format, 1 means new (RAR 5+) format
-
-  ]##
-  let versionExpr = this.io.readU1()
-  this.version = versionExpr
-
-  ##[
-  New format (RAR 5+) magic contains extra byte
-  ]##
-  if this.version == 1:
-    let magic3Expr = this.io.readBytes(int(1))
-    this.magic3 = magic3Expr
-
-proc fromFile*(_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =
-  Rar_MagicSignature.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Rar_DosTime], io: KaitaiStream, root: KaitaiStruct, parent: Rar_BlockFileHeader): Rar_DosTime =
-  template this: untyped = result
-  this = new(Rar_DosTime)
-  let root = if root == nil: cast[Rar](this) else: cast[Rar](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let timeExpr = this.io.readU2le()
-  this.time = timeExpr
-  let dateExpr = this.io.readU2le()
-  this.date = dateExpr
-
-proc month(this: Rar_DosTime): int = 
-  if this.monthInst != nil:
-    return this.monthInst
-  let monthInstExpr = int(((this.date and 480) shr 5))
-  this.monthInst = monthInstExpr
-  if this.monthInst != nil:
-    return this.monthInst
-
-proc seconds(this: Rar_DosTime): int = 
-  if this.secondsInst != nil:
-    return this.secondsInst
-  let secondsInstExpr = int(((this.time and 31) * 2))
-  this.secondsInst = secondsInstExpr
-  if this.secondsInst != nil:
-    return this.secondsInst
-
-proc year(this: Rar_DosTime): int = 
-  if this.yearInst != nil:
-    return this.yearInst
-  let yearInstExpr = int((((this.date and 65024) shr 9) + 1980))
-  this.yearInst = yearInstExpr
-  if this.yearInst != nil:
-    return this.yearInst
-
-proc minutes(this: Rar_DosTime): int = 
-  if this.minutesInst != nil:
-    return this.minutesInst
-  let minutesInstExpr = int(((this.time and 2016) shr 5))
-  this.minutesInst = minutesInstExpr
-  if this.minutesInst != nil:
-    return this.minutesInst
-
-proc day(this: Rar_DosTime): int = 
-  if this.dayInst != nil:
-    return this.dayInst
-  let dayInstExpr = int((this.date and 31))
-  this.dayInst = dayInstExpr
-  if this.dayInst != nil:
-    return this.dayInst
-
-proc hours(this: Rar_DosTime): int = 
-  if this.hoursInst != nil:
-    return this.hoursInst
-  let hoursInstExpr = int(((this.time and 63488) shr 11))
-  this.hoursInst = hoursInstExpr
-  if this.hoursInst != nil:
-    return this.hoursInst
-
-proc fromFile*(_: typedesc[Rar_DosTime], filename: string): Rar_DosTime =
-  Rar_DosTime.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Rar_BlockV5], filename: string): Rar_BlockV5 =
+  Rar_BlockV5.read(newKaitaiFileStream(filename), nil, nil)
 

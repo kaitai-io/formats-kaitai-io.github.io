@@ -9,6 +9,7 @@ from enum import Enum
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
+import dos_datetime
 class Zip(KaitaiStruct):
     """ZIP is a popular archive file format, introduced in 1989 by Phil Katz
     and originally implemented in PKZIP utility by PKWARE.
@@ -23,6 +24,10 @@ class Zip(KaitaiStruct):
     
     .. seealso::
        Source - https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+    
+    
+    .. seealso::
+       Source - https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
     """
 
     class Compression(Enum):
@@ -131,7 +136,7 @@ class Zip(KaitaiStruct):
         class Ntfs(KaitaiStruct):
             """
             .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191
             """
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
@@ -184,7 +189,7 @@ class Zip(KaitaiStruct):
         class ExtendedTimestamp(KaitaiStruct):
             """
             .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817
             """
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
@@ -193,20 +198,38 @@ class Zip(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.flags = self._io.read_u1()
-                self.mod_time = self._io.read_u4le()
-                if not (self._io.is_eof()):
+                self._raw_flags = self._io.read_bytes(1)
+                _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
+                self.flags = Zip.ExtraField.ExtendedTimestamp.InfoFlags(_io__raw_flags, self, self._root)
+                if self.flags.has_mod_time:
+                    self.mod_time = self._io.read_u4le()
+
+                if self.flags.has_access_time:
                     self.access_time = self._io.read_u4le()
 
-                if not (self._io.is_eof()):
+                if self.flags.has_create_time:
                     self.create_time = self._io.read_u4le()
+
+
+            class InfoFlags(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.has_mod_time = self._io.read_bits_int_le(1) != 0
+                    self.has_access_time = self._io.read_bits_int_le(1) != 0
+                    self.has_create_time = self._io.read_bits_int_le(1) != 0
+                    self.reserved = self._io.read_bits_int_le(5)
 
 
 
         class InfozipUnixVarSize(KaitaiStruct):
             """
             .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339
             """
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
@@ -239,8 +262,9 @@ class Zip(KaitaiStruct):
             self.version_needed_to_extract = self._io.read_u2le()
             self.flags = self._io.read_u2le()
             self.compression_method = KaitaiStream.resolve_enum(Zip.Compression, self._io.read_u2le())
-            self.last_mod_file_time = self._io.read_u2le()
-            self.last_mod_file_date = self._io.read_u2le()
+            self._raw_file_mod_time = self._io.read_bytes(4)
+            _io__raw_file_mod_time = KaitaiStream(BytesIO(self._raw_file_mod_time))
+            self.file_mod_time = dos_datetime.DosDatetime(_io__raw_file_mod_time)
             self.crc32 = self._io.read_u4le()
             self.len_body_compressed = self._io.read_u4le()
             self.len_body_uncompressed = self._io.read_u4le()
@@ -317,10 +341,13 @@ class Zip(KaitaiStruct):
 
         def _read(self):
             self.version = self._io.read_u2le()
-            self.flags = self._io.read_u2le()
+            self._raw_flags = self._io.read_bytes(2)
+            _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
+            self.flags = Zip.LocalFileHeader.GpFlags(_io__raw_flags, self, self._root)
             self.compression_method = KaitaiStream.resolve_enum(Zip.Compression, self._io.read_u2le())
-            self.file_mod_time = self._io.read_u2le()
-            self.file_mod_date = self._io.read_u2le()
+            self._raw_file_mod_time = self._io.read_bytes(4)
+            _io__raw_file_mod_time = KaitaiStream(BytesIO(self._raw_file_mod_time))
+            self.file_mod_time = dos_datetime.DosDatetime(_io__raw_file_mod_time)
             self.crc32 = self._io.read_u4le()
             self.len_body_compressed = self._io.read_u4le()
             self.len_body_uncompressed = self._io.read_u4le()
@@ -330,6 +357,82 @@ class Zip(KaitaiStruct):
             self._raw_extra = self._io.read_bytes(self.len_extra)
             _io__raw_extra = KaitaiStream(BytesIO(self._raw_extra))
             self.extra = Zip.Extras(_io__raw_extra, self, self._root)
+
+        class GpFlags(KaitaiStruct):
+            """
+            .. seealso::
+               - 4.4.4 - https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+            
+            
+            .. seealso::
+               Local file headers - https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
+            """
+
+            class DeflateMode(Enum):
+                normal = 0
+                maximum = 1
+                fast = 2
+                super_fast = 3
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.file_encrypted = self._io.read_bits_int_le(1) != 0
+                self.comp_options_raw = self._io.read_bits_int_le(2)
+                self.has_data_descriptor = self._io.read_bits_int_le(1) != 0
+                self.reserved_1 = self._io.read_bits_int_le(1) != 0
+                self.comp_patched_data = self._io.read_bits_int_le(1) != 0
+                self.strong_encrypt = self._io.read_bits_int_le(1) != 0
+                self.reserved_2 = self._io.read_bits_int_le(4)
+                self.lang_encoding = self._io.read_bits_int_le(1) != 0
+                self.reserved_3 = self._io.read_bits_int_le(1) != 0
+                self.mask_header_values = self._io.read_bits_int_le(1) != 0
+                self.reserved_4 = self._io.read_bits_int_le(2)
+
+            @property
+            def deflated_mode(self):
+                if hasattr(self, '_m_deflated_mode'):
+                    return self._m_deflated_mode if hasattr(self, '_m_deflated_mode') else None
+
+                if  ((self._parent.compression_method == Zip.Compression.deflated) or (self._parent.compression_method == Zip.Compression.enhanced_deflated)) :
+                    self._m_deflated_mode = KaitaiStream.resolve_enum(Zip.LocalFileHeader.GpFlags.DeflateMode, self.comp_options_raw)
+
+                return self._m_deflated_mode if hasattr(self, '_m_deflated_mode') else None
+
+            @property
+            def imploded_dict_byte_size(self):
+                """8KiB or 4KiB in bytes."""
+                if hasattr(self, '_m_imploded_dict_byte_size'):
+                    return self._m_imploded_dict_byte_size if hasattr(self, '_m_imploded_dict_byte_size') else None
+
+                if self._parent.compression_method == Zip.Compression.imploded:
+                    self._m_imploded_dict_byte_size = ((8 if (self.comp_options_raw & 1) != 0 else 4) * 1024)
+
+                return self._m_imploded_dict_byte_size if hasattr(self, '_m_imploded_dict_byte_size') else None
+
+            @property
+            def imploded_num_sf_trees(self):
+                if hasattr(self, '_m_imploded_num_sf_trees'):
+                    return self._m_imploded_num_sf_trees if hasattr(self, '_m_imploded_num_sf_trees') else None
+
+                if self._parent.compression_method == Zip.Compression.imploded:
+                    self._m_imploded_num_sf_trees = (3 if (self.comp_options_raw & 2) != 0 else 2)
+
+                return self._m_imploded_num_sf_trees if hasattr(self, '_m_imploded_num_sf_trees') else None
+
+            @property
+            def lzma_has_eos_marker(self):
+                if hasattr(self, '_m_lzma_has_eos_marker'):
+                    return self._m_lzma_has_eos_marker if hasattr(self, '_m_lzma_has_eos_marker') else None
+
+                if self._parent.compression_method == Zip.Compression.lzma:
+                    self._m_lzma_has_eos_marker = (self.comp_options_raw & 1) != 0
+
+                return self._m_lzma_has_eos_marker if hasattr(self, '_m_lzma_has_eos_marker') else None
+
 
 
     class EndOfCentralDir(KaitaiStruct):

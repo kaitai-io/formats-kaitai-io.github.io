@@ -19,6 +19,7 @@ import (
  * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
  * are actually ZIP archives.
  * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
+ * @see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Source</a>
  */
 
 type Zip_Compression int
@@ -246,7 +247,7 @@ func (this *Zip_ExtraField) Read(io *kaitai.Stream, parent *Zip_Extras, root *Zi
 }
 
 /**
- * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191">Source</a>
+ * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
  */
 type Zip_ExtraField_Ntfs struct {
 	Reserved uint32
@@ -378,16 +379,17 @@ func (this *Zip_ExtraField_Ntfs_Attribute1) Read(io *kaitai.Stream, parent *Zip_
 }
 
 /**
- * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817">Source</a>
+ * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817">Source</a>
  */
 type Zip_ExtraField_ExtendedTimestamp struct {
-	Flags uint8
+	Flags *Zip_ExtraField_ExtendedTimestamp_InfoFlags
 	ModTime uint32
 	AccessTime uint32
 	CreateTime uint32
 	_io *kaitai.Stream
 	_root *Zip
 	_parent *Zip_ExtraField
+	_raw_Flags []byte
 }
 func NewZip_ExtraField_ExtendedTimestamp() *Zip_ExtraField_ExtendedTimestamp {
 	return &Zip_ExtraField_ExtendedTimestamp{
@@ -399,43 +401,98 @@ func (this *Zip_ExtraField_ExtendedTimestamp) Read(io *kaitai.Stream, parent *Zi
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadU1()
+	tmp28, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp28
-	tmp29, err := this._io.ReadU4le()
+	tmp28 = tmp28
+	this._raw_Flags = tmp28
+	_io__raw_Flags := kaitai.NewStream(bytes.NewReader(this._raw_Flags))
+	tmp29 := NewZip_ExtraField_ExtendedTimestamp_InfoFlags()
+	err = tmp29.Read(_io__raw_Flags, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ModTime = uint32(tmp29)
-	tmp30, err := this._io.EOF()
-	if err != nil {
-		return err
+	this.Flags = tmp29
+	if (this.Flags.HasModTime) {
+		tmp30, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.ModTime = uint32(tmp30)
 	}
-	if (!(tmp30)) {
+	if (this.Flags.HasAccessTime) {
 		tmp31, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.AccessTime = uint32(tmp31)
 	}
-	tmp32, err := this._io.EOF()
-	if err != nil {
-		return err
-	}
-	if (!(tmp32)) {
-		tmp33, err := this._io.ReadU4le()
+	if (this.Flags.HasCreateTime) {
+		tmp32, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.CreateTime = uint32(tmp33)
+		this.CreateTime = uint32(tmp32)
 	}
 	return err
 }
 
 /**
- * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339">Source</a>
+ * Unix timestamp
+ */
+
+/**
+ * Unix timestamp
+ */
+
+/**
+ * Unix timestamp
+ */
+type Zip_ExtraField_ExtendedTimestamp_InfoFlags struct {
+	HasModTime bool
+	HasAccessTime bool
+	HasCreateTime bool
+	Reserved uint64
+	_io *kaitai.Stream
+	_root *Zip
+	_parent *Zip_ExtraField_ExtendedTimestamp
+}
+func NewZip_ExtraField_ExtendedTimestamp_InfoFlags() *Zip_ExtraField_ExtendedTimestamp_InfoFlags {
+	return &Zip_ExtraField_ExtendedTimestamp_InfoFlags{
+	}
+}
+
+func (this *Zip_ExtraField_ExtendedTimestamp_InfoFlags) Read(io *kaitai.Stream, parent *Zip_ExtraField_ExtendedTimestamp, root *Zip) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp33, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.HasModTime = tmp33 != 0
+	tmp34, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.HasAccessTime = tmp34 != 0
+	tmp35, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.HasCreateTime = tmp35 != 0
+	tmp36, err := this._io.ReadBitsIntLe(5)
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp36
+	return err
+}
+
+/**
+ * @see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339">Source</a>
  */
 type Zip_ExtraField_InfozipUnixVarSize struct {
 	Version uint8
@@ -457,33 +514,33 @@ func (this *Zip_ExtraField_InfozipUnixVarSize) Read(io *kaitai.Stream, parent *Z
 	this._parent = parent
 	this._root = root
 
-	tmp34, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Version = tmp34
-	tmp35, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenUid = tmp35
-	tmp36, err := this._io.ReadBytes(int(this.LenUid))
-	if err != nil {
-		return err
-	}
-	tmp36 = tmp36
-	this.Uid = tmp36
 	tmp37, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LenGid = tmp37
-	tmp38, err := this._io.ReadBytes(int(this.LenGid))
+	this.Version = tmp37
+	tmp38, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	tmp38 = tmp38
-	this.Gid = tmp38
+	this.LenUid = tmp38
+	tmp39, err := this._io.ReadBytes(int(this.LenUid))
+	if err != nil {
+		return err
+	}
+	tmp39 = tmp39
+	this.Uid = tmp39
+	tmp40, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenGid = tmp40
+	tmp41, err := this._io.ReadBytes(int(this.LenGid))
+	if err != nil {
+		return err
+	}
+	tmp41 = tmp41
+	this.Gid = tmp41
 	return err
 }
 
@@ -515,8 +572,7 @@ type Zip_CentralDirEntry struct {
 	VersionNeededToExtract uint16
 	Flags uint16
 	CompressionMethod Zip_Compression
-	LastModFileTime uint16
-	LastModFileDate uint16
+	FileModTime *DosDatetime
 	Crc32 uint32
 	LenBodyCompressed uint32
 	LenBodyUncompressed uint32
@@ -533,6 +589,7 @@ type Zip_CentralDirEntry struct {
 	_io *kaitai.Stream
 	_root *Zip
 	_parent *Zip_PkSection
+	_raw_FileModTime []byte
 	_raw_Extra []byte
 	_f_localHeader bool
 	localHeader *Zip_PkSection
@@ -547,111 +604,114 @@ func (this *Zip_CentralDirEntry) Read(io *kaitai.Stream, parent *Zip_PkSection, 
 	this._parent = parent
 	this._root = root
 
-	tmp39, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.VersionMadeBy = uint16(tmp39)
-	tmp40, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.VersionNeededToExtract = uint16(tmp40)
-	tmp41, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint16(tmp41)
 	tmp42, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.CompressionMethod = Zip_Compression(tmp42)
+	this.VersionMadeBy = uint16(tmp42)
 	tmp43, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LastModFileTime = uint16(tmp43)
+	this.VersionNeededToExtract = uint16(tmp43)
 	tmp44, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LastModFileDate = uint16(tmp44)
-	tmp45, err := this._io.ReadU4le()
+	this.Flags = uint16(tmp44)
+	tmp45, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Crc32 = uint32(tmp45)
-	tmp46, err := this._io.ReadU4le()
+	this.CompressionMethod = Zip_Compression(tmp45)
+	tmp46, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.LenBodyCompressed = uint32(tmp46)
-	tmp47, err := this._io.ReadU4le()
+	tmp46 = tmp46
+	this._raw_FileModTime = tmp46
+	_io__raw_FileModTime := kaitai.NewStream(bytes.NewReader(this._raw_FileModTime))
+	tmp47 := NewDosDatetime()
+	err = tmp47.Read(_io__raw_FileModTime, this, nil)
 	if err != nil {
 		return err
 	}
-	this.LenBodyUncompressed = uint32(tmp47)
-	tmp48, err := this._io.ReadU2le()
+	this.FileModTime = tmp47
+	tmp48, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenFileName = uint16(tmp48)
-	tmp49, err := this._io.ReadU2le()
+	this.Crc32 = uint32(tmp48)
+	tmp49, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenExtra = uint16(tmp49)
-	tmp50, err := this._io.ReadU2le()
+	this.LenBodyCompressed = uint32(tmp49)
+	tmp50, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenComment = uint16(tmp50)
+	this.LenBodyUncompressed = uint32(tmp50)
 	tmp51, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DiskNumberStart = uint16(tmp51)
+	this.LenFileName = uint16(tmp51)
 	tmp52, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.IntFileAttr = uint16(tmp52)
-	tmp53, err := this._io.ReadU4le()
+	this.LenExtra = uint16(tmp52)
+	tmp53, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ExtFileAttr = uint32(tmp53)
-	tmp54, err := this._io.ReadS4le()
+	this.LenComment = uint16(tmp53)
+	tmp54, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.OfsLocalHeader = int32(tmp54)
-	tmp55, err := this._io.ReadBytes(int(this.LenFileName))
+	this.DiskNumberStart = uint16(tmp54)
+	tmp55, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	tmp55 = tmp55
-	this.FileName = string(tmp55)
-	tmp56, err := this._io.ReadBytes(int(this.LenExtra))
+	this.IntFileAttr = uint16(tmp55)
+	tmp56, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp56 = tmp56
-	this._raw_Extra = tmp56
-	_io__raw_Extra := kaitai.NewStream(bytes.NewReader(this._raw_Extra))
-	tmp57 := NewZip_Extras()
-	err = tmp57.Read(_io__raw_Extra, this, this._root)
+	this.ExtFileAttr = uint32(tmp56)
+	tmp57, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Extra = tmp57
-	tmp58, err := this._io.ReadBytes(int(this.LenComment))
+	this.OfsLocalHeader = int32(tmp57)
+	tmp58, err := this._io.ReadBytes(int(this.LenFileName))
 	if err != nil {
 		return err
 	}
 	tmp58 = tmp58
-	this.Comment = string(tmp58)
+	this.FileName = string(tmp58)
+	tmp59, err := this._io.ReadBytes(int(this.LenExtra))
+	if err != nil {
+		return err
+	}
+	tmp59 = tmp59
+	this._raw_Extra = tmp59
+	_io__raw_Extra := kaitai.NewStream(bytes.NewReader(this._raw_Extra))
+	tmp60 := NewZip_Extras()
+	err = tmp60.Read(_io__raw_Extra, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Extra = tmp60
+	tmp61, err := this._io.ReadBytes(int(this.LenComment))
+	if err != nil {
+		return err
+	}
+	tmp61 = tmp61
+	this.Comment = string(tmp61)
 	return err
 }
 func (this *Zip_CentralDirEntry) LocalHeader() (v *Zip_PkSection, err error) {
@@ -666,12 +726,12 @@ func (this *Zip_CentralDirEntry) LocalHeader() (v *Zip_PkSection, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp59 := NewZip_PkSection()
-	err = tmp59.Read(this._io, this, this._root)
+	tmp62 := NewZip_PkSection()
+	err = tmp62.Read(this._io, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.localHeader = tmp59
+	this.localHeader = tmp62
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -698,49 +758,49 @@ func (this *Zip_PkSection) Read(io *kaitai.Stream, parent interface{}, root *Zip
 	this._parent = parent
 	this._root = root
 
-	tmp60, err := this._io.ReadBytes(int(2))
+	tmp63, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp60 = tmp60
-	this.Magic = tmp60
+	tmp63 = tmp63
+	this.Magic = tmp63
 	if !(bytes.Equal(this.Magic, []uint8{80, 75})) {
 		return kaitai.NewValidationNotEqualError([]uint8{80, 75}, this.Magic, this._io, "/types/pk_section/seq/0")
 	}
-	tmp61, err := this._io.ReadU2le()
+	tmp64, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.SectionType = uint16(tmp61)
+	this.SectionType = uint16(tmp64)
 	switch (this.SectionType) {
 	case 513:
-		tmp62 := NewZip_CentralDirEntry()
-		err = tmp62.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp62
-	case 1027:
-		tmp63 := NewZip_LocalFile()
-		err = tmp63.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp63
-	case 1541:
-		tmp64 := NewZip_EndOfCentralDir()
-		err = tmp64.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp64
-	case 2055:
-		tmp65 := NewZip_DataDescriptor()
+		tmp65 := NewZip_CentralDirEntry()
 		err = tmp65.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp65
+	case 1027:
+		tmp66 := NewZip_LocalFile()
+		err = tmp66.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp66
+	case 1541:
+		tmp67 := NewZip_EndOfCentralDir()
+		err = tmp67.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp67
+	case 2055:
+		tmp68 := NewZip_DataDescriptor()
+		err = tmp68.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp68
 	}
 	return err
 }
@@ -761,28 +821,27 @@ func (this *Zip_Extras) Read(io *kaitai.Stream, parent interface{}, root *Zip) (
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp66, err := this._io.EOF()
+		tmp69, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp66 {
+		if tmp69 {
 			break
 		}
-		tmp67 := NewZip_ExtraField()
-		err = tmp67.Read(this._io, this, this._root)
+		tmp70 := NewZip_ExtraField()
+		err = tmp70.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp67)
+		this.Entries = append(this.Entries, tmp70)
 	}
 	return err
 }
 type Zip_LocalFileHeader struct {
 	Version uint16
-	Flags uint16
+	Flags *Zip_LocalFileHeader_GpFlags
 	CompressionMethod Zip_Compression
-	FileModTime uint16
-	FileModDate uint16
+	FileModTime *DosDatetime
 	Crc32 uint32
 	LenBodyCompressed uint32
 	LenBodyUncompressed uint32
@@ -793,6 +852,8 @@ type Zip_LocalFileHeader struct {
 	_io *kaitai.Stream
 	_root *Zip
 	_parent *Zip_LocalFile
+	_raw_Flags []byte
+	_raw_FileModTime []byte
 	_raw_Extra []byte
 }
 func NewZip_LocalFileHeader() *Zip_LocalFileHeader {
@@ -805,77 +866,252 @@ func (this *Zip_LocalFileHeader) Read(io *kaitai.Stream, parent *Zip_LocalFile, 
 	this._parent = parent
 	this._root = root
 
-	tmp68, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Version = uint16(tmp68)
-	tmp69, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint16(tmp69)
-	tmp70, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.CompressionMethod = Zip_Compression(tmp70)
 	tmp71, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.FileModTime = uint16(tmp71)
-	tmp72, err := this._io.ReadU2le()
+	this.Version = uint16(tmp71)
+	tmp72, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	this.FileModDate = uint16(tmp72)
-	tmp73, err := this._io.ReadU4le()
+	tmp72 = tmp72
+	this._raw_Flags = tmp72
+	_io__raw_Flags := kaitai.NewStream(bytes.NewReader(this._raw_Flags))
+	tmp73 := NewZip_LocalFileHeader_GpFlags()
+	err = tmp73.Read(_io__raw_Flags, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Crc32 = uint32(tmp73)
-	tmp74, err := this._io.ReadU4le()
+	this.Flags = tmp73
+	tmp74, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenBodyCompressed = uint32(tmp74)
-	tmp75, err := this._io.ReadU4le()
+	this.CompressionMethod = Zip_Compression(tmp74)
+	tmp75, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.LenBodyUncompressed = uint32(tmp75)
-	tmp76, err := this._io.ReadU2le()
+	tmp75 = tmp75
+	this._raw_FileModTime = tmp75
+	_io__raw_FileModTime := kaitai.NewStream(bytes.NewReader(this._raw_FileModTime))
+	tmp76 := NewDosDatetime()
+	err = tmp76.Read(_io__raw_FileModTime, this, nil)
 	if err != nil {
 		return err
 	}
-	this.LenFileName = uint16(tmp76)
-	tmp77, err := this._io.ReadU2le()
+	this.FileModTime = tmp76
+	tmp77, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenExtra = uint16(tmp77)
-	tmp78, err := this._io.ReadBytes(int(this.LenFileName))
+	this.Crc32 = uint32(tmp77)
+	tmp78, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp78 = tmp78
-	this.FileName = string(tmp78)
-	tmp79, err := this._io.ReadBytes(int(this.LenExtra))
+	this.LenBodyCompressed = uint32(tmp78)
+	tmp79, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp79 = tmp79
-	this._raw_Extra = tmp79
+	this.LenBodyUncompressed = uint32(tmp79)
+	tmp80, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenFileName = uint16(tmp80)
+	tmp81, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenExtra = uint16(tmp81)
+	tmp82, err := this._io.ReadBytes(int(this.LenFileName))
+	if err != nil {
+		return err
+	}
+	tmp82 = tmp82
+	this.FileName = string(tmp82)
+	tmp83, err := this._io.ReadBytes(int(this.LenExtra))
+	if err != nil {
+		return err
+	}
+	tmp83 = tmp83
+	this._raw_Extra = tmp83
 	_io__raw_Extra := kaitai.NewStream(bytes.NewReader(this._raw_Extra))
-	tmp80 := NewZip_Extras()
-	err = tmp80.Read(_io__raw_Extra, this, this._root)
+	tmp84 := NewZip_Extras()
+	err = tmp84.Read(_io__raw_Extra, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Extra = tmp80
+	this.Extra = tmp84
 	return err
 }
+
+/**
+ * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.4.4</a>
+ * @see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Local file headers</a>
+ */
+
+type Zip_LocalFileHeader_GpFlags_DeflateMode int
+const (
+	Zip_LocalFileHeader_GpFlags_DeflateMode__Normal Zip_LocalFileHeader_GpFlags_DeflateMode = 0
+	Zip_LocalFileHeader_GpFlags_DeflateMode__Maximum Zip_LocalFileHeader_GpFlags_DeflateMode = 1
+	Zip_LocalFileHeader_GpFlags_DeflateMode__Fast Zip_LocalFileHeader_GpFlags_DeflateMode = 2
+	Zip_LocalFileHeader_GpFlags_DeflateMode__SuperFast Zip_LocalFileHeader_GpFlags_DeflateMode = 3
+)
+type Zip_LocalFileHeader_GpFlags struct {
+	FileEncrypted bool
+	CompOptionsRaw uint64
+	HasDataDescriptor bool
+	Reserved1 bool
+	CompPatchedData bool
+	StrongEncrypt bool
+	Reserved2 uint64
+	LangEncoding bool
+	Reserved3 bool
+	MaskHeaderValues bool
+	Reserved4 uint64
+	_io *kaitai.Stream
+	_root *Zip
+	_parent *Zip_LocalFileHeader
+	_f_deflatedMode bool
+	deflatedMode Zip_LocalFileHeader_GpFlags_DeflateMode
+	_f_implodedDictByteSize bool
+	implodedDictByteSize int
+	_f_implodedNumSfTrees bool
+	implodedNumSfTrees int8
+	_f_lzmaHasEosMarker bool
+	lzmaHasEosMarker bool
+}
+func NewZip_LocalFileHeader_GpFlags() *Zip_LocalFileHeader_GpFlags {
+	return &Zip_LocalFileHeader_GpFlags{
+	}
+}
+
+func (this *Zip_LocalFileHeader_GpFlags) Read(io *kaitai.Stream, parent *Zip_LocalFileHeader, root *Zip) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp85, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.FileEncrypted = tmp85 != 0
+	tmp86, err := this._io.ReadBitsIntLe(2)
+	if err != nil {
+		return err
+	}
+	this.CompOptionsRaw = tmp86
+	tmp87, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.HasDataDescriptor = tmp87 != 0
+	tmp88, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = tmp88 != 0
+	tmp89, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.CompPatchedData = tmp89 != 0
+	tmp90, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.StrongEncrypt = tmp90 != 0
+	tmp91, err := this._io.ReadBitsIntLe(4)
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = tmp91
+	tmp92, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.LangEncoding = tmp92 != 0
+	tmp93, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.Reserved3 = tmp93 != 0
+	tmp94, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.MaskHeaderValues = tmp94 != 0
+	tmp95, err := this._io.ReadBitsIntLe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved4 = tmp95
+	return err
+}
+func (this *Zip_LocalFileHeader_GpFlags) DeflatedMode() (v Zip_LocalFileHeader_GpFlags_DeflateMode, err error) {
+	if (this._f_deflatedMode) {
+		return this.deflatedMode, nil
+	}
+	if ( ((this._parent.CompressionMethod == Zip_Compression__Deflated) || (this._parent.CompressionMethod == Zip_Compression__EnhancedDeflated)) ) {
+		this.deflatedMode = Zip_LocalFileHeader_GpFlags_DeflateMode(Zip_LocalFileHeader_GpFlags_DeflateMode(this.CompOptionsRaw))
+	}
+	this._f_deflatedMode = true
+	return this.deflatedMode, nil
+}
+
+/**
+ * 8KiB or 4KiB in bytes
+ */
+func (this *Zip_LocalFileHeader_GpFlags) ImplodedDictByteSize() (v int, err error) {
+	if (this._f_implodedDictByteSize) {
+		return this.implodedDictByteSize, nil
+	}
+	if (this._parent.CompressionMethod == Zip_Compression__Imploded) {
+		var tmp96 int8;
+		if ((this.CompOptionsRaw & 1) != 0) {
+			tmp96 = 8
+		} else {
+			tmp96 = 4
+		}
+		this.implodedDictByteSize = int((tmp96 * 1024))
+	}
+	this._f_implodedDictByteSize = true
+	return this.implodedDictByteSize, nil
+}
+func (this *Zip_LocalFileHeader_GpFlags) ImplodedNumSfTrees() (v int8, err error) {
+	if (this._f_implodedNumSfTrees) {
+		return this.implodedNumSfTrees, nil
+	}
+	if (this._parent.CompressionMethod == Zip_Compression__Imploded) {
+		var tmp97 int8;
+		if ((this.CompOptionsRaw & 2) != 0) {
+			tmp97 = 3
+		} else {
+			tmp97 = 2
+		}
+		this.implodedNumSfTrees = int8(tmp97)
+	}
+	this._f_implodedNumSfTrees = true
+	return this.implodedNumSfTrees, nil
+}
+func (this *Zip_LocalFileHeader_GpFlags) LzmaHasEosMarker() (v bool, err error) {
+	if (this._f_lzmaHasEosMarker) {
+		return this.lzmaHasEosMarker, nil
+	}
+	if (this._parent.CompressionMethod == Zip_Compression__Lzma) {
+		this.lzmaHasEosMarker = bool((this.CompOptionsRaw & 1) != 0)
+	}
+	this._f_lzmaHasEosMarker = true
+	return this.lzmaHasEosMarker, nil
+}
+
+/**
+ * internal; access derived value instances instead
+ */
 type Zip_EndOfCentralDir struct {
 	DiskOfEndOfCentralDir uint16
 	DiskOfCentralDir uint16
@@ -899,46 +1135,46 @@ func (this *Zip_EndOfCentralDir) Read(io *kaitai.Stream, parent *Zip_PkSection, 
 	this._parent = parent
 	this._root = root
 
-	tmp81, err := this._io.ReadU2le()
+	tmp98, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DiskOfEndOfCentralDir = uint16(tmp81)
-	tmp82, err := this._io.ReadU2le()
+	this.DiskOfEndOfCentralDir = uint16(tmp98)
+	tmp99, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DiskOfCentralDir = uint16(tmp82)
-	tmp83, err := this._io.ReadU2le()
+	this.DiskOfCentralDir = uint16(tmp99)
+	tmp100, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumCentralDirEntriesOnDisk = uint16(tmp83)
-	tmp84, err := this._io.ReadU2le()
+	this.NumCentralDirEntriesOnDisk = uint16(tmp100)
+	tmp101, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumCentralDirEntriesTotal = uint16(tmp84)
-	tmp85, err := this._io.ReadU4le()
+	this.NumCentralDirEntriesTotal = uint16(tmp101)
+	tmp102, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenCentralDir = uint32(tmp85)
-	tmp86, err := this._io.ReadU4le()
+	this.LenCentralDir = uint32(tmp102)
+	tmp103, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsCentralDir = uint32(tmp86)
-	tmp87, err := this._io.ReadU2le()
+	this.OfsCentralDir = uint32(tmp103)
+	tmp104, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenComment = uint16(tmp87)
-	tmp88, err := this._io.ReadBytes(int(this.LenComment))
+	this.LenComment = uint16(tmp104)
+	tmp105, err := this._io.ReadBytes(int(this.LenComment))
 	if err != nil {
 		return err
 	}
-	tmp88 = tmp88
-	this.Comment = string(tmp88)
+	tmp105 = tmp105
+	this.Comment = string(tmp105)
 	return err
 }

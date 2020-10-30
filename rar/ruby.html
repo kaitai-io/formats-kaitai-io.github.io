@@ -330,7 +330,7 @@ how to process a certain block type.</p>
 <span class="c1"># blocks. Each block has fixed header and custom body (that depends on</span>
 <span class="c1"># block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
 <span class="c1"># how to process a certain block type.</span>
-<span class="c1"># @see http://acritum.com/winrar/rar-format </span>
+<span class="c1"># @see http://acritum.com/winrar/rar-format Source</span>
 <span class="k">class</span> <span class="nc">Rar</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">BLOCK_TYPES</span> <span class="o">=</span> <span class="p">{</span>
@@ -386,15 +386,44 @@ how to process a certain block type.</p>
     <span class="k">end</span>
     <span class="nb">self</span>
   <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">BlockV5</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+  <span class="c1"># 8-byte magic (and pretty different block format) for v5+. This</span>
+  <span class="c1"># type would parse and validate both versions of signature. Note</span>
+  <span class="c1"># that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+  <span class="c1"># one can omit signature reading at all, and read this normally,</span>
+  <span class="c1"># as a block, if exact RAR version is known (and thus it&#39;s</span>
+  <span class="c1"># possible to choose correct block format).</span>
+  <span class="k">class</span> <span class="nc">MagicSignature</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="vi">@magic3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic3</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic3</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+    <span class="c1"># format, 1 means new (RAR 5+) format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># New format (RAR 5+) magic contains extra byte</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic3</span>
   <span class="k">end</span>
 
   <span class="c1">##</span>
@@ -477,7 +506,9 @@ how to process a certain block type.</p>
       <span class="vi">@low_unp_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@host_os</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Rar</span><span class="o">::</span><span class="no">OSES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="vi">@file_crc32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@file_time</span> <span class="o">=</span> <span class="no">DosTime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@_raw_file_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="n">_io__raw_file_time</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_file_time</span><span class="p">)</span>
+      <span class="vi">@file_time</span> <span class="o">=</span> <span class="no">DosDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_file_time</span><span class="p">)</span>
       <span class="vi">@rar_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="vi">@method</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Rar</span><span class="o">::</span><span class="no">METHODS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="vi">@name_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -526,89 +557,17 @@ how to process a certain block type.</p>
     <span class="kp">attr_reader</span> <span class="ss">:high_pack_size</span>
     <span class="kp">attr_reader</span> <span class="ss">:file_name</span>
     <span class="kp">attr_reader</span> <span class="ss">:salt</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_file_time</span>
   <span class="k">end</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
-  <span class="c1"># 8-byte magic (and pretty different block format) for v5+. This</span>
-  <span class="c1"># type would parse and validate both versions of signature. Note</span>
-  <span class="c1"># that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
-  <span class="c1"># one can omit signature reading at all, and read this normally,</span>
-  <span class="c1"># as a block, if exact RAR version is known (and thus it&#39;s</span>
-  <span class="c1"># possible to choose correct block format).</span>
-  <span class="k">class</span> <span class="nc">MagicSignature</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">class</span> <span class="nc">BlockV5</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="vi">@magic3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic3</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic3</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
-    <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
-    <span class="c1"># format, 1 means new (RAR 5+) format</span>
-    <span class="kp">attr_reader</span> <span class="ss">:version</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># New format (RAR 5+) magic contains extra byte</span>
-    <span class="kp">attr_reader</span> <span class="ss">:magic3</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">DosTime</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
-
-    <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="vi">@date</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">month</span>
-      <span class="k">return</span> <span class="vi">@month</span> <span class="k">unless</span> <span class="vi">@month</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@month</span> <span class="o">=</span> <span class="p">((</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">480</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
-      <span class="vi">@month</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">seconds</span>
-      <span class="k">return</span> <span class="vi">@seconds</span> <span class="k">unless</span> <span class="vi">@seconds</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@seconds</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@seconds</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">year</span>
-      <span class="k">return</span> <span class="vi">@year</span> <span class="k">unless</span> <span class="vi">@year</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@year</span> <span class="o">=</span> <span class="p">(((</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">65024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">)</span>
-      <span class="vi">@year</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">minutes</span>
-      <span class="k">return</span> <span class="vi">@minutes</span> <span class="k">unless</span> <span class="vi">@minutes</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@minutes</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">2016</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
-      <span class="vi">@minutes</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">day</span>
-      <span class="k">return</span> <span class="vi">@day</span> <span class="k">unless</span> <span class="vi">@day</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@day</span> <span class="o">=</span> <span class="p">(</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span>
-      <span class="vi">@day</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">hours</span>
-      <span class="k">return</span> <span class="vi">@hours</span> <span class="k">unless</span> <span class="vi">@hours</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@hours</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">63488</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span>
-      <span class="vi">@hours</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:time</span>
-    <span class="kp">attr_reader</span> <span class="ss">:date</span>
   <span class="k">end</span>
 
   <span class="c1">##</span>

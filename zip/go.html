@@ -135,6 +135,10 @@ are actually ZIP archives.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -298,6 +302,7 @@ are actually ZIP archives.</p>
 <span class="cm"> * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
 <span class="cm"> * are actually ZIP archives.</span>
 <span class="cm"> * @see &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 
 <span class="kd">type</span> <span class="nx">Zip_Compression</span> <span class="kt">int</span>
@@ -525,7 +530,7 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Zip_ExtraField_Ntfs</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Reserved</span> <span class="kt">uint32</span>
@@ -657,16 +662,17 @@ are actually ZIP archives.</p>
 <span class="p">}</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Zip_ExtraField_ExtendedTimestamp</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">Flags</span> <span class="kt">uint8</span>
+	<span class="nx">Flags</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp_InfoFlags</span>
 	<span class="nx">ModTime</span> <span class="kt">uint32</span>
 	<span class="nx">AccessTime</span> <span class="kt">uint32</span>
 	<span class="nx">CreateTime</span> <span class="kt">uint32</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Zip</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Zip_ExtraField</span>
+	<span class="nx">_raw_Flags</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewZip_ExtraField_ExtendedTimestamp</span><span class="p">()</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Zip_ExtraField_ExtendedTimestamp</span><span class="p">{</span>
@@ -678,43 +684,98 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nx">tmp28</span>
-	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp28</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Flags</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">_io__raw_Flags</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Flags</span><span class="p">))</span>
+	<span class="nx">tmp29</span> <span class="o">:=</span> <span class="nx">NewZip_ExtraField_ExtendedTimestamp_InfoFlags</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp29</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Flags</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ModTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
-	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasModTime</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">ModTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(!(</span><span class="nx">tmp30</span><span class="p">))</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasAccessTime</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">AccessTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(!(</span><span class="nx">tmp32</span><span class="p">))</span> <span class="p">{</span>
-		<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasCreateTime</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">CreateTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">CreateTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * Unix timestamp</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Unix timestamp</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Unix timestamp</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Zip_ExtraField_ExtendedTimestamp_InfoFlags</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">HasModTime</span> <span class="kt">bool</span>
+	<span class="nx">HasAccessTime</span> <span class="kt">bool</span>
+	<span class="nx">HasCreateTime</span> <span class="kt">bool</span>
+	<span class="nx">Reserved</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Zip</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewZip_ExtraField_ExtendedTimestamp_InfoFlags</span><span class="p">()</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp_InfoFlags</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Zip_ExtraField_ExtendedTimestamp_InfoFlags</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp_InfoFlags</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Zip_ExtraField_ExtendedTimestamp</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Zip</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HasModTime</span> <span class="p">=</span> <span class="nx">tmp33</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HasAccessTime</span> <span class="p">=</span> <span class="nx">tmp34</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HasCreateTime</span> <span class="p">=</span> <span class="nx">tmp35</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Zip_ExtraField_InfozipUnixVarSize</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Version</span> <span class="kt">uint8</span>
@@ -736,33 +797,33 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp34</span>
-	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenUid</span> <span class="p">=</span> <span class="nx">tmp35</span>
-	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenUid</span><span class="p">))</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">tmp36</span> <span class="p">=</span> <span class="nx">tmp36</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Uid</span> <span class="p">=</span> <span class="nx">tmp36</span>
 	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenGid</span> <span class="p">=</span> <span class="nx">tmp37</span>
-	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenGid</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp37</span>
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp38</span> <span class="p">=</span> <span class="nx">tmp38</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Gid</span> <span class="p">=</span> <span class="nx">tmp38</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenUid</span> <span class="p">=</span> <span class="nx">tmp38</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenUid</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp39</span> <span class="p">=</span> <span class="nx">tmp39</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Uid</span> <span class="p">=</span> <span class="nx">tmp39</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenGid</span> <span class="p">=</span> <span class="nx">tmp40</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenGid</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp41</span> <span class="p">=</span> <span class="nx">tmp41</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Gid</span> <span class="p">=</span> <span class="nx">tmp41</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 
@@ -794,8 +855,7 @@ are actually ZIP archives.</p>
 	<span class="nx">VersionNeededToExtract</span> <span class="kt">uint16</span>
 	<span class="nx">Flags</span> <span class="kt">uint16</span>
 	<span class="nx">CompressionMethod</span> <span class="nx">Zip_Compression</span>
-	<span class="nx">LastModFileTime</span> <span class="kt">uint16</span>
-	<span class="nx">LastModFileDate</span> <span class="kt">uint16</span>
+	<span class="nx">FileModTime</span> <span class="o">*</span><span class="nx">DosDatetime</span>
 	<span class="nx">Crc32</span> <span class="kt">uint32</span>
 	<span class="nx">LenBodyCompressed</span> <span class="kt">uint32</span>
 	<span class="nx">LenBodyUncompressed</span> <span class="kt">uint32</span>
@@ -812,6 +872,7 @@ are actually ZIP archives.</p>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Zip</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Zip_PkSection</span>
+	<span class="nx">_raw_FileModTime</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">_raw_Extra</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">_f_localHeader</span> <span class="kt">bool</span>
 	<span class="nx">localHeader</span> <span class="o">*</span><span class="nx">Zip_PkSection</span>
@@ -826,111 +887,114 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionMadeBy</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
-	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionNeededToExtract</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
-	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp41</span><span class="p">)</span>
 	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="p">=</span> <span class="nx">Zip_Compression</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionMadeBy</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
 	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LastModFileTime</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionNeededToExtract</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
 	<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LastModFileDate</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp44</span><span class="p">)</span>
-	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp44</span><span class="p">)</span>
+	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp45</span><span class="p">)</span>
-	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="p">=</span> <span class="nx">Zip_Compression</span><span class="p">(</span><span class="nx">tmp45</span><span class="p">)</span>
+	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyCompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp46</span><span class="p">)</span>
-	<span class="nx">tmp47</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp46</span> <span class="p">=</span> <span class="nx">tmp46</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileModTime</span> <span class="p">=</span> <span class="nx">tmp46</span>
+	<span class="nx">_io__raw_FileModTime</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileModTime</span><span class="p">))</span>
+	<span class="nx">tmp47</span> <span class="o">:=</span> <span class="nx">NewDosDatetime</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp47</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileModTime</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyUncompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp47</span><span class="p">)</span>
-	<span class="nx">tmp48</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileModTime</span> <span class="p">=</span> <span class="nx">tmp47</span>
+	<span class="nx">tmp48</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp48</span><span class="p">)</span>
-	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp48</span><span class="p">)</span>
+	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp49</span><span class="p">)</span>
-	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyCompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp49</span><span class="p">)</span>
+	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyUncompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span>
 	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskNumberStart</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp51</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp51</span><span class="p">)</span>
 	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">IntFileAttr</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp52</span><span class="p">)</span>
-	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp52</span><span class="p">)</span>
+	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ExtFileAttr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp53</span><span class="p">)</span>
-	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp53</span><span class="p">)</span>
+	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsLocalHeader</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp54</span><span class="p">)</span>
-	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskNumberStart</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp54</span><span class="p">)</span>
+	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp55</span> <span class="p">=</span> <span class="nx">tmp55</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp55</span><span class="p">)</span>
-	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">IntFileAttr</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp55</span><span class="p">)</span>
+	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp56</span> <span class="p">=</span> <span class="nx">tmp56</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span> <span class="p">=</span> <span class="nx">tmp56</span>
-	<span class="nx">_io__raw_Extra</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span><span class="p">))</span>
-	<span class="nx">tmp57</span> <span class="o">:=</span> <span class="nx">NewZip_Extras</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp57</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Extra</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ExtFileAttr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp56</span><span class="p">)</span>
+	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Extra</span> <span class="p">=</span> <span class="nx">tmp57</span>
-	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsLocalHeader</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp57</span><span class="p">)</span>
+	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">tmp58</span> <span class="p">=</span> <span class="nx">tmp58</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Comment</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp58</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp58</span><span class="p">)</span>
+	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp59</span> <span class="p">=</span> <span class="nx">tmp59</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span> <span class="p">=</span> <span class="nx">tmp59</span>
+	<span class="nx">_io__raw_Extra</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span><span class="p">))</span>
+	<span class="nx">tmp60</span> <span class="o">:=</span> <span class="nx">NewZip_Extras</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp60</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Extra</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Extra</span> <span class="p">=</span> <span class="nx">tmp60</span>
+	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp61</span> <span class="p">=</span> <span class="nx">tmp61</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Comment</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp61</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_CentralDirEntry</span><span class="p">)</span> <span class="nx">LocalHeader</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">Zip_PkSection</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -945,12 +1009,12 @@ are actually ZIP archives.</p>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp59</span> <span class="o">:=</span> <span class="nx">NewZip_PkSection</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp59</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp62</span> <span class="o">:=</span> <span class="nx">NewZip_PkSection</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp62</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">localHeader</span> <span class="p">=</span> <span class="nx">tmp59</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">localHeader</span> <span class="p">=</span> <span class="nx">tmp62</span>
 	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
@@ -977,49 +1041,49 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="nx">tmp63</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp60</span> <span class="p">=</span> <span class="nx">tmp60</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp60</span>
+	<span class="nx">tmp63</span> <span class="p">=</span> <span class="nx">tmp63</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp63</span>
 	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">80</span><span class="p">,</span> <span class="mi">75</span><span class="p">}))</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">80</span><span class="p">,</span> <span class="mi">75</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/pk_section/seq/0&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp64</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">SectionType</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp61</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SectionType</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp64</span><span class="p">)</span>
 	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">SectionType</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">case</span> <span class="mi">513</span><span class="p">:</span>
-		<span class="nx">tmp62</span> <span class="o">:=</span> <span class="nx">NewZip_CentralDirEntry</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp62</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp62</span>
-	<span class="k">case</span> <span class="mi">1027</span><span class="p">:</span>
-		<span class="nx">tmp63</span> <span class="o">:=</span> <span class="nx">NewZip_LocalFile</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp63</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp63</span>
-	<span class="k">case</span> <span class="mi">1541</span><span class="p">:</span>
-		<span class="nx">tmp64</span> <span class="o">:=</span> <span class="nx">NewZip_EndOfCentralDir</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp64</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp64</span>
-	<span class="k">case</span> <span class="mi">2055</span><span class="p">:</span>
-		<span class="nx">tmp65</span> <span class="o">:=</span> <span class="nx">NewZip_DataDescriptor</span><span class="p">()</span>
+		<span class="nx">tmp65</span> <span class="o">:=</span> <span class="nx">NewZip_CentralDirEntry</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp65</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp65</span>
+	<span class="k">case</span> <span class="mi">1027</span><span class="p">:</span>
+		<span class="nx">tmp66</span> <span class="o">:=</span> <span class="nx">NewZip_LocalFile</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp66</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp66</span>
+	<span class="k">case</span> <span class="mi">1541</span><span class="p">:</span>
+		<span class="nx">tmp67</span> <span class="o">:=</span> <span class="nx">NewZip_EndOfCentralDir</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp67</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp67</span>
+	<span class="k">case</span> <span class="mi">2055</span><span class="p">:</span>
+		<span class="nx">tmp68</span> <span class="o">:=</span> <span class="nx">NewZip_DataDescriptor</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp68</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp68</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -1040,28 +1104,27 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="nx">tmp69</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="k">if</span> <span class="nx">tmp66</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">tmp69</span> <span class="p">{</span>
 			<span class="k">break</span>
 		<span class="p">}</span>
-		<span class="nx">tmp67</span> <span class="o">:=</span> <span class="nx">NewZip_ExtraField</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp67</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp70</span> <span class="o">:=</span> <span class="nx">NewZip_ExtraField</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp70</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp67</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp70</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Zip_LocalFileHeader</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Version</span> <span class="kt">uint16</span>
-	<span class="nx">Flags</span> <span class="kt">uint16</span>
+	<span class="nx">Flags</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span>
 	<span class="nx">CompressionMethod</span> <span class="nx">Zip_Compression</span>
-	<span class="nx">FileModTime</span> <span class="kt">uint16</span>
-	<span class="nx">FileModDate</span> <span class="kt">uint16</span>
+	<span class="nx">FileModTime</span> <span class="o">*</span><span class="nx">DosDatetime</span>
 	<span class="nx">Crc32</span> <span class="kt">uint32</span>
 	<span class="nx">LenBodyCompressed</span> <span class="kt">uint32</span>
 	<span class="nx">LenBodyUncompressed</span> <span class="kt">uint32</span>
@@ -1072,6 +1135,8 @@ are actually ZIP archives.</p>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Zip</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Zip_LocalFile</span>
+	<span class="nx">_raw_Flags</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_FileModTime</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">_raw_Extra</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewZip_LocalFileHeader</span><span class="p">()</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader</span> <span class="p">{</span>
@@ -1084,77 +1149,252 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp68</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp68</span><span class="p">)</span>
-	<span class="nx">tmp69</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp69</span><span class="p">)</span>
-	<span class="nx">tmp70</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="p">=</span> <span class="nx">Zip_Compression</span><span class="p">(</span><span class="nx">tmp70</span><span class="p">)</span>
 	<span class="nx">tmp71</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileModTime</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp71</span><span class="p">)</span>
-	<span class="nx">tmp72</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp71</span><span class="p">)</span>
+	<span class="nx">tmp72</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileModDate</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp72</span><span class="p">)</span>
-	<span class="nx">tmp73</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp72</span> <span class="p">=</span> <span class="nx">tmp72</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Flags</span> <span class="p">=</span> <span class="nx">tmp72</span>
+	<span class="nx">_io__raw_Flags</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Flags</span><span class="p">))</span>
+	<span class="nx">tmp73</span> <span class="o">:=</span> <span class="nx">NewZip_LocalFileHeader_GpFlags</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp73</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Flags</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp73</span><span class="p">)</span>
-	<span class="nx">tmp74</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nx">tmp73</span>
+	<span class="nx">tmp74</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyCompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp74</span><span class="p">)</span>
-	<span class="nx">tmp75</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="p">=</span> <span class="nx">Zip_Compression</span><span class="p">(</span><span class="nx">tmp74</span><span class="p">)</span>
+	<span class="nx">tmp75</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyUncompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp75</span><span class="p">)</span>
-	<span class="nx">tmp76</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp75</span> <span class="p">=</span> <span class="nx">tmp75</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileModTime</span> <span class="p">=</span> <span class="nx">tmp75</span>
+	<span class="nx">_io__raw_FileModTime</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileModTime</span><span class="p">))</span>
+	<span class="nx">tmp76</span> <span class="o">:=</span> <span class="nx">NewDosDatetime</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp76</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileModTime</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp76</span><span class="p">)</span>
-	<span class="nx">tmp77</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileModTime</span> <span class="p">=</span> <span class="nx">tmp76</span>
+	<span class="nx">tmp77</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp77</span><span class="p">)</span>
-	<span class="nx">tmp78</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp77</span><span class="p">)</span>
+	<span class="nx">tmp78</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp78</span> <span class="p">=</span> <span class="nx">tmp78</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp78</span><span class="p">)</span>
-	<span class="nx">tmp79</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyCompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp78</span><span class="p">)</span>
+	<span class="nx">tmp79</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp79</span> <span class="p">=</span> <span class="nx">tmp79</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span> <span class="p">=</span> <span class="nx">tmp79</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBodyUncompressed</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp79</span><span class="p">)</span>
+	<span class="nx">tmp80</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp80</span><span class="p">)</span>
+	<span class="nx">tmp81</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp81</span><span class="p">)</span>
+	<span class="nx">tmp82</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenFileName</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp82</span> <span class="p">=</span> <span class="nx">tmp82</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp82</span><span class="p">)</span>
+	<span class="nx">tmp83</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenExtra</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp83</span> <span class="p">=</span> <span class="nx">tmp83</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span> <span class="p">=</span> <span class="nx">tmp83</span>
 	<span class="nx">_io__raw_Extra</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Extra</span><span class="p">))</span>
-	<span class="nx">tmp80</span> <span class="o">:=</span> <span class="nx">NewZip_Extras</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp80</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Extra</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp84</span> <span class="o">:=</span> <span class="nx">NewZip_Extras</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp84</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Extra</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Extra</span> <span class="p">=</span> <span class="nx">tmp80</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Extra</span> <span class="p">=</span> <span class="nx">tmp84</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;- 4.4.4&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html&quot;&gt;Local file headers&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode__Normal</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode__Maximum</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode__Fast</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode__SuperFast</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">Zip_LocalFileHeader_GpFlags</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">FileEncrypted</span> <span class="kt">bool</span>
+	<span class="nx">CompOptionsRaw</span> <span class="kt">uint64</span>
+	<span class="nx">HasDataDescriptor</span> <span class="kt">bool</span>
+	<span class="nx">Reserved1</span> <span class="kt">bool</span>
+	<span class="nx">CompPatchedData</span> <span class="kt">bool</span>
+	<span class="nx">StrongEncrypt</span> <span class="kt">bool</span>
+	<span class="nx">Reserved2</span> <span class="kt">uint64</span>
+	<span class="nx">LangEncoding</span> <span class="kt">bool</span>
+	<span class="nx">Reserved3</span> <span class="kt">bool</span>
+	<span class="nx">MaskHeaderValues</span> <span class="kt">bool</span>
+	<span class="nx">Reserved4</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Zip</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader</span>
+	<span class="nx">_f_deflatedMode</span> <span class="kt">bool</span>
+	<span class="nx">deflatedMode</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span>
+	<span class="nx">_f_implodedDictByteSize</span> <span class="kt">bool</span>
+	<span class="nx">implodedDictByteSize</span> <span class="kt">int</span>
+	<span class="nx">_f_implodedNumSfTrees</span> <span class="kt">bool</span>
+	<span class="nx">implodedNumSfTrees</span> <span class="kt">int8</span>
+	<span class="nx">_f_lzmaHasEosMarker</span> <span class="kt">bool</span>
+	<span class="nx">lzmaHasEosMarker</span> <span class="kt">bool</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewZip_LocalFileHeader_GpFlags</span><span class="p">()</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Zip</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp85</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileEncrypted</span> <span class="p">=</span> <span class="nx">tmp85</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp86</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CompOptionsRaw</span> <span class="p">=</span> <span class="nx">tmp86</span>
+	<span class="nx">tmp87</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HasDataDescriptor</span> <span class="p">=</span> <span class="nx">tmp87</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp88</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp88</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp89</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CompPatchedData</span> <span class="p">=</span> <span class="nx">tmp89</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp90</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StrongEncrypt</span> <span class="p">=</span> <span class="nx">tmp90</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp91</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp91</span>
+	<span class="nx">tmp92</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LangEncoding</span> <span class="p">=</span> <span class="nx">tmp92</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp93</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp93</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp94</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MaskHeaderValues</span> <span class="p">=</span> <span class="nx">tmp94</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp95</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved4</span> <span class="p">=</span> <span class="nx">tmp95</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">)</span> <span class="nx">DeflatedMode</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_deflatedMode</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">deflatedMode</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="o">==</span> <span class="nx">Zip_Compression__Deflated</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="o">==</span> <span class="nx">Zip_Compression__EnhancedDeflated</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">deflatedMode</span> <span class="p">=</span> <span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span><span class="p">(</span><span class="nx">Zip_LocalFileHeader_GpFlags_DeflateMode</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">CompOptionsRaw</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_deflatedMode</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">deflatedMode</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 8KiB or 4KiB in bytes</span>
+<span class="cm"> */</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">)</span> <span class="nx">ImplodedDictByteSize</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_implodedDictByteSize</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">implodedDictByteSize</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="o">==</span> <span class="nx">Zip_Compression__Imploded</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp96</span> <span class="kt">int8</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">CompOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">tmp96</span> <span class="p">=</span> <span class="mi">8</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">tmp96</span> <span class="p">=</span> <span class="mi">4</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">implodedDictByteSize</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">tmp96</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_implodedDictByteSize</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">implodedDictByteSize</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">)</span> <span class="nx">ImplodedNumSfTrees</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int8</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_implodedNumSfTrees</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">implodedNumSfTrees</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="o">==</span> <span class="nx">Zip_Compression__Imploded</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp97</span> <span class="kt">int8</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">CompOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">tmp97</span> <span class="p">=</span> <span class="mi">3</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">tmp97</span> <span class="p">=</span> <span class="mi">2</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">implodedNumSfTrees</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">tmp97</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_implodedNumSfTrees</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">implodedNumSfTrees</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Zip_LocalFileHeader_GpFlags</span><span class="p">)</span> <span class="nx">LzmaHasEosMarker</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lzmaHasEosMarker</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lzmaHasEosMarker</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">CompressionMethod</span> <span class="o">==</span> <span class="nx">Zip_Compression__Lzma</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">lzmaHasEosMarker</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">CompOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lzmaHasEosMarker</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lzmaHasEosMarker</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * internal; access derived value instances instead</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Zip_EndOfCentralDir</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">DiskOfEndOfCentralDir</span> <span class="kt">uint16</span>
 	<span class="nx">DiskOfCentralDir</span> <span class="kt">uint16</span>
@@ -1178,47 +1418,47 @@ are actually ZIP archives.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp81</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp98</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskOfEndOfCentralDir</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp81</span><span class="p">)</span>
-	<span class="nx">tmp82</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskOfEndOfCentralDir</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp98</span><span class="p">)</span>
+	<span class="nx">tmp99</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskOfCentralDir</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp82</span><span class="p">)</span>
-	<span class="nx">tmp83</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DiskOfCentralDir</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp99</span><span class="p">)</span>
+	<span class="nx">tmp100</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">NumCentralDirEntriesOnDisk</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp83</span><span class="p">)</span>
-	<span class="nx">tmp84</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumCentralDirEntriesOnDisk</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp100</span><span class="p">)</span>
+	<span class="nx">tmp101</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">NumCentralDirEntriesTotal</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp84</span><span class="p">)</span>
-	<span class="nx">tmp85</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumCentralDirEntriesTotal</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp101</span><span class="p">)</span>
+	<span class="nx">tmp102</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenCentralDir</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp85</span><span class="p">)</span>
-	<span class="nx">tmp86</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenCentralDir</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp102</span><span class="p">)</span>
+	<span class="nx">tmp103</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsCentralDir</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp86</span><span class="p">)</span>
-	<span class="nx">tmp87</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsCentralDir</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp103</span><span class="p">)</span>
+	<span class="nx">tmp104</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp87</span><span class="p">)</span>
-	<span class="nx">tmp88</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp104</span><span class="p">)</span>
+	<span class="nx">tmp105</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenComment</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp88</span> <span class="p">=</span> <span class="nx">tmp88</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Comment</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp88</span><span class="p">)</span>
+	<span class="nx">tmp105</span> <span class="p">=</span> <span class="nx">tmp105</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Comment</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp105</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 </pre></div>

@@ -8,6 +8,7 @@ local enum = require("enum")
 local stringstream = require("string_stream")
 local utils = require("utils")
 
+require("dos_datetime")
 -- 
 -- RAR is a archive format used by popular proprietary RAR archiver,
 -- created by Eugene Roshal. There are two major versions of format
@@ -17,7 +18,7 @@ local utils = require("utils")
 -- blocks. Each block has fixed header and custom body (that depends on
 -- block type), so it's possible to skip block even if one doesn't know
 -- how to process a certain block type.
--- See also:  (http://acritum.com/winrar/rar-format)
+-- See also: Source (http://acritum.com/winrar/rar-format)
 Rar = class.class(KaitaiStruct)
 
 Rar.BlockTypes = enum.Enum {
@@ -78,18 +79,44 @@ end
 -- 
 -- Sequence of blocks that constitute the RAR file.
 
-Rar.BlockV5 = class.class(KaitaiStruct)
+-- 
+-- RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+-- 8-byte magic (and pretty different block format) for v5+. This
+-- type would parse and validate both versions of signature. Note
+-- that actually this signature is a valid RAR "block": in theory,
+-- one can omit signature reading at all, and read this normally,
+-- as a block, if exact RAR version is known (and thus it's
+-- possible to choose correct block format).
+Rar.MagicSignature = class.class(KaitaiStruct)
 
-function Rar.BlockV5:_init(io, parent, root)
+function Rar.MagicSignature:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root or self
   self:_read()
 end
 
-function Rar.BlockV5:_read()
+function Rar.MagicSignature:_read()
+  self.magic1 = self._io:read_bytes(6)
+  if not(self.magic1 == "\082\097\114\033\026\007") then
+    error("not equal, expected " ..  "\082\097\114\033\026\007" .. ", but got " .. self.magic1)
+  end
+  self.version = self._io:read_u1()
+  if self.version == 1 then
+    self.magic3 = self._io:read_bytes(1)
+    if not(self.magic3 == "\000") then
+      error("not equal, expected " ..  "\000" .. ", but got " .. self.magic3)
+    end
+  end
 end
 
+-- 
+-- Fixed part of file's magic signature that doesn't change with RAR version.
+-- 
+-- Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+-- format, 1 means new (RAR 5+) format
+-- 
+-- New format (RAR 5+) magic contains extra byte.
 
 -- 
 -- Basic block that RAR files consist of. There are several block
@@ -179,7 +206,9 @@ function Rar.BlockFileHeader:_read()
   self.low_unp_size = self._io:read_u4le()
   self.host_os = Rar.Oses(self._io:read_u1())
   self.file_crc32 = self._io:read_u4le()
-  self.file_time = Rar.DosTime(self._io, self, self._root)
+  self._raw_file_time = self._io:read_bytes(4)
+  local _io = KaitaiStream(stringstream(self._raw_file_time))
+  self.file_time = DosDatetime(_io)
   self.rar_version = self._io:read_u1()
   self.method = Rar.Methods(self._io:read_u1())
   self.name_size = self._io:read_u2le()
@@ -210,117 +239,16 @@ end
 -- 
 -- Compressed file size, high 32 bits, only if 64-bit header flag is present.
 
--- 
--- RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
--- 8-byte magic (and pretty different block format) for v5+. This
--- type would parse and validate both versions of signature. Note
--- that actually this signature is a valid RAR "block": in theory,
--- one can omit signature reading at all, and read this normally,
--- as a block, if exact RAR version is known (and thus it's
--- possible to choose correct block format).
-Rar.MagicSignature = class.class(KaitaiStruct)
+Rar.BlockV5 = class.class(KaitaiStruct)
 
-function Rar.MagicSignature:_init(io, parent, root)
+function Rar.BlockV5:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root or self
   self:_read()
 end
 
-function Rar.MagicSignature:_read()
-  self.magic1 = self._io:read_bytes(6)
-  if not(self.magic1 == "\082\097\114\033\026\007") then
-    error("not equal, expected " ..  "\082\097\114\033\026\007" .. ", but got " .. self.magic1)
-  end
-  self.version = self._io:read_u1()
-  if self.version == 1 then
-    self.magic3 = self._io:read_bytes(1)
-    if not(self.magic3 == "\000") then
-      error("not equal, expected " ..  "\000" .. ", but got " .. self.magic3)
-    end
-  end
-end
-
--- 
--- Fixed part of file's magic signature that doesn't change with RAR version.
--- 
--- Variable part of magic signature: 0 means old (RAR 1.5-4.0)
--- format, 1 means new (RAR 5+) format
--- 
--- New format (RAR 5+) magic contains extra byte.
-
-Rar.DosTime = class.class(KaitaiStruct)
-
-function Rar.DosTime:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rar.DosTime:_read()
-  self.time = self._io:read_u2le()
-  self.date = self._io:read_u2le()
-end
-
-Rar.DosTime.property.month = {}
-function Rar.DosTime.property.month:get()
-  if self._m_month ~= nil then
-    return self._m_month
-  end
-
-  self._m_month = ((self.date & 480) >> 5)
-  return self._m_month
-end
-
-Rar.DosTime.property.seconds = {}
-function Rar.DosTime.property.seconds:get()
-  if self._m_seconds ~= nil then
-    return self._m_seconds
-  end
-
-  self._m_seconds = ((self.time & 31) * 2)
-  return self._m_seconds
-end
-
-Rar.DosTime.property.year = {}
-function Rar.DosTime.property.year:get()
-  if self._m_year ~= nil then
-    return self._m_year
-  end
-
-  self._m_year = (((self.date & 65024) >> 9) + 1980)
-  return self._m_year
-end
-
-Rar.DosTime.property.minutes = {}
-function Rar.DosTime.property.minutes:get()
-  if self._m_minutes ~= nil then
-    return self._m_minutes
-  end
-
-  self._m_minutes = ((self.time & 2016) >> 5)
-  return self._m_minutes
-end
-
-Rar.DosTime.property.day = {}
-function Rar.DosTime.property.day:get()
-  if self._m_day ~= nil then
-    return self._m_day
-  end
-
-  self._m_day = (self.date & 31)
-  return self._m_day
-end
-
-Rar.DosTime.property.hours = {}
-function Rar.DosTime.property.hours:get()
-  if self._m_hours ~= nil then
-    return self._m_hours
-  end
-
-  self._m_hours = ((self.time & 63488) >> 11)
-  return self._m_hours
+function Rar.BlockV5:_read()
 end
 
 

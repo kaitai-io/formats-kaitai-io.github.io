@@ -19,7 +19,7 @@ import java.util.Arrays;
  * blocks. Each block has fixed header and custom body (that depends on
  * block type), so it's possible to skip block even if one doesn't know
  * how to process a certain block type.
- * @see <a href="http://acritum.com/winrar/rar-format"></a>
+ * @see <a href="http://acritum.com/winrar/rar-format">Source</a>
  */
 public class Rar extends KaitaiStruct {
     public static Rar fromFile(String fileName) throws IOException {
@@ -121,29 +121,69 @@ public class Rar extends KaitaiStruct {
             }
         }
     }
-    public static class BlockV5 extends KaitaiStruct {
-        public static BlockV5 fromFile(String fileName) throws IOException {
-            return new BlockV5(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+     * 8-byte magic (and pretty different block format) for v5+. This
+     * type would parse and validate both versions of signature. Note
+     * that actually this signature is a valid RAR "block": in theory,
+     * one can omit signature reading at all, and read this normally,
+     * as a block, if exact RAR version is known (and thus it's
+     * possible to choose correct block format).
+     */
+    public static class MagicSignature extends KaitaiStruct {
+        public static MagicSignature fromFile(String fileName) throws IOException {
+            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
         }
 
-        public BlockV5(KaitaiStream _io) {
+        public MagicSignature(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public BlockV5(KaitaiStream _io, Rar _parent) {
+        public MagicSignature(KaitaiStream _io, Rar _parent) {
             this(_io, _parent, null);
         }
 
-        public BlockV5(KaitaiStream _io, Rar _parent, Rar _root) {
+        public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
+            this.magic1 = this._io.readBytes(6);
+            if (!(Arrays.equals(magic1(), new byte[] { 82, 97, 114, 33, 26, 7 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, magic1(), _io(), "/types/magic_signature/seq/0");
+            }
+            this.version = this._io.readU1();
+            if (version() == 1) {
+                this.magic3 = this._io.readBytes(1);
+                if (!(Arrays.equals(magic3(), new byte[] { 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, magic3(), _io(), "/types/magic_signature/seq/2");
+                }
+            }
         }
+        private byte[] magic1;
+        private int version;
+        private byte[] magic3;
         private Rar _root;
         private Rar _parent;
+
+        /**
+         * Fixed part of file's magic signature that doesn't change with RAR version
+         */
+        public byte[] magic1() { return magic1; }
+
+        /**
+         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+         * format, 1 means new (RAR 5+) format
+         */
+        public int version() { return version; }
+
+        /**
+         * New format (RAR 5+) magic contains extra byte
+         */
+        public byte[] magic3() { return magic3; }
         public Rar _root() { return _root; }
         public Rar _parent() { return _parent; }
     }
@@ -291,7 +331,9 @@ public class Rar extends KaitaiStruct {
             this.lowUnpSize = this._io.readU4le();
             this.hostOs = Rar.Oses.byId(this._io.readU1());
             this.fileCrc32 = this._io.readU4le();
-            this.fileTime = new DosTime(this._io, this, _root);
+            this._raw_fileTime = this._io.readBytes(4);
+            KaitaiStream _io__raw_fileTime = new ByteBufferKaitaiStream(_raw_fileTime);
+            this.fileTime = new DosDatetime(_io__raw_fileTime);
             this.rarVersion = this._io.readU1();
             this.method = Rar.Methods.byId(this._io.readU1());
             this.nameSize = this._io.readU2le();
@@ -307,7 +349,7 @@ public class Rar extends KaitaiStruct {
         private long lowUnpSize;
         private Oses hostOs;
         private long fileCrc32;
-        private DosTime fileTime;
+        private DosDatetime fileTime;
         private int rarVersion;
         private Methods method;
         private int nameSize;
@@ -317,6 +359,7 @@ public class Rar extends KaitaiStruct {
         private Long salt;
         private Rar _root;
         private Rar.Block _parent;
+        private byte[] _raw_fileTime;
 
         /**
          * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
@@ -332,7 +375,7 @@ public class Rar extends KaitaiStruct {
         /**
          * Date and time in standard MS DOS format
          */
-        public DosTime fileTime() { return fileTime; }
+        public DosDatetime fileTime() { return fileTime; }
 
         /**
          * RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
@@ -362,152 +405,33 @@ public class Rar extends KaitaiStruct {
         public Long salt() { return salt; }
         public Rar _root() { return _root; }
         public Rar.Block _parent() { return _parent; }
+        public byte[] _raw_fileTime() { return _raw_fileTime; }
     }
-
-    /**
-     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-     * 8-byte magic (and pretty different block format) for v5+. This
-     * type would parse and validate both versions of signature. Note
-     * that actually this signature is a valid RAR "block": in theory,
-     * one can omit signature reading at all, and read this normally,
-     * as a block, if exact RAR version is known (and thus it's
-     * possible to choose correct block format).
-     */
-    public static class MagicSignature extends KaitaiStruct {
-        public static MagicSignature fromFile(String fileName) throws IOException {
-            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
+    public static class BlockV5 extends KaitaiStruct {
+        public static BlockV5 fromFile(String fileName) throws IOException {
+            return new BlockV5(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MagicSignature(KaitaiStream _io) {
+        public BlockV5(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MagicSignature(KaitaiStream _io, Rar _parent) {
+        public BlockV5(KaitaiStream _io, Rar _parent) {
             this(_io, _parent, null);
         }
 
-        public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
+        public BlockV5(KaitaiStream _io, Rar _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic1 = this._io.readBytes(6);
-            if (!(Arrays.equals(magic1(), new byte[] { 82, 97, 114, 33, 26, 7 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, magic1(), _io(), "/types/magic_signature/seq/0");
-            }
-            this.version = this._io.readU1();
-            if (version() == 1) {
-                this.magic3 = this._io.readBytes(1);
-                if (!(Arrays.equals(magic3(), new byte[] { 0 }))) {
-                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, magic3(), _io(), "/types/magic_signature/seq/2");
-                }
-            }
         }
-        private byte[] magic1;
-        private int version;
-        private byte[] magic3;
         private Rar _root;
         private Rar _parent;
-
-        /**
-         * Fixed part of file's magic signature that doesn't change with RAR version
-         */
-        public byte[] magic1() { return magic1; }
-
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        public int version() { return version; }
-
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        public byte[] magic3() { return magic3; }
         public Rar _root() { return _root; }
         public Rar _parent() { return _parent; }
-    }
-    public static class DosTime extends KaitaiStruct {
-        public static DosTime fromFile(String fileName) throws IOException {
-            return new DosTime(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DosTime(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.time = this._io.readU2le();
-            this.date = this._io.readU2le();
-        }
-        private Integer month;
-        public Integer month() {
-            if (this.month != null)
-                return this.month;
-            int _tmp = (int) (((date() & 480) >> 5));
-            this.month = _tmp;
-            return this.month;
-        }
-        private Integer seconds;
-        public Integer seconds() {
-            if (this.seconds != null)
-                return this.seconds;
-            int _tmp = (int) (((time() & 31) * 2));
-            this.seconds = _tmp;
-            return this.seconds;
-        }
-        private Integer year;
-        public Integer year() {
-            if (this.year != null)
-                return this.year;
-            int _tmp = (int) ((((date() & 65024) >> 9) + 1980));
-            this.year = _tmp;
-            return this.year;
-        }
-        private Integer minutes;
-        public Integer minutes() {
-            if (this.minutes != null)
-                return this.minutes;
-            int _tmp = (int) (((time() & 2016) >> 5));
-            this.minutes = _tmp;
-            return this.minutes;
-        }
-        private Integer day;
-        public Integer day() {
-            if (this.day != null)
-                return this.day;
-            int _tmp = (int) ((date() & 31));
-            this.day = _tmp;
-            return this.day;
-        }
-        private Integer hours;
-        public Integer hours() {
-            if (this.hours != null)
-                return this.hours;
-            int _tmp = (int) (((time() & 63488) >> 11));
-            this.hours = _tmp;
-            return this.hours;
-        }
-        private int time;
-        private int date;
-        private Rar _root;
-        private Rar.BlockFileHeader _parent;
-        public int time() { return time; }
-        public int date() { return date; }
-        public Rar _root() { return _root; }
-        public Rar.BlockFileHeader _parent() { return _parent; }
     }
     private MagicSignature magic;
     private ArrayList<KaitaiStruct> blocks;

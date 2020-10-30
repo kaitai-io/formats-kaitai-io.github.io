@@ -5,11 +5,13 @@
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include "dos_datetime.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
+class dos_datetime_t;
 
 /**
  * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
@@ -23,6 +25,7 @@
  * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
  * are actually ZIP archives.
  * \sa https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT Source
+ * \sa https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Source
  */
 
 class zip_t : public kaitai::kstruct {
@@ -158,7 +161,7 @@ public:
         ~extra_field_t();
 
         /**
-         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191 Source
+         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191 Source
          */
 
         class ntfs_t : public kaitai::kstruct {
@@ -256,12 +259,13 @@ public:
         };
 
         /**
-         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817 Source
+         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817 Source
          */
 
         class extended_timestamp_t : public kaitai::kstruct {
 
         public:
+            class info_flags_t;
 
             extended_timestamp_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent = 0, zip_t* p__root = 0);
 
@@ -272,9 +276,45 @@ public:
         public:
             ~extended_timestamp_t();
 
+            class info_flags_t : public kaitai::kstruct {
+
+            public:
+
+                info_flags_t(kaitai::kstream* p__io, zip_t::extra_field_t::extended_timestamp_t* p__parent = 0, zip_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~info_flags_t();
+
+            private:
+                bool m_has_mod_time;
+                bool m_has_access_time;
+                bool m_has_create_time;
+                uint64_t m_reserved;
+                zip_t* m__root;
+                zip_t::extra_field_t::extended_timestamp_t* m__parent;
+
+            public:
+                bool has_mod_time() const { return m_has_mod_time; }
+                bool has_access_time() const { return m_has_access_time; }
+                bool has_create_time() const { return m_has_create_time; }
+                uint64_t reserved() const { return m_reserved; }
+                zip_t* _root() const { return m__root; }
+                zip_t::extra_field_t::extended_timestamp_t* _parent() const { return m__parent; }
+            };
+
         private:
-            uint8_t m_flags;
+            info_flags_t* m_flags;
             uint32_t m_mod_time;
+            bool n_mod_time;
+
+        public:
+            bool _is_null_mod_time() { mod_time(); return n_mod_time; };
+
+        private:
             uint32_t m_access_time;
             bool n_access_time;
 
@@ -291,18 +331,34 @@ public:
         private:
             zip_t* m__root;
             zip_t::extra_field_t* m__parent;
+            std::string m__raw_flags;
+            kaitai::kstream* m__io__raw_flags;
 
         public:
-            uint8_t flags() const { return m_flags; }
+            info_flags_t* flags() const { return m_flags; }
+
+            /**
+             * Unix timestamp
+             */
             uint32_t mod_time() const { return m_mod_time; }
+
+            /**
+             * Unix timestamp
+             */
             uint32_t access_time() const { return m_access_time; }
+
+            /**
+             * Unix timestamp
+             */
             uint32_t create_time() const { return m_create_time; }
             zip_t* _root() const { return m__root; }
             zip_t::extra_field_t* _parent() const { return m__parent; }
+            std::string _raw_flags() const { return m__raw_flags; }
+            kaitai::kstream* _io__raw_flags() const { return m__io__raw_flags; }
         };
 
         /**
-         * \sa https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339 Source
+         * \sa https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339 Source
          */
 
         class infozip_unix_var_size_t : public kaitai::kstruct {
@@ -411,8 +467,7 @@ public:
         uint16_t m_version_needed_to_extract;
         uint16_t m_flags;
         compression_t m_compression_method;
-        uint16_t m_last_mod_file_time;
-        uint16_t m_last_mod_file_date;
+        dos_datetime_t* m_file_mod_time;
         uint32_t m_crc32;
         uint32_t m_len_body_compressed;
         uint32_t m_len_body_uncompressed;
@@ -428,6 +483,8 @@ public:
         std::string m_comment;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
+        std::string m__raw_file_mod_time;
+        kaitai::kstream* m__io__raw_file_mod_time;
         std::string m__raw_extra;
         kaitai::kstream* m__io__raw_extra;
 
@@ -436,8 +493,7 @@ public:
         uint16_t version_needed_to_extract() const { return m_version_needed_to_extract; }
         uint16_t flags() const { return m_flags; }
         compression_t compression_method() const { return m_compression_method; }
-        uint16_t last_mod_file_time() const { return m_last_mod_file_time; }
-        uint16_t last_mod_file_date() const { return m_last_mod_file_date; }
+        dos_datetime_t* file_mod_time() const { return m_file_mod_time; }
         uint32_t crc32() const { return m_crc32; }
         uint32_t len_body_compressed() const { return m_len_body_compressed; }
         uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
@@ -453,6 +509,8 @@ public:
         std::string comment() const { return m_comment; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
+        std::string _raw_file_mod_time() const { return m__raw_file_mod_time; }
+        kaitai::kstream* _io__raw_file_mod_time() const { return m__io__raw_file_mod_time; }
         std::string _raw_extra() const { return m__raw_extra; }
         kaitai::kstream* _io__raw_extra() const { return m__io__raw_extra; }
     };
@@ -518,6 +576,7 @@ public:
     class local_file_header_t : public kaitai::kstruct {
 
     public:
+        class gp_flags_t;
 
         local_file_header_t(kaitai::kstream* p__io, zip_t::local_file_t* p__parent = 0, zip_t* p__root = 0);
 
@@ -528,12 +587,127 @@ public:
     public:
         ~local_file_header_t();
 
+        /**
+         * \sa https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.4.4
+         * \sa https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Local file headers
+         */
+
+        class gp_flags_t : public kaitai::kstruct {
+
+        public:
+
+            enum deflate_mode_t {
+                DEFLATE_MODE_NORMAL = 0,
+                DEFLATE_MODE_MAXIMUM = 1,
+                DEFLATE_MODE_FAST = 2,
+                DEFLATE_MODE_SUPER_FAST = 3
+            };
+
+            gp_flags_t(kaitai::kstream* p__io, zip_t::local_file_header_t* p__parent = 0, zip_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~gp_flags_t();
+
+        private:
+            bool f_deflated_mode;
+            deflate_mode_t m_deflated_mode;
+            bool n_deflated_mode;
+
+        public:
+            bool _is_null_deflated_mode() { deflated_mode(); return n_deflated_mode; };
+
+        private:
+
+        public:
+            deflate_mode_t deflated_mode();
+
+        private:
+            bool f_imploded_dict_byte_size;
+            int32_t m_imploded_dict_byte_size;
+            bool n_imploded_dict_byte_size;
+
+        public:
+            bool _is_null_imploded_dict_byte_size() { imploded_dict_byte_size(); return n_imploded_dict_byte_size; };
+
+        private:
+
+        public:
+
+            /**
+             * 8KiB or 4KiB in bytes
+             */
+            int32_t imploded_dict_byte_size();
+
+        private:
+            bool f_imploded_num_sf_trees;
+            int8_t m_imploded_num_sf_trees;
+            bool n_imploded_num_sf_trees;
+
+        public:
+            bool _is_null_imploded_num_sf_trees() { imploded_num_sf_trees(); return n_imploded_num_sf_trees; };
+
+        private:
+
+        public:
+            int8_t imploded_num_sf_trees();
+
+        private:
+            bool f_lzma_has_eos_marker;
+            bool m_lzma_has_eos_marker;
+            bool n_lzma_has_eos_marker;
+
+        public:
+            bool _is_null_lzma_has_eos_marker() { lzma_has_eos_marker(); return n_lzma_has_eos_marker; };
+
+        private:
+
+        public:
+            bool lzma_has_eos_marker();
+
+        private:
+            bool m_file_encrypted;
+            uint64_t m_comp_options_raw;
+            bool m_has_data_descriptor;
+            bool m_reserved_1;
+            bool m_comp_patched_data;
+            bool m_strong_encrypt;
+            uint64_t m_reserved_2;
+            bool m_lang_encoding;
+            bool m_reserved_3;
+            bool m_mask_header_values;
+            uint64_t m_reserved_4;
+            zip_t* m__root;
+            zip_t::local_file_header_t* m__parent;
+
+        public:
+            bool file_encrypted() const { return m_file_encrypted; }
+
+            /**
+             * internal; access derived value instances instead
+             */
+            uint64_t comp_options_raw() const { return m_comp_options_raw; }
+            bool has_data_descriptor() const { return m_has_data_descriptor; }
+            bool reserved_1() const { return m_reserved_1; }
+            bool comp_patched_data() const { return m_comp_patched_data; }
+            bool strong_encrypt() const { return m_strong_encrypt; }
+            uint64_t reserved_2() const { return m_reserved_2; }
+            bool lang_encoding() const { return m_lang_encoding; }
+            bool reserved_3() const { return m_reserved_3; }
+            bool mask_header_values() const { return m_mask_header_values; }
+            uint64_t reserved_4() const { return m_reserved_4; }
+            zip_t* _root() const { return m__root; }
+            zip_t::local_file_header_t* _parent() const { return m__parent; }
+        };
+
     private:
         uint16_t m_version;
-        uint16_t m_flags;
+        gp_flags_t* m_flags;
         compression_t m_compression_method;
-        uint16_t m_file_mod_time;
-        uint16_t m_file_mod_date;
+        dos_datetime_t* m_file_mod_time;
         uint32_t m_crc32;
         uint32_t m_len_body_compressed;
         uint32_t m_len_body_uncompressed;
@@ -543,15 +717,18 @@ public:
         extras_t* m_extra;
         zip_t* m__root;
         zip_t::local_file_t* m__parent;
+        std::string m__raw_flags;
+        kaitai::kstream* m__io__raw_flags;
+        std::string m__raw_file_mod_time;
+        kaitai::kstream* m__io__raw_file_mod_time;
         std::string m__raw_extra;
         kaitai::kstream* m__io__raw_extra;
 
     public:
         uint16_t version() const { return m_version; }
-        uint16_t flags() const { return m_flags; }
+        gp_flags_t* flags() const { return m_flags; }
         compression_t compression_method() const { return m_compression_method; }
-        uint16_t file_mod_time() const { return m_file_mod_time; }
-        uint16_t file_mod_date() const { return m_file_mod_date; }
+        dos_datetime_t* file_mod_time() const { return m_file_mod_time; }
         uint32_t crc32() const { return m_crc32; }
         uint32_t len_body_compressed() const { return m_len_body_compressed; }
         uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
@@ -561,6 +738,10 @@ public:
         extras_t* extra() const { return m_extra; }
         zip_t* _root() const { return m__root; }
         zip_t::local_file_t* _parent() const { return m__parent; }
+        std::string _raw_flags() const { return m__raw_flags; }
+        kaitai::kstream* _io__raw_flags() const { return m__io__raw_flags; }
+        std::string _raw_file_mod_time() const { return m__raw_file_mod_time; }
+        kaitai::kstream* _io__raw_file_mod_time() const { return m__io__raw_file_mod_time; }
         std::string _raw_extra() const { return m__raw_extra; }
         kaitai::kstream* _io__raw_extra() const { return m__io__raw_extra; }
     };

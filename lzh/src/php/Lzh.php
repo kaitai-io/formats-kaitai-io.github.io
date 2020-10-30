@@ -134,7 +134,9 @@ namespace Lzh {
             $this->_m_methodId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(5), "ASCII");
             $this->_m_fileSizeCompr = $this->_io->readU4le();
             $this->_m_fileSizeUncompr = $this->_io->readU4le();
-            $this->_m_fileTimestamp = $this->_io->readU4le();
+            $this->_m__raw_fileTimestamp = $this->_io->readBytes(4);
+            $_io__raw_fileTimestamp = new \Kaitai\Struct\Stream($this->_m__raw_fileTimestamp);
+            $this->_m_fileTimestamp = new \DosDatetime($_io__raw_fileTimestamp);
             $this->_m_attr = $this->_io->readU1();
             $this->_m_lhaLevel = $this->_io->readU1();
         }
@@ -145,6 +147,7 @@ namespace Lzh {
         protected $_m_fileTimestamp;
         protected $_m_attr;
         protected $_m_lhaLevel;
+        protected $_m__raw_fileTimestamp;
         public function headerChecksum() { return $this->_m_headerChecksum; }
         public function methodId() { return $this->_m_methodId; }
 
@@ -168,5 +171,6 @@ namespace Lzh {
          */
         public function attr() { return $this->_m_attr; }
         public function lhaLevel() { return $this->_m_lhaLevel; }
+        public function _raw_fileTimestamp() { return $this->_m__raw_fileTimestamp; }
     }
 }

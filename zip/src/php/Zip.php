@@ -199,12 +199,16 @@ namespace Zip\ExtraField {
         }
 
         private function _read() {
-            $this->_m_flags = $this->_io->readU1();
-            $this->_m_modTime = $this->_io->readU4le();
-            if (!($this->_io()->isEof())) {
+            $this->_m__raw_flags = $this->_io->readBytes(1);
+            $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
+            $this->_m_flags = new \Zip\ExtraField\ExtendedTimestamp\InfoFlags($_io__raw_flags, $this, $this->_root);
+            if ($this->flags()->hasModTime()) {
+                $this->_m_modTime = $this->_io->readU4le();
+            }
+            if ($this->flags()->hasAccessTime()) {
                 $this->_m_accessTime = $this->_io->readU4le();
             }
-            if (!($this->_io()->isEof())) {
+            if ($this->flags()->hasCreateTime()) {
                 $this->_m_createTime = $this->_io->readU4le();
             }
         }
@@ -212,10 +216,48 @@ namespace Zip\ExtraField {
         protected $_m_modTime;
         protected $_m_accessTime;
         protected $_m_createTime;
+        protected $_m__raw_flags;
         public function flags() { return $this->_m_flags; }
+
+        /**
+         * Unix timestamp
+         */
         public function modTime() { return $this->_m_modTime; }
+
+        /**
+         * Unix timestamp
+         */
         public function accessTime() { return $this->_m_accessTime; }
+
+        /**
+         * Unix timestamp
+         */
         public function createTime() { return $this->_m_createTime; }
+        public function _raw_flags() { return $this->_m__raw_flags; }
+    }
+}
+
+namespace Zip\ExtraField\ExtendedTimestamp {
+    class InfoFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\ExtendedTimestamp $_parent = null, \Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_hasModTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_hasAccessTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_hasCreateTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved = $this->_io->readBitsIntLe(5);
+        }
+        protected $_m_hasModTime;
+        protected $_m_hasAccessTime;
+        protected $_m_hasCreateTime;
+        protected $_m_reserved;
+        public function hasModTime() { return $this->_m_hasModTime; }
+        public function hasAccessTime() { return $this->_m_hasAccessTime; }
+        public function hasCreateTime() { return $this->_m_hasCreateTime; }
+        public function reserved() { return $this->_m_reserved; }
     }
 }
 
@@ -278,8 +320,9 @@ namespace Zip {
             $this->_m_versionNeededToExtract = $this->_io->readU2le();
             $this->_m_flags = $this->_io->readU2le();
             $this->_m_compressionMethod = $this->_io->readU2le();
-            $this->_m_lastModFileTime = $this->_io->readU2le();
-            $this->_m_lastModFileDate = $this->_io->readU2le();
+            $this->_m__raw_fileModTime = $this->_io->readBytes(4);
+            $_io__raw_fileModTime = new \Kaitai\Struct\Stream($this->_m__raw_fileModTime);
+            $this->_m_fileModTime = new \DosDatetime($_io__raw_fileModTime);
             $this->_m_crc32 = $this->_io->readU4le();
             $this->_m_lenBodyCompressed = $this->_io->readU4le();
             $this->_m_lenBodyUncompressed = $this->_io->readU4le();
@@ -310,8 +353,7 @@ namespace Zip {
         protected $_m_versionNeededToExtract;
         protected $_m_flags;
         protected $_m_compressionMethod;
-        protected $_m_lastModFileTime;
-        protected $_m_lastModFileDate;
+        protected $_m_fileModTime;
         protected $_m_crc32;
         protected $_m_lenBodyCompressed;
         protected $_m_lenBodyUncompressed;
@@ -325,13 +367,13 @@ namespace Zip {
         protected $_m_fileName;
         protected $_m_extra;
         protected $_m_comment;
+        protected $_m__raw_fileModTime;
         protected $_m__raw_extra;
         public function versionMadeBy() { return $this->_m_versionMadeBy; }
         public function versionNeededToExtract() { return $this->_m_versionNeededToExtract; }
         public function flags() { return $this->_m_flags; }
         public function compressionMethod() { return $this->_m_compressionMethod; }
-        public function lastModFileTime() { return $this->_m_lastModFileTime; }
-        public function lastModFileDate() { return $this->_m_lastModFileDate; }
+        public function fileModTime() { return $this->_m_fileModTime; }
         public function crc32() { return $this->_m_crc32; }
         public function lenBodyCompressed() { return $this->_m_lenBodyCompressed; }
         public function lenBodyUncompressed() { return $this->_m_lenBodyUncompressed; }
@@ -345,6 +387,7 @@ namespace Zip {
         public function fileName() { return $this->_m_fileName; }
         public function extra() { return $this->_m_extra; }
         public function comment() { return $this->_m_comment; }
+        public function _raw_fileModTime() { return $this->_m__raw_fileModTime; }
         public function _raw_extra() { return $this->_m__raw_extra; }
     }
 }
@@ -415,10 +458,13 @@ namespace Zip {
 
         private function _read() {
             $this->_m_version = $this->_io->readU2le();
-            $this->_m_flags = $this->_io->readU2le();
+            $this->_m__raw_flags = $this->_io->readBytes(2);
+            $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
+            $this->_m_flags = new \Zip\LocalFileHeader\GpFlags($_io__raw_flags, $this, $this->_root);
             $this->_m_compressionMethod = $this->_io->readU2le();
-            $this->_m_fileModTime = $this->_io->readU2le();
-            $this->_m_fileModDate = $this->_io->readU2le();
+            $this->_m__raw_fileModTime = $this->_io->readBytes(4);
+            $_io__raw_fileModTime = new \Kaitai\Struct\Stream($this->_m__raw_fileModTime);
+            $this->_m_fileModTime = new \DosDatetime($_io__raw_fileModTime);
             $this->_m_crc32 = $this->_io->readU4le();
             $this->_m_lenBodyCompressed = $this->_io->readU4le();
             $this->_m_lenBodyUncompressed = $this->_io->readU4le();
@@ -433,7 +479,6 @@ namespace Zip {
         protected $_m_flags;
         protected $_m_compressionMethod;
         protected $_m_fileModTime;
-        protected $_m_fileModDate;
         protected $_m_crc32;
         protected $_m_lenBodyCompressed;
         protected $_m_lenBodyUncompressed;
@@ -441,12 +486,13 @@ namespace Zip {
         protected $_m_lenExtra;
         protected $_m_fileName;
         protected $_m_extra;
+        protected $_m__raw_flags;
+        protected $_m__raw_fileModTime;
         protected $_m__raw_extra;
         public function version() { return $this->_m_version; }
         public function flags() { return $this->_m_flags; }
         public function compressionMethod() { return $this->_m_compressionMethod; }
         public function fileModTime() { return $this->_m_fileModTime; }
-        public function fileModDate() { return $this->_m_fileModDate; }
         public function crc32() { return $this->_m_crc32; }
         public function lenBodyCompressed() { return $this->_m_lenBodyCompressed; }
         public function lenBodyUncompressed() { return $this->_m_lenBodyUncompressed; }
@@ -454,7 +500,107 @@ namespace Zip {
         public function lenExtra() { return $this->_m_lenExtra; }
         public function fileName() { return $this->_m_fileName; }
         public function extra() { return $this->_m_extra; }
+        public function _raw_flags() { return $this->_m__raw_flags; }
+        public function _raw_fileModTime() { return $this->_m__raw_fileModTime; }
         public function _raw_extra() { return $this->_m__raw_extra; }
+    }
+}
+
+namespace Zip\LocalFileHeader {
+    class GpFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\LocalFileHeader $_parent = null, \Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fileEncrypted = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_compOptionsRaw = $this->_io->readBitsIntLe(2);
+            $this->_m_hasDataDescriptor = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved1 = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_compPatchedData = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_strongEncrypt = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved2 = $this->_io->readBitsIntLe(4);
+            $this->_m_langEncoding = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved3 = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_maskHeaderValues = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved4 = $this->_io->readBitsIntLe(2);
+        }
+        protected $_m_deflatedMode;
+        public function deflatedMode() {
+            if ($this->_m_deflatedMode !== null)
+                return $this->_m_deflatedMode;
+            if ( (($this->_parent()->compressionMethod() == \Zip\Compression::DEFLATED) || ($this->_parent()->compressionMethod() == \Zip\Compression::ENHANCED_DEFLATED)) ) {
+                $this->_m_deflatedMode = $this->compOptionsRaw();
+            }
+            return $this->_m_deflatedMode;
+        }
+        protected $_m_implodedDictByteSize;
+
+        /**
+         * 8KiB or 4KiB in bytes
+         */
+        public function implodedDictByteSize() {
+            if ($this->_m_implodedDictByteSize !== null)
+                return $this->_m_implodedDictByteSize;
+            if ($this->_parent()->compressionMethod() == \Zip\Compression::IMPLODED) {
+                $this->_m_implodedDictByteSize = ((($this->compOptionsRaw() & 1) != 0 ? 8 : 4) * 1024);
+            }
+            return $this->_m_implodedDictByteSize;
+        }
+        protected $_m_implodedNumSfTrees;
+        public function implodedNumSfTrees() {
+            if ($this->_m_implodedNumSfTrees !== null)
+                return $this->_m_implodedNumSfTrees;
+            if ($this->_parent()->compressionMethod() == \Zip\Compression::IMPLODED) {
+                $this->_m_implodedNumSfTrees = (($this->compOptionsRaw() & 2) != 0 ? 3 : 2);
+            }
+            return $this->_m_implodedNumSfTrees;
+        }
+        protected $_m_lzmaHasEosMarker;
+        public function lzmaHasEosMarker() {
+            if ($this->_m_lzmaHasEosMarker !== null)
+                return $this->_m_lzmaHasEosMarker;
+            if ($this->_parent()->compressionMethod() == \Zip\Compression::LZMA) {
+                $this->_m_lzmaHasEosMarker = ($this->compOptionsRaw() & 1) != 0;
+            }
+            return $this->_m_lzmaHasEosMarker;
+        }
+        protected $_m_fileEncrypted;
+        protected $_m_compOptionsRaw;
+        protected $_m_hasDataDescriptor;
+        protected $_m_reserved1;
+        protected $_m_compPatchedData;
+        protected $_m_strongEncrypt;
+        protected $_m_reserved2;
+        protected $_m_langEncoding;
+        protected $_m_reserved3;
+        protected $_m_maskHeaderValues;
+        protected $_m_reserved4;
+        public function fileEncrypted() { return $this->_m_fileEncrypted; }
+
+        /**
+         * internal; access derived value instances instead
+         */
+        public function compOptionsRaw() { return $this->_m_compOptionsRaw; }
+        public function hasDataDescriptor() { return $this->_m_hasDataDescriptor; }
+        public function reserved1() { return $this->_m_reserved1; }
+        public function compPatchedData() { return $this->_m_compPatchedData; }
+        public function strongEncrypt() { return $this->_m_strongEncrypt; }
+        public function reserved2() { return $this->_m_reserved2; }
+        public function langEncoding() { return $this->_m_langEncoding; }
+        public function reserved3() { return $this->_m_reserved3; }
+        public function maskHeaderValues() { return $this->_m_maskHeaderValues; }
+        public function reserved4() { return $this->_m_reserved4; }
+    }
+}
+
+namespace Zip\LocalFileHeader\GpFlags {
+    class DeflateMode {
+        const NORMAL = 0;
+        const MAXIMUM = 1;
+        const FAST = 2;
+        const SUPER_FAST = 3;
     }
 }
 

@@ -16,7 +16,7 @@ namespace Kaitai
     /// how to process a certain block type.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://acritum.com/winrar/rar-format"></a>
+    /// Reference: <a href="http://acritum.com/winrar/rar-format">Source</a>
     /// </remarks>
     public partial class Rar : KaitaiStruct
     {
@@ -86,14 +86,24 @@ namespace Kaitai
                 }
             }
         }
-        public partial class BlockV5 : KaitaiStruct
+
+        /// <summary>
+        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+        /// 8-byte magic (and pretty different block format) for v5+. This
+        /// type would parse and validate both versions of signature. Note
+        /// that actually this signature is a valid RAR &quot;block&quot;: in theory,
+        /// one can omit signature reading at all, and read this normally,
+        /// as a block, if exact RAR version is known (and thus it's
+        /// possible to choose correct block format).
+        /// </summary>
+        public partial class MagicSignature : KaitaiStruct
         {
-            public static BlockV5 FromFile(string fileName)
+            public static MagicSignature FromFile(string fileName)
             {
-                return new BlockV5(new KaitaiStream(fileName));
+                return new MagicSignature(new KaitaiStream(fileName));
             }
 
-            public BlockV5(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -101,9 +111,41 @@ namespace Kaitai
             }
             private void _read()
             {
+                _magic1 = m_io.ReadBytes(6);
+                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 97, 114, 33, 26, 7 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, Magic1, M_Io, "/types/magic_signature/seq/0");
+                }
+                _version = m_io.ReadU1();
+                if (Version == 1) {
+                    _magic3 = m_io.ReadBytes(1);
+                    if (!((KaitaiStream.ByteArrayCompare(Magic3, new byte[] { 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0 }, Magic3, M_Io, "/types/magic_signature/seq/2");
+                    }
+                }
             }
+            private byte[] _magic1;
+            private byte _version;
+            private byte[] _magic3;
             private Rar m_root;
             private Rar m_parent;
+
+            /// <summary>
+            /// Fixed part of file's magic signature that doesn't change with RAR version
+            /// </summary>
+            public byte[] Magic1 { get { return _magic1; } }
+
+            /// <summary>
+            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+            /// format, 1 means new (RAR 5+) format
+            /// </summary>
+            public byte Version { get { return _version; } }
+
+            /// <summary>
+            /// New format (RAR 5+) magic contains extra byte
+            /// </summary>
+            public byte[] Magic3 { get { return _magic3; } }
             public Rar M_Root { get { return m_root; } }
             public Rar M_Parent { get { return m_parent; } }
         }
@@ -252,7 +294,9 @@ namespace Kaitai
                 _lowUnpSize = m_io.ReadU4le();
                 _hostOs = ((Rar.Oses) m_io.ReadU1());
                 _fileCrc32 = m_io.ReadU4le();
-                _fileTime = new DosTime(m_io, this, m_root);
+                __raw_fileTime = m_io.ReadBytes(4);
+                var io___raw_fileTime = new KaitaiStream(__raw_fileTime);
+                _fileTime = new DosDatetime(io___raw_fileTime);
                 _rarVersion = m_io.ReadU1();
                 _method = ((Rar.Methods) m_io.ReadU1());
                 _nameSize = m_io.ReadU2le();
@@ -268,7 +312,7 @@ namespace Kaitai
             private uint _lowUnpSize;
             private Oses _hostOs;
             private uint _fileCrc32;
-            private DosTime _fileTime;
+            private DosDatetime _fileTime;
             private byte _rarVersion;
             private Methods _method;
             private ushort _nameSize;
@@ -278,6 +322,7 @@ namespace Kaitai
             private ulong? _salt;
             private Rar m_root;
             private Rar.Block m_parent;
+            private byte[] __raw_fileTime;
 
             /// <summary>
             /// Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
@@ -293,7 +338,7 @@ namespace Kaitai
             /// <summary>
             /// Date and time in standard MS DOS format
             /// </summary>
-            public DosTime FileTime { get { return _fileTime; } }
+            public DosDatetime FileTime { get { return _fileTime; } }
 
             /// <summary>
             /// RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
@@ -323,25 +368,16 @@ namespace Kaitai
             public ulong? Salt { get { return _salt; } }
             public Rar M_Root { get { return m_root; } }
             public Rar.Block M_Parent { get { return m_parent; } }
+            public byte[] M_RawFileTime { get { return __raw_fileTime; } }
         }
-
-        /// <summary>
-        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-        /// 8-byte magic (and pretty different block format) for v5+. This
-        /// type would parse and validate both versions of signature. Note
-        /// that actually this signature is a valid RAR &quot;block&quot;: in theory,
-        /// one can omit signature reading at all, and read this normally,
-        /// as a block, if exact RAR version is known (and thus it's
-        /// possible to choose correct block format).
-        /// </summary>
-        public partial class MagicSignature : KaitaiStruct
+        public partial class BlockV5 : KaitaiStruct
         {
-            public static MagicSignature FromFile(string fileName)
+            public static BlockV5 FromFile(string fileName)
             {
-                return new MagicSignature(new KaitaiStream(fileName));
+                return new BlockV5(new KaitaiStream(fileName));
             }
 
-            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            public BlockV5(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -349,154 +385,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic1 = m_io.ReadBytes(6);
-                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 97, 114, 33, 26, 7 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, Magic1, M_Io, "/types/magic_signature/seq/0");
-                }
-                _version = m_io.ReadU1();
-                if (Version == 1) {
-                    _magic3 = m_io.ReadBytes(1);
-                    if (!((KaitaiStream.ByteArrayCompare(Magic3, new byte[] { 0 }) == 0)))
-                    {
-                        throw new ValidationNotEqualError(new byte[] { 0 }, Magic3, M_Io, "/types/magic_signature/seq/2");
-                    }
-                }
             }
-            private byte[] _magic1;
-            private byte _version;
-            private byte[] _magic3;
             private Rar m_root;
             private Rar m_parent;
-
-            /// <summary>
-            /// Fixed part of file's magic signature that doesn't change with RAR version
-            /// </summary>
-            public byte[] Magic1 { get { return _magic1; } }
-
-            /// <summary>
-            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-            /// format, 1 means new (RAR 5+) format
-            /// </summary>
-            public byte Version { get { return _version; } }
-
-            /// <summary>
-            /// New format (RAR 5+) magic contains extra byte
-            /// </summary>
-            public byte[] Magic3 { get { return _magic3; } }
             public Rar M_Root { get { return m_root; } }
             public Rar M_Parent { get { return m_parent; } }
-        }
-        public partial class DosTime : KaitaiStruct
-        {
-            public static DosTime FromFile(string fileName)
-            {
-                return new DosTime(new KaitaiStream(fileName));
-            }
-
-            public DosTime(KaitaiStream p__io, Rar.BlockFileHeader p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_month = false;
-                f_seconds = false;
-                f_year = false;
-                f_minutes = false;
-                f_day = false;
-                f_hours = false;
-                _read();
-            }
-            private void _read()
-            {
-                _time = m_io.ReadU2le();
-                _date = m_io.ReadU2le();
-            }
-            private bool f_month;
-            private int _month;
-            public int Month
-            {
-                get
-                {
-                    if (f_month)
-                        return _month;
-                    _month = (int) (((Date & 480) >> 5));
-                    f_month = true;
-                    return _month;
-                }
-            }
-            private bool f_seconds;
-            private int _seconds;
-            public int Seconds
-            {
-                get
-                {
-                    if (f_seconds)
-                        return _seconds;
-                    _seconds = (int) (((Time & 31) * 2));
-                    f_seconds = true;
-                    return _seconds;
-                }
-            }
-            private bool f_year;
-            private int _year;
-            public int Year
-            {
-                get
-                {
-                    if (f_year)
-                        return _year;
-                    _year = (int) ((((Date & 65024) >> 9) + 1980));
-                    f_year = true;
-                    return _year;
-                }
-            }
-            private bool f_minutes;
-            private int _minutes;
-            public int Minutes
-            {
-                get
-                {
-                    if (f_minutes)
-                        return _minutes;
-                    _minutes = (int) (((Time & 2016) >> 5));
-                    f_minutes = true;
-                    return _minutes;
-                }
-            }
-            private bool f_day;
-            private int _day;
-            public int Day
-            {
-                get
-                {
-                    if (f_day)
-                        return _day;
-                    _day = (int) ((Date & 31));
-                    f_day = true;
-                    return _day;
-                }
-            }
-            private bool f_hours;
-            private int _hours;
-            public int Hours
-            {
-                get
-                {
-                    if (f_hours)
-                        return _hours;
-                    _hours = (int) (((Time & 63488) >> 11));
-                    f_hours = true;
-                    return _hours;
-                }
-            }
-            private ushort _time;
-            private ushort _date;
-            private Rar m_root;
-            private Rar.BlockFileHeader m_parent;
-            public ushort Time { get { return _time; } }
-            public ushort Date { get { return _date; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar.BlockFileHeader M_Parent { get { return m_parent; } }
         }
         private MagicSignature _magic;
         private List<KaitaiStruct> _blocks;

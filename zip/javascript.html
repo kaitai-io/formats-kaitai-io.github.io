@@ -135,6 +135,10 @@ are actually ZIP archives.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -303,13 +307,13 @@ are actually ZIP archives.</p>
 
 <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span> <span class="s1">&#39;./DosDatetime&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./DosDatetime&#39;</span><span class="p">));</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">Zip</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Zip</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">DosDatetime</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">DosDatetime</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * ZIP is a popular archive file format, introduced in 1989 by Phil Katz</span>
 <span class="cm"> * and originally implemented in PKZIP utility by PKWARE.</span>
@@ -322,6 +326,7 @@ are actually ZIP archives.</p>
 <span class="cm"> * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
 <span class="cm"> * are actually ZIP archives.</span>
 <span class="cm"> * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|Source}</span>
+<span class="cm"> * @see {@link https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html|Source}</span>
 <span class="cm"> */</span>
 
 <span class="kd">var</span> <span class="nx">Zip</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -486,7 +491,7 @@ are actually ZIP archives.</p>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
-<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191|Source}</span>
+<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191|Source}</span>
 <span class="cm">     */</span>
 
     <span class="kd">var</span> <span class="nx">Ntfs</span> <span class="o">=</span> <span class="nx">ExtraField</span><span class="p">.</span><span class="nx">Ntfs</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -554,7 +559,7 @@ are actually ZIP archives.</p>
     <span class="p">})();</span>
 
     <span class="cm">/**</span>
-<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817|Source}</span>
+<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817|Source}</span>
 <span class="cm">     */</span>
 
     <span class="kd">var</span> <span class="nx">ExtendedTimestamp</span> <span class="o">=</span> <span class="nx">ExtraField</span><span class="p">.</span><span class="nx">ExtendedTimestamp</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -566,21 +571,55 @@ are actually ZIP archives.</p>
         <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
       <span class="p">}</span>
       <span class="nx">ExtendedTimestamp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">modTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_flags</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InfoFlags</span><span class="p">(</span><span class="nx">_io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="p">.</span><span class="nx">hasModTime</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">modTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="p">.</span><span class="nx">hasAccessTime</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">accessTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="p">.</span><span class="nx">hasCreateTime</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">createTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
         <span class="p">}</span>
       <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">InfoFlags</span> <span class="o">=</span> <span class="nx">ExtendedTimestamp</span><span class="p">.</span><span class="nx">InfoFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">InfoFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">InfoFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">hasModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">hasAccessTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">hasCreateTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">InfoFlags</span><span class="p">;</span>
+      <span class="p">})();</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Unix timestamp</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Unix timestamp</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Unix timestamp</span>
+<span class="cm">       */</span>
 
       <span class="k">return</span> <span class="nx">ExtendedTimestamp</span><span class="p">;</span>
     <span class="p">})();</span>
 
     <span class="cm">/**</span>
-<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339|Source}</span>
+<span class="cm">     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339|Source}</span>
 <span class="cm">     */</span>
 
     <span class="kd">var</span> <span class="nx">InfozipUnixVarSize</span> <span class="o">=</span> <span class="nx">ExtraField</span><span class="p">.</span><span class="nx">InfozipUnixVarSize</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -642,8 +681,9 @@ are actually ZIP archives.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">versionNeededToExtract</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">lastModFileTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">lastModFileDate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fileModTime</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DosDatetime</span><span class="p">(</span><span class="nx">_io__raw_fileModTime</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">crc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">lenBodyCompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">lenBodyUncompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
@@ -738,10 +778,13 @@ are actually ZIP archives.</p>
     <span class="p">}</span>
     <span class="nx">LocalFileHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_flags</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GpFlags</span><span class="p">(</span><span class="nx">_io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">fileModDate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fileModTime</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DosDatetime</span><span class="p">(</span><span class="nx">_io__raw_fileModTime</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">crc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">lenBodyCompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">lenBodyUncompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
@@ -752,6 +795,96 @@ are actually ZIP archives.</p>
       <span class="kd">var</span> <span class="nx">_io__raw_extra</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_extra</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">extra</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Extras</span><span class="p">(</span><span class="nx">_io__raw_extra</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|- 4.4.4}</span>
+<span class="cm">     * @see {@link https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html|Local file headers}</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">GpFlags</span> <span class="o">=</span> <span class="nx">LocalFileHeader</span><span class="p">.</span><span class="nx">GpFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">GpFlags</span><span class="p">.</span><span class="nx">DeflateMode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+        <span class="nx">NORMAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">MAXIMUM</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">FAST</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">SUPER_FAST</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+        <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;MAXIMUM&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;FAST&quot;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;SUPER_FAST&quot;</span><span class="p">,</span>
+      <span class="p">});</span>
+
+      <span class="kd">function</span> <span class="nx">GpFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">GpFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">fileEncrypted</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">compOptionsRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">hasDataDescriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">compPatchedData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">strongEncrypt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">langEncoding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">maskHeaderValues</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">GpFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;deflatedMode&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_deflatedMode</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_deflatedMode</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">==</span> <span class="nx">Zip</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">DEFLATED</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">==</span> <span class="nx">Zip</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">ENHANCED_DEFLATED</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_deflatedMode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">compOptionsRaw</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_deflatedMode</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * 8KiB or 4KiB in bytes</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">GpFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;implodedDictByteSize&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedDictByteSize</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedDictByteSize</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">==</span> <span class="nx">Zip</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedDictByteSize</span> <span class="o">=</span> <span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">compOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">8</span> <span class="o">:</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedDictByteSize</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">GpFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;implodedNumSfTrees&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedNumSfTrees</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedNumSfTrees</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">==</span> <span class="nx">Zip</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedNumSfTrees</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">compOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">3</span> <span class="o">:</span> <span class="mi">2</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_implodedNumSfTrees</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">GpFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lzmaHasEosMarker&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lzmaHasEosMarker</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lzmaHasEosMarker</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">==</span> <span class="nx">Zip</span><span class="p">.</span><span class="nx">Compression</span><span class="p">.</span><span class="nx">LZMA</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_lzmaHasEosMarker</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">compOptionsRaw</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lzmaHasEosMarker</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * internal; access derived value instances instead</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">GpFlags</span><span class="p">;</span>
+    <span class="p">})();</span>
 
     <span class="k">return</span> <span class="nx">LocalFileHeader</span><span class="p">;</span>
   <span class="p">})();</span>

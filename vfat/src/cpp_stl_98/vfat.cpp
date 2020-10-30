@@ -62,9 +62,9 @@ vfat_t::ext_bios_param_block_fat32_t::ext_bios_param_block_fat32_t(kaitai::kstre
 
 void vfat_t::ext_bios_param_block_fat32_t::_read() {
     m_ls_per_fat = m__io->read_u4le();
-    m_has_active_fat = m__io->read_bits_int_be(1);
-    m_reserved1 = m__io->read_bits_int_be(3);
-    m_active_fat_id = m__io->read_bits_int_be(4);
+    m_has_active_fat = m__io->read_bits_int_le(1);
+    m_reserved1 = m__io->read_bits_int_le(3);
+    m_active_fat_id = m__io->read_bits_int_le(4);
     m__io->align_to_byte();
     m_reserved2 = m__io->read_bytes(1);
     if (!(reserved2() == std::string("\x00", 1))) {
@@ -241,6 +241,10 @@ void vfat_t::bios_param_block_t::_clean_up() {
 vfat_t::root_directory_rec_t::root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_attrs = 0;
+    m__io__raw_attrs = 0;
+    m_last_write_time = 0;
+    m__io__raw_last_write_time = 0;
 
     try {
         _read();
@@ -252,10 +256,13 @@ vfat_t::root_directory_rec_t::root_directory_rec_t(kaitai::kstream* p__io, vfat_
 
 void vfat_t::root_directory_rec_t::_read() {
     m_file_name = m__io->read_bytes(11);
-    m_attribute = m__io->read_u1();
+    m__raw_attrs = m__io->read_bytes(1);
+    m__io__raw_attrs = new kaitai::kstream(m__raw_attrs);
+    m_attrs = new attr_flags_t(m__io__raw_attrs, this, m__root);
     m_reserved = m__io->read_bytes(10);
-    m_time = m__io->read_u2le();
-    m_date = m__io->read_u2le();
+    m__raw_last_write_time = m__io->read_bytes(4);
+    m__io__raw_last_write_time = new kaitai::kstream(m__raw_last_write_time);
+    m_last_write_time = new dos_datetime_t(m__io__raw_last_write_time);
     m_start_clus = m__io->read_u2le();
     m_file_size = m__io->read_u4le();
 }
@@ -265,6 +272,56 @@ vfat_t::root_directory_rec_t::~root_directory_rec_t() {
 }
 
 void vfat_t::root_directory_rec_t::_clean_up() {
+    if (m__io__raw_attrs) {
+        delete m__io__raw_attrs; m__io__raw_attrs = 0;
+    }
+    if (m_attrs) {
+        delete m_attrs; m_attrs = 0;
+    }
+    if (m__io__raw_last_write_time) {
+        delete m__io__raw_last_write_time; m__io__raw_last_write_time = 0;
+    }
+    if (m_last_write_time) {
+        delete m_last_write_time; m_last_write_time = 0;
+    }
+}
+
+vfat_t::root_directory_rec_t::attr_flags_t::attr_flags_t(kaitai::kstream* p__io, vfat_t::root_directory_rec_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_long_name = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void vfat_t::root_directory_rec_t::attr_flags_t::_read() {
+    m_read_only = m__io->read_bits_int_le(1);
+    m_hidden = m__io->read_bits_int_le(1);
+    m_system = m__io->read_bits_int_le(1);
+    m_volume_id = m__io->read_bits_int_le(1);
+    m_is_directory = m__io->read_bits_int_le(1);
+    m_archive = m__io->read_bits_int_le(1);
+    m_reserved = m__io->read_bits_int_le(2);
+}
+
+vfat_t::root_directory_rec_t::attr_flags_t::~attr_flags_t() {
+    _clean_up();
+}
+
+void vfat_t::root_directory_rec_t::attr_flags_t::_clean_up() {
+}
+
+bool vfat_t::root_directory_rec_t::attr_flags_t::long_name() {
+    if (f_long_name)
+        return m_long_name;
+    m_long_name =  ((read_only()) && (hidden()) && (system()) && (volume_id())) ;
+    f_long_name = true;
+    return m_long_name;
 }
 
 vfat_t::root_directory_t::root_directory_t(kaitai::kstream* p__io, vfat_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {

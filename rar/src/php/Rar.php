@@ -50,15 +50,55 @@ namespace {
     }
 }
 
+/**
+ * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+ * 8-byte magic (and pretty different block format) for v5+. This
+ * type would parse and validate both versions of signature. Note
+ * that actually this signature is a valid RAR "block": in theory,
+ * one can omit signature reading at all, and read this normally,
+ * as a block, if exact RAR version is known (and thus it's
+ * possible to choose correct block format).
+ */
+
 namespace Rar {
-    class BlockV5 extends \Kaitai\Struct\Struct {
+    class MagicSignature extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
+            $this->_m_magic1 = $this->_io->readBytes(6);
+            if (!($this->magic1() == "\x52\x61\x72\x21\x1A\x07")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x61\x72\x21\x1A\x07", $this->magic1(), $this->_io(), "/types/magic_signature/seq/0");
+            }
+            $this->_m_version = $this->_io->readU1();
+            if ($this->version() == 1) {
+                $this->_m_magic3 = $this->_io->readBytes(1);
+                if (!($this->magic3() == "\x00")) {
+                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->magic3(), $this->_io(), "/types/magic_signature/seq/2");
+                }
+            }
         }
+        protected $_m_magic1;
+        protected $_m_version;
+        protected $_m_magic3;
+
+        /**
+         * Fixed part of file's magic signature that doesn't change with RAR version
+         */
+        public function magic1() { return $this->_m_magic1; }
+
+        /**
+         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+         * format, 1 means new (RAR 5+) format
+         */
+        public function version() { return $this->_m_version; }
+
+        /**
+         * New format (RAR 5+) magic contains extra byte
+         */
+        public function magic3() { return $this->_m_magic3; }
     }
 }
 
@@ -168,7 +208,9 @@ namespace Rar {
             $this->_m_lowUnpSize = $this->_io->readU4le();
             $this->_m_hostOs = $this->_io->readU1();
             $this->_m_fileCrc32 = $this->_io->readU4le();
-            $this->_m_fileTime = new \Rar\DosTime($this->_io, $this, $this->_root);
+            $this->_m__raw_fileTime = $this->_io->readBytes(4);
+            $_io__raw_fileTime = new \Kaitai\Struct\Stream($this->_m__raw_fileTime);
+            $this->_m_fileTime = new \DosDatetime($_io__raw_fileTime);
             $this->_m_rarVersion = $this->_io->readU1();
             $this->_m_method = $this->_io->readU1();
             $this->_m_nameSize = $this->_io->readU2le();
@@ -192,6 +234,7 @@ namespace Rar {
         protected $_m_highPackSize;
         protected $_m_fileName;
         protected $_m_salt;
+        protected $_m__raw_fileTime;
 
         /**
          * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
@@ -235,118 +278,19 @@ namespace Rar {
         public function highPackSize() { return $this->_m_highPackSize; }
         public function fileName() { return $this->_m_fileName; }
         public function salt() { return $this->_m_salt; }
+        public function _raw_fileTime() { return $this->_m__raw_fileTime; }
     }
 }
 
-/**
- * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
- * 8-byte magic (and pretty different block format) for v5+. This
- * type would parse and validate both versions of signature. Note
- * that actually this signature is a valid RAR "block": in theory,
- * one can omit signature reading at all, and read this normally,
- * as a block, if exact RAR version is known (and thus it's
- * possible to choose correct block format).
- */
-
 namespace Rar {
-    class MagicSignature extends \Kaitai\Struct\Struct {
+    class BlockV5 extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic1 = $this->_io->readBytes(6);
-            if (!($this->magic1() == "\x52\x61\x72\x21\x1A\x07")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x61\x72\x21\x1A\x07", $this->magic1(), $this->_io(), "/types/magic_signature/seq/0");
-            }
-            $this->_m_version = $this->_io->readU1();
-            if ($this->version() == 1) {
-                $this->_m_magic3 = $this->_io->readBytes(1);
-                if (!($this->magic3() == "\x00")) {
-                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->magic3(), $this->_io(), "/types/magic_signature/seq/2");
-                }
-            }
         }
-        protected $_m_magic1;
-        protected $_m_version;
-        protected $_m_magic3;
-
-        /**
-         * Fixed part of file's magic signature that doesn't change with RAR version
-         */
-        public function magic1() { return $this->_m_magic1; }
-
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        public function version() { return $this->_m_version; }
-
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        public function magic3() { return $this->_m_magic3; }
-    }
-}
-
-namespace Rar {
-    class DosTime extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rar\BlockFileHeader $_parent = null, \Rar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_time = $this->_io->readU2le();
-            $this->_m_date = $this->_io->readU2le();
-        }
-        protected $_m_month;
-        public function month() {
-            if ($this->_m_month !== null)
-                return $this->_m_month;
-            $this->_m_month = (($this->date() & 480) >> 5);
-            return $this->_m_month;
-        }
-        protected $_m_seconds;
-        public function seconds() {
-            if ($this->_m_seconds !== null)
-                return $this->_m_seconds;
-            $this->_m_seconds = (($this->time() & 31) * 2);
-            return $this->_m_seconds;
-        }
-        protected $_m_year;
-        public function year() {
-            if ($this->_m_year !== null)
-                return $this->_m_year;
-            $this->_m_year = ((($this->date() & 65024) >> 9) + 1980);
-            return $this->_m_year;
-        }
-        protected $_m_minutes;
-        public function minutes() {
-            if ($this->_m_minutes !== null)
-                return $this->_m_minutes;
-            $this->_m_minutes = (($this->time() & 2016) >> 5);
-            return $this->_m_minutes;
-        }
-        protected $_m_day;
-        public function day() {
-            if ($this->_m_day !== null)
-                return $this->_m_day;
-            $this->_m_day = ($this->date() & 31);
-            return $this->_m_day;
-        }
-        protected $_m_hours;
-        public function hours() {
-            if ($this->_m_hours !== null)
-                return $this->_m_hours;
-            $this->_m_hours = (($this->time() & 63488) >> 11);
-            return $this->_m_hours;
-        }
-        protected $_m_time;
-        protected $_m_date;
-        public function time() { return $this->_m_time; }
-        public function date() { return $this->_m_date; }
     }
 }
 

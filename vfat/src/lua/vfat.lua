@@ -8,6 +8,9 @@ local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 local utils = require("utils")
 
+require("dos_datetime")
+-- 
+-- See also: Source (https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc)
 Vfat = class.class(KaitaiStruct)
 
 function Vfat:_init(io, parent, root)
@@ -66,9 +69,9 @@ end
 
 function Vfat.ExtBiosParamBlockFat32:_read()
   self.ls_per_fat = self._io:read_u4le()
-  self.has_active_fat = self._io:read_bits_int_be(1)
-  self.reserved1 = self._io:read_bits_int_be(3)
-  self.active_fat_id = self._io:read_bits_int_be(4)
+  self.has_active_fat = self._io:read_bits_int_le(1)
+  self.reserved1 = self._io:read_bits_int_le(3)
+  self.active_fat_id = self._io:read_bits_int_le(4)
   self._io:align_to_byte()
   self.reserved2 = self._io:read_bytes(1)
   if not(self.reserved2 == "\000") then
@@ -319,12 +322,45 @@ end
 
 function Vfat.RootDirectoryRec:_read()
   self.file_name = self._io:read_bytes(11)
-  self.attribute = self._io:read_u1()
+  self._raw_attrs = self._io:read_bytes(1)
+  local _io = KaitaiStream(stringstream(self._raw_attrs))
+  self.attrs = Vfat.RootDirectoryRec.AttrFlags(_io, self, self._root)
   self.reserved = self._io:read_bytes(10)
-  self.time = self._io:read_u2le()
-  self.date = self._io:read_u2le()
+  self._raw_last_write_time = self._io:read_bytes(4)
+  local _io = KaitaiStream(stringstream(self._raw_last_write_time))
+  self.last_write_time = DosDatetime(_io)
   self.start_clus = self._io:read_u2le()
   self.file_size = self._io:read_u4le()
+end
+
+
+Vfat.RootDirectoryRec.AttrFlags = class.class(KaitaiStruct)
+
+function Vfat.RootDirectoryRec.AttrFlags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Vfat.RootDirectoryRec.AttrFlags:_read()
+  self.read_only = self._io:read_bits_int_le(1)
+  self.hidden = self._io:read_bits_int_le(1)
+  self.system = self._io:read_bits_int_le(1)
+  self.volume_id = self._io:read_bits_int_le(1)
+  self.is_directory = self._io:read_bits_int_le(1)
+  self.archive = self._io:read_bits_int_le(1)
+  self.reserved = self._io:read_bits_int_le(2)
+end
+
+Vfat.RootDirectoryRec.AttrFlags.property.long_name = {}
+function Vfat.RootDirectoryRec.AttrFlags.property.long_name:get()
+  if self._m_long_name ~= nil then
+    return self._m_long_name
+  end
+
+  self._m_long_name =  ((self.read_only) and (self.hidden) and (self.system) and (self.volume_id)) 
+  return self._m_long_name
 end
 
 

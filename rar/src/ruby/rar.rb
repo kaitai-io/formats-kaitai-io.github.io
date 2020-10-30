@@ -16,7 +16,7 @@ end
 # blocks. Each block has fixed header and custom body (that depends on
 # block type), so it's possible to skip block even if one doesn't know
 # how to process a certain block type.
-# @see http://acritum.com/winrar/rar-format 
+# @see http://acritum.com/winrar/rar-format Source
 class Rar < Kaitai::Struct::Struct
 
   BLOCK_TYPES = {
@@ -72,15 +72,44 @@ class Rar < Kaitai::Struct::Struct
     end
     self
   end
-  class BlockV5 < Kaitai::Struct::Struct
+
+  ##
+  # RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+  # 8-byte magic (and pretty different block format) for v5+. This
+  # type would parse and validate both versions of signature. Note
+  # that actually this signature is a valid RAR "block": in theory,
+  # one can omit signature reading at all, and read this normally,
+  # as a block, if exact RAR version is known (and thus it's
+  # possible to choose correct block format).
+  class MagicSignature < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
+      @magic1 = @_io.read_bytes(6)
+      raise Kaitai::Struct::ValidationNotEqualError.new([82, 97, 114, 33, 26, 7].pack('C*'), magic1, _io, "/types/magic_signature/seq/0") if not magic1 == [82, 97, 114, 33, 26, 7].pack('C*')
+      @version = @_io.read_u1
+      if version == 1
+        @magic3 = @_io.read_bytes(1)
+        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), magic3, _io, "/types/magic_signature/seq/2") if not magic3 == [0].pack('C*')
+      end
       self
     end
+
+    ##
+    # Fixed part of file's magic signature that doesn't change with RAR version
+    attr_reader :magic1
+
+    ##
+    # Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+    # format, 1 means new (RAR 5+) format
+    attr_reader :version
+
+    ##
+    # New format (RAR 5+) magic contains extra byte
+    attr_reader :magic3
   end
 
   ##
@@ -163,7 +192,9 @@ class Rar < Kaitai::Struct::Struct
       @low_unp_size = @_io.read_u4le
       @host_os = Kaitai::Struct::Stream::resolve_enum(Rar::OSES, @_io.read_u1)
       @file_crc32 = @_io.read_u4le
-      @file_time = DosTime.new(@_io, self, @_root)
+      @_raw_file_time = @_io.read_bytes(4)
+      _io__raw_file_time = Kaitai::Struct::Stream.new(@_raw_file_time)
+      @file_time = DosDatetime.new(_io__raw_file_time)
       @rar_version = @_io.read_u1
       @method = Kaitai::Struct::Stream::resolve_enum(Rar::METHODS, @_io.read_u1)
       @name_size = @_io.read_u2le
@@ -212,89 +243,17 @@ class Rar < Kaitai::Struct::Struct
     attr_reader :high_pack_size
     attr_reader :file_name
     attr_reader :salt
+    attr_reader :_raw_file_time
   end
-
-  ##
-  # RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-  # 8-byte magic (and pretty different block format) for v5+. This
-  # type would parse and validate both versions of signature. Note
-  # that actually this signature is a valid RAR "block": in theory,
-  # one can omit signature reading at all, and read this normally,
-  # as a block, if exact RAR version is known (and thus it's
-  # possible to choose correct block format).
-  class MagicSignature < Kaitai::Struct::Struct
+  class BlockV5 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic1 = @_io.read_bytes(6)
-      raise Kaitai::Struct::ValidationNotEqualError.new([82, 97, 114, 33, 26, 7].pack('C*'), magic1, _io, "/types/magic_signature/seq/0") if not magic1 == [82, 97, 114, 33, 26, 7].pack('C*')
-      @version = @_io.read_u1
-      if version == 1
-        @magic3 = @_io.read_bytes(1)
-        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), magic3, _io, "/types/magic_signature/seq/2") if not magic3 == [0].pack('C*')
-      end
       self
     end
-
-    ##
-    # Fixed part of file's magic signature that doesn't change with RAR version
-    attr_reader :magic1
-
-    ##
-    # Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-    # format, 1 means new (RAR 5+) format
-    attr_reader :version
-
-    ##
-    # New format (RAR 5+) magic contains extra byte
-    attr_reader :magic3
-  end
-  class DosTime < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @time = @_io.read_u2le
-      @date = @_io.read_u2le
-      self
-    end
-    def month
-      return @month unless @month.nil?
-      @month = ((date & 480) >> 5)
-      @month
-    end
-    def seconds
-      return @seconds unless @seconds.nil?
-      @seconds = ((time & 31) * 2)
-      @seconds
-    end
-    def year
-      return @year unless @year.nil?
-      @year = (((date & 65024) >> 9) + 1980)
-      @year
-    end
-    def minutes
-      return @minutes unless @minutes.nil?
-      @minutes = ((time & 2016) >> 5)
-      @minutes
-    end
-    def day
-      return @day unless @day.nil?
-      @day = (date & 31)
-      @day
-    end
-    def hours
-      return @hours unless @hours.nil?
-      @hours = ((time & 63488) >> 11)
-      @hours
-    end
-    attr_reader :time
-    attr_reader :date
   end
 
   ##

@@ -6,6 +6,10 @@ import (
 	"bytes"
 )
 
+
+/**
+ * @see <a href="https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc">Source</a>
+ */
 type Vfat struct {
 	BootSector *Vfat_BootSector
 	_io *kaitai.Stream
@@ -153,17 +157,17 @@ func (this *Vfat_ExtBiosParamBlockFat32) Read(io *kaitai.Stream, parent *Vfat_Bo
 		return err
 	}
 	this.LsPerFat = uint32(tmp9)
-	tmp10, err := this._io.ReadBitsIntBe(1)
+	tmp10, err := this._io.ReadBitsIntLe(1)
 	if err != nil {
 		return err
 	}
 	this.HasActiveFat = tmp10 != 0
-	tmp11, err := this._io.ReadBitsIntBe(3)
+	tmp11, err := this._io.ReadBitsIntLe(3)
 	if err != nil {
 		return err
 	}
 	this.Reserved1 = tmp11
-	tmp12, err := this._io.ReadBitsIntBe(4)
+	tmp12, err := this._io.ReadBitsIntLe(4)
 	if err != nil {
 		return err
 	}
@@ -649,15 +653,16 @@ func (this *Vfat_BiosParamBlock) Read(io *kaitai.Stream, parent *Vfat_BootSector
  */
 type Vfat_RootDirectoryRec struct {
 	FileName []byte
-	Attribute uint8
+	Attrs *Vfat_RootDirectoryRec_AttrFlags
 	Reserved []byte
-	Time uint16
-	Date uint16
+	LastWriteTime *DosDatetime
 	StartClus uint16
 	FileSize uint32
 	_io *kaitai.Stream
 	_root *Vfat
 	_parent *Vfat_RootDirectory
+	_raw_Attrs []byte
+	_raw_LastWriteTime []byte
 }
 func NewVfat_RootDirectoryRec() *Vfat_RootDirectoryRec {
 	return &Vfat_RootDirectoryRec{
@@ -675,38 +680,118 @@ func (this *Vfat_RootDirectoryRec) Read(io *kaitai.Stream, parent *Vfat_RootDire
 	}
 	tmp49 = tmp49
 	this.FileName = tmp49
-	tmp50, err := this._io.ReadU1()
+	tmp50, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	this.Attribute = tmp50
-	tmp51, err := this._io.ReadBytes(int(10))
+	tmp50 = tmp50
+	this._raw_Attrs = tmp50
+	_io__raw_Attrs := kaitai.NewStream(bytes.NewReader(this._raw_Attrs))
+	tmp51 := NewVfat_RootDirectoryRec_AttrFlags()
+	err = tmp51.Read(_io__raw_Attrs, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp51 = tmp51
-	this.Reserved = tmp51
-	tmp52, err := this._io.ReadU2le()
+	this.Attrs = tmp51
+	tmp52, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	this.Time = uint16(tmp52)
-	tmp53, err := this._io.ReadU2le()
+	tmp52 = tmp52
+	this.Reserved = tmp52
+	tmp53, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.Date = uint16(tmp53)
-	tmp54, err := this._io.ReadU2le()
+	tmp53 = tmp53
+	this._raw_LastWriteTime = tmp53
+	_io__raw_LastWriteTime := kaitai.NewStream(bytes.NewReader(this._raw_LastWriteTime))
+	tmp54 := NewDosDatetime()
+	err = tmp54.Read(_io__raw_LastWriteTime, this, nil)
 	if err != nil {
 		return err
 	}
-	this.StartClus = uint16(tmp54)
-	tmp55, err := this._io.ReadU4le()
+	this.LastWriteTime = tmp54
+	tmp55, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.FileSize = uint32(tmp55)
+	this.StartClus = uint16(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.FileSize = uint32(tmp56)
 	return err
+}
+type Vfat_RootDirectoryRec_AttrFlags struct {
+	ReadOnly bool
+	Hidden bool
+	System bool
+	VolumeId bool
+	IsDirectory bool
+	Archive bool
+	Reserved uint64
+	_io *kaitai.Stream
+	_root *Vfat
+	_parent *Vfat_RootDirectoryRec
+	_f_longName bool
+	longName bool
+}
+func NewVfat_RootDirectoryRec_AttrFlags() *Vfat_RootDirectoryRec_AttrFlags {
+	return &Vfat_RootDirectoryRec_AttrFlags{
+	}
+}
+
+func (this *Vfat_RootDirectoryRec_AttrFlags) Read(io *kaitai.Stream, parent *Vfat_RootDirectoryRec, root *Vfat) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp57, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.ReadOnly = tmp57 != 0
+	tmp58, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.Hidden = tmp58 != 0
+	tmp59, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.System = tmp59 != 0
+	tmp60, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.VolumeId = tmp60 != 0
+	tmp61, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.IsDirectory = tmp61 != 0
+	tmp62, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.Archive = tmp62 != 0
+	tmp63, err := this._io.ReadBitsIntLe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp63
+	return err
+}
+func (this *Vfat_RootDirectoryRec_AttrFlags) LongName() (v bool, err error) {
+	if (this._f_longName) {
+		return this.longName, nil
+	}
+	this.longName = bool( ((this.ReadOnly) && (this.Hidden) && (this.System) && (this.VolumeId)) )
+	this._f_longName = true
+	return this.longName, nil
 }
 type Vfat_RootDirectory struct {
 	Records []*Vfat_RootDirectoryRec
@@ -726,12 +811,12 @@ func (this *Vfat_RootDirectory) Read(io *kaitai.Stream, parent *Vfat, root *Vfat
 
 	this.Records = make([]*Vfat_RootDirectoryRec, this._root.BootSector.Bpb.MaxRootDirRec)
 	for i := range this.Records {
-		tmp56 := NewVfat_RootDirectoryRec()
-		err = tmp56.Read(this._io, this, this._root)
+		tmp64 := NewVfat_RootDirectoryRec()
+		err = tmp64.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Records[i] = tmp56
+		this.Records[i] = tmp64
 	}
 	return err
 }
@@ -761,39 +846,39 @@ func (this *Vfat_ExtBiosParamBlockFat16) Read(io *kaitai.Stream, parent *Vfat_Bo
 	this._parent = parent
 	this._root = root
 
-	tmp57, err := this._io.ReadU1()
+	tmp65, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PhysDriveNum = tmp57
-	tmp58, err := this._io.ReadU1()
+	this.PhysDriveNum = tmp65
+	tmp66, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp58
-	tmp59, err := this._io.ReadU1()
+	this.Reserved1 = tmp66
+	tmp67, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ExtBootSign = tmp59
-	tmp60, err := this._io.ReadBytes(int(4))
+	this.ExtBootSign = tmp67
+	tmp68, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp60 = tmp60
-	this.VolumeId = tmp60
-	tmp61, err := this._io.ReadBytes(int(11))
+	tmp68 = tmp68
+	this.VolumeId = tmp68
+	tmp69, err := this._io.ReadBytes(int(11))
 	if err != nil {
 		return err
 	}
-	tmp61 = kaitai.BytesStripRight(tmp61, 32)
-	this.PartitionVolumeLabel = string(tmp61)
-	tmp62, err := this._io.ReadBytes(int(8))
+	tmp69 = kaitai.BytesStripRight(tmp69, 32)
+	this.PartitionVolumeLabel = string(tmp69)
+	tmp70, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	tmp62 = kaitai.BytesStripRight(tmp62, 32)
-	this.FsTypeStr = string(tmp62)
+	tmp70 = kaitai.BytesStripRight(tmp70, 32)
+	this.FsTypeStr = string(tmp70)
 	return err
 }
 

@@ -120,7 +120,35 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
                     
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/FAT12">FAT12 in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -243,6 +271,10 @@ section#format-index .row {
 	<span class="s">&quot;bytes&quot;</span>
 <span class="p">)</span>
 
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Vfat</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">BootSector</span> <span class="o">*</span><span class="nx">Vfat_BootSector</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
@@ -390,17 +422,17 @@ section#format-index .row {
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">LsPerFat</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
-	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">HasActiveFat</span> <span class="p">=</span> <span class="nx">tmp10</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp11</span>
-	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
@@ -886,15 +918,16 @@ section#format-index .row {
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Vfat_RootDirectoryRec</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">FileName</span> <span class="p">[]</span><span class="kt">byte</span>
-	<span class="nx">Attribute</span> <span class="kt">uint8</span>
+	<span class="nx">Attrs</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec_AttrFlags</span>
 	<span class="nx">Reserved</span> <span class="p">[]</span><span class="kt">byte</span>
-	<span class="nx">Time</span> <span class="kt">uint16</span>
-	<span class="nx">Date</span> <span class="kt">uint16</span>
+	<span class="nx">LastWriteTime</span> <span class="o">*</span><span class="nx">DosDatetime</span>
 	<span class="nx">StartClus</span> <span class="kt">uint16</span>
 	<span class="nx">FileSize</span> <span class="kt">uint32</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Vfat</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Vfat_RootDirectory</span>
+	<span class="nx">_raw_Attrs</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_LastWriteTime</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewVfat_RootDirectoryRec</span><span class="p">()</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Vfat_RootDirectoryRec</span><span class="p">{</span>
@@ -912,38 +945,118 @@ section#format-index .row {
 	<span class="p">}</span>
 	<span class="nx">tmp49</span> <span class="p">=</span> <span class="nx">tmp49</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nx">tmp49</span>
-	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Attribute</span> <span class="p">=</span> <span class="nx">tmp50</span>
-	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+	<span class="nx">tmp50</span> <span class="p">=</span> <span class="nx">tmp50</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Attrs</span> <span class="p">=</span> <span class="nx">tmp50</span>
+	<span class="nx">_io__raw_Attrs</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Attrs</span><span class="p">))</span>
+	<span class="nx">tmp51</span> <span class="o">:=</span> <span class="nx">NewVfat_RootDirectoryRec_AttrFlags</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp51</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Attrs</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp51</span> <span class="p">=</span> <span class="nx">tmp51</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp51</span>
-	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Attrs</span> <span class="p">=</span> <span class="nx">tmp51</span>
+	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Time</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp52</span><span class="p">)</span>
-	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp52</span> <span class="p">=</span> <span class="nx">tmp52</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp52</span>
+	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Date</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp53</span><span class="p">)</span>
-	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp53</span> <span class="p">=</span> <span class="nx">tmp53</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_LastWriteTime</span> <span class="p">=</span> <span class="nx">tmp53</span>
+	<span class="nx">_io__raw_LastWriteTime</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_LastWriteTime</span><span class="p">))</span>
+	<span class="nx">tmp54</span> <span class="o">:=</span> <span class="nx">NewDosDatetime</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp54</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_LastWriteTime</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">StartClus</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp54</span><span class="p">)</span>
-	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LastWriteTime</span> <span class="p">=</span> <span class="nx">tmp54</span>
+	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp55</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StartClus</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp55</span><span class="p">)</span>
+	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp56</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">Vfat_RootDirectoryRec_AttrFlags</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ReadOnly</span> <span class="kt">bool</span>
+	<span class="nx">Hidden</span> <span class="kt">bool</span>
+	<span class="nx">System</span> <span class="kt">bool</span>
+	<span class="nx">VolumeId</span> <span class="kt">bool</span>
+	<span class="nx">IsDirectory</span> <span class="kt">bool</span>
+	<span class="nx">Archive</span> <span class="kt">bool</span>
+	<span class="nx">Reserved</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Vfat</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec</span>
+	<span class="nx">_f_longName</span> <span class="kt">bool</span>
+	<span class="nx">longName</span> <span class="kt">bool</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewVfat_RootDirectoryRec_AttrFlags</span><span class="p">()</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec_AttrFlags</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Vfat</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ReadOnly</span> <span class="p">=</span> <span class="nx">tmp57</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Hidden</span> <span class="p">=</span> <span class="nx">tmp58</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">System</span> <span class="p">=</span> <span class="nx">tmp59</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VolumeId</span> <span class="p">=</span> <span class="nx">tmp60</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">IsDirectory</span> <span class="p">=</span> <span class="nx">tmp61</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Archive</span> <span class="p">=</span> <span class="nx">tmp62</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp63</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp63</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">)</span> <span class="nx">LongName</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_longName</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">longName</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">longName</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">ReadOnly</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Hidden</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">System</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">VolumeId</span><span class="p">))</span> <span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_longName</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">longName</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Vfat_RootDirectory</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Records</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Vfat_RootDirectoryRec</span>
@@ -963,12 +1076,12 @@ section#format-index .row {
 
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Records</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">Vfat_RootDirectoryRec</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">BootSector</span><span class="p">.</span><span class="nx">Bpb</span><span class="p">.</span><span class="nx">MaxRootDirRec</span><span class="p">)</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Records</span> <span class="p">{</span>
-		<span class="nx">tmp56</span> <span class="o">:=</span> <span class="nx">NewVfat_RootDirectoryRec</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp56</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp64</span> <span class="o">:=</span> <span class="nx">NewVfat_RootDirectoryRec</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp64</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Records</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp56</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Records</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp64</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -998,39 +1111,39 @@ section#format-index .row {
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">PhysDriveNum</span> <span class="p">=</span> <span class="nx">tmp57</span>
-	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PhysDriveNum</span> <span class="p">=</span> <span class="nx">tmp65</span>
+	<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp58</span>
-	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp66</span>
+	<span class="nx">tmp67</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ExtBootSign</span> <span class="p">=</span> <span class="nx">tmp59</span>
-	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ExtBootSign</span> <span class="p">=</span> <span class="nx">tmp67</span>
+	<span class="nx">tmp68</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp60</span> <span class="p">=</span> <span class="nx">tmp60</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">VolumeId</span> <span class="p">=</span> <span class="nx">tmp60</span>
-	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
+	<span class="nx">tmp68</span> <span class="p">=</span> <span class="nx">tmp68</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">VolumeId</span> <span class="p">=</span> <span class="nx">tmp68</span>
+	<span class="nx">tmp69</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp61</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesStripRight</span><span class="p">(</span><span class="nx">tmp61</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">PartitionVolumeLabel</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp61</span><span class="p">)</span>
-	<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="nx">tmp69</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesStripRight</span><span class="p">(</span><span class="nx">tmp69</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PartitionVolumeLabel</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp69</span><span class="p">)</span>
+	<span class="nx">tmp70</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp62</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesStripRight</span><span class="p">(</span><span class="nx">tmp62</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FsTypeStr</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp62</span><span class="p">)</span>
+	<span class="nx">tmp70</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesStripRight</span><span class="p">(</span><span class="nx">tmp70</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FsTypeStr</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp70</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 

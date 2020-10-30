@@ -39,20 +39,35 @@ rar_t::~rar_t() {
 void rar_t::_clean_up() {
 }
 
-rar_t::block_v5_t::block_v5_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+rar_t::magic_signature_t::magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     _read();
 }
 
-void rar_t::block_v5_t::_read() {
+void rar_t::magic_signature_t::_read() {
+    m_magic1 = m__io->read_bytes(6);
+    if (!(magic1() == std::string("\x52\x61\x72\x21\x1A\x07", 6))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x52\x61\x72\x21\x1A\x07", 6), magic1(), _io(), std::string("/types/magic_signature/seq/0"));
+    }
+    m_version = m__io->read_u1();
+    n_magic3 = true;
+    if (version() == 1) {
+        n_magic3 = false;
+        m_magic3 = m__io->read_bytes(1);
+        if (!(magic3() == std::string("\x00", 1))) {
+            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), magic3(), _io(), std::string("/types/magic_signature/seq/2"));
+        }
+    }
 }
 
-rar_t::block_v5_t::~block_v5_t() {
+rar_t::magic_signature_t::~magic_signature_t() {
     _clean_up();
 }
 
-void rar_t::block_v5_t::_clean_up() {
+void rar_t::magic_signature_t::_clean_up() {
+    if (!n_magic3) {
+    }
 }
 
 rar_t::block_t::block_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
@@ -137,6 +152,7 @@ rar_t::block_file_header_t::block_file_header_t(kaitai::kstream* p__io, rar_t::b
     m__parent = p__parent;
     m__root = p__root;
     m_file_time = nullptr;
+    m__io__raw_file_time = nullptr;
     _read();
 }
 
@@ -144,7 +160,9 @@ void rar_t::block_file_header_t::_read() {
     m_low_unp_size = m__io->read_u4le();
     m_host_os = static_cast<rar_t::oses_t>(m__io->read_u1());
     m_file_crc32 = m__io->read_u4le();
-    m_file_time = std::unique_ptr<dos_time_t>(new dos_time_t(m__io, this, m__root));
+    m__raw_file_time = m__io->read_bytes(4);
+    m__io__raw_file_time = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_file_time));
+    m_file_time = std::unique_ptr<dos_datetime_t>(new dos_datetime_t(m__io__raw_file_time.get()));
     m_rar_version = m__io->read_u1();
     m_method = static_cast<rar_t::methods_t>(m__io->read_u1());
     m_name_size = m__io->read_u2le();
@@ -173,105 +191,18 @@ void rar_t::block_file_header_t::_clean_up() {
     }
 }
 
-rar_t::magic_signature_t::magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+rar_t::block_v5_t::block_v5_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     _read();
 }
 
-void rar_t::magic_signature_t::_read() {
-    m_magic1 = m__io->read_bytes(6);
-    if (!(magic1() == std::string("\x52\x61\x72\x21\x1A\x07", 6))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x52\x61\x72\x21\x1A\x07", 6), magic1(), _io(), std::string("/types/magic_signature/seq/0"));
-    }
-    m_version = m__io->read_u1();
-    n_magic3 = true;
-    if (version() == 1) {
-        n_magic3 = false;
-        m_magic3 = m__io->read_bytes(1);
-        if (!(magic3() == std::string("\x00", 1))) {
-            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), magic3(), _io(), std::string("/types/magic_signature/seq/2"));
-        }
-    }
+void rar_t::block_v5_t::_read() {
 }
 
-rar_t::magic_signature_t::~magic_signature_t() {
+rar_t::block_v5_t::~block_v5_t() {
     _clean_up();
 }
 
-void rar_t::magic_signature_t::_clean_up() {
-    if (!n_magic3) {
-    }
-}
-
-rar_t::dos_time_t::dos_time_t(kaitai::kstream* p__io, rar_t::block_file_header_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_month = false;
-    f_seconds = false;
-    f_year = false;
-    f_minutes = false;
-    f_day = false;
-    f_hours = false;
-    _read();
-}
-
-void rar_t::dos_time_t::_read() {
-    m_time = m__io->read_u2le();
-    m_date = m__io->read_u2le();
-}
-
-rar_t::dos_time_t::~dos_time_t() {
-    _clean_up();
-}
-
-void rar_t::dos_time_t::_clean_up() {
-}
-
-int32_t rar_t::dos_time_t::month() {
-    if (f_month)
-        return m_month;
-    m_month = ((date() & 480) >> 5);
-    f_month = true;
-    return m_month;
-}
-
-int32_t rar_t::dos_time_t::seconds() {
-    if (f_seconds)
-        return m_seconds;
-    m_seconds = ((time() & 31) * 2);
-    f_seconds = true;
-    return m_seconds;
-}
-
-int32_t rar_t::dos_time_t::year() {
-    if (f_year)
-        return m_year;
-    m_year = (((date() & 65024) >> 9) + 1980);
-    f_year = true;
-    return m_year;
-}
-
-int32_t rar_t::dos_time_t::minutes() {
-    if (f_minutes)
-        return m_minutes;
-    m_minutes = ((time() & 2016) >> 5);
-    f_minutes = true;
-    return m_minutes;
-}
-
-int32_t rar_t::dos_time_t::day() {
-    if (f_day)
-        return m_day;
-    m_day = (date() & 31);
-    f_day = true;
-    return m_day;
-}
-
-int32_t rar_t::dos_time_t::hours() {
-    if (f_hours)
-        return m_hours;
-    m_hours = ((time() & 63488) >> 11);
-    f_hours = true;
-    return m_hours;
+void rar_t::block_v5_t::_clean_up() {
 }

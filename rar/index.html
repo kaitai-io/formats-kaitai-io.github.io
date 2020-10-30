@@ -294,6 +294,8 @@ how to process a certain block type.</p>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">x-fmt/264</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q243303</span>
   <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/common/dos_datetime</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
@@ -305,8 +307,7 @@ how to process a certain block type.</p>
   <span class="no">blocks. Each block has fixed header and custom body (that depends on</span>
   <span class="no">block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
   <span class="no">how to process a certain block type.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">http://acritum.com/winrar/rar-format  </span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://acritum.com/winrar/rar-format</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic_signature</span>
@@ -396,7 +397,8 @@ how to process a certain block type.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_crc32</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_time</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dos_time</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dos_datetime</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Date and time in standard MS DOS format</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rar_version</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -426,25 +428,6 @@ how to process a certain block type.</p>
   <span class="nt">block_v5</span><span class="p">:</span>
     <span class="p p-Indicator">{}</span>
     <span class="c1"># not yet implemented</span>
-  <span class="nt">dos_time</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">year</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;((date</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b1111_1110_0000_0000)</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">9)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">1980&#39;</span>
-      <span class="nt">month</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(date</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0000_0001_1110_0000)</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">5&#39;</span>
-      <span class="nt">day</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;date</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0000_0000_0001_1111&#39;</span>
-      <span class="nt">hours</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(time</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b1111_1000_0000_0000)</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">11&#39;</span>
-      <span class="nt">minutes</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(time</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0000_0111_1110_0000)</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">5&#39;</span>
-      <span class="nt">seconds</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(time</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0000_0000_0001_1111)</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">2&#39;</span>
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">block_types</span><span class="p">:</span>
     <span class="nt">0x72</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">marker</span>

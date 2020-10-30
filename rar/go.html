@@ -303,7 +303,7 @@ how to process a certain block type.</p>
 <span class="cm"> * blocks. Each block has fixed header and custom body (that depends on</span>
 <span class="cm"> * block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
 <span class="cm"> * how to process a certain block type.</span>
-<span class="cm"> * @see &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 
 <span class="kd">type</span> <span class="nx">Rar_BlockTypes</span> <span class="kt">int</span>
@@ -397,23 +397,74 @@ how to process a certain block type.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Sequence of blocks that constitute the RAR file</span>
 <span class="cm"> */</span>
-<span class="kd">type</span> <span class="nx">Rar_BlockV5</span> <span class="kd">struct</span> <span class="p">{</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+<span class="cm"> * 8-byte magic (and pretty different block format) for v5+. This</span>
+<span class="cm"> * type would parse and validate both versions of signature. Note</span>
+<span class="cm"> * that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+<span class="cm"> * one can omit signature reading at all, and read this normally,</span>
+<span class="cm"> * as a block, if exact RAR version is known (and thus it&#39;s</span>
+<span class="cm"> * possible to choose correct block format).</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Rar_MagicSignature</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic1</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Version</span> <span class="kt">uint8</span>
+	<span class="nx">Magic3</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Rar</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Rar</span>
 <span class="p">}</span>
-<span class="kd">func</span> <span class="nx">NewRar_BlockV5</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_BlockV5</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_BlockV5</span><span class="p">{</span>
+<span class="kd">func</span> <span class="nx">NewRar_MagicSignature</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_MagicSignature</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_MagicSignature</span><span class="p">{</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_BlockV5</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_MagicSignature</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp5</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp6</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp7</span> <span class="p">=</span> <span class="nx">tmp7</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span> <span class="p">=</span> <span class="nx">tmp7</span>
+		<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+<span class="cm"> * format, 1 means new (RAR 5+) format</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * New format (RAR 5+) magic contains extra byte</span>
+<span class="cm"> */</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * Basic block that RAR files consist of. There are several block</span>
@@ -449,57 +500,39 @@ how to process a certain block type.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc16</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
-	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlockType</span> <span class="p">=</span> <span class="nx">Rar_BlockTypes</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">)</span>
-	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
 	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlockSize</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
-	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Crc16</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlockType</span> <span class="p">=</span> <span class="nx">Rar_BlockTypes</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlockSize</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">AddSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">AddSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockType</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">case</span> <span class="nx">Rar_BlockTypes__FileHeader</span><span class="p">:</span>
-		<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BodySize</span><span class="p">()</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">))</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">tmp12</span> <span class="p">=</span> <span class="nx">tmp12</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span> <span class="p">=</span> <span class="nx">tmp12</span>
-		<span class="nx">_io__raw_Body</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
-		<span class="nx">tmp13</span> <span class="o">:=</span> <span class="nx">NewRar_BlockFileHeader</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp13</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp13</span>
-	<span class="k">default</span><span class="p">:</span>
 		<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BodySize</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
@@ -510,18 +543,36 @@ how to process a certain block type.</p>
 		<span class="p">}</span>
 		<span class="nx">tmp15</span> <span class="p">=</span> <span class="nx">tmp15</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span> <span class="p">=</span> <span class="nx">tmp15</span>
-	<span class="p">}</span>
-	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">AddSize</span><span class="p">))</span>
+		<span class="nx">_io__raw_Body</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+		<span class="nx">tmp16</span> <span class="o">:=</span> <span class="nx">NewRar_BlockFileHeader</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">tmp17</span> <span class="p">=</span> <span class="nx">tmp17</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">AddBody</span> <span class="p">=</span> <span class="nx">tmp17</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BodySize</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp18</span> <span class="p">=</span> <span class="nx">tmp18</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="p">}</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">AddSize</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp20</span> <span class="p">=</span> <span class="nx">tmp20</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">AddBody</span> <span class="p">=</span> <span class="nx">tmp20</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -541,17 +592,17 @@ how to process a certain block type.</p>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_headerSize</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="kd">var</span> <span class="nx">tmp18</span> <span class="kt">int8</span><span class="p">;</span>
-	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
+	<span class="kd">var</span> <span class="nx">tmp21</span> <span class="kt">int8</span><span class="p">;</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasAdd</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp18</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp22</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp21</span> <span class="p">=</span> <span class="mi">11</span>
 	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">tmp18</span> <span class="p">=</span> <span class="mi">7</span>
+		<span class="nx">tmp21</span> <span class="p">=</span> <span class="mi">7</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">headerSize</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">headerSize</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">)</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_headerSize</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -559,11 +610,11 @@ how to process a certain block type.</p>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_bodySize</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bodySize</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HeaderSize</span><span class="p">()</span>
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HeaderSize</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">bodySize</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockSize</span> <span class="o">-</span> <span class="nx">tmp20</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">bodySize</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockSize</span> <span class="o">-</span> <span class="nx">tmp23</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_bodySize</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bodySize</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -587,7 +638,7 @@ how to process a certain block type.</p>
 	<span class="nx">LowUnpSize</span> <span class="kt">uint32</span>
 	<span class="nx">HostOs</span> <span class="nx">Rar_Oses</span>
 	<span class="nx">FileCrc32</span> <span class="kt">uint32</span>
-	<span class="nx">FileTime</span> <span class="o">*</span><span class="nx">Rar_DosTime</span>
+	<span class="nx">FileTime</span> <span class="o">*</span><span class="nx">DosDatetime</span>
 	<span class="nx">RarVersion</span> <span class="kt">uint8</span>
 	<span class="nx">Method</span> <span class="nx">Rar_Methods</span>
 	<span class="nx">NameSize</span> <span class="kt">uint16</span>
@@ -598,6 +649,7 @@ how to process a certain block type.</p>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Rar</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Rar_Block</span>
+	<span class="nx">_raw_FileTime</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewRar_BlockFileHeader</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_BlockFileHeader</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_BlockFileHeader</span><span class="p">{</span>
@@ -609,66 +661,73 @@ how to process a certain block type.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LowUnpSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">)</span>
-	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">HostOs</span> <span class="p">=</span> <span class="nx">Rar_Oses</span><span class="p">(</span><span class="nx">tmp22</span><span class="p">)</span>
-	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileCrc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span>
-	<span class="nx">tmp24</span> <span class="o">:=</span> <span class="nx">NewRar_DosTime</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp24</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileTime</span> <span class="p">=</span> <span class="nx">tmp24</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LowUnpSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
 	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RarVersion</span> <span class="p">=</span> <span class="nx">tmp25</span>
-	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HostOs</span> <span class="p">=</span> <span class="nx">Rar_Oses</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Method</span> <span class="p">=</span> <span class="nx">Rar_Methods</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
-	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileCrc32</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">NameSize</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
-	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp27</span> <span class="p">=</span> <span class="nx">tmp27</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTime</span> <span class="p">=</span> <span class="nx">tmp27</span>
+	<span class="nx">_io__raw_FileTime</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTime</span><span class="p">))</span>
+	<span class="nx">tmp28</span> <span class="o">:=</span> <span class="nx">NewDosDatetime</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp28</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileTime</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileTime</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RarVersion</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Method</span> <span class="p">=</span> <span class="nx">Rar_Methods</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NameSize</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
 	<span class="k">if</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Flags</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+		<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">HighPackSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">HighPackSize</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NameSize</span><span class="p">))</span>
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NameSize</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp30</span> <span class="p">=</span> <span class="nx">tmp30</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nx">tmp30</span>
+	<span class="nx">tmp34</span> <span class="p">=</span> <span class="nx">tmp34</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span> <span class="p">=</span> <span class="nx">tmp34</span>
 	<span class="k">if</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Flags</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+		<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Salt</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Salt</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -704,162 +763,22 @@ how to process a certain block type.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Compressed file size, high 32 bits, only if 64-bit header flag is present</span>
 <span class="cm"> */</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
-<span class="cm"> * 8-byte magic (and pretty different block format) for v5+. This</span>
-<span class="cm"> * type would parse and validate both versions of signature. Note</span>
-<span class="cm"> * that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
-<span class="cm"> * one can omit signature reading at all, and read this normally,</span>
-<span class="cm"> * as a block, if exact RAR version is known (and thus it&#39;s</span>
-<span class="cm"> * possible to choose correct block format).</span>
-<span class="cm"> */</span>
-<span class="kd">type</span> <span class="nx">Rar_MagicSignature</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">Magic1</span> <span class="p">[]</span><span class="kt">byte</span>
-	<span class="nx">Version</span> <span class="kt">uint8</span>
-	<span class="nx">Magic3</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="kd">type</span> <span class="nx">Rar_BlockV5</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Rar</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Rar</span>
 <span class="p">}</span>
-<span class="kd">func</span> <span class="nx">NewRar_MagicSignature</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_MagicSignature</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_MagicSignature</span><span class="p">{</span>
+<span class="kd">func</span> <span class="nx">NewRar_BlockV5</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_BlockV5</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_BlockV5</span><span class="p">{</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_MagicSignature</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_BlockV5</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">tmp32</span> <span class="p">=</span> <span class="nx">tmp32</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span> <span class="p">=</span> <span class="nx">tmp32</span>
-	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="p">}))</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">)</span>
-	<span class="p">}</span>
-	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp33</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">tmp34</span> <span class="p">=</span> <span class="nx">tmp34</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span> <span class="p">=</span> <span class="nx">tmp34</span>
-		<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic3</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">)</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
-<span class="p">}</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
-<span class="cm"> */</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
-<span class="cm"> * format, 1 means new (RAR 5+) format</span>
-<span class="cm"> */</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * New format (RAR 5+) magic contains extra byte</span>
-<span class="cm"> */</span>
-<span class="kd">type</span> <span class="nx">Rar_DosTime</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">Time</span> <span class="kt">uint16</span>
-	<span class="nx">Date</span> <span class="kt">uint16</span>
-	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
-	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Rar</span>
-	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Rar_BlockFileHeader</span>
-	<span class="nx">_f_month</span> <span class="kt">bool</span>
-	<span class="nx">month</span> <span class="kt">int</span>
-	<span class="nx">_f_seconds</span> <span class="kt">bool</span>
-	<span class="nx">seconds</span> <span class="kt">int</span>
-	<span class="nx">_f_year</span> <span class="kt">bool</span>
-	<span class="nx">year</span> <span class="kt">int</span>
-	<span class="nx">_f_minutes</span> <span class="kt">bool</span>
-	<span class="nx">minutes</span> <span class="kt">int</span>
-	<span class="nx">_f_day</span> <span class="kt">bool</span>
-	<span class="nx">day</span> <span class="kt">int</span>
-	<span class="nx">_f_hours</span> <span class="kt">bool</span>
-	<span class="nx">hours</span> <span class="kt">int</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="nx">NewRar_DosTime</span><span class="p">()</span> <span class="o">*</span><span class="nx">Rar_DosTime</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Rar_DosTime</span><span class="p">{</span>
-	<span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Rar_BlockFileHeader</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Rar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
-
-	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Time</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
-	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Date</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
-	<span class="k">return</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Month</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_month</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">month</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">month</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Date</span> <span class="o">&amp;</span> <span class="mi">480</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_month</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">month</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Seconds</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_seconds</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">seconds</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">seconds</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Time</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_seconds</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">seconds</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Year</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_year</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">year</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">year</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Date</span> <span class="o">&amp;</span> <span class="mi">65024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_year</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">year</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Minutes</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_minutes</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">minutes</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">minutes</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Time</span> <span class="o">&amp;</span> <span class="mi">2016</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_minutes</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">minutes</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Day</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_day</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">day</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">day</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Date</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_day</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">day</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Rar_DosTime</span><span class="p">)</span> <span class="nx">Hours</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hours</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">hours</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">hours</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Time</span> <span class="o">&amp;</span> <span class="mi">63488</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">))</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_hours</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">hours</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 </pre></div>
 

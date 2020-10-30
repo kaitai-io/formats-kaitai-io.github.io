@@ -135,6 +135,10 @@ are actually ZIP archives.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -328,6 +332,7 @@ are actually ZIP archives.</p>
 <span class="cm"> * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
 <span class="cm"> * are actually ZIP archives.</span>
 <span class="cm"> * @see &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Zip</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">Zip</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -542,7 +547,7 @@ are actually ZIP archives.</p>
         <span class="p">}</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Ntfs</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
             <span class="kd">public</span> <span class="kd">static</span> <span class="n">Ntfs</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -668,7 +673,7 @@ are actually ZIP archives.</p>
         <span class="p">}</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ExtendedTimestamp</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
             <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExtendedTimestamp</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -690,31 +695,87 @@ are actually ZIP archives.</p>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">modTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_flags</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InfoFlags</span><span class="p">(</span><span class="n">_io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasModTime</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">modTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasAccessTime</span><span class="p">())</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">accessTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasCreateTime</span><span class="p">())</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">createTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
-            <span class="kd">private</span> <span class="kt">long</span> <span class="n">modTime</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InfoFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="n">InfoFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="n">InfoFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">InfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">InfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span><span class="p">.</span><span class="na">ExtendedTimestamp</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">InfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span><span class="p">.</span><span class="na">ExtendedTimestamp</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">hasModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">hasAccessTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">hasCreateTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasModTime</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasAccessTime</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasCreateTime</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span><span class="p">.</span><span class="na">ExtendedTimestamp</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasModTime</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasAccessTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasAccessTime</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasCreateTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasCreateTime</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">Zip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span><span class="p">.</span><span class="na">ExtendedTimestamp</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">InfoFlags</span> <span class="n">flags</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Long</span> <span class="n">modTime</span><span class="p">;</span>
             <span class="kd">private</span> <span class="n">Long</span> <span class="n">accessTime</span><span class="p">;</span>
             <span class="kd">private</span> <span class="n">Long</span> <span class="n">createTime</span><span class="p">;</span>
             <span class="kd">private</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">;</span>
             <span class="kd">private</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span> <span class="n">_parent</span><span class="p">;</span>
-            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">modTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">modTime</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_flags</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">InfoFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="n">Long</span> <span class="nf">modTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">modTime</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
             <span class="kd">public</span> <span class="n">Long</span> <span class="nf">accessTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">accessTime</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Unix timestamp</span>
+<span class="cm">             */</span>
             <span class="kd">public</span> <span class="n">Long</span> <span class="nf">createTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">createTime</span><span class="p">;</span> <span class="p">}</span>
             <span class="kd">public</span> <span class="n">Zip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
             <span class="kd">public</span> <span class="n">Zip</span><span class="p">.</span><span class="na">ExtraField</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">}</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InfozipUnixVarSize</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
             <span class="kd">public</span> <span class="kd">static</span> <span class="n">InfozipUnixVarSize</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -818,8 +879,9 @@ are actually ZIP archives.</p>
             <span class="k">this</span><span class="p">.</span><span class="na">versionNeededToExtract</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">compressionMethod</span> <span class="o">=</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">lastModFileTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">lastModFileDate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fileModTime</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="n">_io__raw_fileModTime</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">crc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lenBodyCompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lenBodyUncompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
@@ -850,8 +912,7 @@ are actually ZIP archives.</p>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">versionNeededToExtract</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Compression</span> <span class="n">compressionMethod</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lastModFileTime</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lastModFileDate</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DosDatetime</span> <span class="n">fileModTime</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">crc32</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBodyCompressed</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBodyUncompressed</span><span class="p">;</span>
@@ -867,13 +928,13 @@ are actually ZIP archives.</p>
         <span class="kd">private</span> <span class="n">String</span> <span class="n">comment</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Zip</span><span class="p">.</span><span class="na">PkSection</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_fileModTime</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_extra</span><span class="p">;</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">versionMadeBy</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">versionMadeBy</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">versionNeededToExtract</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">versionNeededToExtract</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Compression</span> <span class="nf">compressionMethod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compressionMethod</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lastModFileTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lastModFileTime</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lastModFileDate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lastModFileDate</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DosDatetime</span> <span class="nf">fileModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileModTime</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">crc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crc32</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBodyCompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBodyCompressed</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBodyUncompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBodyUncompressed</span><span class="p">;</span> <span class="p">}</span>
@@ -889,6 +950,7 @@ are actually ZIP archives.</p>
         <span class="kd">public</span> <span class="n">String</span> <span class="nf">comment</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">comment</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Zip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Zip</span><span class="p">.</span><span class="na">PkSection</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_fileModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_fileModTime</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_extra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_extra</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PkSection</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
@@ -1003,10 +1065,13 @@ are actually ZIP archives.</p>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_flags</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GpFlags</span><span class="p">(</span><span class="n">_io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">compressionMethod</span> <span class="o">=</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">fileModDate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_fileModTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fileModTime</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileModTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="n">_io__raw_fileModTime</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">crc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lenBodyCompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lenBodyUncompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
@@ -1017,11 +1082,138 @@ are actually ZIP archives.</p>
             <span class="n">KaitaiStream</span> <span class="n">_io__raw_extra</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_extra</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">extra</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Extras</span><span class="p">(</span><span class="n">_io__raw_extra</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
         <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;- 4.4.4&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html&quot;&gt;Local file headers&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">GpFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">GpFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">GpFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="kd">enum</span> <span class="n">DeflateMode</span> <span class="p">{</span>
+                <span class="n">NORMAL</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">MAXIMUM</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">FAST</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                <span class="n">SUPER_FAST</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+                <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+                <span class="n">DeflateMode</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">DeflateMode</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">DeflateMode</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+                <span class="kd">static</span> <span class="p">{</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="n">DeflateMode</span> <span class="n">e</span> <span class="p">:</span> <span class="n">DeflateMode</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                        <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="n">DeflateMode</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">GpFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">GpFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFileHeader</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">GpFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFileHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">fileEncrypted</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">compOptionsRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">hasDataDescriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">compPatchedData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">strongEncrypt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">langEncoding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">maskHeaderValues</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">DeflateMode</span> <span class="n">deflatedMode</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">DeflateMode</span> <span class="nf">deflatedMode</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">deflatedMode</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">deflatedMode</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">_parent</span><span class="p">().</span><span class="na">compressionMethod</span><span class="p">()</span> <span class="o">==</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">DEFLATED</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">compressionMethod</span><span class="p">()</span> <span class="o">==</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">ENHANCED_DEFLATED</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">deflatedMode</span> <span class="o">=</span> <span class="n">DeflateMode</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="n">compOptionsRaw</span><span class="p">());</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">deflatedMode</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Integer</span> <span class="n">implodedDictByteSize</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * 8KiB or 4KiB in bytes</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">implodedDictByteSize</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">implodedDictByteSize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">implodedDictByteSize</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">compressionMethod</span><span class="p">()</span> <span class="o">==</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((</span><span class="n">compOptionsRaw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">8</span> <span class="p">:</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">implodedDictByteSize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">implodedDictByteSize</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Byte</span> <span class="n">implodedNumSfTrees</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">implodedNumSfTrees</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">implodedNumSfTrees</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">implodedNumSfTrees</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">compressionMethod</span><span class="p">()</span> <span class="o">==</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">IMPLODED</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kt">byte</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(((</span><span class="n">compOptionsRaw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">3</span> <span class="p">:</span> <span class="mi">2</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">implodedNumSfTrees</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">implodedNumSfTrees</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">lzmaHasEosMarker</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">lzmaHasEosMarker</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">lzmaHasEosMarker</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">lzmaHasEosMarker</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">compressionMethod</span><span class="p">()</span> <span class="o">==</span> <span class="n">Zip</span><span class="p">.</span><span class="na">Compression</span><span class="p">.</span><span class="na">LZMA</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">compOptionsRaw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">lzmaHasEosMarker</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">lzmaHasEosMarker</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">fileEncrypted</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">compOptionsRaw</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasDataDescriptor</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">reserved1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">compPatchedData</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">strongEncrypt</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved2</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">langEncoding</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">reserved3</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">maskHeaderValues</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved4</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFileHeader</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">fileEncrypted</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileEncrypted</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * internal; access derived value instances instead</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">compOptionsRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compOptionsRaw</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasDataDescriptor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasDataDescriptor</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">compPatchedData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compPatchedData</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">strongEncrypt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">strongEncrypt</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">langEncoding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">langEncoding</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">reserved3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved3</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">maskHeaderValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">maskHeaderValues</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved4</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Zip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFileHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">version</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GpFlags</span> <span class="n">flags</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Compression</span> <span class="n">compressionMethod</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileModTime</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileModDate</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DosDatetime</span> <span class="n">fileModTime</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">crc32</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBodyCompressed</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBodyUncompressed</span><span class="p">;</span>
@@ -1031,12 +1223,13 @@ are actually ZIP archives.</p>
         <span class="kd">private</span> <span class="n">Extras</span> <span class="n">extra</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Zip</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFile</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_fileModTime</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_extra</span><span class="p">;</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GpFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Compression</span> <span class="nf">compressionMethod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compressionMethod</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileModTime</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileModDate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileModDate</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DosDatetime</span> <span class="nf">fileModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileModTime</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">crc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crc32</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBodyCompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBodyCompressed</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBodyUncompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBodyUncompressed</span><span class="p">;</span> <span class="p">}</span>
@@ -1046,6 +1239,8 @@ are actually ZIP archives.</p>
         <span class="kd">public</span> <span class="n">Extras</span> <span class="nf">extra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extra</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Zip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Zip</span><span class="p">.</span><span class="na">LocalFile</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_fileModTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_fileModTime</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_extra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_extra</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">EndOfCentralDir</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>

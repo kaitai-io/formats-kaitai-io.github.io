@@ -482,7 +482,9 @@ records.</p>
                 <span class="n">_methodId</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>
                 <span class="n">_fileSizeCompr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_fileSizeUncompr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_fileTimestamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">__raw_fileTimestamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_fileTimestamp</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_fileTimestamp</span><span class="p">);</span>
+                <span class="n">_fileTimestamp</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="n">io___raw_fileTimestamp</span><span class="p">);</span>
                 <span class="n">_attr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
                 <span class="n">_lhaLevel</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
             <span class="p">}</span>
@@ -490,11 +492,12 @@ records.</p>
             <span class="k">private</span> <span class="kt">string</span> <span class="n">_methodId</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileSizeCompr</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileSizeUncompr</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileTimestamp</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">_fileTimestamp</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">byte</span> <span class="n">_attr</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lhaLevel</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">Lzh</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">Lzh</span><span class="p">.</span><span class="n">Header</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_fileTimestamp</span><span class="p">;</span>
             <span class="k">public</span> <span class="kt">byte</span> <span class="n">HeaderChecksum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerChecksum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="kt">string</span> <span class="n">MethodId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_methodId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
@@ -511,7 +514,7 @@ records.</p>
             <span class="c1">/// &lt;summary&gt;</span>
             <span class="c1">/// Original file date/time</span>
             <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">FileTimestamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileTimestamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">FileTimestamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileTimestamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
             <span class="c1">/// &lt;summary&gt;</span>
             <span class="c1">/// File or directory attribute</span>
@@ -520,6 +523,7 @@ records.</p>
             <span class="k">public</span> <span class="kt">byte</span> <span class="n">LhaLevel</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lhaLevel</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Lzh</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Lzh</span><span class="p">.</span><span class="n">Header</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawFileTimestamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_fileTimestamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">Lzh</span> <span class="n">m_root</span><span class="p">;</span>

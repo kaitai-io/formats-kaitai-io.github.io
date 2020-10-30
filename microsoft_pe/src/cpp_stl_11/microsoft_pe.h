@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx Source
+ * \sa https://docs.microsoft.com/en-us/windows/win32/debug/pe-format Source
  */
 
 class microsoft_pe_t : public kaitai::kstruct {

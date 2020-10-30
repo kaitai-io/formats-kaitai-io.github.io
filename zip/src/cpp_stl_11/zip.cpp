@@ -198,19 +198,27 @@ void zip_t::extra_field_t::ntfs_t::attribute_1_t::_clean_up() {
 zip_t::extra_field_t::extended_timestamp_t::extended_timestamp_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_flags = nullptr;
+    m__io__raw_flags = nullptr;
     _read();
 }
 
 void zip_t::extra_field_t::extended_timestamp_t::_read() {
-    m_flags = m__io->read_u1();
-    m_mod_time = m__io->read_u4le();
+    m__raw_flags = m__io->read_bytes(1);
+    m__io__raw_flags = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_flags));
+    m_flags = std::unique_ptr<info_flags_t>(new info_flags_t(m__io__raw_flags.get(), this, m__root));
+    n_mod_time = true;
+    if (flags()->has_mod_time()) {
+        n_mod_time = false;
+        m_mod_time = m__io->read_u4le();
+    }
     n_access_time = true;
-    if (!(_io()->is_eof())) {
+    if (flags()->has_access_time()) {
         n_access_time = false;
         m_access_time = m__io->read_u4le();
     }
     n_create_time = true;
-    if (!(_io()->is_eof())) {
+    if (flags()->has_create_time()) {
         n_create_time = false;
         m_create_time = m__io->read_u4le();
     }
@@ -221,10 +229,32 @@ zip_t::extra_field_t::extended_timestamp_t::~extended_timestamp_t() {
 }
 
 void zip_t::extra_field_t::extended_timestamp_t::_clean_up() {
+    if (!n_mod_time) {
+    }
     if (!n_access_time) {
     }
     if (!n_create_time) {
     }
+}
+
+zip_t::extra_field_t::extended_timestamp_t::info_flags_t::info_flags_t(kaitai::kstream* p__io, zip_t::extra_field_t::extended_timestamp_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zip_t::extra_field_t::extended_timestamp_t::info_flags_t::_read() {
+    m_has_mod_time = m__io->read_bits_int_le(1);
+    m_has_access_time = m__io->read_bits_int_le(1);
+    m_has_create_time = m__io->read_bits_int_le(1);
+    m_reserved = m__io->read_bits_int_le(5);
+}
+
+zip_t::extra_field_t::extended_timestamp_t::info_flags_t::~info_flags_t() {
+    _clean_up();
+}
+
+void zip_t::extra_field_t::extended_timestamp_t::info_flags_t::_clean_up() {
 }
 
 zip_t::extra_field_t::infozip_unix_var_size_t::infozip_unix_var_size_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
@@ -251,6 +281,8 @@ void zip_t::extra_field_t::infozip_unix_var_size_t::_clean_up() {
 zip_t::central_dir_entry_t::central_dir_entry_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_file_mod_time = nullptr;
+    m__io__raw_file_mod_time = nullptr;
     m_extra = nullptr;
     m__io__raw_extra = nullptr;
     m_local_header = nullptr;
@@ -263,8 +295,9 @@ void zip_t::central_dir_entry_t::_read() {
     m_version_needed_to_extract = m__io->read_u2le();
     m_flags = m__io->read_u2le();
     m_compression_method = static_cast<zip_t::compression_t>(m__io->read_u2le());
-    m_last_mod_file_time = m__io->read_u2le();
-    m_last_mod_file_date = m__io->read_u2le();
+    m__raw_file_mod_time = m__io->read_bytes(4);
+    m__io__raw_file_mod_time = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_file_mod_time));
+    m_file_mod_time = std::unique_ptr<dos_datetime_t>(new dos_datetime_t(m__io__raw_file_mod_time.get()));
     m_crc32 = m__io->read_u4le();
     m_len_body_compressed = m__io->read_u4le();
     m_len_body_uncompressed = m__io->read_u4le();
@@ -376,6 +409,10 @@ void zip_t::extras_t::_clean_up() {
 zip_t::local_file_header_t::local_file_header_t(kaitai::kstream* p__io, zip_t::local_file_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_flags = nullptr;
+    m__io__raw_flags = nullptr;
+    m_file_mod_time = nullptr;
+    m__io__raw_file_mod_time = nullptr;
     m_extra = nullptr;
     m__io__raw_extra = nullptr;
     _read();
@@ -383,10 +420,13 @@ zip_t::local_file_header_t::local_file_header_t(kaitai::kstream* p__io, zip_t::l
 
 void zip_t::local_file_header_t::_read() {
     m_version = m__io->read_u2le();
-    m_flags = m__io->read_u2le();
+    m__raw_flags = m__io->read_bytes(2);
+    m__io__raw_flags = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_flags));
+    m_flags = std::unique_ptr<gp_flags_t>(new gp_flags_t(m__io__raw_flags.get(), this, m__root));
     m_compression_method = static_cast<zip_t::compression_t>(m__io->read_u2le());
-    m_file_mod_time = m__io->read_u2le();
-    m_file_mod_date = m__io->read_u2le();
+    m__raw_file_mod_time = m__io->read_bytes(4);
+    m__io__raw_file_mod_time = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_file_mod_time));
+    m_file_mod_time = std::unique_ptr<dos_datetime_t>(new dos_datetime_t(m__io__raw_file_mod_time.get()));
     m_crc32 = m__io->read_u4le();
     m_len_body_compressed = m__io->read_u4le();
     m_len_body_uncompressed = m__io->read_u4le();
@@ -403,6 +443,85 @@ zip_t::local_file_header_t::~local_file_header_t() {
 }
 
 void zip_t::local_file_header_t::_clean_up() {
+}
+
+zip_t::local_file_header_t::gp_flags_t::gp_flags_t(kaitai::kstream* p__io, zip_t::local_file_header_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_deflated_mode = false;
+    f_imploded_dict_byte_size = false;
+    f_imploded_num_sf_trees = false;
+    f_lzma_has_eos_marker = false;
+    _read();
+}
+
+void zip_t::local_file_header_t::gp_flags_t::_read() {
+    m_file_encrypted = m__io->read_bits_int_le(1);
+    m_comp_options_raw = m__io->read_bits_int_le(2);
+    m_has_data_descriptor = m__io->read_bits_int_le(1);
+    m_reserved_1 = m__io->read_bits_int_le(1);
+    m_comp_patched_data = m__io->read_bits_int_le(1);
+    m_strong_encrypt = m__io->read_bits_int_le(1);
+    m_reserved_2 = m__io->read_bits_int_le(4);
+    m_lang_encoding = m__io->read_bits_int_le(1);
+    m_reserved_3 = m__io->read_bits_int_le(1);
+    m_mask_header_values = m__io->read_bits_int_le(1);
+    m_reserved_4 = m__io->read_bits_int_le(2);
+}
+
+zip_t::local_file_header_t::gp_flags_t::~gp_flags_t() {
+    _clean_up();
+}
+
+void zip_t::local_file_header_t::gp_flags_t::_clean_up() {
+}
+
+zip_t::local_file_header_t::gp_flags_t::deflate_mode_t zip_t::local_file_header_t::gp_flags_t::deflated_mode() {
+    if (f_deflated_mode)
+        return m_deflated_mode;
+    n_deflated_mode = true;
+    if ( ((_parent()->compression_method() == zip_t::COMPRESSION_DEFLATED) || (_parent()->compression_method() == zip_t::COMPRESSION_ENHANCED_DEFLATED)) ) {
+        n_deflated_mode = false;
+        m_deflated_mode = static_cast<zip_t::local_file_header_t::gp_flags_t::deflate_mode_t>(comp_options_raw());
+    }
+    f_deflated_mode = true;
+    return m_deflated_mode;
+}
+
+int32_t zip_t::local_file_header_t::gp_flags_t::imploded_dict_byte_size() {
+    if (f_imploded_dict_byte_size)
+        return m_imploded_dict_byte_size;
+    n_imploded_dict_byte_size = true;
+    if (_parent()->compression_method() == zip_t::COMPRESSION_IMPLODED) {
+        n_imploded_dict_byte_size = false;
+        m_imploded_dict_byte_size = ((((comp_options_raw() & 1) != 0) ? (8) : (4)) * 1024);
+    }
+    f_imploded_dict_byte_size = true;
+    return m_imploded_dict_byte_size;
+}
+
+int8_t zip_t::local_file_header_t::gp_flags_t::imploded_num_sf_trees() {
+    if (f_imploded_num_sf_trees)
+        return m_imploded_num_sf_trees;
+    n_imploded_num_sf_trees = true;
+    if (_parent()->compression_method() == zip_t::COMPRESSION_IMPLODED) {
+        n_imploded_num_sf_trees = false;
+        m_imploded_num_sf_trees = (((comp_options_raw() & 2) != 0) ? (3) : (2));
+    }
+    f_imploded_num_sf_trees = true;
+    return m_imploded_num_sf_trees;
+}
+
+bool zip_t::local_file_header_t::gp_flags_t::lzma_has_eos_marker() {
+    if (f_lzma_has_eos_marker)
+        return m_lzma_has_eos_marker;
+    n_lzma_has_eos_marker = true;
+    if (_parent()->compression_method() == zip_t::COMPRESSION_LZMA) {
+        n_lzma_has_eos_marker = false;
+        m_lzma_has_eos_marker = (comp_options_raw() & 1) != 0;
+    }
+    f_lzma_has_eos_marker = true;
+    return m_lzma_has_eos_marker;
 }
 
 zip_t::end_of_central_dir_t::end_of_central_dir_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {

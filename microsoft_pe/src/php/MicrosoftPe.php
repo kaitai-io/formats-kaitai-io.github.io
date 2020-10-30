@@ -86,7 +86,7 @@ namespace MicrosoftPe\CertificateEntry {
     class CertificateType {
 
         /**
-         * bCertificate contains an X.509 Certificate 
+         * bCertificate contains an X.509 Certificate
          * Not Supported
          */
         const X509 = 1;
@@ -102,7 +102,7 @@ namespace MicrosoftPe\CertificateEntry {
         const RESERVED_1 = 3;
 
         /**
-         * Terminal Server Protocol Stack Certificate signing 
+         * Terminal Server Protocol Stack Certificate signing
          * Not Supported
          */
         const TS_STACK_SIGNED = 4;

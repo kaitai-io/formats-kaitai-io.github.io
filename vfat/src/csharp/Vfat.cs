@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc">Source</a>
+    /// </remarks>
     public partial class Vfat : KaitaiStruct
     {
         public static Vfat FromFile(string fileName)
@@ -43,9 +47,9 @@ namespace Kaitai
             private void _read()
             {
                 _lsPerFat = m_io.ReadU4le();
-                _hasActiveFat = m_io.ReadBitsIntBe(1) != 0;
-                _reserved1 = m_io.ReadBitsIntBe(3);
-                _activeFatId = m_io.ReadBitsIntBe(4);
+                _hasActiveFat = m_io.ReadBitsIntLe(1) != 0;
+                _reserved1 = m_io.ReadBitsIntLe(3);
+                _activeFatId = m_io.ReadBitsIntLe(4);
                 m_io.AlignToByte();
                 _reserved2 = m_io.ReadBytes(1);
                 if (!((KaitaiStream.ByteArrayCompare(Reserved2, new byte[] { 0 }) == 0)))
@@ -477,31 +481,92 @@ namespace Kaitai
             private void _read()
             {
                 _fileName = m_io.ReadBytes(11);
-                _attribute = m_io.ReadU1();
+                __raw_attrs = m_io.ReadBytes(1);
+                var io___raw_attrs = new KaitaiStream(__raw_attrs);
+                _attrs = new AttrFlags(io___raw_attrs, this, m_root);
                 _reserved = m_io.ReadBytes(10);
-                _time = m_io.ReadU2le();
-                _date = m_io.ReadU2le();
+                __raw_lastWriteTime = m_io.ReadBytes(4);
+                var io___raw_lastWriteTime = new KaitaiStream(__raw_lastWriteTime);
+                _lastWriteTime = new DosDatetime(io___raw_lastWriteTime);
                 _startClus = m_io.ReadU2le();
                 _fileSize = m_io.ReadU4le();
             }
+            public partial class AttrFlags : KaitaiStruct
+            {
+                public static AttrFlags FromFile(string fileName)
+                {
+                    return new AttrFlags(new KaitaiStream(fileName));
+                }
+
+                public AttrFlags(KaitaiStream p__io, Vfat.RootDirectoryRec p__parent = null, Vfat p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_longName = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _readOnly = m_io.ReadBitsIntLe(1) != 0;
+                    _hidden = m_io.ReadBitsIntLe(1) != 0;
+                    _system = m_io.ReadBitsIntLe(1) != 0;
+                    _volumeId = m_io.ReadBitsIntLe(1) != 0;
+                    _isDirectory = m_io.ReadBitsIntLe(1) != 0;
+                    _archive = m_io.ReadBitsIntLe(1) != 0;
+                    _reserved = m_io.ReadBitsIntLe(2);
+                }
+                private bool f_longName;
+                private bool _longName;
+                public bool LongName
+                {
+                    get
+                    {
+                        if (f_longName)
+                            return _longName;
+                        _longName = (bool) ( ((ReadOnly) && (Hidden) && (System) && (VolumeId)) );
+                        f_longName = true;
+                        return _longName;
+                    }
+                }
+                private bool _readOnly;
+                private bool _hidden;
+                private bool _system;
+                private bool _volumeId;
+                private bool _isDirectory;
+                private bool _archive;
+                private ulong _reserved;
+                private Vfat m_root;
+                private Vfat.RootDirectoryRec m_parent;
+                public bool ReadOnly { get { return _readOnly; } }
+                public bool Hidden { get { return _hidden; } }
+                public bool System { get { return _system; } }
+                public bool VolumeId { get { return _volumeId; } }
+                public bool IsDirectory { get { return _isDirectory; } }
+                public bool Archive { get { return _archive; } }
+                public ulong Reserved { get { return _reserved; } }
+                public Vfat M_Root { get { return m_root; } }
+                public Vfat.RootDirectoryRec M_Parent { get { return m_parent; } }
+            }
             private byte[] _fileName;
-            private byte _attribute;
+            private AttrFlags _attrs;
             private byte[] _reserved;
-            private ushort _time;
-            private ushort _date;
+            private DosDatetime _lastWriteTime;
             private ushort _startClus;
             private uint _fileSize;
             private Vfat m_root;
             private Vfat.RootDirectory m_parent;
+            private byte[] __raw_attrs;
+            private byte[] __raw_lastWriteTime;
             public byte[] FileName { get { return _fileName; } }
-            public byte Attribute { get { return _attribute; } }
+            public AttrFlags Attrs { get { return _attrs; } }
             public byte[] Reserved { get { return _reserved; } }
-            public ushort Time { get { return _time; } }
-            public ushort Date { get { return _date; } }
+            public DosDatetime LastWriteTime { get { return _lastWriteTime; } }
             public ushort StartClus { get { return _startClus; } }
             public uint FileSize { get { return _fileSize; } }
             public Vfat M_Root { get { return m_root; } }
             public Vfat.RootDirectory M_Parent { get { return m_parent; } }
+            public byte[] M_RawAttrs { get { return __raw_attrs; } }
+            public byte[] M_RawLastWriteTime { get { return __raw_lastWriteTime; } }
         }
         public partial class RootDirectory : KaitaiStruct
         {

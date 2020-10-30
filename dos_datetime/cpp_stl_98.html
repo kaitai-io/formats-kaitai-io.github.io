@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MS-DOS datetime: C++98/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Commonly Used Data Types</li>
+        <li class="active">MS-DOS datetime</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>MS-DOS datetime:
+            
+            C++98/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>MS-DOS date and time are packed 16-bit values that specify local date/time.
+The time is always stored in the current UTC time offset set on the computer
+which created the file. Note that the daylight saving time (DST) shifts
+also change the UTC time offset.</p>
+<p>For example, if you pack two files A and B into a ZIP archive, file A last modified
+at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),
+the file modification times saved in MS-DOS format in the ZIP file will vary depending
+on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</p>
+<ul>
+<li>If set to GMT:
+<ul>
+<li>file A: 2020-03-29 00:59 (UTC+00:00)</li>
+<li>file B: 2020-03-29 01:00 (UTC+00:00)</li>
+</ul>
+</li>
+<li>If set to BST:
+<ul>
+<li>file A: 2020-03-29 01:59 (UTC+01:00)</li>
+<li>file B: 2020-03-29 02:00 (UTC+01:00)</li>
+</ul>
+</li>
+</ul>
+<p>It follows that you are unable to determine the actual last modified time
+of any file stored in the ZIP archive, if you don't know the locale time
+setting of the computer at the time it created the ZIP.</p>
+<p>This format is used in some data formats from the MS-DOS era, for example:</p>
+<ul>
+<li><a href="/zip/">zip</a></li>
+<li><a href="/rar/">rar</a></li>
+<li><a href="/vfat/">vfat</a> (FAT12)</li>
+<li><a href="/lzh/">lzh</a></li>
+<li><a href="http://justsolve.archiveteam.org/wiki/Cabinet">cab</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/MS-DOS_date/time">MS-DOS date/time in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of MS-DOS datetime
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="MS-DOS datetime parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="MS-DOS datetime parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_98.html" title="MS-DOS datetime parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="MS-DOS datetime parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="MS-DOS datetime parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="MS-DOS datetime parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="MS-DOS datetime parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="MS-DOS datetime parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="MS-DOS datetime parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="MS-DOS datetime parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="MS-DOS datetime parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="MS-DOS datetime parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="MS-DOS datetime parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="MS-DOS datetime parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.dos_datetime&quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;kaitai/kaitaistream.h&gt;</span><span class="cp"></span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="n">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">dos_datetime_t</span> <span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="c1">// =&gt; get time</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++98/STL source code to parse MS-DOS datetime
+            
+        </h2>
+
+        
+
+        <h3>dos_datetime.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_98/dos_datetime.h" download="dos_datetime.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef DOS_DATETIME_H_</span>
+<span class="cp">#define DOS_DATETIME_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * MS-DOS date and time are packed 16-bit values that specify local date/time.</span>
+<span class="cm"> * The time is always stored in the current UTC time offset set on the computer</span>
+<span class="cm"> * which created the file. Note that the daylight saving time (DST) shifts</span>
+<span class="cm"> * also change the UTC time offset.</span>
+<span class="cm"> * </span>
+<span class="cm"> * For example, if you pack two files A and B into a ZIP archive, file A last modified</span>
+<span class="cm"> * at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),</span>
+<span class="cm"> * the file modification times saved in MS-DOS format in the ZIP file will vary depending</span>
+<span class="cm"> * on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</span>
+<span class="cm"> * </span>
+<span class="cm"> *   - If set to GMT:</span>
+<span class="cm"> *       - file A: 2020-03-29 00:59 (UTC+00:00)</span>
+<span class="cm"> *       - file B: 2020-03-29 01:00 (UTC+00:00)</span>
+<span class="cm"> *   - If set to BST:</span>
+<span class="cm"> *       - file A: 2020-03-29 01:59 (UTC+01:00)</span>
+<span class="cm"> *       - file B: 2020-03-29 02:00 (UTC+01:00)</span>
+<span class="cm"> * </span>
+<span class="cm"> * It follows that you are unable to determine the actual last modified time</span>
+<span class="cm"> * of any file stored in the ZIP archive, if you don&#39;t know the locale time</span>
+<span class="cm"> * setting of the computer at the time it created the ZIP.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This format is used in some data formats from the MS-DOS era, for example:</span>
+<span class="cm"> * </span>
+<span class="cm"> *   - [zip](/zip/)</span>
+<span class="cm"> *   - [rar](/rar/)</span>
+<span class="cm"> *   - [vfat](/vfat/) (FAT12)</span>
+<span class="cm"> *   - [lzh](/lzh/)</span>
+<span class="cm"> *   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)</span>
+<span class="cm"> * \sa https://docs.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time Source</span>
+<span class="cm"> * \sa https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime Source</span>
+<span class="cm"> * \sa https://github.com/reactos/reactos/blob/c6b6444/dll/win32/kernel32/client/time.c#L82-L87 DosDateTimeToFileTime</span>
+<span class="cm"> * \sa https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc page 25/34</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">dos_datetime_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">time_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">date_t</span><span class="p">;</span>
+
+    <span class="n">dos_datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">dos_datetime_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">time_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="kt">time_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="kt">time_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_second</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_second</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">second</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_second</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_second</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_second</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_minute</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_minute</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_minute</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_hour</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_hour</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_hour</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_second_div_2</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_minute</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_hour</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">second_div_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_second_div_2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">minute</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_minute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">hour</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hour</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">date_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">date_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">date_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_year</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_year</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * only years from 1980 to 2107 (1980 + 127) can be represented</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">year</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_day</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_day</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_day</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_month</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_month</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_month</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_padded_year</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padded_year</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padded_year</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_day</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_month</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_year_minus_1980</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">day</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_day</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">month</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_month</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">year_minus_1980</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_year_minus_1980</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">time_t</span><span class="o">*</span> <span class="n">m_time</span><span class="p">;</span>
+    <span class="n">date_t</span><span class="o">*</span> <span class="n">m_date</span><span class="p">;</span>
+    <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">time_t</span><span class="o">*</span> <span class="n">time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">date_t</span><span class="o">*</span> <span class="n">date</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_date</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// DOS_DATETIME_H_</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>dos_datetime.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_98/dos_datetime.cpp" download="dos_datetime.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;dos_datetime.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+
+<span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">dos_datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">m_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">m_date</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_time</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">time_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_date</span> <span class="o">=</span> <span class="k">new</span> <span class="n">date_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">dos_datetime_t</span><span class="o">::~</span><span class="n">dos_datetime_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_time</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_time</span><span class="p">;</span> <span class="n">m_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_date</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_date</span><span class="p">;</span> <span class="n">m_date</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="kt">time_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_second</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_second</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_minute</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_hour</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_second_div_2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">second_div_2</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="n">second_div_2</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/time/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_minute</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">minute</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">59</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="n">minute</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/time/seq/1&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_hour</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">hour</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">23</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="n">hour</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/time/seq/2&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::~</span><span class="kt">time_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">second</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_second</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_second</span><span class="p">;</span>
+    <span class="n">m_second</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">second_div_2</span><span class="p">());</span>
+    <span class="n">f_second</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">padded_second</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_second</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_second</span><span class="p">;</span>
+    <span class="n">m_padded_second</span> <span class="o">=</span> <span class="p">((</span><span class="n">second</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">second</span><span class="p">());</span>
+    <span class="n">f_padded_second</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">padded_minute</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_minute</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_minute</span><span class="p">;</span>
+    <span class="n">m_padded_minute</span> <span class="o">=</span> <span class="p">((</span><span class="n">minute</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">minute</span><span class="p">());</span>
+    <span class="n">f_padded_minute</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_minute</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="kt">time_t</span><span class="o">::</span><span class="n">padded_hour</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_hour</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_hour</span><span class="p">;</span>
+    <span class="n">m_padded_hour</span> <span class="o">=</span> <span class="p">((</span><span class="n">hour</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">hour</span><span class="p">());</span>
+    <span class="n">f_padded_hour</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_hour</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">date_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dos_datetime_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_year</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_day</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_month</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_padded_year</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_day</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">day</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_less_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/date/seq/0&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_month</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">month</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_less_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">month</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">month</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_year_minus_1980</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::~</span><span class="n">date_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">year</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_year</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_year</span><span class="p">;</span>
+    <span class="n">m_year</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1980</span> <span class="o">+</span> <span class="n">year_minus_1980</span><span class="p">());</span>
+    <span class="n">f_year</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_year</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">padded_day</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_day</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_day</span><span class="p">;</span>
+    <span class="n">m_padded_day</span> <span class="o">=</span> <span class="p">((</span><span class="n">day</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">day</span><span class="p">());</span>
+    <span class="n">f_padded_day</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_day</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">padded_month</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_month</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_month</span><span class="p">;</span>
+    <span class="n">m_padded_month</span> <span class="o">=</span> <span class="p">((</span><span class="n">month</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">month</span><span class="p">());</span>
+    <span class="n">f_padded_month</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_month</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dos_datetime_t</span><span class="o">::</span><span class="n">date_t</span><span class="o">::</span><span class="n">padded_year</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_padded_year</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_padded_year</span><span class="p">;</span>
+    <span class="n">m_padded_year</span> <span class="o">=</span> <span class="p">((</span><span class="n">year</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">999</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">year</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">99</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">year</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">))))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">))))</span> <span class="o">:</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">year</span><span class="p">());</span>
+    <span class="n">f_padded_year</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_padded_year</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

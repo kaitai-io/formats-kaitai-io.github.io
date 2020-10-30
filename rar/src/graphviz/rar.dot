@@ -16,12 +16,15 @@ rar__seq_blocks_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD>0</TD><TD PORT="case0">Block</TD></TR>
 	<TR><TD>1</TD><TD PORT="case1">BlockV5</TD></TR>
 </TABLE>>];
-		subgraph cluster__block_v5 {
-			label="Rar::BlockV5";
+		subgraph cluster__magic_signature {
+			label="Rar::MagicSignature";
 			graph[style=dotted];
 
-			block_v5__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			magic_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic1_pos">0</TD><TD PORT="magic1_size">6</TD><TD></TD><TD PORT="magic1_type">magic1</TD></TR>
+				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="magic3_pos">7</TD><TD PORT="magic3_size">1</TD><TD></TD><TD PORT="magic3_type">magic3</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__block {
@@ -64,7 +67,7 @@ block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="low_unp_size_pos">0</TD><TD PORT="low_unp_size_size">4</TD><TD>u4le</TD><TD PORT="low_unp_size_type">low_unp_size</TD></TR>
 				<TR><TD PORT="host_os_pos">4</TD><TD PORT="host_os_size">1</TD><TD>u1→Oses</TD><TD PORT="host_os_type">host_os</TD></TR>
 				<TR><TD PORT="file_crc32_pos">5</TD><TD PORT="file_crc32_size">4</TD><TD>u4le</TD><TD PORT="file_crc32_type">file_crc32</TD></TR>
-				<TR><TD PORT="file_time_pos">9</TD><TD PORT="file_time_size">4</TD><TD>DosTime</TD><TD PORT="file_time_type">file_time</TD></TR>
+				<TR><TD PORT="file_time_pos">9</TD><TD PORT="file_time_size">4</TD><TD>DosDatetime</TD><TD PORT="file_time_type">file_time</TD></TR>
 				<TR><TD PORT="rar_version_pos">13</TD><TD PORT="rar_version_size">1</TD><TD>u1</TD><TD PORT="rar_version_type">rar_version</TD></TR>
 				<TR><TD PORT="method_pos">14</TD><TD PORT="method_size">1</TD><TD>u1→Methods</TD><TD PORT="method_type">method</TD></TR>
 				<TR><TD PORT="name_size_pos">15</TD><TD PORT="name_size_size">2</TD><TD>u2le</TD><TD PORT="name_size_type">name_size</TD></TR>
@@ -74,49 +77,12 @@ block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="salt_pos">...</TD><TD PORT="salt_size">8</TD><TD>u8le</TD><TD PORT="salt_type">salt</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__magic_signature {
-			label="Rar::MagicSignature";
+		subgraph cluster__block_v5 {
+			label="Rar::BlockV5";
 			graph[style=dotted];
 
-			magic_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			block_v5__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic1_pos">0</TD><TD PORT="magic1_size">6</TD><TD></TD><TD PORT="magic1_type">magic1</TD></TR>
-				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="magic3_pos">7</TD><TD PORT="magic3_size">1</TD><TD></TD><TD PORT="magic3_type">magic3</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__dos_time {
-			label="Rar::DosTime";
-			graph[style=dotted];
-
-			dos_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">2</TD><TD>u2le</TD><TD PORT="time_type">time</TD></TR>
-				<TR><TD PORT="date_pos">2</TD><TD PORT="date_size">2</TD><TD>u2le</TD><TD PORT="date_type">date</TD></TR>
-			</TABLE>>];
-			dos_time__inst__month [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>month</TD><TD>((date &amp; 480) &gt;&gt; 5)</TD></TR>
-			</TABLE>>];
-			dos_time__inst__seconds [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>seconds</TD><TD>((time &amp; 31) * 2)</TD></TR>
-			</TABLE>>];
-			dos_time__inst__year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>year</TD><TD>(((date &amp; 65024) &gt;&gt; 9) + 1980)</TD></TR>
-			</TABLE>>];
-			dos_time__inst__minutes [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>minutes</TD><TD>((time &amp; 2016) &gt;&gt; 5)</TD></TR>
-			</TABLE>>];
-			dos_time__inst__day [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>day</TD><TD>(date &amp; 31)</TD></TR>
-			</TABLE>>];
-			dos_time__inst__hours [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>hours</TD><TD>((time &amp; 63488) &gt;&gt; 11)</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -133,12 +99,6 @@ block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	block__inst__has_add:has_add_type -> block__inst__header_size [color="#404040"];
 	block__seq:block_size_type -> block__inst__body_size [color="#404040"];
 	block__inst__header_size:header_size_type -> block__inst__body_size [color="#404040"];
-	block_file_header__seq:file_time_type -> dos_time__seq [style=bold];
+	block_file_header__seq:file_time_type -> dos_datetime__seq [style=bold];
 	block_file_header__seq:name_size_type -> block_file_header__seq:file_name_size [color="#404040"];
-	dos_time__seq:date_type -> dos_time__inst__month [color="#404040"];
-	dos_time__seq:time_type -> dos_time__inst__seconds [color="#404040"];
-	dos_time__seq:date_type -> dos_time__inst__year [color="#404040"];
-	dos_time__seq:time_type -> dos_time__inst__minutes [color="#404040"];
-	dos_time__seq:date_type -> dos_time__inst__day [color="#404040"];
-	dos_time__seq:time_type -> dos_time__inst__hours [color="#404040"];
 }

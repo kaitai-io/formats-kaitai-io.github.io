@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
 use Encode;
+use DosDatetime;
 
 ########################################################################
 package Zip;
@@ -440,12 +441,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{flags} = $self->{_io}->read_u1();
-    $self->{mod_time} = $self->{_io}->read_u4le();
-    if (!($self->_io()->is_eof())) {
+    $self->{_raw_flags} = $self->{_io}->read_bytes(1);
+    my $io__raw_flags = IO::KaitaiStruct::Stream->new($self->{_raw_flags});
+    $self->{flags} = Zip::ExtraField::ExtendedTimestamp::InfoFlags->new($io__raw_flags, $self, $self->{_root});
+    if ($self->flags()->has_mod_time()) {
+        $self->{mod_time} = $self->{_io}->read_u4le();
+    }
+    if ($self->flags()->has_access_time()) {
         $self->{access_time} = $self->{_io}->read_u4le();
     }
-    if (!($self->_io()->is_eof())) {
+    if ($self->flags()->has_create_time()) {
         $self->{create_time} = $self->{_io}->read_u4le();
     }
 }
@@ -468,6 +473,67 @@ sub access_time {
 sub create_time {
     my ($self) = @_;
     return $self->{create_time};
+}
+
+sub _raw_flags {
+    my ($self) = @_;
+    return $self->{_raw_flags};
+}
+
+########################################################################
+package Zip::ExtraField::ExtendedTimestamp::InfoFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{has_mod_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{has_access_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{has_create_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_le(5);
+}
+
+sub has_mod_time {
+    my ($self) = @_;
+    return $self->{has_mod_time};
+}
+
+sub has_access_time {
+    my ($self) = @_;
+    return $self->{has_access_time};
+}
+
+sub has_create_time {
+    my ($self) = @_;
+    return $self->{has_create_time};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
 }
 
 ########################################################################
@@ -566,8 +632,9 @@ sub _read {
     $self->{version_needed_to_extract} = $self->{_io}->read_u2le();
     $self->{flags} = $self->{_io}->read_u2le();
     $self->{compression_method} = $self->{_io}->read_u2le();
-    $self->{last_mod_file_time} = $self->{_io}->read_u2le();
-    $self->{last_mod_file_date} = $self->{_io}->read_u2le();
+    $self->{_raw_file_mod_time} = $self->{_io}->read_bytes(4);
+    my $io__raw_file_mod_time = IO::KaitaiStruct::Stream->new($self->{_raw_file_mod_time});
+    $self->{file_mod_time} = DosDatetime->new($io__raw_file_mod_time);
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{len_body_compressed} = $self->{_io}->read_u4le();
     $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
@@ -615,14 +682,9 @@ sub compression_method {
     return $self->{compression_method};
 }
 
-sub last_mod_file_time {
+sub file_mod_time {
     my ($self) = @_;
-    return $self->{last_mod_file_time};
-}
-
-sub last_mod_file_date {
-    my ($self) = @_;
-    return $self->{last_mod_file_date};
+    return $self->{file_mod_time};
 }
 
 sub crc32 {
@@ -688,6 +750,11 @@ sub extra {
 sub comment {
     my ($self) = @_;
     return $self->{comment};
+}
+
+sub _raw_file_mod_time {
+    my ($self) = @_;
+    return $self->{_raw_file_mod_time};
 }
 
 sub _raw_extra {
@@ -829,10 +896,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{version} = $self->{_io}->read_u2le();
-    $self->{flags} = $self->{_io}->read_u2le();
+    $self->{_raw_flags} = $self->{_io}->read_bytes(2);
+    my $io__raw_flags = IO::KaitaiStruct::Stream->new($self->{_raw_flags});
+    $self->{flags} = Zip::LocalFileHeader::GpFlags->new($io__raw_flags, $self, $self->{_root});
     $self->{compression_method} = $self->{_io}->read_u2le();
-    $self->{file_mod_time} = $self->{_io}->read_u2le();
-    $self->{file_mod_date} = $self->{_io}->read_u2le();
+    $self->{_raw_file_mod_time} = $self->{_io}->read_bytes(4);
+    my $io__raw_file_mod_time = IO::KaitaiStruct::Stream->new($self->{_raw_file_mod_time});
+    $self->{file_mod_time} = DosDatetime->new($io__raw_file_mod_time);
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{len_body_compressed} = $self->{_io}->read_u4le();
     $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
@@ -862,11 +932,6 @@ sub compression_method {
 sub file_mod_time {
     my ($self) = @_;
     return $self->{file_mod_time};
-}
-
-sub file_mod_date {
-    my ($self) = @_;
-    return $self->{file_mod_date};
 }
 
 sub crc32 {
@@ -904,9 +969,158 @@ sub extra {
     return $self->{extra};
 }
 
+sub _raw_flags {
+    my ($self) = @_;
+    return $self->{_raw_flags};
+}
+
+sub _raw_file_mod_time {
+    my ($self) = @_;
+    return $self->{_raw_file_mod_time};
+}
+
 sub _raw_extra {
     my ($self) = @_;
     return $self->{_raw_extra};
+}
+
+########################################################################
+package Zip::LocalFileHeader::GpFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $DEFLATE_MODE_NORMAL = 0;
+our $DEFLATE_MODE_MAXIMUM = 1;
+our $DEFLATE_MODE_FAST = 2;
+our $DEFLATE_MODE_SUPER_FAST = 3;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{file_encrypted} = $self->{_io}->read_bits_int_le(1);
+    $self->{comp_options_raw} = $self->{_io}->read_bits_int_le(2);
+    $self->{has_data_descriptor} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved_1} = $self->{_io}->read_bits_int_le(1);
+    $self->{comp_patched_data} = $self->{_io}->read_bits_int_le(1);
+    $self->{strong_encrypt} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved_2} = $self->{_io}->read_bits_int_le(4);
+    $self->{lang_encoding} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved_3} = $self->{_io}->read_bits_int_le(1);
+    $self->{mask_header_values} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved_4} = $self->{_io}->read_bits_int_le(2);
+}
+
+sub deflated_mode {
+    my ($self) = @_;
+    return $self->{deflated_mode} if ($self->{deflated_mode});
+    if ( (($self->_parent()->compression_method() == $Zip::COMPRESSION_DEFLATED) || ($self->_parent()->compression_method() == $Zip::COMPRESSION_ENHANCED_DEFLATED)) ) {
+        $self->{deflated_mode} = $self->comp_options_raw();
+    }
+    return $self->{deflated_mode};
+}
+
+sub imploded_dict_byte_size {
+    my ($self) = @_;
+    return $self->{imploded_dict_byte_size} if ($self->{imploded_dict_byte_size});
+    if ($self->_parent()->compression_method() == $Zip::COMPRESSION_IMPLODED) {
+        $self->{imploded_dict_byte_size} = ((($self->comp_options_raw() & 1) != 0 ? 8 : 4) * 1024);
+    }
+    return $self->{imploded_dict_byte_size};
+}
+
+sub imploded_num_sf_trees {
+    my ($self) = @_;
+    return $self->{imploded_num_sf_trees} if ($self->{imploded_num_sf_trees});
+    if ($self->_parent()->compression_method() == $Zip::COMPRESSION_IMPLODED) {
+        $self->{imploded_num_sf_trees} = (($self->comp_options_raw() & 2) != 0 ? 3 : 2);
+    }
+    return $self->{imploded_num_sf_trees};
+}
+
+sub lzma_has_eos_marker {
+    my ($self) = @_;
+    return $self->{lzma_has_eos_marker} if ($self->{lzma_has_eos_marker});
+    if ($self->_parent()->compression_method() == $Zip::COMPRESSION_LZMA) {
+        $self->{lzma_has_eos_marker} = ($self->comp_options_raw() & 1) != 0;
+    }
+    return $self->{lzma_has_eos_marker};
+}
+
+sub file_encrypted {
+    my ($self) = @_;
+    return $self->{file_encrypted};
+}
+
+sub comp_options_raw {
+    my ($self) = @_;
+    return $self->{comp_options_raw};
+}
+
+sub has_data_descriptor {
+    my ($self) = @_;
+    return $self->{has_data_descriptor};
+}
+
+sub reserved_1 {
+    my ($self) = @_;
+    return $self->{reserved_1};
+}
+
+sub comp_patched_data {
+    my ($self) = @_;
+    return $self->{comp_patched_data};
+}
+
+sub strong_encrypt {
+    my ($self) = @_;
+    return $self->{strong_encrypt};
+}
+
+sub reserved_2 {
+    my ($self) = @_;
+    return $self->{reserved_2};
+}
+
+sub lang_encoding {
+    my ($self) = @_;
+    return $self->{lang_encoding};
+}
+
+sub reserved_3 {
+    my ($self) = @_;
+    return $self->{reserved_3};
+}
+
+sub mask_header_values {
+    my ($self) = @_;
+    return $self->{mask_header_values};
+}
+
+sub reserved_4 {
+    my ($self) = @_;
+    return $self->{reserved_4};
 }
 
 ########################################################################

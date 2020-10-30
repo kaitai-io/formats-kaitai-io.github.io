@@ -482,12 +482,13 @@ records.</p>
 	<span class="nx">MethodId</span> <span class="kt">string</span>
 	<span class="nx">FileSizeCompr</span> <span class="kt">uint32</span>
 	<span class="nx">FileSizeUncompr</span> <span class="kt">uint32</span>
-	<span class="nx">FileTimestamp</span> <span class="kt">uint32</span>
+	<span class="nx">FileTimestamp</span> <span class="o">*</span><span class="nx">DosDatetime</span>
 	<span class="nx">Attr</span> <span class="kt">uint8</span>
 	<span class="nx">LhaLevel</span> <span class="kt">uint8</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Lzh</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Lzh_Header</span>
+	<span class="nx">_raw_FileTimestamp</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewLzh_Header1</span><span class="p">()</span> <span class="o">*</span><span class="nx">Lzh_Header1</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Lzh_Header1</span><span class="p">{</span>
@@ -520,21 +521,29 @@ records.</p>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">FileSizeUncompr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
-	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FileTimestamp</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span>
-	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp19</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTimestamp</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">_io__raw_FileTimestamp</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTimestamp</span><span class="p">))</span>
+	<span class="nx">tmp20</span> <span class="o">:=</span> <span class="nx">NewDosDatetime</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp20</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileTimestamp</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FileTimestamp</span> <span class="p">=</span> <span class="nx">tmp20</span>
 	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LhaLevel</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LhaLevel</span> <span class="p">=</span> <span class="nx">tmp22</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 

@@ -137,6 +137,8 @@ void lzh_t::header_t::_clean_up() {
 lzh_t::header1_t::header1_t(kaitai::kstream* p__io, lzh_t::header_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_file_timestamp = nullptr;
+    m__io__raw_file_timestamp = nullptr;
     _read();
 }
 
@@ -145,7 +147,9 @@ void lzh_t::header1_t::_read() {
     m_method_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(5), std::string("ASCII"));
     m_file_size_compr = m__io->read_u4le();
     m_file_size_uncompr = m__io->read_u4le();
-    m_file_timestamp = m__io->read_u4le();
+    m__raw_file_timestamp = m__io->read_bytes(4);
+    m__io__raw_file_timestamp = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_file_timestamp));
+    m_file_timestamp = std::unique_ptr<dos_datetime_t>(new dos_datetime_t(m__io__raw_file_timestamp.get()));
     m_attr = m__io->read_u1();
     m_lha_level = m__io->read_u1();
 }

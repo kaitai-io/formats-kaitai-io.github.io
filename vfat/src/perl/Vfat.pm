@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
 use Encode;
+use DosDatetime;
 
 ########################################################################
 package Vfat;
@@ -105,9 +106,9 @@ sub _read {
     my ($self) = @_;
 
     $self->{ls_per_fat} = $self->{_io}->read_u4le();
-    $self->{has_active_fat} = $self->{_io}->read_bits_int_be(1);
-    $self->{reserved1} = $self->{_io}->read_bits_int_be(3);
-    $self->{active_fat_id} = $self->{_io}->read_bits_int_be(4);
+    $self->{has_active_fat} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int_le(3);
+    $self->{active_fat_id} = $self->{_io}->read_bits_int_le(4);
     $self->{_io}->align_to_byte();
     $self->{reserved2} = $self->{_io}->read_bytes(1);
     $self->{fat_version} = $self->{_io}->read_u2le();
@@ -453,10 +454,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{file_name} = $self->{_io}->read_bytes(11);
-    $self->{attribute} = $self->{_io}->read_u1();
+    $self->{_raw_attrs} = $self->{_io}->read_bytes(1);
+    my $io__raw_attrs = IO::KaitaiStruct::Stream->new($self->{_raw_attrs});
+    $self->{attrs} = Vfat::RootDirectoryRec::AttrFlags->new($io__raw_attrs, $self, $self->{_root});
     $self->{reserved} = $self->{_io}->read_bytes(10);
-    $self->{time} = $self->{_io}->read_u2le();
-    $self->{date} = $self->{_io}->read_u2le();
+    $self->{_raw_last_write_time} = $self->{_io}->read_bytes(4);
+    my $io__raw_last_write_time = IO::KaitaiStruct::Stream->new($self->{_raw_last_write_time});
+    $self->{last_write_time} = DosDatetime->new($io__raw_last_write_time);
     $self->{start_clus} = $self->{_io}->read_u2le();
     $self->{file_size} = $self->{_io}->read_u4le();
 }
@@ -466,9 +470,9 @@ sub file_name {
     return $self->{file_name};
 }
 
-sub attribute {
+sub attrs {
     my ($self) = @_;
-    return $self->{attribute};
+    return $self->{attrs};
 }
 
 sub reserved {
@@ -476,14 +480,9 @@ sub reserved {
     return $self->{reserved};
 }
 
-sub time {
+sub last_write_time {
     my ($self) = @_;
-    return $self->{time};
-}
-
-sub date {
-    my ($self) = @_;
-    return $self->{date};
+    return $self->{last_write_time};
 }
 
 sub start_clus {
@@ -494,6 +493,97 @@ sub start_clus {
 sub file_size {
     my ($self) = @_;
     return $self->{file_size};
+}
+
+sub _raw_attrs {
+    my ($self) = @_;
+    return $self->{_raw_attrs};
+}
+
+sub _raw_last_write_time {
+    my ($self) = @_;
+    return $self->{_raw_last_write_time};
+}
+
+########################################################################
+package Vfat::RootDirectoryRec::AttrFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{read_only} = $self->{_io}->read_bits_int_le(1);
+    $self->{hidden} = $self->{_io}->read_bits_int_le(1);
+    $self->{system} = $self->{_io}->read_bits_int_le(1);
+    $self->{volume_id} = $self->{_io}->read_bits_int_le(1);
+    $self->{is_directory} = $self->{_io}->read_bits_int_le(1);
+    $self->{archive} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_le(2);
+}
+
+sub long_name {
+    my ($self) = @_;
+    return $self->{long_name} if ($self->{long_name});
+    $self->{long_name} =  (($self->read_only()) && ($self->hidden()) && ($self->system()) && ($self->volume_id())) ;
+    return $self->{long_name};
+}
+
+sub read_only {
+    my ($self) = @_;
+    return $self->{read_only};
+}
+
+sub hidden {
+    my ($self) = @_;
+    return $self->{hidden};
+}
+
+sub system {
+    my ($self) = @_;
+    return $self->{system};
+}
+
+sub volume_id {
+    my ($self) = @_;
+    return $self->{volume_id};
+}
+
+sub is_directory {
+    my ($self) = @_;
+    return $self->{is_directory};
+}
+
+sub archive {
+    my ($self) = @_;
+    return $self->{archive};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
 }
 
 ########################################################################

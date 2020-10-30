@@ -25,7 +25,7 @@ digraph {
 			ext_bios_param_block_fat32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="ls_per_fat_pos">0</TD><TD PORT="ls_per_fat_size">4</TD><TD>u4le</TD><TD PORT="ls_per_fat_type">ls_per_fat</TD></TR>
-				<TR><TD PORT="has_active_fat_pos">4</TD><TD PORT="has_active_fat_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_active_fat_type">has_active_fat</TD></TR>
+				<TR><TD PORT="has_active_fat_pos">4</TD><TD PORT="has_active_fat_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="has_active_fat_type">has_active_fat</TD></TR>
 				<TR><TD PORT="reserved1_pos">4:1</TD><TD PORT="reserved1_size">3b</TD><TD>b3</TD><TD PORT="reserved1_type">reserved1</TD></TR>
 				<TR><TD PORT="active_fat_id_pos">4:4</TD><TD PORT="active_fat_id_size">4b</TD><TD>b4</TD><TD PORT="active_fat_id_type">active_fat_id</TD></TR>
 				<TR><TD PORT="reserved2_pos">5</TD><TD PORT="reserved2_size">1</TD><TD></TD><TD PORT="reserved2_type">reserved2</TD></TR>
@@ -110,13 +110,31 @@ digraph {
 			root_directory_rec__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="file_name_pos">0</TD><TD PORT="file_name_size">11</TD><TD></TD><TD PORT="file_name_type">file_name</TD></TR>
-				<TR><TD PORT="attribute_pos">11</TD><TD PORT="attribute_size">1</TD><TD>u1</TD><TD PORT="attribute_type">attribute</TD></TR>
+				<TR><TD PORT="attrs_pos">11</TD><TD PORT="attrs_size">1</TD><TD>AttrFlags</TD><TD PORT="attrs_type">attrs</TD></TR>
 				<TR><TD PORT="reserved_pos">12</TD><TD PORT="reserved_size">10</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
-				<TR><TD PORT="time_pos">22</TD><TD PORT="time_size">2</TD><TD>u2le</TD><TD PORT="time_type">time</TD></TR>
-				<TR><TD PORT="date_pos">24</TD><TD PORT="date_size">2</TD><TD>u2le</TD><TD PORT="date_type">date</TD></TR>
+				<TR><TD PORT="last_write_time_pos">22</TD><TD PORT="last_write_time_size">4</TD><TD>DosDatetime</TD><TD PORT="last_write_time_type">last_write_time</TD></TR>
 				<TR><TD PORT="start_clus_pos">26</TD><TD PORT="start_clus_size">2</TD><TD>u2le</TD><TD PORT="start_clus_type">start_clus</TD></TR>
 				<TR><TD PORT="file_size_pos">28</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
 			</TABLE>>];
+			subgraph cluster__attr_flags {
+				label="Vfat::RootDirectoryRec::AttrFlags";
+				graph[style=dotted];
+
+				attr_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="read_only_pos">0</TD><TD PORT="read_only_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="read_only_type">read_only</TD></TR>
+					<TR><TD PORT="hidden_pos">0:1</TD><TD PORT="hidden_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="hidden_type">hidden</TD></TR>
+					<TR><TD PORT="system_pos">0:2</TD><TD PORT="system_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="system_type">system</TD></TR>
+					<TR><TD PORT="volume_id_pos">0:3</TD><TD PORT="volume_id_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="volume_id_type">volume_id</TD></TR>
+					<TR><TD PORT="is_directory_pos">0:4</TD><TD PORT="is_directory_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="is_directory_type">is_directory</TD></TR>
+					<TR><TD PORT="archive_pos">0:5</TD><TD PORT="archive_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="archive_type">archive</TD></TR>
+					<TR><TD PORT="reserved_pos">0:6</TD><TD PORT="reserved_size">2b</TD><TD>b2</TD><TD PORT="reserved_type">reserved</TD></TR>
+				</TABLE>>];
+				attr_flags__inst__long_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>long_name</TD><TD> ((read_only) &amp;&amp; (hidden) &amp;&amp; (system) &amp;&amp; (volume_id)) </TD></TR>
+				</TABLE>>];
+			}
 		}
 		subgraph cluster__root_directory {
 			label="Vfat::RootDirectory";
@@ -170,6 +188,12 @@ digraph {
 	bios_param_block__seq:num_fats_type -> boot_sector__inst__pos_root_dir [color="#404040"];
 	boot_sector__inst__ls_per_root_dir:ls_per_root_dir_type -> boot_sector__inst__size_root_dir [color="#404040"];
 	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__size_root_dir [color="#404040"];
+	root_directory_rec__seq:attrs_type -> attr_flags__seq [style=bold];
+	root_directory_rec__seq:last_write_time_type -> dos_datetime__seq [style=bold];
+	attr_flags__seq:read_only_type -> attr_flags__inst__long_name [color="#404040"];
+	attr_flags__seq:hidden_type -> attr_flags__inst__long_name [color="#404040"];
+	attr_flags__seq:system_type -> attr_flags__inst__long_name [color="#404040"];
+	attr_flags__seq:volume_id_type -> attr_flags__inst__long_name [color="#404040"];
 	root_directory__seq:records_type -> root_directory_rec__seq [style=bold];
 	bios_param_block__seq:max_root_dir_rec_type -> root_directory__seq:records__repeat [color="#404040"];
 }

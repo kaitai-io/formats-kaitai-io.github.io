@@ -19,6 +19,7 @@ end
 # For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
 # are actually ZIP archives.
 # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT Source
+# @see https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Source
 class Zip < Kaitai::Struct::Struct
 
   COMPRESSION = {
@@ -136,7 +137,7 @@ class Zip < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191 Source
+    # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191 Source
     class Ntfs < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -198,7 +199,7 @@ class Zip < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817 Source
+    # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817 Source
     class ExtendedTimestamp < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -206,24 +207,56 @@ class Zip < Kaitai::Struct::Struct
       end
 
       def _read
-        @flags = @_io.read_u1
-        @mod_time = @_io.read_u4le
-        if !(_io.eof?)
+        @_raw_flags = @_io.read_bytes(1)
+        _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
+        @flags = InfoFlags.new(_io__raw_flags, self, @_root)
+        if flags.has_mod_time
+          @mod_time = @_io.read_u4le
+        end
+        if flags.has_access_time
           @access_time = @_io.read_u4le
         end
-        if !(_io.eof?)
+        if flags.has_create_time
           @create_time = @_io.read_u4le
         end
         self
       end
+      class InfoFlags < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @has_mod_time = @_io.read_bits_int_le(1) != 0
+          @has_access_time = @_io.read_bits_int_le(1) != 0
+          @has_create_time = @_io.read_bits_int_le(1) != 0
+          @reserved = @_io.read_bits_int_le(5)
+          self
+        end
+        attr_reader :has_mod_time
+        attr_reader :has_access_time
+        attr_reader :has_create_time
+        attr_reader :reserved
+      end
       attr_reader :flags
+
+      ##
+      # Unix timestamp
       attr_reader :mod_time
+
+      ##
+      # Unix timestamp
       attr_reader :access_time
+
+      ##
+      # Unix timestamp
       attr_reader :create_time
+      attr_reader :_raw_flags
     end
 
     ##
-    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339 Source
+    # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339 Source
     class InfozipUnixVarSize < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -278,8 +311,9 @@ class Zip < Kaitai::Struct::Struct
       @version_needed_to_extract = @_io.read_u2le
       @flags = @_io.read_u2le
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
-      @last_mod_file_time = @_io.read_u2le
-      @last_mod_file_date = @_io.read_u2le
+      @_raw_file_mod_time = @_io.read_bytes(4)
+      _io__raw_file_mod_time = Kaitai::Struct::Stream.new(@_raw_file_mod_time)
+      @file_mod_time = DosDatetime.new(_io__raw_file_mod_time)
       @crc32 = @_io.read_u4le
       @len_body_compressed = @_io.read_u4le
       @len_body_uncompressed = @_io.read_u4le
@@ -309,8 +343,7 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :version_needed_to_extract
     attr_reader :flags
     attr_reader :compression_method
-    attr_reader :last_mod_file_time
-    attr_reader :last_mod_file_date
+    attr_reader :file_mod_time
     attr_reader :crc32
     attr_reader :len_body_compressed
     attr_reader :len_body_uncompressed
@@ -324,6 +357,7 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :file_name
     attr_reader :extra
     attr_reader :comment
+    attr_reader :_raw_file_mod_time
     attr_reader :_raw_extra
   end
   class PkSection < Kaitai::Struct::Struct
@@ -377,10 +411,13 @@ class Zip < Kaitai::Struct::Struct
 
     def _read
       @version = @_io.read_u2le
-      @flags = @_io.read_u2le
+      @_raw_flags = @_io.read_bytes(2)
+      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
+      @flags = GpFlags.new(_io__raw_flags, self, @_root)
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
-      @file_mod_time = @_io.read_u2le
-      @file_mod_date = @_io.read_u2le
+      @_raw_file_mod_time = @_io.read_bytes(4)
+      _io__raw_file_mod_time = Kaitai::Struct::Stream.new(@_raw_file_mod_time)
+      @file_mod_time = DosDatetime.new(_io__raw_file_mod_time)
       @crc32 = @_io.read_u4le
       @len_body_compressed = @_io.read_u4le
       @len_body_uncompressed = @_io.read_u4le
@@ -392,11 +429,88 @@ class Zip < Kaitai::Struct::Struct
       @extra = Extras.new(_io__raw_extra, self, @_root)
       self
     end
+
+    ##
+    # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.4.4
+    # @see https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Local file headers
+    class GpFlags < Kaitai::Struct::Struct
+
+      DEFLATE_MODE = {
+        0 => :deflate_mode_normal,
+        1 => :deflate_mode_maximum,
+        2 => :deflate_mode_fast,
+        3 => :deflate_mode_super_fast,
+      }
+      I__DEFLATE_MODE = DEFLATE_MODE.invert
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @file_encrypted = @_io.read_bits_int_le(1) != 0
+        @comp_options_raw = @_io.read_bits_int_le(2)
+        @has_data_descriptor = @_io.read_bits_int_le(1) != 0
+        @reserved_1 = @_io.read_bits_int_le(1) != 0
+        @comp_patched_data = @_io.read_bits_int_le(1) != 0
+        @strong_encrypt = @_io.read_bits_int_le(1) != 0
+        @reserved_2 = @_io.read_bits_int_le(4)
+        @lang_encoding = @_io.read_bits_int_le(1) != 0
+        @reserved_3 = @_io.read_bits_int_le(1) != 0
+        @mask_header_values = @_io.read_bits_int_le(1) != 0
+        @reserved_4 = @_io.read_bits_int_le(2)
+        self
+      end
+      def deflated_mode
+        return @deflated_mode unless @deflated_mode.nil?
+        if  ((_parent.compression_method == :compression_deflated) || (_parent.compression_method == :compression_enhanced_deflated)) 
+          @deflated_mode = Kaitai::Struct::Stream::resolve_enum(DEFLATE_MODE, comp_options_raw)
+        end
+        @deflated_mode
+      end
+
+      ##
+      # 8KiB or 4KiB in bytes
+      def imploded_dict_byte_size
+        return @imploded_dict_byte_size unless @imploded_dict_byte_size.nil?
+        if _parent.compression_method == :compression_imploded
+          @imploded_dict_byte_size = (((comp_options_raw & 1) != 0 ? 8 : 4) * 1024)
+        end
+        @imploded_dict_byte_size
+      end
+      def imploded_num_sf_trees
+        return @imploded_num_sf_trees unless @imploded_num_sf_trees.nil?
+        if _parent.compression_method == :compression_imploded
+          @imploded_num_sf_trees = ((comp_options_raw & 2) != 0 ? 3 : 2)
+        end
+        @imploded_num_sf_trees
+      end
+      def lzma_has_eos_marker
+        return @lzma_has_eos_marker unless @lzma_has_eos_marker.nil?
+        if _parent.compression_method == :compression_lzma
+          @lzma_has_eos_marker = (comp_options_raw & 1) != 0
+        end
+        @lzma_has_eos_marker
+      end
+      attr_reader :file_encrypted
+
+      ##
+      # internal; access derived value instances instead
+      attr_reader :comp_options_raw
+      attr_reader :has_data_descriptor
+      attr_reader :reserved_1
+      attr_reader :comp_patched_data
+      attr_reader :strong_encrypt
+      attr_reader :reserved_2
+      attr_reader :lang_encoding
+      attr_reader :reserved_3
+      attr_reader :mask_header_values
+      attr_reader :reserved_4
+    end
     attr_reader :version
     attr_reader :flags
     attr_reader :compression_method
     attr_reader :file_mod_time
-    attr_reader :file_mod_date
     attr_reader :crc32
     attr_reader :len_body_compressed
     attr_reader :len_body_uncompressed
@@ -404,6 +518,8 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :len_extra
     attr_reader :file_name
     attr_reader :extra
+    attr_reader :_raw_flags
+    attr_reader :_raw_file_mod_time
     attr_reader :_raw_extra
   end
   class EndOfCentralDir < Kaitai::Struct::Struct

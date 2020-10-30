@@ -135,6 +135,10 @@ are actually ZIP archives.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -281,8 +285,12 @@ are actually ZIP archives.</p>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fdd000361</span>
     <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x-fmt/263</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q136218</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/common/dos_datetime</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">bit-endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">ZIP is a popular archive file format, introduced in 1989 by Phil Katz</span>
   <span class="no">and originally implemented in PKZIP utility by PKWARE.</span>
@@ -294,7 +302,9 @@ are actually ZIP archives.</p>
 
   <span class="no">For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
   <span class="no">are actually ZIP archives.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sections</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pk_section</span>
@@ -333,14 +343,14 @@ are actually ZIP archives.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gp_flags</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_mod_time</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_mod_date</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dos_datetime</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc32</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_compressed</span>
@@ -358,6 +368,59 @@ are actually ZIP archives.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_extra</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extras</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">gp_flags</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">general purpose bit flag</span>
+        <span class="nt">doc-ref</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.4.4</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html Local file headers</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_encrypted</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comp_options_raw</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access derived value instances instead</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_data_descriptor</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_1</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comp_patched_data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strong_encrypt</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lang_encoding</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_3</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mask_header_values</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_4</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">deflated_mode</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comp_options_raw</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deflate_mode</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">_parent.compression_method == compression::deflated</span>
+              <span class="no">or _parent.compression_method == compression::enhanced_deflated</span>
+          <span class="nt">imploded_dict_byte_size</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;((comp_options_raw</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b01)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">4)</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1024&#39;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;_parent.compression_method</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">compression::imploded&#39;</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8KiB or 4KiB in bytes</span>
+          <span class="nt">imploded_num_sf_trees</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(comp_options_raw</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b10)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">2&#39;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;_parent.compression_method</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">compression::imploded&#39;</span>
+          <span class="nt">lzma_has_eos_marker</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(comp_options_raw</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b01)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;_parent.compression_method</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">compression::lzma&#39;</span>
+        <span class="nt">enums</span><span class="p">:</span>
+          <span class="nt">deflate_mode</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maximum</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fast</span>
+            <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">super_fast</span>
   <span class="nt">central_dir_entry</span><span class="p">:</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12</span>
     <span class="nt">seq</span><span class="p">:</span>
@@ -370,10 +433,9 @@ are actually ZIP archives.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_mod_file_time</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_mod_file_date</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_mod_time</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dos_datetime</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc32</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_compressed</span>
@@ -452,7 +514,7 @@ are actually ZIP archives.</p>
             <span class="s">&#39;extra_codes::infozip_unix_var_size&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">infozip_unix_var_size</span>
     <span class="nt">types</span><span class="p">:</span>
       <span class="nt">ntfs</span><span class="p">:</span>
-        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&#39;</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -481,20 +543,36 @@ are actually ZIP archives.</p>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">creation_time</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
       <span class="nt">extended_timestamp</span><span class="p">:</span>
-        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&#39;</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info_flags</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mod_time</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags.has_mod_time</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unix timestamp</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">access_time</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags.has_access_time</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unix timestamp</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create_time</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags.has_create_time</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unix timestamp</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">info_flags</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_mod_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_access_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_create_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
       <span class="nt">infozip_unix_var_size</span><span class="p">:</span>
-        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&#39;</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -529,7 +607,7 @@ are actually ZIP archives.</p>
     <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm_lz77_z</span>
     <span class="nt">98</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppmd</span>
   <span class="nt">extra_codes</span><span class="p">:</span>
-    <span class="c1"># https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt</span>
+    <span class="c1"># https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt</span>
     <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zip64</span>
     <span class="nt">0x0007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">av_info</span>
 <span class="c1">#    0x0008: reserved for extended language encoding data (PFS) (see APPENDIX D)</span>

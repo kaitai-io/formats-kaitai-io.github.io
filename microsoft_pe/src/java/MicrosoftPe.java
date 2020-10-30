@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx">Source</a>
+ * @see <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
  */
 public class MicrosoftPe extends KaitaiStruct {
     public static MicrosoftPe fromFile(String fileName) throws IOException {

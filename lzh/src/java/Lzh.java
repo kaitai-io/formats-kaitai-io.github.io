@@ -203,7 +203,9 @@ public class Lzh extends KaitaiStruct {
             this.methodId = new String(this._io.readBytes(5), Charset.forName("ASCII"));
             this.fileSizeCompr = this._io.readU4le();
             this.fileSizeUncompr = this._io.readU4le();
-            this.fileTimestamp = this._io.readU4le();
+            this._raw_fileTimestamp = this._io.readBytes(4);
+            KaitaiStream _io__raw_fileTimestamp = new ByteBufferKaitaiStream(_raw_fileTimestamp);
+            this.fileTimestamp = new DosDatetime(_io__raw_fileTimestamp);
             this.attr = this._io.readU1();
             this.lhaLevel = this._io.readU1();
         }
@@ -211,11 +213,12 @@ public class Lzh extends KaitaiStruct {
         private String methodId;
         private long fileSizeCompr;
         private long fileSizeUncompr;
-        private long fileTimestamp;
+        private DosDatetime fileTimestamp;
         private int attr;
         private int lhaLevel;
         private Lzh _root;
         private Lzh.Header _parent;
+        private byte[] _raw_fileTimestamp;
         public int headerChecksum() { return headerChecksum; }
         public String methodId() { return methodId; }
 
@@ -232,7 +235,7 @@ public class Lzh extends KaitaiStruct {
         /**
          * Original file date/time
          */
-        public long fileTimestamp() { return fileTimestamp; }
+        public DosDatetime fileTimestamp() { return fileTimestamp; }
 
         /**
          * File or directory attribute
@@ -241,6 +244,7 @@ public class Lzh extends KaitaiStruct {
         public int lhaLevel() { return lhaLevel; }
         public Lzh _root() { return _root; }
         public Lzh.Header _parent() { return _parent; }
+        public byte[] _raw_fileTimestamp() { return _raw_fileTimestamp; }
     }
     private ArrayList<Record> entries;
     private Lzh _root;

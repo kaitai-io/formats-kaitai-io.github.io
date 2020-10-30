@@ -57,9 +57,9 @@ namespace Vfat {
 
         private function _read() {
             $this->_m_lsPerFat = $this->_io->readU4le();
-            $this->_m_hasActiveFat = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_reserved1 = $this->_io->readBitsIntBe(3);
-            $this->_m_activeFatId = $this->_io->readBitsIntBe(4);
+            $this->_m_hasActiveFat = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved1 = $this->_io->readBitsIntLe(3);
+            $this->_m_activeFatId = $this->_io->readBitsIntLe(4);
             $this->_io->alignToByte();
             $this->_m_reserved2 = $this->_io->readBytes(1);
             if (!($this->reserved2() == "\x00")) {
@@ -411,27 +411,72 @@ namespace Vfat {
 
         private function _read() {
             $this->_m_fileName = $this->_io->readBytes(11);
-            $this->_m_attribute = $this->_io->readU1();
+            $this->_m__raw_attrs = $this->_io->readBytes(1);
+            $_io__raw_attrs = new \Kaitai\Struct\Stream($this->_m__raw_attrs);
+            $this->_m_attrs = new \Vfat\RootDirectoryRec\AttrFlags($_io__raw_attrs, $this, $this->_root);
             $this->_m_reserved = $this->_io->readBytes(10);
-            $this->_m_time = $this->_io->readU2le();
-            $this->_m_date = $this->_io->readU2le();
+            $this->_m__raw_lastWriteTime = $this->_io->readBytes(4);
+            $_io__raw_lastWriteTime = new \Kaitai\Struct\Stream($this->_m__raw_lastWriteTime);
+            $this->_m_lastWriteTime = new \DosDatetime($_io__raw_lastWriteTime);
             $this->_m_startClus = $this->_io->readU2le();
             $this->_m_fileSize = $this->_io->readU4le();
         }
         protected $_m_fileName;
-        protected $_m_attribute;
+        protected $_m_attrs;
         protected $_m_reserved;
-        protected $_m_time;
-        protected $_m_date;
+        protected $_m_lastWriteTime;
         protected $_m_startClus;
         protected $_m_fileSize;
+        protected $_m__raw_attrs;
+        protected $_m__raw_lastWriteTime;
         public function fileName() { return $this->_m_fileName; }
-        public function attribute() { return $this->_m_attribute; }
+        public function attrs() { return $this->_m_attrs; }
         public function reserved() { return $this->_m_reserved; }
-        public function time() { return $this->_m_time; }
-        public function date() { return $this->_m_date; }
+        public function lastWriteTime() { return $this->_m_lastWriteTime; }
         public function startClus() { return $this->_m_startClus; }
         public function fileSize() { return $this->_m_fileSize; }
+        public function _raw_attrs() { return $this->_m__raw_attrs; }
+        public function _raw_lastWriteTime() { return $this->_m__raw_lastWriteTime; }
+    }
+}
+
+namespace Vfat\RootDirectoryRec {
+    class AttrFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\RootDirectoryRec $_parent = null, \Vfat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_readOnly = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_hidden = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_system = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_volumeId = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_isDirectory = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_archive = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved = $this->_io->readBitsIntLe(2);
+        }
+        protected $_m_longName;
+        public function longName() {
+            if ($this->_m_longName !== null)
+                return $this->_m_longName;
+            $this->_m_longName =  (($this->readOnly()) && ($this->hidden()) && ($this->system()) && ($this->volumeId())) ;
+            return $this->_m_longName;
+        }
+        protected $_m_readOnly;
+        protected $_m_hidden;
+        protected $_m_system;
+        protected $_m_volumeId;
+        protected $_m_isDirectory;
+        protected $_m_archive;
+        protected $_m_reserved;
+        public function readOnly() { return $this->_m_readOnly; }
+        public function hidden() { return $this->_m_hidden; }
+        public function system() { return $this->_m_system; }
+        public function volumeId() { return $this->_m_volumeId; }
+        public function isDirectory() { return $this->_m_isDirectory; }
+        public function archive() { return $this->_m_archive; }
+        public function reserved() { return $this->_m_reserved; }
     }
 }
 

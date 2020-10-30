@@ -10,7 +10,7 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 
 -- 
--- See also: Source (http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx)
+-- See also: Source (https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
 MicrosoftPe = class.class(KaitaiStruct)
 
 MicrosoftPe.PeFormat = enum.Enum {

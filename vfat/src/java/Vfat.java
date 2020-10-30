@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+
+/**
+ * @see <a href="https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc">Source</a>
+ */
 public class Vfat extends KaitaiStruct {
     public static Vfat fromFile(String fileName) throws IOException {
         return new Vfat(new ByteBufferKaitaiStream(fileName));
@@ -55,9 +59,9 @@ public class Vfat extends KaitaiStruct {
         }
         private void _read() {
             this.lsPerFat = this._io.readU4le();
-            this.hasActiveFat = this._io.readBitsIntBe(1) != 0;
-            this.reserved1 = this._io.readBitsIntBe(3);
-            this.activeFatId = this._io.readBitsIntBe(4);
+            this.hasActiveFat = this._io.readBitsIntLe(1) != 0;
+            this.reserved1 = this._io.readBitsIntLe(3);
+            this.activeFatId = this._io.readBitsIntLe(4);
             this._io.alignToByte();
             this.reserved2 = this._io.readBytes(1);
             if (!(Arrays.equals(reserved2(), new byte[] { 0 }))) {
@@ -459,31 +463,91 @@ public class Vfat extends KaitaiStruct {
         }
         private void _read() {
             this.fileName = this._io.readBytes(11);
-            this.attribute = this._io.readU1();
+            this._raw_attrs = this._io.readBytes(1);
+            KaitaiStream _io__raw_attrs = new ByteBufferKaitaiStream(_raw_attrs);
+            this.attrs = new AttrFlags(_io__raw_attrs, this, _root);
             this.reserved = this._io.readBytes(10);
-            this.time = this._io.readU2le();
-            this.date = this._io.readU2le();
+            this._raw_lastWriteTime = this._io.readBytes(4);
+            KaitaiStream _io__raw_lastWriteTime = new ByteBufferKaitaiStream(_raw_lastWriteTime);
+            this.lastWriteTime = new DosDatetime(_io__raw_lastWriteTime);
             this.startClus = this._io.readU2le();
             this.fileSize = this._io.readU4le();
         }
+        public static class AttrFlags extends KaitaiStruct {
+            public static AttrFlags fromFile(String fileName) throws IOException {
+                return new AttrFlags(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public AttrFlags(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public AttrFlags(KaitaiStream _io, Vfat.RootDirectoryRec _parent) {
+                this(_io, _parent, null);
+            }
+
+            public AttrFlags(KaitaiStream _io, Vfat.RootDirectoryRec _parent, Vfat _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.readOnly = this._io.readBitsIntLe(1) != 0;
+                this.hidden = this._io.readBitsIntLe(1) != 0;
+                this.system = this._io.readBitsIntLe(1) != 0;
+                this.volumeId = this._io.readBitsIntLe(1) != 0;
+                this.isDirectory = this._io.readBitsIntLe(1) != 0;
+                this.archive = this._io.readBitsIntLe(1) != 0;
+                this.reserved = this._io.readBitsIntLe(2);
+            }
+            private Boolean longName;
+            public Boolean longName() {
+                if (this.longName != null)
+                    return this.longName;
+                boolean _tmp = (boolean) ( ((readOnly()) && (hidden()) && (system()) && (volumeId())) );
+                this.longName = _tmp;
+                return this.longName;
+            }
+            private boolean readOnly;
+            private boolean hidden;
+            private boolean system;
+            private boolean volumeId;
+            private boolean isDirectory;
+            private boolean archive;
+            private long reserved;
+            private Vfat _root;
+            private Vfat.RootDirectoryRec _parent;
+            public boolean readOnly() { return readOnly; }
+            public boolean hidden() { return hidden; }
+            public boolean system() { return system; }
+            public boolean volumeId() { return volumeId; }
+            public boolean isDirectory() { return isDirectory; }
+            public boolean archive() { return archive; }
+            public long reserved() { return reserved; }
+            public Vfat _root() { return _root; }
+            public Vfat.RootDirectoryRec _parent() { return _parent; }
+        }
         private byte[] fileName;
-        private int attribute;
+        private AttrFlags attrs;
         private byte[] reserved;
-        private int time;
-        private int date;
+        private DosDatetime lastWriteTime;
         private int startClus;
         private long fileSize;
         private Vfat _root;
         private Vfat.RootDirectory _parent;
+        private byte[] _raw_attrs;
+        private byte[] _raw_lastWriteTime;
         public byte[] fileName() { return fileName; }
-        public int attribute() { return attribute; }
+        public AttrFlags attrs() { return attrs; }
         public byte[] reserved() { return reserved; }
-        public int time() { return time; }
-        public int date() { return date; }
+        public DosDatetime lastWriteTime() { return lastWriteTime; }
         public int startClus() { return startClus; }
         public long fileSize() { return fileSize; }
         public Vfat _root() { return _root; }
         public Vfat.RootDirectory _parent() { return _parent; }
+        public byte[] _raw_attrs() { return _raw_attrs; }
+        public byte[] _raw_lastWriteTime() { return _raw_lastWriteTime; }
     }
     public static class RootDirectory extends KaitaiStruct {
         public static RootDirectory fromFile(String fileName) throws IOException {

@@ -510,7 +510,9 @@ records.</p>
             <span class="k">this</span><span class="p">.</span><span class="na">methodId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
             <span class="k">this</span><span class="p">.</span><span class="na">fileSizeCompr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">fileSizeUncompr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">fileTimestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_fileTimestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_fileTimestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fileTimestamp</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileTimestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="n">_io__raw_fileTimestamp</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">attr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lhaLevel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
         <span class="p">}</span>
@@ -518,11 +520,12 @@ records.</p>
         <span class="kd">private</span> <span class="n">String</span> <span class="n">methodId</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">fileSizeCompr</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">long</span> <span class="n">fileSizeUncompr</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">long</span> <span class="n">fileTimestamp</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DosDatetime</span> <span class="n">fileTimestamp</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">attr</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">lhaLevel</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Lzh</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Lzh</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_fileTimestamp</span><span class="p">;</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">headerChecksum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headerChecksum</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">String</span> <span class="nf">methodId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">methodId</span><span class="p">;</span> <span class="p">}</span>
 
@@ -539,7 +542,7 @@ records.</p>
         <span class="cm">/**</span>
 <span class="cm">         * Original file date/time</span>
 <span class="cm">         */</span>
-        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">fileTimestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileTimestamp</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DosDatetime</span> <span class="nf">fileTimestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileTimestamp</span><span class="p">;</span> <span class="p">}</span>
 
         <span class="cm">/**</span>
 <span class="cm">         * File or directory attribute</span>
@@ -548,6 +551,7 @@ records.</p>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lhaLevel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lhaLevel</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Lzh</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Lzh</span><span class="p">.</span><span class="na">Header</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_fileTimestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_fileTimestamp</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
     <span class="kd">private</span> <span class="n">Lzh</span> <span class="n">_root</span><span class="p">;</span>

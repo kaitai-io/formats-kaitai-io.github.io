@@ -7,6 +7,7 @@ require("kaitaistruct")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
+require("dos_datetime")
 -- 
 -- LHA (LHarc, LZH) is a file format used by a popular freeware
 -- eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the
@@ -116,7 +117,9 @@ function Lzh.Header1:_read()
   self.method_id = str_decode.decode(self._io:read_bytes(5), "ASCII")
   self.file_size_compr = self._io:read_u4le()
   self.file_size_uncompr = self._io:read_u4le()
-  self.file_timestamp = self._io:read_u4le()
+  self._raw_file_timestamp = self._io:read_bytes(4)
+  local _io = KaitaiStream(stringstream(self._raw_file_timestamp))
+  self.file_timestamp = DosDatetime(_io)
   self.attr = self._io:read_u1()
   self.lha_level = self._io:read_u1()
 end

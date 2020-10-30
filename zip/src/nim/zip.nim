@@ -1,6 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
+import /common/dos_datetime
 
+import "dos_datetime"
 type
   Zip* = ref object of KaitaiStruct
     `sections`*: seq[Zip_PkSection]
@@ -73,11 +75,18 @@ type
     `creationTime`*: uint64
     `parent`*: Zip_ExtraField_Ntfs_Attribute
   Zip_ExtraField_ExtendedTimestamp* = ref object of KaitaiStruct
-    `flags`*: uint8
+    `flags`*: Zip_ExtraField_ExtendedTimestamp_InfoFlags
     `modTime`*: uint32
     `accessTime`*: uint32
     `createTime`*: uint32
     `parent`*: Zip_ExtraField
+    `rawFlags`*: seq[byte]
+  Zip_ExtraField_ExtendedTimestamp_InfoFlags* = ref object of KaitaiStruct
+    `hasModTime`*: bool
+    `hasAccessTime`*: bool
+    `hasCreateTime`*: bool
+    `reserved`*: uint64
+    `parent`*: Zip_ExtraField_ExtendedTimestamp
   Zip_ExtraField_InfozipUnixVarSize* = ref object of KaitaiStruct
     `version`*: uint8
     `lenUid`*: uint8
@@ -90,8 +99,7 @@ type
     `versionNeededToExtract`*: uint16
     `flags`*: uint16
     `compressionMethod`*: Zip_Compression
-    `lastModFileTime`*: uint16
-    `lastModFileDate`*: uint16
+    `fileModTime`*: DosDatetime
     `crc32`*: uint32
     `lenBodyCompressed`*: uint32
     `lenBodyUncompressed`*: uint32
@@ -106,6 +114,7 @@ type
     `extra`*: Zip_Extras
     `comment`*: string
     `parent`*: Zip_PkSection
+    `rawFileModTime`*: seq[byte]
     `rawExtra`*: seq[byte]
     `localHeaderInst`*: Zip_PkSection
   Zip_PkSection* = ref object of KaitaiStruct
@@ -118,10 +127,9 @@ type
     `parent`*: KaitaiStruct
   Zip_LocalFileHeader* = ref object of KaitaiStruct
     `version`*: uint16
-    `flags`*: uint16
+    `flags`*: Zip_LocalFileHeader_GpFlags
     `compressionMethod`*: Zip_Compression
-    `fileModTime`*: uint16
-    `fileModDate`*: uint16
+    `fileModTime`*: DosDatetime
     `crc32`*: uint32
     `lenBodyCompressed`*: uint32
     `lenBodyUncompressed`*: uint32
@@ -130,7 +138,31 @@ type
     `fileName`*: string
     `extra`*: Zip_Extras
     `parent`*: Zip_LocalFile
+    `rawFlags`*: seq[byte]
+    `rawFileModTime`*: seq[byte]
     `rawExtra`*: seq[byte]
+  Zip_LocalFileHeader_GpFlags* = ref object of KaitaiStruct
+    `fileEncrypted`*: bool
+    `compOptionsRaw`*: uint64
+    `hasDataDescriptor`*: bool
+    `reserved1`*: bool
+    `compPatchedData`*: bool
+    `strongEncrypt`*: bool
+    `reserved2`*: uint64
+    `langEncoding`*: bool
+    `reserved3`*: bool
+    `maskHeaderValues`*: bool
+    `reserved4`*: uint64
+    `parent`*: Zip_LocalFileHeader
+    `deflatedModeInst`*: Zip_LocalFileHeader_GpFlags_DeflateMode
+    `implodedDictByteSizeInst`*: int
+    `implodedNumSfTreesInst`*: int8
+    `lzmaHasEosMarkerInst`*: bool
+  Zip_LocalFileHeader_GpFlags_DeflateMode* = enum
+    normal = 0
+    maximum = 1
+    fast = 2
+    super_fast = 3
   Zip_EndOfCentralDir* = ref object of KaitaiStruct
     `diskOfEndOfCentralDir`*: uint16
     `diskOfCentralDir`*: uint16
@@ -150,14 +182,20 @@ proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruc
 proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs): Zip_ExtraField_Ntfs_Attribute
 proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs_Attribute): Zip_ExtraField_Ntfs_Attribute1
 proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_ExtendedTimestamp
+proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp_InfoFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_ExtendedTimestamp): Zip_ExtraField_ExtendedTimestamp_InfoFlags
 proc read*(_: typedesc[Zip_ExtraField_InfozipUnixVarSize], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_InfozipUnixVarSize
 proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_CentralDirEntry
 proc read*(_: typedesc[Zip_PkSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_PkSection
 proc read*(_: typedesc[Zip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_Extras
 proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFile): Zip_LocalFileHeader
+proc read*(_: typedesc[Zip_LocalFileHeader_GpFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFileHeader): Zip_LocalFileHeader_GpFlags
 proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir
 
 proc localHeader*(this: Zip_CentralDirEntry): Zip_PkSection
+proc deflatedMode*(this: Zip_LocalFileHeader_GpFlags): Zip_LocalFileHeader_GpFlags_DeflateMode
+proc implodedDictByteSize*(this: Zip_LocalFileHeader_GpFlags): int
+proc implodedNumSfTrees*(this: Zip_LocalFileHeader_GpFlags): int8
+proc lzmaHasEosMarker*(this: Zip_LocalFileHeader_GpFlags): bool
 
 
 ##[
@@ -173,6 +211,7 @@ For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
 are actually ZIP archives.
 
 @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
+@see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Source</a>
 ]##
 proc read*(_: typedesc[Zip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip =
   template this: untyped = result
@@ -267,7 +306,7 @@ proc fromFile*(_: typedesc[Zip_ExtraField], filename: string): Zip_ExtraField =
 
 
 ##[
-@see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191">Source</a>
+@see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
 ]##
 proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_Ntfs =
   template this: untyped = result
@@ -336,7 +375,7 @@ proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], filename: string): Z
 
 
 ##[
-@see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817">Source</a>
+@see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817">Source</a>
 ]##
 proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_ExtendedTimestamp =
   template this: untyped = result
@@ -346,23 +385,59 @@ proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp], io: KaitaiStream, root
   this.root = root
   this.parent = parent
 
-  let flagsExpr = this.io.readU1()
+  let rawFlagsExpr = this.io.readBytes(int(1))
+  this.rawFlags = rawFlagsExpr
+  let rawFlagsIo = newKaitaiStream(rawFlagsExpr)
+  let flagsExpr = Zip_ExtraField_ExtendedTimestamp_InfoFlags.read(rawFlagsIo, this.root, this)
   this.flags = flagsExpr
-  let modTimeExpr = this.io.readU4le()
-  this.modTime = modTimeExpr
-  if not(this.io.isEof):
+
+  ##[
+  Unix timestamp
+  ]##
+  if this.flags.hasModTime:
+    let modTimeExpr = this.io.readU4le()
+    this.modTime = modTimeExpr
+
+  ##[
+  Unix timestamp
+  ]##
+  if this.flags.hasAccessTime:
     let accessTimeExpr = this.io.readU4le()
     this.accessTime = accessTimeExpr
-  if not(this.io.isEof):
+
+  ##[
+  Unix timestamp
+  ]##
+  if this.flags.hasCreateTime:
     let createTimeExpr = this.io.readU4le()
     this.createTime = createTimeExpr
 
 proc fromFile*(_: typedesc[Zip_ExtraField_ExtendedTimestamp], filename: string): Zip_ExtraField_ExtendedTimestamp =
   Zip_ExtraField_ExtendedTimestamp.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp_InfoFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_ExtendedTimestamp): Zip_ExtraField_ExtendedTimestamp_InfoFlags =
+  template this: untyped = result
+  this = new(Zip_ExtraField_ExtendedTimestamp_InfoFlags)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let hasModTimeExpr = this.io.readBitsIntLe(1) != 0
+  this.hasModTime = hasModTimeExpr
+  let hasAccessTimeExpr = this.io.readBitsIntLe(1) != 0
+  this.hasAccessTime = hasAccessTimeExpr
+  let hasCreateTimeExpr = this.io.readBitsIntLe(1) != 0
+  this.hasCreateTime = hasCreateTimeExpr
+  let reservedExpr = this.io.readBitsIntLe(5)
+  this.reserved = reservedExpr
+
+proc fromFile*(_: typedesc[Zip_ExtraField_ExtendedTimestamp_InfoFlags], filename: string): Zip_ExtraField_ExtendedTimestamp_InfoFlags =
+  Zip_ExtraField_ExtendedTimestamp_InfoFlags.read(newKaitaiFileStream(filename), nil, nil)
+
 
 ##[
-@see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339">Source</a>
+@see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339">Source</a>
 ]##
 proc read*(_: typedesc[Zip_ExtraField_InfozipUnixVarSize], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_InfozipUnixVarSize =
   template this: untyped = result
@@ -426,10 +501,11 @@ proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruc
   this.flags = flagsExpr
   let compressionMethodExpr = Zip_Compression(this.io.readU2le())
   this.compressionMethod = compressionMethodExpr
-  let lastModFileTimeExpr = this.io.readU2le()
-  this.lastModFileTime = lastModFileTimeExpr
-  let lastModFileDateExpr = this.io.readU2le()
-  this.lastModFileDate = lastModFileDateExpr
+  let rawFileModTimeExpr = this.io.readBytes(int(4))
+  this.rawFileModTime = rawFileModTimeExpr
+  let rawFileModTimeIo = newKaitaiStream(rawFileModTimeExpr)
+  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, this.root, this)
+  this.fileModTime = fileModTimeExpr
   let crc32Expr = this.io.readU4le()
   this.crc32 = crc32Expr
   let lenBodyCompressedExpr = this.io.readU4le()
@@ -532,14 +608,18 @@ proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruc
 
   let versionExpr = this.io.readU2le()
   this.version = versionExpr
-  let flagsExpr = this.io.readU2le()
+  let rawFlagsExpr = this.io.readBytes(int(2))
+  this.rawFlags = rawFlagsExpr
+  let rawFlagsIo = newKaitaiStream(rawFlagsExpr)
+  let flagsExpr = Zip_LocalFileHeader_GpFlags.read(rawFlagsIo, this.root, this)
   this.flags = flagsExpr
   let compressionMethodExpr = Zip_Compression(this.io.readU2le())
   this.compressionMethod = compressionMethodExpr
-  let fileModTimeExpr = this.io.readU2le()
+  let rawFileModTimeExpr = this.io.readBytes(int(4))
+  this.rawFileModTime = rawFileModTimeExpr
+  let rawFileModTimeIo = newKaitaiStream(rawFileModTimeExpr)
+  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, this.root, this)
   this.fileModTime = fileModTimeExpr
-  let fileModDateExpr = this.io.readU2le()
-  this.fileModDate = fileModDateExpr
   let crc32Expr = this.io.readU4le()
   this.crc32 = crc32Expr
   let lenBodyCompressedExpr = this.io.readU4le()
@@ -560,6 +640,89 @@ proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruc
 
 proc fromFile*(_: typedesc[Zip_LocalFileHeader], filename: string): Zip_LocalFileHeader =
   Zip_LocalFileHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.4.4</a>
+@see <a href="https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html">Local file headers</a>
+]##
+proc read*(_: typedesc[Zip_LocalFileHeader_GpFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFileHeader): Zip_LocalFileHeader_GpFlags =
+  template this: untyped = result
+  this = new(Zip_LocalFileHeader_GpFlags)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let fileEncryptedExpr = this.io.readBitsIntLe(1) != 0
+  this.fileEncrypted = fileEncryptedExpr
+
+  ##[
+  internal; access derived value instances instead
+  ]##
+  let compOptionsRawExpr = this.io.readBitsIntLe(2)
+  this.compOptionsRaw = compOptionsRawExpr
+  let hasDataDescriptorExpr = this.io.readBitsIntLe(1) != 0
+  this.hasDataDescriptor = hasDataDescriptorExpr
+  let reserved1Expr = this.io.readBitsIntLe(1) != 0
+  this.reserved1 = reserved1Expr
+  let compPatchedDataExpr = this.io.readBitsIntLe(1) != 0
+  this.compPatchedData = compPatchedDataExpr
+  let strongEncryptExpr = this.io.readBitsIntLe(1) != 0
+  this.strongEncrypt = strongEncryptExpr
+  let reserved2Expr = this.io.readBitsIntLe(4)
+  this.reserved2 = reserved2Expr
+  let langEncodingExpr = this.io.readBitsIntLe(1) != 0
+  this.langEncoding = langEncodingExpr
+  let reserved3Expr = this.io.readBitsIntLe(1) != 0
+  this.reserved3 = reserved3Expr
+  let maskHeaderValuesExpr = this.io.readBitsIntLe(1) != 0
+  this.maskHeaderValues = maskHeaderValuesExpr
+  let reserved4Expr = this.io.readBitsIntLe(2)
+  this.reserved4 = reserved4Expr
+
+proc deflatedMode(this: Zip_LocalFileHeader_GpFlags): Zip_LocalFileHeader_GpFlags_DeflateMode = 
+  if this.deflatedModeInst != nil:
+    return this.deflatedModeInst
+  if  ((this.parent.compressionMethod == zip.deflated) or (this.parent.compressionMethod == zip.enhanced_deflated)) :
+    let deflatedModeInstExpr = Zip_LocalFileHeader_GpFlags_DeflateMode(Zip_LocalFileHeader_GpFlags_DeflateMode(this.compOptionsRaw))
+    this.deflatedModeInst = deflatedModeInstExpr
+  if this.deflatedModeInst != nil:
+    return this.deflatedModeInst
+
+proc implodedDictByteSize(this: Zip_LocalFileHeader_GpFlags): int = 
+
+  ##[
+  8KiB or 4KiB in bytes
+  ]##
+  if this.implodedDictByteSizeInst != nil:
+    return this.implodedDictByteSizeInst
+  if this.parent.compressionMethod == zip.imploded:
+    let implodedDictByteSizeInstExpr = int(((if (this.compOptionsRaw and 1) != 0: 8 else: 4) * 1024))
+    this.implodedDictByteSizeInst = implodedDictByteSizeInstExpr
+  if this.implodedDictByteSizeInst != nil:
+    return this.implodedDictByteSizeInst
+
+proc implodedNumSfTrees(this: Zip_LocalFileHeader_GpFlags): int8 = 
+  if this.implodedNumSfTreesInst != nil:
+    return this.implodedNumSfTreesInst
+  if this.parent.compressionMethod == zip.imploded:
+    let implodedNumSfTreesInstExpr = int8((if (this.compOptionsRaw and 2) != 0: 3 else: 2))
+    this.implodedNumSfTreesInst = implodedNumSfTreesInstExpr
+  if this.implodedNumSfTreesInst != nil:
+    return this.implodedNumSfTreesInst
+
+proc lzmaHasEosMarker(this: Zip_LocalFileHeader_GpFlags): bool = 
+  if this.lzmaHasEosMarkerInst != nil:
+    return this.lzmaHasEosMarkerInst
+  if this.parent.compressionMethod == zip.lzma:
+    let lzmaHasEosMarkerInstExpr = bool((this.compOptionsRaw and 1) != 0)
+    this.lzmaHasEosMarkerInst = lzmaHasEosMarkerInstExpr
+  if this.lzmaHasEosMarkerInst != nil:
+    return this.lzmaHasEosMarkerInst
+
+proc fromFile*(_: typedesc[Zip_LocalFileHeader_GpFlags], filename: string): Zip_LocalFileHeader_GpFlags =
+  Zip_LocalFileHeader_GpFlags.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir =
   template this: untyped = result

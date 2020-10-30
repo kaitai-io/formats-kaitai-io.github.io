@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc Source
 class Vfat < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -27,9 +30,9 @@ class Vfat < Kaitai::Struct::Struct
 
     def _read
       @ls_per_fat = @_io.read_u4le
-      @has_active_fat = @_io.read_bits_int_be(1) != 0
-      @reserved1 = @_io.read_bits_int_be(3)
-      @active_fat_id = @_io.read_bits_int_be(4)
+      @has_active_fat = @_io.read_bits_int_le(1) != 0
+      @reserved1 = @_io.read_bits_int_le(3)
+      @active_fat_id = @_io.read_bits_int_le(4)
       @_io.align_to_byte
       @reserved2 = @_io.read_bytes(1)
       raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved2, _io, "/types/ext_bios_param_block_fat32/seq/4") if not reserved2 == [0].pack('C*')
@@ -297,21 +300,54 @@ class Vfat < Kaitai::Struct::Struct
 
     def _read
       @file_name = @_io.read_bytes(11)
-      @attribute = @_io.read_u1
+      @_raw_attrs = @_io.read_bytes(1)
+      _io__raw_attrs = Kaitai::Struct::Stream.new(@_raw_attrs)
+      @attrs = AttrFlags.new(_io__raw_attrs, self, @_root)
       @reserved = @_io.read_bytes(10)
-      @time = @_io.read_u2le
-      @date = @_io.read_u2le
+      @_raw_last_write_time = @_io.read_bytes(4)
+      _io__raw_last_write_time = Kaitai::Struct::Stream.new(@_raw_last_write_time)
+      @last_write_time = DosDatetime.new(_io__raw_last_write_time)
       @start_clus = @_io.read_u2le
       @file_size = @_io.read_u4le
       self
     end
+    class AttrFlags < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @read_only = @_io.read_bits_int_le(1) != 0
+        @hidden = @_io.read_bits_int_le(1) != 0
+        @system = @_io.read_bits_int_le(1) != 0
+        @volume_id = @_io.read_bits_int_le(1) != 0
+        @is_directory = @_io.read_bits_int_le(1) != 0
+        @archive = @_io.read_bits_int_le(1) != 0
+        @reserved = @_io.read_bits_int_le(2)
+        self
+      end
+      def long_name
+        return @long_name unless @long_name.nil?
+        @long_name =  ((read_only) && (hidden) && (system) && (volume_id)) 
+        @long_name
+      end
+      attr_reader :read_only
+      attr_reader :hidden
+      attr_reader :system
+      attr_reader :volume_id
+      attr_reader :is_directory
+      attr_reader :archive
+      attr_reader :reserved
+    end
     attr_reader :file_name
-    attr_reader :attribute
+    attr_reader :attrs
     attr_reader :reserved
-    attr_reader :time
-    attr_reader :date
+    attr_reader :last_write_time
     attr_reader :start_clus
     attr_reader :file_size
+    attr_reader :_raw_attrs
+    attr_reader :_raw_last_write_time
   end
   class RootDirectory < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
