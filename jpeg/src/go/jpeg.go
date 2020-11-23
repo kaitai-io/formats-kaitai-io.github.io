@@ -6,6 +6,25 @@ import (
 )
 
 
+/**
+ * JPEG File Interchange Format, or JFIF, or, more colloquially known
+ * as just "JPEG" or "JPG", is a popular 2D bitmap image file format,
+ * offering lossy compression which works reasonably well with
+ * photographic images.
+ * 
+ * Format is organized as a container format, serving multiple
+ * "segments", each starting with a magic and a marker. JFIF standard
+ * dictates order and mandatory apperance of segments:
+ * 
+ * * SOI
+ * * APP0 (with JFIF magic)
+ * * APP0 (with JFXX magic, optional)
+ * * everything else
+ * * SOS
+ * * JPEG-compressed stream
+ * * EOI
+ */
+
 type Jpeg_ComponentId int
 const (
 	Jpeg_ComponentId__Y Jpeg_ComponentId = 1

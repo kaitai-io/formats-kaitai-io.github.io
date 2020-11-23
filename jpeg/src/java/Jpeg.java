@@ -10,6 +10,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.nio.charset.Charset;
 
+
+/**
+ * JPEG File Interchange Format, or JFIF, or, more colloquially known
+ * as just "JPEG" or "JPG", is a popular 2D bitmap image file format,
+ * offering lossy compression which works reasonably well with
+ * photographic images.
+ * 
+ * Format is organized as a container format, serving multiple
+ * "segments", each starting with a magic and a marker. JFIF standard
+ * dictates order and mandatory apperance of segments:
+ * 
+ * * SOI
+ * * APP0 (with JFIF magic)
+ * * APP0 (with JFXX magic, optional)
+ * * everything else
+ * * SOS
+ * * JPEG-compressed stream
+ * * EOI
+ */
 public class Jpeg extends KaitaiStruct {
     public static Jpeg fromFile(String fileName) throws IOException {
         return new Jpeg(new ByteBufferKaitaiStream(fileName));

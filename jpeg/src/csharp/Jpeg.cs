@@ -4,6 +4,25 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// JPEG File Interchange Format, or JFIF, or, more colloquially known
+    /// as just &quot;JPEG&quot; or &quot;JPG&quot;, is a popular 2D bitmap image file format,
+    /// offering lossy compression which works reasonably well with
+    /// photographic images.
+    /// 
+    /// Format is organized as a container format, serving multiple
+    /// &quot;segments&quot;, each starting with a magic and a marker. JFIF standard
+    /// dictates order and mandatory apperance of segments:
+    /// 
+    /// * SOI
+    /// * APP0 (with JFIF magic)
+    /// * APP0 (with JFXX magic, optional)
+    /// * everything else
+    /// * SOS
+    /// * JPEG-compressed stream
+    /// * EOI
+    /// </summary>
     public partial class Jpeg : KaitaiStruct
     {
         public static Jpeg FromFile(string fileName)
