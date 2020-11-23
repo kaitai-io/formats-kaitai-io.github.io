@@ -553,7 +553,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ($self->raw() / (1 << 30));
+    $self->{value} = (($self->raw() + 0.0) / (1 << 30));
     return $self->{value};
 }
 
@@ -886,7 +886,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ($self->raw() / (1 << 16));
+    $self->{value} = (($self->raw() + 0.0) / (1 << 16));
     return $self->{value};
 }
 
@@ -1050,7 +1050,7 @@ sub _read {
     $self->{_raw_header} = $self->{_io}->read_bytes(($self->len_header() - 4));
     my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
     $self->{header} = Bmp::BitmapHeader->new($io__raw_header, $self, $self->{_root});
-    if ( ((!($self->_io()->is_eof())) && ($self->is_color_mask_here())) ) {
+    if ($self->is_color_mask_here()) {
         $self->{color_mask} = Bmp::ColorMask->new($self->{_io}, $self, $self->{_root});
     }
     if (!($self->_io()->is_eof())) {
@@ -1100,7 +1100,7 @@ sub color_mask_green {
 sub is_color_mask_here {
     my ($self) = @_;
     return $self->{is_color_mask_here} if ($self->{is_color_mask_here});
-    $self->{is_color_mask_here} =  (($self->header()->len_header() == $Bmp::HEADER_TYPE_BITMAP_INFO_HEADER) && ( (($self->header()->bitmap_info_ext()->compression() == $Bmp::COMPRESSIONS_BITFIELDS) || ($self->header()->bitmap_info_ext()->compression() == $Bmp::COMPRESSIONS_ALPHA_BITFIELDS)) )) ;
+    $self->{is_color_mask_here} =  ((!($self->_io()->is_eof())) && ($self->header()->len_header() == $Bmp::HEADER_TYPE_BITMAP_INFO_HEADER) && ( (($self->header()->bitmap_info_ext()->compression() == $Bmp::COMPRESSIONS_BITFIELDS) || ($self->header()->bitmap_info_ext()->compression() == $Bmp::COMPRESSIONS_ALPHA_BITFIELDS)) )) ;
     return $self->{is_color_mask_here};
 }
 

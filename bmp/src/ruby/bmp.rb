@@ -336,7 +336,7 @@ class Bmp < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = (raw / (1 << 30))
+      @value = ((raw + 0.0) / (1 << 30))
       @value
     end
     attr_reader :raw
@@ -536,7 +536,7 @@ class Bmp < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = (raw / (1 << 16))
+      @value = ((raw + 0.0) / (1 << 16))
       @value
     end
     attr_reader :raw
@@ -615,7 +615,7 @@ class Bmp < Kaitai::Struct::Struct
       @_raw_header = @_io.read_bytes((len_header - 4))
       _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
       @header = BitmapHeader.new(_io__raw_header, self, @_root, len_header)
-      if  ((!(_io.eof?)) && (is_color_mask_here)) 
+      if is_color_mask_here
         @color_mask = ColorMask.new(@_io, self, @_root, header.bitmap_info_ext.compression == :compressions_alpha_bitfields)
       end
       if !(_io.eof?)
@@ -654,7 +654,7 @@ class Bmp < Kaitai::Struct::Struct
     end
     def is_color_mask_here
       return @is_color_mask_here unless @is_color_mask_here.nil?
-      @is_color_mask_here =  ((header.len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header]) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) )) 
+      @is_color_mask_here =  ((!(_io.eof?)) && (header.len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header]) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) )) 
       @is_color_mask_here
     end
     def color_mask_red

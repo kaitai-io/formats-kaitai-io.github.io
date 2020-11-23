@@ -508,7 +508,7 @@ proc read*(_: typedesc[Bmp_FixedPoint2Dot30], io: KaitaiStream, root: KaitaiStru
 proc value(this: Bmp_FixedPoint2Dot30): float64 = 
   if this.valueInst != nil:
     return this.valueInst
-  let valueInstExpr = float64(((float32(this.raw)) div (1 shl 30)))
+  let valueInstExpr = float64(((this.raw + 0.0) div (1 shl 30)))
   this.valueInst = valueInstExpr
   if this.valueInst != nil:
     return this.valueInst
@@ -761,7 +761,7 @@ proc read*(_: typedesc[Bmp_FixedPoint16Dot16], io: KaitaiStream, root: KaitaiStr
 proc value(this: Bmp_FixedPoint16Dot16): float64 = 
   if this.valueInst != nil:
     return this.valueInst
-  let valueInstExpr = float64(((float32(this.raw)) div (1 shl 16)))
+  let valueInstExpr = float64(((this.raw + 0.0) div (1 shl 16)))
   this.valueInst = valueInstExpr
   if this.valueInst != nil:
     return this.valueInst
@@ -853,7 +853,7 @@ proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, pa
   ##[
   Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
   ]##
-  if  ((not(this.io.isEof)) and (this.isColorMaskHere)) :
+  if this.isColorMaskHere:
     let colorMaskExpr = Bmp_ColorMask.read(this.io, this.root, this, this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)
     this.colorMask = colorMaskExpr
   if not(this.io.isEof):
@@ -907,7 +907,7 @@ proc colorMaskGreen(this: Bmp_BitmapInfo): int =
 proc isColorMaskHere(this: Bmp_BitmapInfo): bool = 
   if this.isColorMaskHereInst != nil:
     return this.isColorMaskHereInst
-  let isColorMaskHereInstExpr = bool( ((this.header.lenHeader == ord(bmp.bitmap_info_header)) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) )) )
+  let isColorMaskHereInstExpr = bool( ((not(this.io.isEof)) and (this.header.lenHeader == ord(bmp.bitmap_info_header)) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) )) )
   this.isColorMaskHereInst = isColorMaskHereInstExpr
   if this.isColorMaskHereInst != nil:
     return this.isColorMaskHereInst

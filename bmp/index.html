@@ -457,21 +457,19 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bitmap_header(len_header)</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_mask</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_mask(header.bitmap_info_ext.compression == compressions::alpha_bitfields)</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof and is_color_mask_here</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_color_mask_here</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_table</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bmciColors</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;color_table(</span>
-            <span class="s">not</span><span class="nv"> </span><span class="s">header.is_core_header,</span>
-            <span class="s">header.extends_bitmap_info</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">header.bitmap_info_ext.num_colors_used</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0</span>
-          <span class="s">)&#39;</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;color_table(not</span><span class="nv"> </span><span class="s">header.is_core_header,</span><span class="nv"> </span><span class="s">header.extends_bitmap_info</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">header.bitmap_info_ext.num_colors_used</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0)&#39;</span>
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">is_color_mask_here</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">&gt;-</span>
-          <span class="no">header.len_header == header_type::bitmap_info_header.to_i</span>
-            <span class="no">and (header.bitmap_info_ext.compression == compressions::bitfields or header.bitmap_info_ext.compression == compressions::alpha_bitfields)</span>
+          <span class="no">not _io.eof</span>
+          <span class="no">and header.len_header == header_type::bitmap_info_header.to_i</span>
+          <span class="no">and (header.bitmap_info_ext.compression == compressions::bitfields or header.bitmap_info_ext.compression == compressions::alpha_bitfields)</span>
       <span class="nt">is_color_mask_given</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">&gt;-</span>
           <span class="no">header.extends_bitmap_info</span>
@@ -797,7 +795,7 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">value</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw.as&lt;f4&gt; / (1 &lt;&lt; 30)</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(raw + 0.0) / (1 &lt;&lt; 30)</span>
     <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
   <span class="nt">fixed_point_16_dot_16</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
@@ -805,7 +803,7 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">value</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw.as&lt;f4&gt; / (1 &lt;&lt; 16)</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(raw + 0.0) / (1 &lt;&lt; 16)</span>
     <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">compressions</span><span class="p">:</span>

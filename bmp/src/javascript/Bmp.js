@@ -385,7 +385,7 @@ var Bmp = (function() {
       get: function() {
         if (this._m_value !== undefined)
           return this._m_value;
-        this._m_value = (this.raw / (1 << 30));
+        this._m_value = ((this.raw + 0.0) / (1 << 30));
         return this._m_value;
       }
     });
@@ -629,7 +629,7 @@ var Bmp = (function() {
       get: function() {
         if (this._m_value !== undefined)
           return this._m_value;
-        this._m_value = (this.raw / (1 << 16));
+        this._m_value = ((this.raw + 0.0) / (1 << 16));
         return this._m_value;
       }
     });
@@ -723,7 +723,7 @@ var Bmp = (function() {
       this._raw_header = this._io.readBytes((this.lenHeader - 4));
       var _io__raw_header = new KaitaiStream(this._raw_header);
       this.header = new BitmapHeader(_io__raw_header, this, this._root, this.lenHeader);
-      if ( ((!(this._io.isEof())) && (this.isColorMaskHere)) ) {
+      if (this.isColorMaskHere) {
         this.colorMask = new ColorMask(this._io, this, this._root, this.header.bitmapInfoExt.compression == Bmp.Compressions.ALPHA_BITFIELDS);
       }
       if (!(this._io.isEof())) {
@@ -778,7 +778,7 @@ var Bmp = (function() {
       get: function() {
         if (this._m_isColorMaskHere !== undefined)
           return this._m_isColorMaskHere;
-        this._m_isColorMaskHere =  ((this.header.lenHeader == Bmp.HeaderType.BITMAP_INFO_HEADER) && ( ((this.header.bitmapInfoExt.compression == Bmp.Compressions.BITFIELDS) || (this.header.bitmapInfoExt.compression == Bmp.Compressions.ALPHA_BITFIELDS)) )) ;
+        this._m_isColorMaskHere =  ((!(this._io.isEof())) && (this.header.lenHeader == Bmp.HeaderType.BITMAP_INFO_HEADER) && ( ((this.header.bitmapInfoExt.compression == Bmp.Compressions.BITFIELDS) || (this.header.bitmapInfoExt.compression == Bmp.Compressions.ALPHA_BITFIELDS)) )) ;
         return this._m_isColorMaskHere;
       }
     });

@@ -327,7 +327,7 @@ namespace Bmp {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ($this->raw() / (1 << 30));
+            $this->_m_value = (($this->raw() + 0.0) / (1 << 30));
             return $this->_m_value;
         }
         protected $_m_raw;
@@ -582,7 +582,7 @@ namespace Bmp {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ($this->raw() / (1 << 16));
+            $this->_m_value = (($this->raw() + 0.0) / (1 << 16));
             return $this->_m_value;
         }
         protected $_m_raw;
@@ -679,7 +679,7 @@ namespace Bmp {
             $this->_m__raw_header = $this->_io->readBytes(($this->lenHeader() - 4));
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \Bmp\BitmapHeader($this->lenHeader(), $_io__raw_header, $this, $this->_root);
-            if ( ((!($this->_io()->isEof())) && ($this->isColorMaskHere())) ) {
+            if ($this->isColorMaskHere()) {
                 $this->_m_colorMask = new \Bmp\ColorMask($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS, $this->_io, $this, $this->_root);
             }
             if (!($this->_io()->isEof())) {
@@ -729,7 +729,7 @@ namespace Bmp {
         public function isColorMaskHere() {
             if ($this->_m_isColorMaskHere !== null)
                 return $this->_m_isColorMaskHere;
-            $this->_m_isColorMaskHere =  (($this->header()->lenHeader() == \Bmp\HeaderType::BITMAP_INFO_HEADER) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) )) ;
+            $this->_m_isColorMaskHere =  ((!($this->_io()->isEof())) && ($this->header()->lenHeader() == \Bmp\HeaderType::BITMAP_INFO_HEADER) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) )) ;
             return $this->_m_isColorMaskHere;
         }
         protected $_m_colorMaskRed;

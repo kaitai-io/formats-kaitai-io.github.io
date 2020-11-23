@@ -473,7 +473,7 @@ namespace Kaitai
                 {
                     if (f_value)
                         return _value;
-                    _value = (double) ((((float) (Raw)) / (1 << 30)));
+                    _value = (double) (((Raw + 0.0) / (1 << 30)));
                     f_value = true;
                     return _value;
                 }
@@ -846,7 +846,7 @@ namespace Kaitai
                 {
                     if (f_value)
                         return _value;
-                    _value = (double) ((((float) (Raw)) / (1 << 16)));
+                    _value = (double) (((Raw + 0.0) / (1 << 16)));
                     f_value = true;
                     return _value;
                 }
@@ -990,7 +990,7 @@ namespace Kaitai
                 __raw_header = m_io.ReadBytes((LenHeader - 4));
                 var io___raw_header = new KaitaiStream(__raw_header);
                 _header = new BitmapHeader(LenHeader, io___raw_header, this, m_root);
-                if ( ((!(M_Io.IsEof)) && (IsColorMaskHere)) ) {
+                if (IsColorMaskHere) {
                     _colorMask = new ColorMask(Header.BitmapInfoExt.Compression == Bmp.Compressions.AlphaBitfields, m_io, this, m_root);
                 }
                 if (!(M_Io.IsEof)) {
@@ -1074,7 +1074,7 @@ namespace Kaitai
                 {
                     if (f_isColorMaskHere)
                         return _isColorMaskHere;
-                    _isColorMaskHere = (bool) ( ((Header.LenHeader == Bmp.HeaderType.BitmapInfoHeader) && ( ((Header.BitmapInfoExt.Compression == Bmp.Compressions.Bitfields) || (Header.BitmapInfoExt.Compression == Bmp.Compressions.AlphaBitfields)) )) );
+                    _isColorMaskHere = (bool) ( ((!(M_Io.IsEof)) && (Header.LenHeader == Bmp.HeaderType.BitmapInfoHeader) && ( ((Header.BitmapInfoExt.Compression == Bmp.Compressions.Bitfields) || (Header.BitmapInfoExt.Compression == Bmp.Compressions.AlphaBitfields)) )) );
                     f_isColorMaskHere = true;
                     return _isColorMaskHere;
                 }

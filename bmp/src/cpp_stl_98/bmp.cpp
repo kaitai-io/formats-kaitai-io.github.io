@@ -346,7 +346,7 @@ void bmp_t::fixed_point_2_dot_30_t::_clean_up() {
 double bmp_t::fixed_point_2_dot_30_t::value() {
     if (f_value)
         return m_value;
-    m_value = (static_cast<float>(raw()) / (1 << 30));
+    m_value = ((raw() + 0.0) / (1 << 30));
     f_value = true;
     return m_value;
 }
@@ -619,7 +619,7 @@ void bmp_t::fixed_point_16_dot_16_t::_clean_up() {
 double bmp_t::fixed_point_16_dot_16_t::value() {
     if (f_value)
         return m_value;
-    m_value = (static_cast<float>(raw()) / (1 << 16));
+    m_value = ((raw() + 0.0) / (1 << 16));
     f_value = true;
     return m_value;
 }
@@ -730,7 +730,7 @@ void bmp_t::bitmap_info_t::_read() {
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new bitmap_header_t(len_header(), m__io__raw_header, this, m__root);
     n_color_mask = true;
-    if ( ((!(_io()->is_eof())) && (is_color_mask_here())) ) {
+    if (is_color_mask_here()) {
         n_color_mask = false;
         m_color_mask = new color_mask_t(header()->bitmap_info_ext()->compression() == bmp_t::COMPRESSIONS_ALPHA_BITFIELDS, m__io, this, m__root);
     }
@@ -816,7 +816,7 @@ int32_t bmp_t::bitmap_info_t::color_mask_green() {
 bool bmp_t::bitmap_info_t::is_color_mask_here() {
     if (f_is_color_mask_here)
         return m_is_color_mask_here;
-    m_is_color_mask_here =  ((header()->len_header() == bmp_t::HEADER_TYPE_BITMAP_INFO_HEADER) && ( ((header()->bitmap_info_ext()->compression() == bmp_t::COMPRESSIONS_BITFIELDS) || (header()->bitmap_info_ext()->compression() == bmp_t::COMPRESSIONS_ALPHA_BITFIELDS)) )) ;
+    m_is_color_mask_here =  ((!(_io()->is_eof())) && (header()->len_header() == bmp_t::HEADER_TYPE_BITMAP_INFO_HEADER) && ( ((header()->bitmap_info_ext()->compression() == bmp_t::COMPRESSIONS_BITFIELDS) || (header()->bitmap_info_ext()->compression() == bmp_t::COMPRESSIONS_ALPHA_BITFIELDS)) )) ;
     f_is_color_mask_here = true;
     return m_is_color_mask_here;
 }

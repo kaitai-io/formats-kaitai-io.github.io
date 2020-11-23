@@ -301,7 +301,7 @@ class Bmp(KaitaiStruct):
             if hasattr(self, '_m_value'):
                 return self._m_value if hasattr(self, '_m_value') else None
 
-            self._m_value = (self.raw / (1 << 30))
+            self._m_value = ((self.raw + 0.0) / (1 << 30))
             return self._m_value if hasattr(self, '_m_value') else None
 
 
@@ -476,7 +476,7 @@ class Bmp(KaitaiStruct):
             if hasattr(self, '_m_value'):
                 return self._m_value if hasattr(self, '_m_value') else None
 
-            self._m_value = (self.raw / (1 << 16))
+            self._m_value = ((self.raw + 0.0) / (1 << 16))
             return self._m_value if hasattr(self, '_m_value') else None
 
 
@@ -541,7 +541,7 @@ class Bmp(KaitaiStruct):
             self._raw_header = self._io.read_bytes((self.len_header - 4))
             _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
             self.header = Bmp.BitmapHeader(self.len_header, _io__raw_header, self, self._root)
-            if  ((not (self._io.is_eof())) and (self.is_color_mask_here)) :
+            if self.is_color_mask_here:
                 self.color_mask = Bmp.ColorMask(self.header.bitmap_info_ext.compression == Bmp.Compressions.alpha_bitfields, self._io, self, self._root)
 
             if not (self._io.is_eof()):
@@ -597,7 +597,7 @@ class Bmp(KaitaiStruct):
             if hasattr(self, '_m_is_color_mask_here'):
                 return self._m_is_color_mask_here if hasattr(self, '_m_is_color_mask_here') else None
 
-            self._m_is_color_mask_here =  ((self.header.len_header == Bmp.HeaderType.bitmap_info_header.value) and ( ((self.header.bitmap_info_ext.compression == Bmp.Compressions.bitfields) or (self.header.bitmap_info_ext.compression == Bmp.Compressions.alpha_bitfields)) )) 
+            self._m_is_color_mask_here =  ((not (self._io.is_eof())) and (self.header.len_header == Bmp.HeaderType.bitmap_info_header.value) and ( ((self.header.bitmap_info_ext.compression == Bmp.Compressions.bitfields) or (self.header.bitmap_info_ext.compression == Bmp.Compressions.alpha_bitfields)) )) 
             return self._m_is_color_mask_here if hasattr(self, '_m_is_color_mask_here') else None
 
         @property

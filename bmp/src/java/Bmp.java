@@ -557,7 +557,7 @@ public class Bmp extends KaitaiStruct {
         public Double value() {
             if (this.value != null)
                 return this.value;
-            double _tmp = (double) ((((float) (raw())) / (1 << 30)));
+            double _tmp = (double) (((raw() + 0.0) / (1 << 30)));
             this.value = _tmp;
             return this.value;
         }
@@ -886,7 +886,7 @@ public class Bmp extends KaitaiStruct {
         public Double value() {
             if (this.value != null)
                 return this.value;
-            double _tmp = (double) ((((float) (raw())) / (1 << 16)));
+            double _tmp = (double) (((raw() + 0.0) / (1 << 16)));
             this.value = _tmp;
             return this.value;
         }
@@ -1031,7 +1031,7 @@ public class Bmp extends KaitaiStruct {
             this._raw_header = this._io.readBytes((lenHeader() - 4));
             KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
             this.header = new BitmapHeader(_io__raw_header, this, _root, lenHeader());
-            if ( ((!(_io().isEof())) && (isColorMaskHere())) ) {
+            if (isColorMaskHere()) {
                 this.colorMask = new ColorMask(this._io, this, _root, header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS);
             }
             if (!(_io().isEof())) {
@@ -1085,7 +1085,7 @@ public class Bmp extends KaitaiStruct {
         public Boolean isColorMaskHere() {
             if (this.isColorMaskHere != null)
                 return this.isColorMaskHere;
-            boolean _tmp = (boolean) ( ((header().lenHeader() == Bmp.HeaderType.BITMAP_INFO_HEADER.id()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) )) );
+            boolean _tmp = (boolean) ( ((!(_io().isEof())) && (header().lenHeader() == Bmp.HeaderType.BITMAP_INFO_HEADER.id()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) )) );
             this.isColorMaskHere = _tmp;
             return this.isColorMaskHere;
         }
