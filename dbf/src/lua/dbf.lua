@@ -7,6 +7,13 @@ require("kaitaistruct")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
+-- 
+-- .dbf is a relational database format introduced in DOS database
+-- management system dBASE in 1982.
+-- 
+-- One .dbf file corresponds to one table and contains a series of headers,
+-- specification of fields, and a number of fixed-size records.
+-- See also: Source (http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm)
 Dbf = class.class(KaitaiStruct)
 
 function Dbf:_init(io, parent, root)

@@ -1,6 +1,14 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * .dbf is a relational database format introduced in DOS database
+ * management system dBASE in 1982.
+ * 
+ * One .dbf file corresponds to one table and contains a series of headers,
+ * specification of fields, and a number of fixed-size records.
+ */
+
 namespace {
     class Dbf extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dbf $_root = null) {

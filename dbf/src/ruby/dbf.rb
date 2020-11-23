@@ -6,6 +6,14 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# .dbf is a relational database format introduced in DOS database
+# management system dBASE in 1982.
+# 
+# One .dbf file corresponds to one table and contains a series of headers,
+# specification of fields, and a number of fixed-size records.
+# @see http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm Source
 class Dbf < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

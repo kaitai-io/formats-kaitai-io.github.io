@@ -4,6 +4,17 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// .dbf is a relational database format introduced in DOS database
+    /// management system dBASE in 1982.
+    /// 
+    /// One .dbf file corresponds to one table and contains a series of headers,
+    /// specification of fields, and a number of fixed-size records.
+    /// </summary>
+    /// <remarks>
+    /// Reference: <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">Source</a>
+    /// </remarks>
     public partial class Dbf : KaitaiStruct
     {
         public static Dbf FromFile(string fileName)

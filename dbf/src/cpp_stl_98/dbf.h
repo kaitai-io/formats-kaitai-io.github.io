@@ -11,6 +11,15 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * .dbf is a relational database format introduced in DOS database
+ * management system dBASE in 1982.
+ * 
+ * One .dbf file corresponds to one table and contains a series of headers,
+ * specification of fields, and a number of fixed-size records.
+ * \sa http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm Source
+ */
+
 class dbf_t : public kaitai::kstruct {
 
 public:

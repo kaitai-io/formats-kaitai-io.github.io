@@ -9,6 +9,15 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dbf(KaitaiStruct):
+    """.dbf is a relational database format introduced in DOS database
+    management system dBASE in 1982.
+    
+    One .dbf file corresponds to one table and contains a series of headers,
+    specification of fields, and a number of fixed-size records.
+    
+    .. seealso::
+       Source - http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

@@ -5,6 +5,15 @@ import (
 	"bytes"
 )
 
+
+/**
+ * .dbf is a relational database format introduced in DOS database
+ * management system dBASE in 1982.
+ * 
+ * One .dbf file corresponds to one table and contains a series of headers,
+ * specification of fields, and a number of fixed-size records.
+ * @see <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">Source</a>
+ */
 type Dbf struct {
 	Header1 *Dbf_Header1
 	Header2 *Dbf_Header2

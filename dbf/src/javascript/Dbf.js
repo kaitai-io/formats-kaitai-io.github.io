@@ -9,6 +9,15 @@
     root.Dbf = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * .dbf is a relational database format introduced in DOS database
+ * management system dBASE in 1982.
+ * 
+ * One .dbf file corresponds to one table and contains a series of headers,
+ * specification of fields, and a number of fixed-size records.
+ * @see {@link http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm|Source}
+ */
+
 var Dbf = (function() {
   function Dbf(_io, _parent, _root) {
     this._io = _io;

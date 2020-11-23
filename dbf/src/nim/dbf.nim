@@ -61,6 +61,16 @@ proc read*(_: typedesc[Dbf_HeaderDbase7], io: KaitaiStream, root: KaitaiStruct, 
 
 proc dbaseLevel*(this: Dbf_Header1): int
 
+
+##[
+.dbf is a relational database format introduced in DOS database
+management system dBASE in 1982.
+
+One .dbf file corresponds to one table and contains a series of headers,
+specification of fields, and a number of fixed-size records.
+
+@see <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">Source</a>
+]##
 proc read*(_: typedesc[Dbf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dbf =
   template this: untyped = result
   this = new(Dbf)
