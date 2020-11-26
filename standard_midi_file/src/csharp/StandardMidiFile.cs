@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
+    /// Standard MIDI file, typically known just as &quot;MID&quot;, is a standard way
     /// to serialize series of MIDI events, which is a protocol used in many
     /// music synthesizers to transfer music data: notes being played,
     /// effects being applied, etc.
