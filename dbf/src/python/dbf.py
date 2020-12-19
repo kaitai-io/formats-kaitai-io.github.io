@@ -62,7 +62,7 @@ class Dbf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.name = (self._io.read_bytes(11)).decode(u"ASCII")
+            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(11), 0, False)).decode(u"ASCII")
             self.datatype = self._io.read_u1()
             self.data_address = self._io.read_u4le()
             self.length = self._io.read_u1()

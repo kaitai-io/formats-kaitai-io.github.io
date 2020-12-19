@@ -61,7 +61,7 @@ class Dbf < Kaitai::Struct::Struct
     end
 
     def _read
-      @name = (@_io.read_bytes(11)).force_encoding("ASCII")
+      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(11), 0, false)).force_encoding("ASCII")
       @datatype = @_io.read_u1
       @data_address = @_io.read_u4le
       @length = @_io.read_u1

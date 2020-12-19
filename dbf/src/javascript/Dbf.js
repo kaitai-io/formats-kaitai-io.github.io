@@ -70,7 +70,7 @@ var Dbf = (function() {
       this._read();
     }
     Field.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(11), "ASCII");
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(11), 0, false), "ASCII");
       this.datatype = this._io.readU1();
       this.dataAddress = this._io.readU4le();
       this.length = this._io.readU1();

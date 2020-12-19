@@ -154,7 +154,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes(11));
+    $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(11), 0, 0));
     $self->{datatype} = $self->{_io}->read_u1();
     $self->{data_address} = $self->{_io}->read_u4le();
     $self->{length} = $self->{_io}->read_u1();

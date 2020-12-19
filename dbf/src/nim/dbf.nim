@@ -122,7 +122,7 @@ proc read*(_: typedesc[Dbf_Field], io: KaitaiStream, root: KaitaiStruct, parent:
   this.root = root
   this.parent = parent
 
-  let nameExpr = encode(this.io.readBytes(int(11)), "ASCII")
+  let nameExpr = encode(this.io.readBytes(int(11)).bytesTerminate(0, false), "ASCII")
   this.name = nameExpr
   let datatypeExpr = this.io.readU1()
   this.datatype = datatypeExpr

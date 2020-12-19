@@ -121,7 +121,7 @@ dbf_t::field_t::field_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent, dbf
 }
 
 void dbf_t::field_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(11), std::string("ASCII"));
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(11), 0, false), std::string("ASCII"));
     m_datatype = m__io->read_u1();
     m_data_address = m__io->read_u4le();
     m_length = m__io->read_u1();

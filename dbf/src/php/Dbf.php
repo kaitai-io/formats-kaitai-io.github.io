@@ -75,7 +75,7 @@ namespace Dbf {
         }
 
         private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(11), "ASCII");
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(11), 0, false), "ASCII");
             $this->_m_datatype = $this->_io->readU1();
             $this->_m_dataAddress = $this->_io->readU4le();
             $this->_m_length = $this->_io->readU1();

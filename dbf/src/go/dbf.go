@@ -145,7 +145,7 @@ func (this *Dbf_Field) Read(io *kaitai.Stream, parent *Dbf_Header2, root *Dbf) (
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
+	tmp10 = kaitai.BytesTerminate(tmp10, 0, false)
 	this.Name = string(tmp10)
 	tmp11, err := this._io.ReadU1()
 	if err != nil {

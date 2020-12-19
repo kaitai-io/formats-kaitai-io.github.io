@@ -108,7 +108,7 @@ public class Dbf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(this._io.readBytes(11), Charset.forName("ASCII"));
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(11), (byte) 0, false), Charset.forName("ASCII"));
             this.datatype = this._io.readU1();
             this.dataAddress = this._io.readU4le();
             this.length = this._io.readU1();

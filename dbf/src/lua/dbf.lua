@@ -68,7 +68,7 @@ function Dbf.Field:_init(io, parent, root)
 end
 
 function Dbf.Field:_read()
-  self.name = str_decode.decode(self._io:read_bytes(11), "ASCII")
+  self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(11), 0, false), "ASCII")
   self.datatype = self._io:read_u1()
   self.data_address = self._io:read_u4le()
   self.length = self._io:read_u1()

@@ -93,7 +93,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(11));
+                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(11), 0, false));
                 _datatype = m_io.ReadU1();
                 _dataAddress = m_io.ReadU4le();
                 _length = m_io.ReadU1();
