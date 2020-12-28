@@ -2,7 +2,15 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+ * .trx file format is widely used for distribution of stock firmware
+ * updates for ASUS routers.
+ * 
+ * Fundamentally, it includes a footer which acts as a safeguard
+ * against installing a firmware package on a wrong hardware model or
+ * version, and a header which list numerous partitions packaged inside
+ * a single .trx file.
+ * 
+ * trx files not necessarily contain all these headers.
  */
 
 namespace {
@@ -159,7 +167,7 @@ namespace AsusTrx {
                 $_ = new \AsusTrx\Header\Partition($i, $this->_io, $this, $this->_root);
                 $this->_m_partitions[] = $_;
                 $i++;
-            } while (!( (($i >= 4) || (!($_->present()))) ));
+            } while (!( (($i >= 4) || (!($_->isPresent()))) ));
         }
         protected $_m_signature;
         protected $_m_len;
@@ -197,49 +205,49 @@ namespace AsusTrx\Header {
         }
 
         private function _read() {
-            $this->_m_offset = $this->_io->readU4le();
+            $this->_m_ofsBody = $this->_io->readU4le();
         }
-        protected $_m_present;
-        public function present() {
-            if ($this->_m_present !== null)
-                return $this->_m_present;
-            $this->_m_present = $this->offset() != 0;
-            return $this->_m_present;
+        protected $_m_isPresent;
+        public function isPresent() {
+            if ($this->_m_isPresent !== null)
+                return $this->_m_isPresent;
+            $this->_m_isPresent = $this->ofsBody() != 0;
+            return $this->_m_isPresent;
         }
         protected $_m_isLast;
         public function isLast() {
             if ($this->_m_isLast !== null)
                 return $this->_m_isLast;
-            if ($this->present()) {
-                $this->_m_isLast =  (($this->idx() == (count($this->_parent()->partitions()) - 1)) || (!($this->_parent()->partitions()[($this->idx() + 1)]->present()))) ;
+            if ($this->isPresent()) {
+                $this->_m_isLast =  (($this->idx() == (count($this->_parent()->partitions()) - 1)) || (!($this->_parent()->partitions()[($this->idx() + 1)]->isPresent()))) ;
             }
             return $this->_m_isLast;
         }
-        protected $_m_size;
-        public function size() {
-            if ($this->_m_size !== null)
-                return $this->_m_size;
-            if ($this->present()) {
-                $this->_m_size = ($this->isLast() ? ($this->_root()->_io()->size() - $this->offset()) : $this->_parent()->partitions()[($this->idx() + 1)]->offset());
+        protected $_m_lenBody;
+        public function lenBody() {
+            if ($this->_m_lenBody !== null)
+                return $this->_m_lenBody;
+            if ($this->isPresent()) {
+                $this->_m_lenBody = ($this->isLast() ? ($this->_root()->_io()->size() - $this->ofsBody()) : $this->_parent()->partitions()[($this->idx() + 1)]->ofsBody());
             }
-            return $this->_m_size;
+            return $this->_m_lenBody;
         }
-        protected $_m_partition;
-        public function partition() {
-            if ($this->_m_partition !== null)
-                return $this->_m_partition;
-            if ($this->present()) {
+        protected $_m_body;
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            if ($this->isPresent()) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek($this->offset());
-                $this->_m_partition = $io->readBytes($this->size());
+                $io->seek($this->ofsBody());
+                $this->_m_body = $io->readBytes($this->lenBody());
                 $io->seek($_pos);
             }
-            return $this->_m_partition;
+            return $this->_m_body;
         }
-        protected $_m_offset;
+        protected $_m_ofsBody;
         protected $_m_idx;
-        public function offset() { return $this->_m_offset; }
+        public function ofsBody() { return $this->_m_ofsBody; }
         public function idx() { return $this->_m_idx; }
     }
 }

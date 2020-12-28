@@ -8,7 +8,15 @@ import (
 
 
 /**
- * Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+ * .trx file format is widely used for distribution of stock firmware
+ * updates for ASUS routers.
+ * 
+ * Fundamentally, it includes a footer which acts as a safeguard
+ * against installing a firmware package on a wrong hardware model or
+ * version, and a header which list numerous partitions packaged inside
+ * a single .trx file.
+ * 
+ * trx files not necessarily contain all these headers.
  * @see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
  */
 type AsusTrx struct {
@@ -308,7 +316,7 @@ func (this *AsusTrx_Header) Read(io *kaitai.Stream, parent *AsusTrx, root *AsusT
 		}
 		_it := tmp21
 		this.Partitions = append(this.Partitions, _it)
-		tmp22, err := _it.Present()
+		tmp22, err := _it.IsPresent()
 		if err != nil {
 			return err
 		}
@@ -331,19 +339,19 @@ func (this *AsusTrx_Header) Read(io *kaitai.Stream, parent *AsusTrx, root *AsusT
  * Offsets of partitions from start of header
  */
 type AsusTrx_Header_Partition struct {
-	Offset uint32
+	OfsBody uint32
 	Idx uint8
 	_io *kaitai.Stream
 	_root *AsusTrx
 	_parent *AsusTrx_Header
-	_f_present bool
-	present bool
+	_f_isPresent bool
+	isPresent bool
 	_f_isLast bool
 	isLast bool
-	_f_size bool
-	size int
-	_f_partition bool
-	partition []byte
+	_f_lenBody bool
+	lenBody int
+	_f_body bool
+	body []byte
 }
 func NewAsusTrx_Header_Partition(idx uint8) *AsusTrx_Header_Partition {
 	return &AsusTrx_Header_Partition{
@@ -360,27 +368,27 @@ func (this *AsusTrx_Header_Partition) Read(io *kaitai.Stream, parent *AsusTrx_He
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp23)
+	this.OfsBody = uint32(tmp23)
 	return err
 }
-func (this *AsusTrx_Header_Partition) Present() (v bool, err error) {
-	if (this._f_present) {
-		return this.present, nil
+func (this *AsusTrx_Header_Partition) IsPresent() (v bool, err error) {
+	if (this._f_isPresent) {
+		return this.isPresent, nil
 	}
-	this.present = bool(this.Offset != 0)
-	this._f_present = true
-	return this.present, nil
+	this.isPresent = bool(this.OfsBody != 0)
+	this._f_isPresent = true
+	return this.isPresent, nil
 }
 func (this *AsusTrx_Header_Partition) IsLast() (v bool, err error) {
 	if (this._f_isLast) {
 		return this.isLast, nil
 	}
-	tmp24, err := this.Present()
+	tmp24, err := this.IsPresent()
 	if err != nil {
 		return false, err
 	}
 	if (tmp24) {
-		tmp25, err := this._parent.Partitions[(this.Idx + 1)].Present()
+		tmp25, err := this._parent.Partitions[(this.Idx + 1)].IsPresent()
 		if err != nil {
 			return false, err
 		}
@@ -389,11 +397,11 @@ func (this *AsusTrx_Header_Partition) IsLast() (v bool, err error) {
 	this._f_isLast = true
 	return this.isLast, nil
 }
-func (this *AsusTrx_Header_Partition) Size() (v int, err error) {
-	if (this._f_size) {
-		return this.size, nil
+func (this *AsusTrx_Header_Partition) LenBody() (v int, err error) {
+	if (this._f_lenBody) {
+		return this.lenBody, nil
 	}
-	tmp26, err := this.Present()
+	tmp26, err := this.IsPresent()
 	if err != nil {
 		return 0, err
 	}
@@ -408,20 +416,20 @@ func (this *AsusTrx_Header_Partition) Size() (v int, err error) {
 			if err != nil {
 				return 0, err
 			}
-			tmp27 = (tmp29 - this.Offset)
+			tmp27 = (tmp29 - this.OfsBody)
 		} else {
-			tmp27 = this._parent.Partitions[(this.Idx + 1)].Offset
+			tmp27 = this._parent.Partitions[(this.Idx + 1)].OfsBody
 		}
-		this.size = int(tmp27)
+		this.lenBody = int(tmp27)
 	}
-	this._f_size = true
-	return this.size, nil
+	this._f_lenBody = true
+	return this.lenBody, nil
 }
-func (this *AsusTrx_Header_Partition) Partition() (v []byte, err error) {
-	if (this._f_partition) {
-		return this.partition, nil
+func (this *AsusTrx_Header_Partition) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
 	}
-	tmp30, err := this.Present()
+	tmp30, err := this.IsPresent()
 	if err != nil {
 		return nil, err
 	}
@@ -431,11 +439,11 @@ func (this *AsusTrx_Header_Partition) Partition() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		_, err = thisIo.Seek(int64(this.Offset), io.SeekStart)
+		_, err = thisIo.Seek(int64(this.OfsBody), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		tmp31, err := this.Size()
+		tmp31, err := this.LenBody()
 		if err != nil {
 			return nil, err
 		}
@@ -444,15 +452,15 @@ func (this *AsusTrx_Header_Partition) Partition() (v []byte, err error) {
 			return nil, err
 		}
 		tmp32 = tmp32
-		this.partition = tmp32
+		this.body = tmp32
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		this._f_partition = true
+		this._f_body = true
 	}
-	this._f_partition = true
-	return this.partition, nil
+	this._f_body = true
+	return this.body, nil
 }
 type AsusTrx_Header_Flags struct {
 	Flags []bool

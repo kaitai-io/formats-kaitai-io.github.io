@@ -35,13 +35,13 @@ type
     `partitions`*: seq[AsusTrx_Header_Partition]
     `parent`*: AsusTrx
   AsusTrx_Header_Partition* = ref object of KaitaiStruct
-    `offset`*: uint32
+    `ofsBody`*: uint32
     `idx`*: uint8
     `parent`*: AsusTrx_Header
-    `presentInst`*: bool
+    `isPresentInst`*: bool
     `isLastInst`*: bool
-    `sizeInst`*: int
-    `partitionInst`*: seq[byte]
+    `lenBodyInst`*: int
+    `bodyInst`*: seq[byte]
   AsusTrx_Header_Flags* = ref object of KaitaiStruct
     `flags`*: seq[bool]
     `parent`*: AsusTrx_Header
@@ -57,14 +57,22 @@ proc read*(_: typedesc[AsusTrx_Header_Flags], io: KaitaiStream, root: KaitaiStru
 
 proc header*(this: AsusTrx): AsusTrx_Header
 proc tail*(this: AsusTrx): AsusTrx_Tail
-proc present*(this: AsusTrx_Header_Partition): bool
+proc isPresent*(this: AsusTrx_Header_Partition): bool
 proc isLast*(this: AsusTrx_Header_Partition): bool
-proc size*(this: AsusTrx_Header_Partition): int
-proc partition*(this: AsusTrx_Header_Partition): seq[byte]
+proc lenBody*(this: AsusTrx_Header_Partition): int
+proc body*(this: AsusTrx_Header_Partition): seq[byte]
 
 
 ##[
-Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+.trx file format is widely used for distribution of stock firmware
+updates for ASUS routers.
+
+Fundamentally, it includes a footer which acts as a safeguard
+against installing a firmware package on a wrong hardware model or
+version, and a header which list numerous partitions packaged inside
+a single .trx file.
+
+trx files not necessarily contain all these headers.
 
 @see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
 ]##
@@ -222,7 +230,7 @@ proc read*(_: typedesc[AsusTrx_Header], io: KaitaiStream, root: KaitaiStruct, pa
     while true:
       let it = AsusTrx_Header_Partition.read(this.io, this.root, this, i)
       this.partitions.add(it)
-      if  ((i >= 4) or (not(it.present))) :
+      if  ((i >= 4) or (not(it.isPresent))) :
         break
       inc i
 
@@ -239,47 +247,47 @@ proc read*(_: typedesc[AsusTrx_Header_Partition], io: KaitaiStream, root: Kaitai
   let idxExpr = uint8(idx)
   this.idx = idxExpr
 
-  let offsetExpr = this.io.readU4le()
-  this.offset = offsetExpr
+  let ofsBodyExpr = this.io.readU4le()
+  this.ofsBody = ofsBodyExpr
 
-proc present(this: AsusTrx_Header_Partition): bool = 
-  if this.presentInst != nil:
-    return this.presentInst
-  let presentInstExpr = bool(this.offset != 0)
-  this.presentInst = presentInstExpr
-  if this.presentInst != nil:
-    return this.presentInst
+proc isPresent(this: AsusTrx_Header_Partition): bool = 
+  if this.isPresentInst != nil:
+    return this.isPresentInst
+  let isPresentInstExpr = bool(this.ofsBody != 0)
+  this.isPresentInst = isPresentInstExpr
+  if this.isPresentInst != nil:
+    return this.isPresentInst
 
 proc isLast(this: AsusTrx_Header_Partition): bool = 
   if this.isLastInst != nil:
     return this.isLastInst
-  if this.present:
-    let isLastInstExpr = bool( ((this.idx == (len(this.parent.partitions) - 1)) or (not(this.parent.partitions[(this.idx + 1)].present))) )
+  if this.isPresent:
+    let isLastInstExpr = bool( ((this.idx == (len(this.parent.partitions) - 1)) or (not(this.parent.partitions[(this.idx + 1)].isPresent))) )
     this.isLastInst = isLastInstExpr
   if this.isLastInst != nil:
     return this.isLastInst
 
-proc size(this: AsusTrx_Header_Partition): int = 
-  if this.sizeInst != nil:
-    return this.sizeInst
-  if this.present:
-    let sizeInstExpr = int((if this.isLast: (AsusTrx(this.root).io.size - this.offset) else: this.parent.partitions[(this.idx + 1)].offset))
-    this.sizeInst = sizeInstExpr
-  if this.sizeInst != nil:
-    return this.sizeInst
+proc lenBody(this: AsusTrx_Header_Partition): int = 
+  if this.lenBodyInst != nil:
+    return this.lenBodyInst
+  if this.isPresent:
+    let lenBodyInstExpr = int((if this.isLast: (AsusTrx(this.root).io.size - this.ofsBody) else: this.parent.partitions[(this.idx + 1)].ofsBody))
+    this.lenBodyInst = lenBodyInstExpr
+  if this.lenBodyInst != nil:
+    return this.lenBodyInst
 
-proc partition(this: AsusTrx_Header_Partition): seq[byte] = 
-  if this.partitionInst.len != 0:
-    return this.partitionInst
-  if this.present:
+proc body(this: AsusTrx_Header_Partition): seq[byte] = 
+  if this.bodyInst.len != 0:
+    return this.bodyInst
+  if this.isPresent:
     let io = AsusTrx(this.root).io
     let pos = io.pos()
-    io.seek(int(this.offset))
-    let partitionInstExpr = io.readBytes(int(this.size))
-    this.partitionInst = partitionInstExpr
+    io.seek(int(this.ofsBody))
+    let bodyInstExpr = io.readBytes(int(this.lenBody))
+    this.bodyInst = bodyInstExpr
     io.seek(pos)
-  if this.partitionInst.len != 0:
-    return this.partitionInst
+  if this.bodyInst.len != 0:
+    return this.bodyInst
 
 proc fromFile*(_: typedesc[AsusTrx_Header_Partition], filename: string): AsusTrx_Header_Partition =
   AsusTrx_Header_Partition.read(newKaitaiFileStream(filename), nil, nil)

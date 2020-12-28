@@ -300,7 +300,7 @@ sub _read {
     do {
         $_ = AsusTrx::Header::Partition->new($self->{_io}, $self, $self->{_root});
         push @{$self->{partitions}}, $_;
-    } until ( (($i >= 4) || (!($_->present()))) );
+    } until ( (($i >= 4) || (!($_->is_present()))) );
 }
 
 sub signature {
@@ -363,50 +363,50 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{offset} = $self->{_io}->read_u4le();
+    $self->{ofs_body} = $self->{_io}->read_u4le();
 }
 
-sub present {
+sub is_present {
     my ($self) = @_;
-    return $self->{present} if ($self->{present});
-    $self->{present} = $self->offset() != 0;
-    return $self->{present};
+    return $self->{is_present} if ($self->{is_present});
+    $self->{is_present} = $self->ofs_body() != 0;
+    return $self->{is_present};
 }
 
 sub is_last {
     my ($self) = @_;
     return $self->{is_last} if ($self->{is_last});
-    if ($self->present()) {
-        $self->{is_last} =  (($self->idx() == (scalar(@{$self->_parent()->partitions()}) - 1)) || (!(@{$self->_parent()->partitions()}[($self->idx() + 1)]->present()))) ;
+    if ($self->is_present()) {
+        $self->{is_last} =  (($self->idx() == (scalar(@{$self->_parent()->partitions()}) - 1)) || (!(@{$self->_parent()->partitions()}[($self->idx() + 1)]->is_present()))) ;
     }
     return $self->{is_last};
 }
 
-sub size {
+sub len_body {
     my ($self) = @_;
-    return $self->{size} if ($self->{size});
-    if ($self->present()) {
-        $self->{size} = ($self->is_last() ? ($self->_root()->_io()->size() - $self->offset()) : @{$self->_parent()->partitions()}[($self->idx() + 1)]->offset());
+    return $self->{len_body} if ($self->{len_body});
+    if ($self->is_present()) {
+        $self->{len_body} = ($self->is_last() ? ($self->_root()->_io()->size() - $self->ofs_body()) : @{$self->_parent()->partitions()}[($self->idx() + 1)]->ofs_body());
     }
-    return $self->{size};
+    return $self->{len_body};
 }
 
-sub partition {
+sub body {
     my ($self) = @_;
-    return $self->{partition} if ($self->{partition});
-    if ($self->present()) {
+    return $self->{body} if ($self->{body});
+    if ($self->is_present()) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
-        $io->seek($self->offset());
-        $self->{partition} = $io->read_bytes($self->size());
+        $io->seek($self->ofs_body());
+        $self->{body} = $io->read_bytes($self->len_body());
         $io->seek($_pos);
     }
-    return $self->{partition};
+    return $self->{body};
 }
 
-sub offset {
+sub ofs_body {
     my ($self) = @_;
-    return $self->{offset};
+    return $self->{ofs_body};
 }
 
 sub idx {

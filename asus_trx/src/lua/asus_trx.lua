@@ -8,7 +8,15 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 
 -- 
--- Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+-- .trx file format is widely used for distribution of stock firmware
+-- updates for ASUS routers.
+-- 
+-- Fundamentally, it includes a footer which acts as a safeguard
+-- against installing a firmware package on a wrong hardware model or
+-- version, and a header which list numerous partitions packaged inside
+-- a single .trx file.
+-- 
+-- trx files not necessarily contain all these headers.
 -- See also: Source (https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c)
 AsusTrx = class.class(KaitaiStruct)
 
@@ -145,7 +153,7 @@ function AsusTrx.Header:_read()
   while true do
     _ = AsusTrx.Header.Partition(i, self._io, self, self._root)
     self.partitions[i + 1] = _
-    if  ((i >= 4) or (not(_.present)))  then
+    if  ((i >= 4) or (not(_.is_present)))  then
       break
     end
     i = i + 1
@@ -170,17 +178,17 @@ self:_read()
 end
 
 function AsusTrx.Header.Partition:_read()
-self.offset = self._io:read_u4le()
+self.ofs_body = self._io:read_u4le()
 end
 
-AsusTrx.Header.Partition.property.present = {}
-function AsusTrx.Header.Partition.property.present:get()
-if self._m_present ~= nil then
-  return self._m_present
+AsusTrx.Header.Partition.property.is_present = {}
+function AsusTrx.Header.Partition.property.is_present:get()
+if self._m_is_present ~= nil then
+  return self._m_is_present
 end
 
-self._m_present = self.offset ~= 0
-return self._m_present
+self._m_is_present = self.ofs_body ~= 0
+return self._m_is_present
 end
 
 AsusTrx.Header.Partition.property.is_last = {}
@@ -189,38 +197,38 @@ if self._m_is_last ~= nil then
   return self._m_is_last
 end
 
-if self.present then
-  self._m_is_last =  ((self.idx == (#self._parent.partitions - 1)) or (not(self._parent.partitions[(self.idx + 1) + 1].present))) 
+if self.is_present then
+  self._m_is_last =  ((self.idx == (#self._parent.partitions - 1)) or (not(self._parent.partitions[(self.idx + 1) + 1].is_present))) 
 end
 return self._m_is_last
 end
 
-AsusTrx.Header.Partition.property.size = {}
-function AsusTrx.Header.Partition.property.size:get()
-if self._m_size ~= nil then
-  return self._m_size
+AsusTrx.Header.Partition.property.len_body = {}
+function AsusTrx.Header.Partition.property.len_body:get()
+if self._m_len_body ~= nil then
+  return self._m_len_body
 end
 
-if self.present then
-  self._m_size = utils.box_unwrap((self.is_last) and utils.box_wrap((self._root._io:size() - self.offset)) or (self._parent.partitions[(self.idx + 1) + 1].offset))
+if self.is_present then
+  self._m_len_body = utils.box_unwrap((self.is_last) and utils.box_wrap((self._root._io:size() - self.ofs_body)) or (self._parent.partitions[(self.idx + 1) + 1].ofs_body))
 end
-return self._m_size
-end
-
-AsusTrx.Header.Partition.property.partition = {}
-function AsusTrx.Header.Partition.property.partition:get()
-if self._m_partition ~= nil then
-  return self._m_partition
+return self._m_len_body
 end
 
-if self.present then
+AsusTrx.Header.Partition.property.body = {}
+function AsusTrx.Header.Partition.property.body:get()
+if self._m_body ~= nil then
+  return self._m_body
+end
+
+if self.is_present then
   local _io = self._root._io
   local _pos = _io:pos()
-  _io:seek(self.offset)
-  self._m_partition = _io:read_bytes(self.size)
+  _io:seek(self.ofs_body)
+  self._m_body = _io:read_bytes(self.len_body)
   _io:seek(_pos)
 end
-return self._m_partition
+return self._m_body
 end
 
 

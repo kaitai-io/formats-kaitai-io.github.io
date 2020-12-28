@@ -12,7 +12,15 @@
 #endif
 
 /**
- * Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+ * .trx file format is widely used for distribution of stock firmware
+ * updates for ASUS routers.
+ * 
+ * Fundamentally, it includes a footer which acts as a safeguard
+ * against installing a firmware package on a wrong hardware model or
+ * version, and a header which list numerous partitions packaged inside
+ * a single .trx file.
+ * 
+ * trx files not necessarily contain all these headers.
  * \sa https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c Source
  */
 
@@ -187,11 +195,11 @@ public:
             ~partition_t();
 
         private:
-            bool f_present;
-            bool m_present;
+            bool f_is_present;
+            bool m_is_present;
 
         public:
-            bool present();
+            bool is_present();
 
         private:
             bool f_is_last;
@@ -207,39 +215,39 @@ public:
             bool is_last();
 
         private:
-            bool f_size;
-            int32_t m_size;
-            bool n_size;
+            bool f_len_body;
+            int32_t m_len_body;
+            bool n_len_body;
 
         public:
-            bool _is_null_size() { size(); return n_size; };
+            bool _is_null_len_body() { len_body(); return n_len_body; };
 
         private:
 
         public:
-            int32_t size();
+            int32_t len_body();
 
         private:
-            bool f_partition;
-            std::string m_partition;
-            bool n_partition;
+            bool f_body;
+            std::string m_body;
+            bool n_body;
 
         public:
-            bool _is_null_partition() { partition(); return n_partition; };
+            bool _is_null_body() { body(); return n_body; };
 
         private:
 
         public:
-            std::string partition();
+            std::string body();
 
         private:
-            uint32_t m_offset;
+            uint32_t m_ofs_body;
             uint8_t m_idx;
             asus_trx_t* m__root;
             asus_trx_t::header_t* m__parent;
 
         public:
-            uint32_t offset() const { return m_offset; }
+            uint32_t ofs_body() const { return m_ofs_body; }
             uint8_t idx() const { return m_idx; }
             asus_trx_t* _root() const { return m__root; }
             asus_trx_t::header_t* _parent() const { return m__parent; }

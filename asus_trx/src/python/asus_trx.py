@@ -9,7 +9,15 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AsusTrx(KaitaiStruct):
-    """Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+    """.trx file format is widely used for distribution of stock firmware
+    updates for ASUS routers.
+    
+    Fundamentally, it includes a footer which acts as a safeguard
+    against installing a firmware package on a wrong hardware model or
+    version, and a header which list numerous partitions packaged inside
+    a single .trx file.
+    
+    trx files not necessarily contain all these headers.
     
     .. seealso::
        Source - https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c
@@ -99,7 +107,7 @@ class AsusTrx(KaitaiStruct):
             while True:
                 _ = AsusTrx.Header.Partition(i, self._io, self, self._root)
                 self.partitions.append(_)
-                if  ((i >= 4) or (not (_.present))) :
+                if  ((i >= 4) or (not (_.is_present))) :
                     break
                 i += 1
 
@@ -112,49 +120,49 @@ class AsusTrx(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.offset = self._io.read_u4le()
+                self.ofs_body = self._io.read_u4le()
 
             @property
-            def present(self):
-                if hasattr(self, '_m_present'):
-                    return self._m_present if hasattr(self, '_m_present') else None
+            def is_present(self):
+                if hasattr(self, '_m_is_present'):
+                    return self._m_is_present if hasattr(self, '_m_is_present') else None
 
-                self._m_present = self.offset != 0
-                return self._m_present if hasattr(self, '_m_present') else None
+                self._m_is_present = self.ofs_body != 0
+                return self._m_is_present if hasattr(self, '_m_is_present') else None
 
             @property
             def is_last(self):
                 if hasattr(self, '_m_is_last'):
                     return self._m_is_last if hasattr(self, '_m_is_last') else None
 
-                if self.present:
-                    self._m_is_last =  ((self.idx == (len(self._parent.partitions) - 1)) or (not (self._parent.partitions[(self.idx + 1)].present))) 
+                if self.is_present:
+                    self._m_is_last =  ((self.idx == (len(self._parent.partitions) - 1)) or (not (self._parent.partitions[(self.idx + 1)].is_present))) 
 
                 return self._m_is_last if hasattr(self, '_m_is_last') else None
 
             @property
-            def size(self):
-                if hasattr(self, '_m_size'):
-                    return self._m_size if hasattr(self, '_m_size') else None
+            def len_body(self):
+                if hasattr(self, '_m_len_body'):
+                    return self._m_len_body if hasattr(self, '_m_len_body') else None
 
-                if self.present:
-                    self._m_size = ((self._root._io.size() - self.offset) if self.is_last else self._parent.partitions[(self.idx + 1)].offset)
+                if self.is_present:
+                    self._m_len_body = ((self._root._io.size() - self.ofs_body) if self.is_last else self._parent.partitions[(self.idx + 1)].ofs_body)
 
-                return self._m_size if hasattr(self, '_m_size') else None
+                return self._m_len_body if hasattr(self, '_m_len_body') else None
 
             @property
-            def partition(self):
-                if hasattr(self, '_m_partition'):
-                    return self._m_partition if hasattr(self, '_m_partition') else None
+            def body(self):
+                if hasattr(self, '_m_body'):
+                    return self._m_body if hasattr(self, '_m_body') else None
 
-                if self.present:
+                if self.is_present:
                     io = self._root._io
                     _pos = io.pos()
-                    io.seek(self.offset)
-                    self._m_partition = io.read_bytes(self.size)
+                    io.seek(self.ofs_body)
+                    self._m_body = io.read_bytes(self.len_body)
                     io.seek(_pos)
 
-                return self._m_partition if hasattr(self, '_m_partition') else None
+                return self._m_body if hasattr(self, '_m_body') else None
 
 
         class Flags(KaitaiStruct):

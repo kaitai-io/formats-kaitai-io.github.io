@@ -10,7 +10,15 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+ * .trx file format is widely used for distribution of stock firmware
+ * updates for ASUS routers.
+ * 
+ * Fundamentally, it includes a footer which acts as a safeguard
+ * against installing a firmware package on a wrong hardware model or
+ * version, and a header which list numerous partitions packaged inside
+ * a single .trx file.
+ * 
+ * trx files not necessarily contain all these headers.
  * @see {@link https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c|Source}
  */
 
@@ -131,7 +139,7 @@ var AsusTrx = (function() {
         var _ = new Partition(this._io, this, this._root, i);
         this.partitions.push(_);
         i++;
-      } while (!( ((i >= 4) || (!(_.present))) ));
+      } while (!( ((i >= 4) || (!(_.isPresent))) ));
     }
 
     var Partition = Header.Partition = (function() {
@@ -144,48 +152,48 @@ var AsusTrx = (function() {
         this._read();
       }
       Partition.prototype._read = function() {
-        this.offset = this._io.readU4le();
+        this.ofsBody = this._io.readU4le();
       }
-      Object.defineProperty(Partition.prototype, 'present', {
+      Object.defineProperty(Partition.prototype, 'isPresent', {
         get: function() {
-          if (this._m_present !== undefined)
-            return this._m_present;
-          this._m_present = this.offset != 0;
-          return this._m_present;
+          if (this._m_isPresent !== undefined)
+            return this._m_isPresent;
+          this._m_isPresent = this.ofsBody != 0;
+          return this._m_isPresent;
         }
       });
       Object.defineProperty(Partition.prototype, 'isLast', {
         get: function() {
           if (this._m_isLast !== undefined)
             return this._m_isLast;
-          if (this.present) {
-            this._m_isLast =  ((this.idx == (this._parent.partitions.length - 1)) || (!(this._parent.partitions[(this.idx + 1)].present))) ;
+          if (this.isPresent) {
+            this._m_isLast =  ((this.idx == (this._parent.partitions.length - 1)) || (!(this._parent.partitions[(this.idx + 1)].isPresent))) ;
           }
           return this._m_isLast;
         }
       });
-      Object.defineProperty(Partition.prototype, 'size', {
+      Object.defineProperty(Partition.prototype, 'lenBody', {
         get: function() {
-          if (this._m_size !== undefined)
-            return this._m_size;
-          if (this.present) {
-            this._m_size = (this.isLast ? (this._root._io.size - this.offset) : this._parent.partitions[(this.idx + 1)].offset);
+          if (this._m_lenBody !== undefined)
+            return this._m_lenBody;
+          if (this.isPresent) {
+            this._m_lenBody = (this.isLast ? (this._root._io.size - this.ofsBody) : this._parent.partitions[(this.idx + 1)].ofsBody);
           }
-          return this._m_size;
+          return this._m_lenBody;
         }
       });
-      Object.defineProperty(Partition.prototype, 'partition', {
+      Object.defineProperty(Partition.prototype, 'body', {
         get: function() {
-          if (this._m_partition !== undefined)
-            return this._m_partition;
-          if (this.present) {
+          if (this._m_body !== undefined)
+            return this._m_body;
+          if (this.isPresent) {
             var io = this._root._io;
             var _pos = io.pos;
-            io.seek(this.offset);
-            this._m_partition = io.readBytes(this.size);
+            io.seek(this.ofsBody);
+            this._m_body = io.readBytes(this.lenBody);
             io.seek(_pos);
           }
-          return this._m_partition;
+          return this._m_body;
         }
       });
 

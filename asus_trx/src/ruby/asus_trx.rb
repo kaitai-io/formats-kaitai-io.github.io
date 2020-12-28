@@ -8,7 +8,15 @@ end
 
 
 ##
-# Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+# .trx file format is widely used for distribution of stock firmware
+# updates for ASUS routers.
+# 
+# Fundamentally, it includes a footer which acts as a safeguard
+# against installing a firmware package on a wrong hardware model or
+# version, and a header which list numerous partitions packaged inside
+# a single .trx file.
+# 
+# trx files not necessarily contain all these headers.
 # @see https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c Source
 class AsusTrx < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
@@ -114,7 +122,7 @@ class AsusTrx < Kaitai::Struct::Struct
         _ = Partition.new(@_io, self, @_root, i)
         @partitions << _
         i += 1
-      end until  ((i >= 4) || (!(_.present))) 
+      end until  ((i >= 4) || (!(_.is_present))) 
       self
     end
     class Partition < Kaitai::Struct::Struct
@@ -125,40 +133,40 @@ class AsusTrx < Kaitai::Struct::Struct
       end
 
       def _read
-        @offset = @_io.read_u4le
+        @ofs_body = @_io.read_u4le
         self
       end
-      def present
-        return @present unless @present.nil?
-        @present = offset != 0
-        @present
+      def is_present
+        return @is_present unless @is_present.nil?
+        @is_present = ofs_body != 0
+        @is_present
       end
       def is_last
         return @is_last unless @is_last.nil?
-        if present
-          @is_last =  ((idx == (_parent.partitions.length - 1)) || (!(_parent.partitions[(idx + 1)].present))) 
+        if is_present
+          @is_last =  ((idx == (_parent.partitions.length - 1)) || (!(_parent.partitions[(idx + 1)].is_present))) 
         end
         @is_last
       end
-      def size
-        return @size unless @size.nil?
-        if present
-          @size = (is_last ? (_root._io.size - offset) : _parent.partitions[(idx + 1)].offset)
+      def len_body
+        return @len_body unless @len_body.nil?
+        if is_present
+          @len_body = (is_last ? (_root._io.size - ofs_body) : _parent.partitions[(idx + 1)].ofs_body)
         end
-        @size
+        @len_body
       end
-      def partition
-        return @partition unless @partition.nil?
-        if present
+      def body
+        return @body unless @body.nil?
+        if is_present
           io = _root._io
           _pos = io.pos
-          io.seek(offset)
-          @partition = io.read_bytes(size)
+          io.seek(ofs_body)
+          @body = io.read_bytes(len_body)
           io.seek(_pos)
         end
-        @partition
+        @body
       end
-      attr_reader :offset
+      attr_reader :ofs_body
       attr_reader :idx
     end
     class Flags < Kaitai::Struct::Struct

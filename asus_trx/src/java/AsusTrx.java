@@ -10,7 +10,15 @@ import java.util.Arrays;
 
 
 /**
- * Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+ * .trx file format is widely used for distribution of stock firmware
+ * updates for ASUS routers.
+ * 
+ * Fundamentally, it includes a footer which acts as a safeguard
+ * against installing a firmware package on a wrong hardware model or
+ * version, and a header which list numerous partitions packaged inside
+ * a single .trx file.
+ * 
+ * trx files not necessarily contain all these headers.
  * @see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
  */
 public class AsusTrx extends KaitaiStruct {
@@ -225,7 +233,7 @@ public class AsusTrx extends KaitaiStruct {
                     _it = new Partition(this._io, this, _root, i);
                     this.partitions.add(_it);
                     i++;
-                } while (!( ((i >= 4) || (!(_it.present()))) ));
+                } while (!( ((i >= 4) || (!(_it.isPresent()))) ));
             }
         }
         public static class Partition extends KaitaiStruct {
@@ -246,54 +254,54 @@ public class AsusTrx extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.offset = this._io.readU4le();
+                this.ofsBody = this._io.readU4le();
             }
-            private Boolean present;
-            public Boolean present() {
-                if (this.present != null)
-                    return this.present;
-                boolean _tmp = (boolean) (offset() != 0);
-                this.present = _tmp;
-                return this.present;
+            private Boolean isPresent;
+            public Boolean isPresent() {
+                if (this.isPresent != null)
+                    return this.isPresent;
+                boolean _tmp = (boolean) (ofsBody() != 0);
+                this.isPresent = _tmp;
+                return this.isPresent;
             }
             private Boolean isLast;
             public Boolean isLast() {
                 if (this.isLast != null)
                     return this.isLast;
-                if (present()) {
-                    boolean _tmp = (boolean) ( ((idx() == (_parent().partitions().size() - 1)) || (!(_parent().partitions().get((int) (idx() + 1)).present()))) );
+                if (isPresent()) {
+                    boolean _tmp = (boolean) ( ((idx() == (_parent().partitions().size() - 1)) || (!(_parent().partitions().get((int) (idx() + 1)).isPresent()))) );
                     this.isLast = _tmp;
                 }
                 return this.isLast;
             }
-            private Integer size;
-            public Integer size() {
-                if (this.size != null)
-                    return this.size;
-                if (present()) {
-                    int _tmp = (int) ((isLast() ? (_root._io().size() - offset()) : _parent().partitions().get((int) (idx() + 1)).offset()));
-                    this.size = _tmp;
+            private Integer lenBody;
+            public Integer lenBody() {
+                if (this.lenBody != null)
+                    return this.lenBody;
+                if (isPresent()) {
+                    int _tmp = (int) ((isLast() ? (_root._io().size() - ofsBody()) : _parent().partitions().get((int) (idx() + 1)).ofsBody()));
+                    this.lenBody = _tmp;
                 }
-                return this.size;
+                return this.lenBody;
             }
-            private byte[] partition;
-            public byte[] partition() {
-                if (this.partition != null)
-                    return this.partition;
-                if (present()) {
+            private byte[] body;
+            public byte[] body() {
+                if (this.body != null)
+                    return this.body;
+                if (isPresent()) {
                     KaitaiStream io = _root._io();
                     long _pos = io.pos();
-                    io.seek(offset());
-                    this.partition = io.readBytes(size());
+                    io.seek(ofsBody());
+                    this.body = io.readBytes(lenBody());
                     io.seek(_pos);
                 }
-                return this.partition;
+                return this.body;
             }
-            private long offset;
+            private long ofsBody;
             private int idx;
             private AsusTrx _root;
             private AsusTrx.Header _parent;
-            public long offset() { return offset; }
+            public long ofsBody() { return ofsBody; }
             public int idx() { return idx; }
             public AsusTrx _root() { return _root; }
             public AsusTrx.Header _parent() { return _parent; }

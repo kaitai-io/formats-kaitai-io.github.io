@@ -194,7 +194,7 @@ void asus_trx_t::header_t::_read() {
             _ = new partition_t(i, m__io, this, m__root);
             m_partitions->push_back(_);
             i++;
-        } while (!( ((i >= 4) || (!(_->present()))) ));
+        } while (!( ((i >= 4) || (!(_->is_present()))) ));
     }
 }
 
@@ -218,10 +218,10 @@ asus_trx_t::header_t::partition_t::partition_t(uint8_t p_idx, kaitai::kstream* p
     m__parent = p__parent;
     m__root = p__root;
     m_idx = p_idx;
-    f_present = false;
+    f_is_present = false;
     f_is_last = false;
-    f_size = false;
-    f_partition = false;
+    f_len_body = false;
+    f_body = false;
 
     try {
         _read();
@@ -232,7 +232,7 @@ asus_trx_t::header_t::partition_t::partition_t(uint8_t p_idx, kaitai::kstream* p
 }
 
 void asus_trx_t::header_t::partition_t::_read() {
-    m_offset = m__io->read_u4le();
+    m_ofs_body = m__io->read_u4le();
 }
 
 asus_trx_t::header_t::partition_t::~partition_t() {
@@ -240,56 +240,56 @@ asus_trx_t::header_t::partition_t::~partition_t() {
 }
 
 void asus_trx_t::header_t::partition_t::_clean_up() {
-    if (f_partition && !n_partition) {
+    if (f_body && !n_body) {
     }
 }
 
-bool asus_trx_t::header_t::partition_t::present() {
-    if (f_present)
-        return m_present;
-    m_present = offset() != 0;
-    f_present = true;
-    return m_present;
+bool asus_trx_t::header_t::partition_t::is_present() {
+    if (f_is_present)
+        return m_is_present;
+    m_is_present = ofs_body() != 0;
+    f_is_present = true;
+    return m_is_present;
 }
 
 bool asus_trx_t::header_t::partition_t::is_last() {
     if (f_is_last)
         return m_is_last;
     n_is_last = true;
-    if (present()) {
+    if (is_present()) {
         n_is_last = false;
-        m_is_last =  ((idx() == (_parent()->partitions()->size() - 1)) || (!(_parent()->partitions()->at((idx() + 1))->present()))) ;
+        m_is_last =  ((idx() == (_parent()->partitions()->size() - 1)) || (!(_parent()->partitions()->at((idx() + 1))->is_present()))) ;
     }
     f_is_last = true;
     return m_is_last;
 }
 
-int32_t asus_trx_t::header_t::partition_t::size() {
-    if (f_size)
-        return m_size;
-    n_size = true;
-    if (present()) {
-        n_size = false;
-        m_size = ((is_last()) ? ((_root()->_io()->size() - offset())) : (_parent()->partitions()->at((idx() + 1))->offset()));
+int32_t asus_trx_t::header_t::partition_t::len_body() {
+    if (f_len_body)
+        return m_len_body;
+    n_len_body = true;
+    if (is_present()) {
+        n_len_body = false;
+        m_len_body = ((is_last()) ? ((_root()->_io()->size() - ofs_body())) : (_parent()->partitions()->at((idx() + 1))->ofs_body()));
     }
-    f_size = true;
-    return m_size;
+    f_len_body = true;
+    return m_len_body;
 }
 
-std::string asus_trx_t::header_t::partition_t::partition() {
-    if (f_partition)
-        return m_partition;
-    n_partition = true;
-    if (present()) {
-        n_partition = false;
+std::string asus_trx_t::header_t::partition_t::body() {
+    if (f_body)
+        return m_body;
+    n_body = true;
+    if (is_present()) {
+        n_body = false;
         kaitai::kstream *io = _root()->_io();
         std::streampos _pos = io->pos();
-        io->seek(offset());
-        m_partition = io->read_bytes(size());
+        io->seek(ofs_body());
+        m_body = io->read_bytes(len_body());
         io->seek(_pos);
-        f_partition = true;
+        f_body = true;
     }
-    return m_partition;
+    return m_body;
 }
 
 asus_trx_t::header_t::flags_t::flags_t(kaitai::kstream* p__io, asus_trx_t::header_t* p__parent, asus_trx_t* p__root) : kaitai::kstruct(p__io) {

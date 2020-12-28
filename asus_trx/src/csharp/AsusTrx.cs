@@ -6,7 +6,15 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// Header and a footer for stock firmwares used on some ASUS routers. trx files not necessarily contain these headers.
+    /// .trx file format is widely used for distribution of stock firmware
+    /// updates for ASUS routers.
+    /// 
+    /// Fundamentally, it includes a footer which acts as a safeguard
+    /// against installing a firmware package on a wrong hardware model or
+    /// version, and a header which list numerous partitions packaged inside
+    /// a single .trx file.
+    /// 
+    /// trx files not necessarily contain all these headers.
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
@@ -197,7 +205,7 @@ namespace Kaitai
                         M_ = new Partition(i, m_io, this, m_root);
                         _partitions.Add(M_);
                         i++;
-                    } while (!( ((i >= 4) || (!(M_.Present))) ));
+                    } while (!( ((i >= 4) || (!(M_.IsPresent))) ));
                 }
             }
             public partial class Partition : KaitaiStruct
@@ -207,27 +215,27 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     _idx = p_idx;
-                    f_present = false;
+                    f_isPresent = false;
                     f_isLast = false;
-                    f_size = false;
-                    f_partition = false;
+                    f_lenBody = false;
+                    f_body = false;
                     _read();
                 }
                 private void _read()
                 {
-                    _offset = m_io.ReadU4le();
+                    _ofsBody = m_io.ReadU4le();
                 }
-                private bool f_present;
-                private bool _present;
-                public bool Present
+                private bool f_isPresent;
+                private bool _isPresent;
+                public bool IsPresent
                 {
                     get
                     {
-                        if (f_present)
-                            return _present;
-                        _present = (bool) (Offset != 0);
-                        f_present = true;
-                        return _present;
+                        if (f_isPresent)
+                            return _isPresent;
+                        _isPresent = (bool) (OfsBody != 0);
+                        f_isPresent = true;
+                        return _isPresent;
                     }
                 }
                 private bool f_isLast;
@@ -238,52 +246,52 @@ namespace Kaitai
                     {
                         if (f_isLast)
                             return _isLast;
-                        if (Present) {
-                            _isLast = (bool) ( ((Idx == (M_Parent.Partitions.Count - 1)) || (!(M_Parent.Partitions[(Idx + 1)].Present))) );
+                        if (IsPresent) {
+                            _isLast = (bool) ( ((Idx == (M_Parent.Partitions.Count - 1)) || (!(M_Parent.Partitions[(Idx + 1)].IsPresent))) );
                         }
                         f_isLast = true;
                         return _isLast;
                     }
                 }
-                private bool f_size;
-                private int? _size;
-                public int? Size
+                private bool f_lenBody;
+                private int? _lenBody;
+                public int? LenBody
                 {
                     get
                     {
-                        if (f_size)
-                            return _size;
-                        if (Present) {
-                            _size = (int) ((IsLast ? (M_Root.M_Io.Size - Offset) : M_Parent.Partitions[(Idx + 1)].Offset));
+                        if (f_lenBody)
+                            return _lenBody;
+                        if (IsPresent) {
+                            _lenBody = (int) ((IsLast ? (M_Root.M_Io.Size - OfsBody) : M_Parent.Partitions[(Idx + 1)].OfsBody));
                         }
-                        f_size = true;
-                        return _size;
+                        f_lenBody = true;
+                        return _lenBody;
                     }
                 }
-                private bool f_partition;
-                private byte[] _partition;
-                public byte[] Partition
+                private bool f_body;
+                private byte[] _body;
+                public byte[] Body
                 {
                     get
                     {
-                        if (f_partition)
-                            return _partition;
-                        if (Present) {
+                        if (f_body)
+                            return _body;
+                        if (IsPresent) {
                             KaitaiStream io = M_Root.M_Io;
                             long _pos = io.Pos;
-                            io.Seek(Offset);
-                            _partition = io.ReadBytes(Size);
+                            io.Seek(OfsBody);
+                            _body = io.ReadBytes(LenBody);
                             io.Seek(_pos);
-                            f_partition = true;
+                            f_body = true;
                         }
-                        return _partition;
+                        return _body;
                     }
                 }
-                private uint _offset;
+                private uint _ofsBody;
                 private byte _idx;
                 private AsusTrx m_root;
                 private AsusTrx.Header m_parent;
-                public uint Offset { get { return _offset; } }
+                public uint OfsBody { get { return _ofsBody; } }
                 public byte Idx { get { return _idx; } }
                 public AsusTrx M_Root { get { return m_root; } }
                 public AsusTrx.Header M_Parent { get { return m_parent; } }
