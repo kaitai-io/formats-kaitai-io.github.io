@@ -10,6 +10,24 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Pcx(KaitaiStruct):
+    """PCX is a bitmap image format originally used by PC Paintbrush from
+    ZSoft Corporation. Originally, it was a relatively simple 128-byte
+    header + uncompressed bitmap format, but latest versions introduced
+    more complicated palette support and RLE compression.
+    
+    There's an option to encode 32-bit or 16-bit RGBA pixels, and thus
+    it can potentially include transparency. Theoretically, it's
+    possible to encode resolution or pixel density in the some of the
+    header fields too, but in reality there's no uniform standard for
+    these, so different implementations treat these differently.
+    
+    PCX format was never made a formal standard. "ZSoft Corporation
+    Technical Reference Manual" for "Image File (.PCX) Format", last
+    updated in 1991, is likely the closest authoritative source.
+    
+    .. seealso::
+       Source - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+    """
 
     class Versions(Enum):
         v2_5 = 0
