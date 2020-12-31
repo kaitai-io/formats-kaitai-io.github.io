@@ -27,7 +27,7 @@ type
     `max`*: AsusTrx_Revision
     `parent`*: AsusTrx_Tail
   AsusTrx_Header* = ref object of KaitaiStruct
-    `signature`*: seq[byte]
+    `magic`*: seq[byte]
     `len`*: uint32
     `crc32`*: uint32
     `version`*: uint16
@@ -74,7 +74,7 @@ a single .trx file.
 
 trx files not necessarily contain all these headers.
 
-@see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
+@see <a href="https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c">Source</a>
 ]##
 proc read*(_: typedesc[AsusTrx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AsusTrx =
   template this: untyped = result
@@ -203,8 +203,8 @@ proc read*(_: typedesc[AsusTrx_Header], io: KaitaiStream, root: KaitaiStruct, pa
   this.root = root
   this.parent = parent
 
-  let signatureExpr = this.io.readBytes(int(4))
-  this.signature = signatureExpr
+  let magicExpr = this.io.readBytes(int(4))
+  this.magic = magicExpr
 
   ##[
   Length of file including header

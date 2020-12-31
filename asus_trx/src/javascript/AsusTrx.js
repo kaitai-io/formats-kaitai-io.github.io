@@ -19,7 +19,7 @@
  * a single .trx file.
  * 
  * trx files not necessarily contain all these headers.
- * @see {@link https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c|Source}
+ * @see {@link https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c|Source}
  */
 
 var AsusTrx = (function() {
@@ -125,9 +125,9 @@ var AsusTrx = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.signature = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.signature, [72, 68, 82, 48]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([72, 68, 82, 48], this.signature, this._io, "/types/header/seq/0");
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [72, 68, 82, 48]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([72, 68, 82, 48], this.magic, this._io, "/types/header/seq/0");
       }
       this.len = this._io.readU4le();
       this.crc32 = this._io.readU4le();

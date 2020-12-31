@@ -19,7 +19,7 @@ import java.util.Arrays;
  * a single .trx file.
  * 
  * trx files not necessarily contain all these headers.
- * @see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
+ * @see <a href="https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c">Source</a>
  */
 public class AsusTrx extends KaitaiStruct {
     public static AsusTrx fromFile(String fileName) throws IOException {
@@ -217,9 +217,9 @@ public class AsusTrx extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.readBytes(4);
-            if (!(Arrays.equals(signature(), new byte[] { 72, 68, 82, 48 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, signature(), _io(), "/types/header/seq/0");
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 72, 68, 82, 48 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, magic(), _io(), "/types/header/seq/0");
             }
             this.len = this._io.readU4le();
             this.crc32 = this._io.readU4le();
@@ -338,7 +338,7 @@ public class AsusTrx extends KaitaiStruct {
             public AsusTrx _root() { return _root; }
             public AsusTrx.Header _parent() { return _parent; }
         }
-        private byte[] signature;
+        private byte[] magic;
         private long len;
         private long crc32;
         private int version;
@@ -346,7 +346,7 @@ public class AsusTrx extends KaitaiStruct {
         private ArrayList<Partition> partitions;
         private AsusTrx _root;
         private AsusTrx _parent;
-        public byte[] signature() { return signature; }
+        public byte[] magic() { return magic; }
 
         /**
          * Length of file including header

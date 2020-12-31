@@ -17,7 +17,7 @@ local utils = require("utils")
 -- a single .trx file.
 -- 
 -- trx files not necessarily contain all these headers.
--- See also: Source (https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c)
+-- See also: Source (https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c)
 AsusTrx = class.class(KaitaiStruct)
 
 function AsusTrx:_init(io, parent, root)
@@ -140,9 +140,9 @@ function AsusTrx.Header:_init(io, parent, root)
 end
 
 function AsusTrx.Header:_read()
-  self.signature = self._io:read_bytes(4)
-  if not(self.signature == "\072\068\082\048") then
-    error("not equal, expected " ..  "\072\068\082\048" .. ", but got " .. self.signature)
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\072\068\082\048") then
+    error("not equal, expected " ..  "\072\068\082\048" .. ", but got " .. self.magic)
   end
   self.len = self._io:read_u4le()
   self.crc32 = self._io:read_u4le()

@@ -17,7 +17,7 @@ namespace Kaitai
     /// trx files not necessarily contain all these headers.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
+    /// Reference: <a href="https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c">Source</a>
     /// </remarks>
     public partial class AsusTrx : KaitaiStruct
     {
@@ -188,10 +188,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _signature = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 72, 68, 82, 48 }) == 0)))
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 72, 68, 82, 48 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, Signature, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, Magic, M_Io, "/types/header/seq/0");
                 }
                 _len = m_io.ReadU4le();
                 _crc32 = m_io.ReadU4le();
@@ -324,7 +324,7 @@ namespace Kaitai
                 public AsusTrx M_Root { get { return m_root; } }
                 public AsusTrx.Header M_Parent { get { return m_parent; } }
             }
-            private byte[] _signature;
+            private byte[] _magic;
             private uint _len;
             private uint _crc32;
             private ushort _version;
@@ -332,7 +332,7 @@ namespace Kaitai
             private List<Partition> _partitions;
             private AsusTrx m_root;
             private AsusTrx m_parent;
-            public byte[] Signature { get { return _signature; } }
+            public byte[] Magic { get { return _magic; } }
 
             /// <summary>
             /// Length of file including header

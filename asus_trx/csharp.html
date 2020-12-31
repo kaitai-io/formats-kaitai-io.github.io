@@ -293,7 +293,7 @@ a single .trx file.</p>
     <span class="c1">/// trx files not necessarily contain all these headers.</span>
     <span class="c1">/// &lt;/summary&gt;</span>
     <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AsusTrx</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
@@ -464,10 +464,10 @@ a single .trx file.</p>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
                 <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_crc32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
@@ -600,7 +600,7 @@ a single .trx file.</p>
                 <span class="k">public</span> <span class="n">AsusTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">AsusTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_signature</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">uint</span> <span class="n">_crc32</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_version</span><span class="p">;</span>
@@ -608,7 +608,7 @@ a single .trx file.</p>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Partition</span><span class="p">&gt;</span> <span class="n">_partitions</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">AsusTrx</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">AsusTrx</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Signature</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signature</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
             <span class="c1">/// &lt;summary&gt;</span>
             <span class="c1">/// Length of file including header</span>

@@ -121,9 +121,9 @@ asus_trx_t::header_t::header_t(kaitai::kstream* p__io, asus_trx_t* p__parent, as
 }
 
 void asus_trx_t::header_t::_read() {
-    m_signature = m__io->read_bytes(4);
-    if (!(signature() == std::string("\x48\x44\x52\x30", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x48\x44\x52\x30", 4), signature(), _io(), std::string("/types/header/seq/0"));
+    m_magic = m__io->read_bytes(4);
+    if (!(magic() == std::string("\x48\x44\x52\x30", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x48\x44\x52\x30", 4), magic(), _io(), std::string("/types/header/seq/0"));
     }
     m_len = m__io->read_u4le();
     m_crc32 = m__io->read_u4le();

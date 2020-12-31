@@ -291,7 +291,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->read_bytes(4);
+    $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{len} = $self->{_io}->read_u4le();
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{version} = $self->{_io}->read_u2le();
@@ -303,9 +303,9 @@ sub _read {
     } until ( (($i >= 4) || (!($_->is_present()))) );
 }
 
-sub signature {
+sub magic {
     my ($self) = @_;
-    return $self->{signature};
+    return $self->{magic};
 }
 
 sub len {

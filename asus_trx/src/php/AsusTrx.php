@@ -153,9 +153,9 @@ namespace AsusTrx {
         }
 
         private function _read() {
-            $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x48\x44\x52\x30")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x48\x44\x52\x30", $this->signature(), $this->_io(), "/types/header/seq/0");
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->magic() == "\x48\x44\x52\x30")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x48\x44\x52\x30", $this->magic(), $this->_io(), "/types/header/seq/0");
             }
             $this->_m_len = $this->_io->readU4le();
             $this->_m_crc32 = $this->_io->readU4le();
@@ -169,13 +169,13 @@ namespace AsusTrx {
                 $i++;
             } while (!( (($i >= 4) || (!($_->isPresent()))) ));
         }
-        protected $_m_signature;
+        protected $_m_magic;
         protected $_m_len;
         protected $_m_crc32;
         protected $_m_version;
         protected $_m_flags;
         protected $_m_partitions;
-        public function signature() { return $this->_m_signature; }
+        public function magic() { return $this->_m_magic; }
 
         /**
          * Length of file including header

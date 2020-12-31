@@ -267,7 +267,7 @@ a single .trx file.</p>
 <span class="cm"> * a single .trx file.</span>
 <span class="cm"> * </span>
 <span class="cm"> * trx files not necessarily contain all these headers.</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">AsusTrx</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
@@ -508,7 +508,7 @@ a single .trx file.</p>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">AsusTrx_Header</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">Signature</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">Len</span> <span class="kt">uint32</span>
 	<span class="nx">Crc32</span> <span class="kt">uint32</span>
 	<span class="nx">Version</span> <span class="kt">uint16</span>
@@ -533,9 +533,9 @@ a single .trx file.</p>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">tmp16</span> <span class="p">=</span> <span class="nx">tmp16</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Signature</span> <span class="p">=</span> <span class="nx">tmp16</span>
-	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Signature</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">72</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">48</span><span class="p">}))</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">72</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">48</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Signature</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">72</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">48</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">72</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">48</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>

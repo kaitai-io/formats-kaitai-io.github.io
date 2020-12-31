@@ -17,7 +17,7 @@ end
 # a single .trx file.
 # 
 # trx files not necessarily contain all these headers.
-# @see https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c Source
+# @see https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c Source
 class AsusTrx < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -110,8 +110,8 @@ class AsusTrx < Kaitai::Struct::Struct
     end
 
     def _read
-      @signature = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([72, 68, 82, 48].pack('C*'), signature, _io, "/types/header/seq/0") if not signature == [72, 68, 82, 48].pack('C*')
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([72, 68, 82, 48].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [72, 68, 82, 48].pack('C*')
       @len = @_io.read_u4le
       @crc32 = @_io.read_u4le
       @version = @_io.read_u2le
@@ -184,7 +184,7 @@ class AsusTrx < Kaitai::Struct::Struct
       end
       attr_reader :flags
     end
-    attr_reader :signature
+    attr_reader :magic
 
     ##
     # Length of file including header

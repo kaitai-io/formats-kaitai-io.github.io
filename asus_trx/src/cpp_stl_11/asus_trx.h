@@ -21,7 +21,7 @@
  * a single .trx file.
  * 
  * trx files not necessarily contain all these headers.
- * \sa https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c Source
+ * \sa https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c Source
  */
 
 class asus_trx_t : public kaitai::kstruct {
@@ -278,7 +278,7 @@ public:
         };
 
     private:
-        std::string m_signature;
+        std::string m_magic;
         uint32_t m_len;
         uint32_t m_crc32;
         uint16_t m_version;
@@ -288,7 +288,7 @@ public:
         asus_trx_t* m__parent;
 
     public:
-        std::string signature() const { return m_signature; }
+        std::string magic() const { return m_magic; }
 
         /**
          * Length of file including header

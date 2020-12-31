@@ -20,7 +20,7 @@ class AsusTrx(KaitaiStruct):
     trx files not necessarily contain all these headers.
     
     .. seealso::
-       Source - https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c
+       Source - https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -95,9 +95,9 @@ class AsusTrx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.read_bytes(4)
-            if not self.signature == b"\x48\x44\x52\x30":
-                raise kaitaistruct.ValidationNotEqualError(b"\x48\x44\x52\x30", self.signature, self._io, u"/types/header/seq/0")
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x48\x44\x52\x30":
+                raise kaitaistruct.ValidationNotEqualError(b"\x48\x44\x52\x30", self.magic, self._io, u"/types/header/seq/0")
             self.len = self._io.read_u4le()
             self.crc32 = self._io.read_u4le()
             self.version = self._io.read_u2le()

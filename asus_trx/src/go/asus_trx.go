@@ -17,7 +17,7 @@ import (
  * a single .trx file.
  * 
  * trx files not necessarily contain all these headers.
- * @see <a href="https://github.com/openwrt/openwrt/blob/master/tools/firmware-utils/src/trx.c">Source</a>
+ * @see <a href="https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c">Source</a>
  */
 type AsusTrx struct {
 	_io *kaitai.Stream
@@ -258,7 +258,7 @@ func (this *AsusTrx_Tail_HwCompInfo) Read(io *kaitai.Stream, parent *AsusTrx_Tai
 	return err
 }
 type AsusTrx_Header struct {
-	Signature []byte
+	Magic []byte
 	Len uint32
 	Crc32 uint32
 	Version uint16
@@ -283,9 +283,9 @@ func (this *AsusTrx_Header) Read(io *kaitai.Stream, parent *AsusTrx, root *AsusT
 		return err
 	}
 	tmp16 = tmp16
-	this.Signature = tmp16
-	if !(bytes.Equal(this.Signature, []uint8{72, 68, 82, 48})) {
-		return kaitai.NewValidationNotEqualError([]uint8{72, 68, 82, 48}, this.Signature, this._io, "/types/header/seq/0")
+	this.Magic = tmp16
+	if !(bytes.Equal(this.Magic, []uint8{72, 68, 82, 48})) {
+		return kaitai.NewValidationNotEqualError([]uint8{72, 68, 82, 48}, this.Magic, this._io, "/types/header/seq/0")
 	}
 	tmp17, err := this._io.ReadU4le()
 	if err != nil {
