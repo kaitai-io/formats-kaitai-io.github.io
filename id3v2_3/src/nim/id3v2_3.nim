@@ -82,6 +82,10 @@ proc value*(this: Id3v23_U2beSynchsafe): int
 proc value*(this: Id3v23_U4beSynchsafe): int
 proc isInvalid*(this: Id3v23_Frame): bool
 
+
+##[
+@see <a href="https://id3.org/id3v2.3.0">Source</a>
+]##
 proc read*(_: typedesc[Id3v23], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Id3v23 =
   template this: untyped = result
   this = new(Id3v23)
@@ -136,6 +140,10 @@ proc value(this: Id3v23_U2beSynchsafe): int =
 proc fromFile*(_: typedesc[Id3v23_U2beSynchsafe], filename: string): Id3v23_U2beSynchsafe =
   Id3v23_U2beSynchsafe.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+@see "Section 3. ID3v2 overview"
+]##
 proc read*(_: typedesc[Id3v23_Tag], io: KaitaiStream, root: KaitaiStruct, parent: Id3v23): Id3v23_Tag =
   template this: untyped = result
   this = new(Id3v23_Tag)
@@ -188,6 +196,10 @@ proc value(this: Id3v23_U4beSynchsafe): int =
 proc fromFile*(_: typedesc[Id3v23_U4beSynchsafe], filename: string): Id3v23_U4beSynchsafe =
   Id3v23_U4beSynchsafe.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+@see "Section 3.3. ID3v2 frame overview"
+]##
 proc read*(_: typedesc[Id3v23_Frame], io: KaitaiStream, root: KaitaiStruct, parent: Id3v23_Tag): Id3v23_Frame =
   template this: untyped = result
   this = new(Id3v23_Frame)

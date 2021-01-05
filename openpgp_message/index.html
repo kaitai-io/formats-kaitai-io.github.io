@@ -260,8 +260,7 @@ section#format-index .row {
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
   <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openpgp_message</span>
   <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OpenPGP message</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
-  <span class="nt">file-extension</span><span class="p">:</span> 
+  <span class="nt">file-extension</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">gpg</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pub</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pgp</span>
@@ -269,14 +268,15 @@ section#format-index .row {
     <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PGP</span>
     <span class="nt">rfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4880</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q2141493</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
   <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The OpenPGP Message Format is a format to store encryption and signature keys for emails.</span>
 <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://tools.ietf.org/html/rfc4880</span>
 <span class="nt">seq</span><span class="p">:</span>
- <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packets</span>
-   <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet</span>
-   <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packets</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">packet</span><span class="p">:</span>
     <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{packet_type_old}&#39;</span>
@@ -297,16 +297,16 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not new_packet_format</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
-        <span class="nt">type</span><span class="p">:</span> 
+        <span class="nt">type</span><span class="p">:</span>
           <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_packet_format</span>
           <span class="nt">cases</span><span class="p">:</span>
             <span class="c1">#true: new_packet</span>
             <span class="nt">false</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_packet</span>
-            
+
   <span class="nt">old_packet</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> 
+        <span class="nt">type</span><span class="p">:</span>
           <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.len_type</span>
           <span class="nt">cases</span><span class="p">:</span>
             <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -323,7 +323,7 @@ section#format-index .row {
             <span class="l l-Scalar l-Scalar-Plain">packet_tags::public_subkey_packet</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">public_key_packet</span>
             <span class="l l-Scalar l-Scalar-Plain">packet_tags::secret_key_packet</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">secret_key_packet</span>
             <span class="l l-Scalar l-Scalar-Plain">packet_tags::secret_subkey_packet</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">public_key_packet</span>
-  
+
   <span class="nt">public_key_packet</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
@@ -341,7 +341,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rsa_e</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
-      
+
   <span class="nt">user_id_packet</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id</span>
@@ -349,7 +349,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
 
   <span class="nt">signature_packet</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span> 
+    <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="c1"># enum: TODO switch?</span>
@@ -378,7 +378,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    
+
   <span class="nt">secret_key_packet</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">public_key</span>
@@ -391,13 +391,13 @@ section#format-index .row {
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_to_key &gt;= 254</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">secret_key</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        
+
   <span class="nt">subpackets</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subpacketss</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subpacket</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-  
+
   <span class="nt">subpacket</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
@@ -407,7 +407,7 @@ section#format-index .row {
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subpacket_types</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">content</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len.len - 1</span>
-        <span class="nt">type</span><span class="p">:</span> 
+        <span class="nt">type</span><span class="p">:</span>
           <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subpacket_type</span>
           <span class="nt">cases</span><span class="p">:</span>
             <span class="l l-Scalar l-Scalar-Plain">subpacket_types::signature_creation_time</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_creation_time</span>
@@ -432,7 +432,7 @@ section#format-index .row {
             <span class="l l-Scalar l-Scalar-Plain">subpacket_types::features</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">features</span>
             <span class="l l-Scalar l-Scalar-Plain">subpacket_types::signature_target</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_target</span>
             <span class="l l-Scalar l-Scalar-Plain">subpacket_types::embedded_signature</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">embedded_signature</span>
-      
+
   <span class="nt">len_subpacket</span><span class="p">:</span>
     <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{len}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
@@ -447,63 +447,63 @@ section#format-index .row {
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">len</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;first_octet</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">192</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">first_octet</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">((first_octet</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">192</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">first_octet</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">255)</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">(((first_octet</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">192)</span><span class="nv"> </span><span class="s">&lt;&lt;</span><span class="nv"> </span><span class="s">8)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">second_octet</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">192)</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">scalar)&#39;</span>
-      
+
   <span class="nt">signature_creation_time</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        
+
   <span class="nt">issuer</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keyid</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-  
+
   <span class="nt">key_expiration_time</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  
+
   <span class="nt">preferred_hash_algorithms</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">algorithm</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_algorithms</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-  
+
   <span class="nt">preferred_compression_algorithms</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">algorithm</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_algorithms</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-        
+
   <span class="nt">signature_expiration_time</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        
+
   <span class="nt">exportable_certification</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exportable</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        
+
   <span class="nt">revocable</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">revocable</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-  
+
   <span class="nt">trust_signature</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">level</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amount</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        
+
   <span class="nt">regular_expression</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">regex</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
-        
+
   <span class="nt">revocation_key</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class</span>
@@ -513,7 +513,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fingerprint</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
-        
+
   <span class="nt">notation_data</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
@@ -521,7 +521,7 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_value</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span> 
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
@@ -533,13 +533,13 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server_flags</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-    
+
   <span class="nt">preferred_key_server</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uri</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        
+
   <span class="nt">primary_user_id</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id</span>
@@ -550,20 +550,20 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uri</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    
+
   <span class="nt">key_flags</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_flags</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-      
+
   <span class="nt">signers_user_id</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        
+
   <span class="nt">reason_for_revocation</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">revocation_code</span>
@@ -572,12 +572,12 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reason</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  
+
   <span class="nt">features</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        
+
   <span class="nt">signature_target</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">public_key_algorithm</span>
@@ -588,12 +588,12 @@ section#format-index .row {
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_algorithms</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash</span>
         <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        
+
   <span class="nt">embedded_signature</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_packet</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_packet</span>
-        
+
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">packet_tags</span><span class="p">:</span>
     <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_a_packet_tag_must_not_have_this_value</span>
@@ -705,7 +705,7 @@ section#format-index .row {
     <span class="nt">108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_experimental_algorithm_08</span>
     <span class="nt">109</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_experimental_algorithm_09</span>
     <span class="nt">110</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_experimental_algorithm_10</span>
-    
+
   <span class="nt">subpacket_types</span><span class="p">:</span>
     <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
     <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
@@ -740,10 +740,10 @@ section#format-index .row {
     <span class="nt">30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">features</span>
     <span class="nt">31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_target</span>
     <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">embedded_signature</span>
-    
+
   <span class="nt">server_flags</span><span class="p">:</span>
     <span class="nt">0x80</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_modify</span>
-    
+
   <span class="nt">key_flags</span><span class="p">:</span>
     <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">this_key_may_be_used_to_certify_other_keys</span>
     <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">this_key_may_be_used_to_sign_data</span>
@@ -764,7 +764,6 @@ section#format-index .row {
     <span class="nt">102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_use_3</span>
     <span class="nt">103</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_use_4</span>
     <span class="nt">110</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">private_use_11</span>
-   
 </pre></div>
     </div>
 </section>

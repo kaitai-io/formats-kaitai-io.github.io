@@ -258,10 +258,10 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ntf.r3</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ntf.r4</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ntf.r5</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
   <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.8</span>
   <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for</span>
   <span class="no">storing imagery, e.g. from satellites.</span>
@@ -280,7 +280,7 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_segments</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_segment(_index)</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_image_segments.to_i</span> 
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_image_segments.to_i</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">graphics_segments</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">graphics_segment(_index)</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
@@ -534,9 +534,6 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
     <span class="nt">params</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">has_mask</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_sub_header.img_compression.substring(0, 1) == &#39;M&#39; or image_sub_header.img_compression.substring(1, 2) == &#39;M&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_sub_header</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_sub_header</span>
@@ -546,6 +543,9 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_data_field</span>
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_mask</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.header.linfo[idx].length_image_segment.to_i - image_data_mask.total_size</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">has_mask</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_sub_header.img_compression.substring(0, 1) == &#39;M&#39; or image_sub_header.img_compression.substring(1, 2) == &#39;M&#39;</span>
   <span class="nt">image_sub_header</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_part_type</span>
@@ -752,17 +752,17 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
         <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;(tpxcdlnth</span><span class="nv"> </span><span class="s">%</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">tpxcdlnth</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">tpxcdlnth</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">(8</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">tpxcdlnth</span><span class="nv"> </span><span class="s">%</span><span class="nv"> </span><span class="s">8))</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">8&quot;</span>
       <span class="nt">bmrtmr_count</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
-          <span class="no">_parent.image_sub_header.num_blocks_per_row.to_i * _parent.image_sub_header.num_blocks_per_col.to_i * </span>
-          <span class="no">(_parent.image_sub_header.img_mode != &#39;S&#39; ? </span>
-            <span class="no">1 :  </span>
+          <span class="no">_parent.image_sub_header.num_blocks_per_row.to_i * _parent.image_sub_header.num_blocks_per_col.to_i *</span>
+          <span class="no">(_parent.image_sub_header.img_mode != &#39;S&#39; ?</span>
+            <span class="no">1 :</span>
             <span class="no">(_parent.image_sub_header.num_bands.to_i != 0 ?</span>
-              <span class="no">_parent.image_sub_header.num_bands.to_i : </span>
+              <span class="no">_parent.image_sub_header.num_bands.to_i :</span>
               <span class="no">_parent.image_sub_header.num_multispectral_bands.to_i))</span>
       <span class="nt">has_bmr</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bmrlnth != 0</span>
       <span class="nt">has_tmr</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tmrlnth != 0</span>
-      <span class="nt">bmrbnd_size</span><span class="p">:</span> 
+      <span class="nt">bmrbnd_size</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;has_bmr</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">bmrtmr_count</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0&quot;</span>
       <span class="nt">tmrbnd_size</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;has_tmr</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">bmrtmr_count</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0&quot;</span>
@@ -986,6 +986,7 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">des_defined_subheader_fields_len.to_i</span>
   <span class="nt">data_sub_header_streaming</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="s">&#39;Streaming</span><span class="nv"> </span><span class="s">file</span><span class="nv"> </span><span class="s">Header</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">Extension</span><span class="nv"> </span><span class="s">Segment</span><span class="nv"> </span><span class="s">Subheader&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">des_base</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_sub_header_base</span>
@@ -1011,7 +1012,6 @@ It was implemented by <a href="https://riverloopsecurity.com">River Loop Securit
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="s">&#39;A</span><span class="nv"> </span><span class="s">repeat</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">sfh_l1.&#39;</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="s">&#39;Streaming</span><span class="nv"> </span><span class="s">file</span><span class="nv"> </span><span class="s">Header</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">Extension</span><span class="nv"> </span><span class="s">Segment</span><span class="nv"> </span><span class="s">Subheader&#39;</span>
   <span class="nt">reserved_extension_segment</span><span class="p">:</span>
     <span class="nt">params</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx</span>

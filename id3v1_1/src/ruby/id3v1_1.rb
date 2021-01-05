@@ -14,7 +14,7 @@ end
 # This type is supposed to be used on full .mp3 files, seeking to
 # proper position automatically. If you're interesting in parsing only
 # the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
-# @see http://id3.org/ID3v1 Source
+# @see https://id3.org/ID3v1 Source
 class Id3v11 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

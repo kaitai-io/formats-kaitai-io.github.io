@@ -16,7 +16,7 @@ end
 # Major users of DMX sound library include:
 # 
 # * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
-# * Raptor: Call of the Shadows 
+# * Raptor: Call of the Shadows
 # @see http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip http://doom.wikia.com/wiki/GENMIDI
 class GenmidiOp2 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)

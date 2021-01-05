@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+
+/**
+ * @see <a href="https://id3.org/id3v2.3.0">Source</a>
+ */
 public class Id3v23 extends KaitaiStruct {
     public static Id3v23 fromFile(String fileName) throws IOException {
         return new Id3v23(new ByteBufferKaitaiStream(fileName));
@@ -102,6 +106,10 @@ public class Id3v23 extends KaitaiStruct {
         public Id3v23 _root() { return _root; }
         public Id3v23.U4beSynchsafe _parent() { return _parent; }
     }
+
+    /**
+     * @see "Section 3. ID3v2 overview"
+     */
     public static class Tag extends KaitaiStruct {
         public static Tag fromFile(String fileName) throws IOException {
             return new Tag(new ByteBufferKaitaiStream(fileName));
@@ -193,6 +201,10 @@ public class Id3v23 extends KaitaiStruct {
         public Id3v23 _root() { return _root; }
         public Id3v23.Header _parent() { return _parent; }
     }
+
+    /**
+     * @see "Section 3.3. ID3v2 frame overview"
+     */
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {
             return new Frame(new ByteBufferKaitaiStream(fileName));

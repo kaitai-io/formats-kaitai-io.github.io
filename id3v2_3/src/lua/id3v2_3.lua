@@ -6,6 +6,8 @@ local class = require("class")
 require("kaitaistruct")
 local str_decode = require("string_decode")
 
+-- 
+-- See also: Source (https://id3.org/id3v2.3.0)
 Id3v23 = class.class(KaitaiStruct)
 
 function Id3v23:_init(io, parent, root)
@@ -60,6 +62,8 @@ function Id3v23.U2beSynchsafe.property.value:get()
 end
 
 
+-- 
+-- See also: Section 3. ID3v2 overview
 Id3v23.Tag = class.class(KaitaiStruct)
 
 function Id3v23.Tag:_init(io, parent, root)
@@ -115,6 +119,8 @@ return self._m_value
 end
 
 
+-- 
+-- See also: Section 3.3. ID3v2 frame overview
 Id3v23.Frame = class.class(KaitaiStruct)
 
 function Id3v23.Frame:_init(io, parent, root)

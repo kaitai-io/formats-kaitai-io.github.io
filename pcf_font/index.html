@@ -274,9 +274,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="nt">xref</span><span class="p">:</span>
     <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PCF</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q3398726</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
   <span class="nt">imports</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/common/bytes_with_io</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
   <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
@@ -310,6 +310,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="no">Table offers a offset + length pointer to a particular</span>
       <span class="no">table. &quot;Type&quot; of table references certain enum. Applications can</span>
       <span class="no">ignore enum values which they don&#39;t support.</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{type}&quot;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -338,13 +339,13 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="s">&#39;types::swidths&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">swidths</span>
             <span class="s">&#39;types::glyph_names&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">glyph_names</span>
             <span class="c1"># TODO: bdf_accelerators</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{type}&quot;</span>
     <span class="nt">types</span><span class="p">:</span>
       <span class="nt">properties</span><span class="p">:</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">Array of properties (key-value pairs), used to convey different X11</span>
           <span class="no">settings of a font. Key is always an X font atom.</span>
         <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://fontforge.org/docs/techref/pcf-format.html#properties-table&#39;</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{num_props:dec}</span><span class="nv"> </span><span class="s">properties&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
@@ -365,7 +366,6 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
               <span class="no">Strings buffer. Never used directly, but instead is</span>
               <span class="no">addressed by offsets from the properties.</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{num_props:dec}</span><span class="nv"> </span><span class="s">properties&quot;</span>
         <span class="nt">types</span><span class="p">:</span>
           <span class="nt">prop</span><span class="p">:</span>
             <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
@@ -376,6 +376,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
               <span class="no">Simple offset-based mechanism is employed to keep this</span>
               <span class="no">type&#39;s sequence fixed-sized and thus have simple access</span>
               <span class="no">to property key/value by index.</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name}</span><span class="nv"> </span><span class="s">=&gt;</span><span class="nv"> </span><span class="s">{str_value}/{int_value}&quot;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -394,15 +395,15 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                   <span class="no">value in the strings buffer.</span>
             <span class="nt">instances</span><span class="p">:</span>
               <span class="nt">name</span><span class="p">:</span>
-                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
                 <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.strings._io</span>
+                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
                 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
                   <span class="no">Name of the property addressed in the strings buffer.</span>
                 <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
               <span class="nt">str_value</span><span class="p">:</span>
-                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_or_ofs_value</span>
                 <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.strings._io</span>
+                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_or_ofs_value</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
                 <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_string != 0</span>
                 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
@@ -417,14 +418,13 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
 
               <span class="c1"># As of Kaitai Struct 0.9, `value` fails with:</span>
-              <span class="c1">#  </span>
+              <span class="c1">#</span>
               <span class="c1">#     &quot;can&#39;t combine output types: StrFromBytesType(BytesTerminatedType(0,false,true,true,None),UTF-8) vs IntMultiType(false,Width4,Some(LittleEndian))&quot;</span>
               <span class="c1">#</span>
               <span class="c1"># ... so currently it&#39;s commented out.</span>
 
               <span class="c1">#value:</span>
               <span class="c1">#  value: &#39;(is_string != 0) ? str_value : int_value&#39;</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name}</span><span class="nv"> </span><span class="s">=&gt;</span><span class="nv"> </span><span class="s">{str_value}/{int_value}&quot;</span>
       <span class="nt">bitmaps</span><span class="p">:</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">Table containing uncompressed glyph bitmaps.</span>
@@ -476,6 +476,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">Table containing scalable widths of characters.</span>
         <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table&#39;</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_glyphs:dec}</span><span class="nv"> </span><span class="s">glyphs&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
@@ -488,11 +489,11 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
               <span class="no">The scalable width of a character is the width of the corresponding</span>
               <span class="no">PostScript character in em-units (1/1000ths of an em).</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_glyphs:dec}</span><span class="nv"> </span><span class="s">glyphs&#39;</span>
       <span class="nt">glyph_names</span><span class="p">:</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">Table containing character names for every glyph.</span>
         <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table&#39;</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_glyphs:dec}</span><span class="nv"> </span><span class="s">glyphs&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
@@ -512,19 +513,18 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_with_io</span>
             <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
               <span class="no">Strings buffer which contains all glyph names.</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_glyphs:dec}</span><span class="nv"> </span><span class="s">glyphs&#39;</span>
         <span class="nt">types</span><span class="p">:</span>
           <span class="nt">string_ref</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{value}&#39;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_string</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
             <span class="nt">instances</span><span class="p">:</span>
               <span class="nt">value</span><span class="p">:</span>
-                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_string</span>
                 <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.strings._io</span>
+                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_string</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
                 <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{value}&#39;</span>
   <span class="nt">format</span><span class="p">:</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Table format specifier, always 4 bytes. Original implementation treats</span>

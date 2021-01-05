@@ -16,7 +16,7 @@
  * This type is supposed to be used on full .mp3 files, seeking to
  * proper position automatically. If you're interesting in parsing only
  * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
- * @see {@link http://id3.org/ID3v1|Source}
+ * @see {@link https://id3.org/ID3v1|Source}
  */
 
 var Id3v11 = (function() {

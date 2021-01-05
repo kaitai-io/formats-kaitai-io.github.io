@@ -6,6 +6,9 @@ local class = require("class")
 require("kaitaistruct")
 local str_decode = require("string_decode")
 
+-- 
+-- See also: Source (http://id3.org/id3v2.4.0-structure)
+-- See also: Source (http://id3.org/id3v2.4.0-frames)
 Id3v24 = class.class(KaitaiStruct)
 
 function Id3v24:_init(io, parent, root)

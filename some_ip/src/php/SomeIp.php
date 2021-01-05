@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded 
- * communication protocol which supports remoteprocedure calls, event notifications 
+ * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
+ * communication protocol which supports remoteprocedure calls, event notifications
  * and the underlying serialization/wire format.
  */
 
@@ -84,37 +84,37 @@ namespace SomeIp {
         public function messageId() { return $this->_m_messageId; }
 
         /**
-         * [PRS_SOMEIP_00042] Length field shall contain the length in Byte 
+         * [PRS_SOMEIP_00042] Length field shall contain the length in Byte
          * starting from Request ID/Client ID until the end of the SOME/IP message.
          */
         public function length() { return $this->_m_length; }
 
         /**
-         * The Request ID allows a provider and subscriber to differentiate 
+         * The Request ID allows a provider and subscriber to differentiate
          * multiple parallel uses of the same method, event, getter or setter.
          */
         public function requestId() { return $this->_m_requestId; }
 
         /**
-         * The Protocol Version identifies the used SOME/IP Header format 
+         * The Protocol Version identifies the used SOME/IP Header format
          * (not including the Payload format).
          */
         public function protocolVersion() { return $this->_m_protocolVersion; }
 
         /**
-         * Interface Version shall be an 8 Bit field that contains the 
+         * Interface Version shall be an 8 Bit field that contains the
          * MajorVersion of the Service Interface.
          */
         public function interfaceVersion() { return $this->_m_interfaceVersion; }
 
         /**
-         * The Message Type field is used to differentiate different types of 
+         * The Message Type field is used to differentiate different types of
          * messages.
          */
         public function messageType() { return $this->_m_messageType; }
 
         /**
-         * The Return Code shall be used to signal whether a request was 
+         * The Return Code shall be used to signal whether a request was
          * successfully processed.
          */
         public function returnCode() { return $this->_m_returnCode; }
@@ -124,12 +124,12 @@ namespace SomeIp {
 }
 
 /**
- * [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to 
- * the user. However, the Message ID shall be unique for the whole 
+ * [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to
+ * the user. However, the Message ID shall be unique for the whole
  * system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and
  * should be handled via a comparable process.
  * [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in
- * the ID with 2^16 services with 2^15 methods.        
+ * the ID with 2^16 services with 2^15 methods.
  */
 
 namespace SomeIp\Header {
@@ -191,7 +191,7 @@ namespace SomeIp\Header {
 }
 
 /**
- * The Request ID allows a provider and subscriber to differentiate 
+ * The Request ID allows a provider and subscriber to differentiate
  * multiple parallel usesof the same method, event, getter or setter.
  */
 

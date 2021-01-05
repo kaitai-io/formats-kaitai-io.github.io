@@ -11,7 +11,7 @@ namespace Kaitai
     /// out-of-band data. Originally it was developed to provide 802.11n
     /// radio information, but can be used for other purposes as well.
     /// 
-    /// Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  
+    /// Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>

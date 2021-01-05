@@ -6,6 +6,10 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see http://id3.org/id3v2.4.0-structure Source
+# @see http://id3.org/id3v2.4.0-frames Source
 class Id3v24 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

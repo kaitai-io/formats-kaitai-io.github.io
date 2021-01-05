@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://id3.org/id3v2.4.0-structure">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="http://id3.org/id3v2.4.0-frames">Source</a>
+    /// </remarks>
     public partial class Id3v24 : KaitaiStruct
     {
         public static Id3v24 FromFile(string fileName)

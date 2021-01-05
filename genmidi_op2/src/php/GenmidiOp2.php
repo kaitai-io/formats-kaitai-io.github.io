@@ -10,7 +10,7 @@
  * Major users of DMX sound library include:
  * 
  * * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
- * * Raptor: Call of the Shadows 
+ * * Raptor: Call of the Shadows
  */
 
 namespace {

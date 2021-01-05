@@ -9,6 +9,11 @@
     root.Id3v24 = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link http://id3.org/id3v2.4.0-structure|Source}
+ * @see {@link http://id3.org/id3v2.4.0-frames|Source}
+ */
+
 var Id3v24 = (function() {
   function Id3v24(_io, _parent, _root) {
     this._io = _io;

@@ -5,6 +5,10 @@ import (
 	"bytes"
 )
 
+
+/**
+ * @see <a href="https://id3.org/id3v2.3.0">Source</a>
+ */
 type Id3v23 struct {
 	Tag *Id3v23_Tag
 	_io *kaitai.Stream
@@ -99,6 +103,10 @@ func (this *Id3v23_U2beSynchsafe) Value() (v int, err error) {
 	this._f_value = true
 	return this.value, nil
 }
+
+/**
+ * @see "Section 3. ID3v2 overview"
+ */
 type Id3v23_Tag struct {
 	Header *Id3v23_Header
 	HeaderEx *Id3v23_HeaderEx
@@ -219,6 +227,10 @@ func (this *Id3v23_U4beSynchsafe) Value() (v int, err error) {
 	this._f_value = true
 	return this.value, nil
 }
+
+/**
+ * @see "Section 3.3. ID3v2 frame overview"
+ */
 type Id3v23_Frame struct {
 	Id string
 	Size uint32

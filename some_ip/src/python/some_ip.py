@@ -11,8 +11,8 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 
 import some_ip_sd
 class SomeIp(KaitaiStruct):
-    """SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded 
-    communication protocol which supports remoteprocedure calls, event notifications 
+    """SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
+    communication protocol which supports remoteprocedure calls, event notifications
     and the underlying serialization/wire format.
     
     .. seealso::
@@ -80,12 +80,12 @@ class SomeIp(KaitaiStruct):
             self.return_code = KaitaiStream.resolve_enum(SomeIp.Header.ReturnCodeEnum, self._io.read_u1())
 
         class MessageId(KaitaiStruct):
-            """[PRS_SOMEIP_00035] The assignment of the Message ID shall be up to 
-            the user. However, the Message ID shall be unique for the whole 
+            """[PRS_SOMEIP_00035] The assignment of the Message ID shall be up to
+            the user. However, the Message ID shall be unique for the whole
             system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and
             should be handled via a comparable process.
             [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in
-            the ID with 2^16 services with 2^15 methods.        
+            the ID with 2^16 services with 2^15 methods.
             
             .. seealso::
                AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID
@@ -120,7 +120,7 @@ class SomeIp(KaitaiStruct):
 
 
         class RequestId(KaitaiStruct):
-            """The Request ID allows a provider and subscriber to differentiate 
+            """The Request ID allows a provider and subscriber to differentiate
             multiple parallel usesof the same method, event, getter or setter.
             
             .. seealso::

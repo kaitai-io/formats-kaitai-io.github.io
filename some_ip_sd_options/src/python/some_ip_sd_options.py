@@ -10,8 +10,8 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SomeIpSdOptions(KaitaiStruct):
-    """FormatOptions are used to transport additional information to the entries. 
-    This includes forinstance the information how a service instance is 
+    """FormatOptions are used to transport additional information to the entries.
+    This includes forinstance the information how a service instance is
     reachable (IP-Address, TransportProtocol, Port Number).
     
     .. seealso::

@@ -13,7 +13,7 @@ class PcxDcx(KaitaiStruct):
     """DCX is a simple extension of PCX image format allowing to bundle
     many PCX images (typically, pages of a document) in one file. It saw
     some limited use in DOS-era fax software, but was largely
-    superseeded with multi-page TIFFs and PDFs since then.
+    superseded with multi-page TIFFs and PDFs since then.
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

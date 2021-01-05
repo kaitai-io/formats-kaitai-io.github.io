@@ -10,11 +10,12 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class SomeIpSdEntries(KaitaiStruct):
-    """The entries are used to synchronize the state of services instances and the 
+    """The entries are used to synchronize the state of services instances and the
     Publish/-Subscribe handling.
     
     .. seealso::
-       - section 4.1.2.3  Entry Format - https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+       section 4.1.2.3  Entry Format - https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+       -
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

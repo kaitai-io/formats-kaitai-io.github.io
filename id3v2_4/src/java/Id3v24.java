@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+
+/**
+ * @see <a href="http://id3.org/id3v2.4.0-structure">Source</a>
+ * @see <a href="http://id3.org/id3v2.4.0-frames">Source</a>
+ */
 public class Id3v24 extends KaitaiStruct {
     public static Id3v24 fromFile(String fileName) throws IOException {
         return new Id3v24(new ByteBufferKaitaiStream(fileName));

@@ -9,6 +9,14 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Id3v24(KaitaiStruct):
+    """
+    .. seealso::
+       Source - http://id3.org/id3v2.4.0-structure
+    
+    
+    .. seealso::
+       Source - http://id3.org/id3v2.4.0-frames
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

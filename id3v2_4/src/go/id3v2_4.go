@@ -5,6 +5,11 @@ import (
 	"bytes"
 )
 
+
+/**
+ * @see <a href="http://id3.org/id3v2.4.0-structure">Source</a>
+ * @see <a href="http://id3.org/id3v2.4.0-frames">Source</a>
+ */
 type Id3v24 struct {
 	Tag *Id3v24_Tag
 	_io *kaitai.Stream

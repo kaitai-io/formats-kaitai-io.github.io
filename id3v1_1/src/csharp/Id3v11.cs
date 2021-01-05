@@ -14,7 +14,7 @@ namespace Kaitai
     /// the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://id3.org/ID3v1">Source</a>
+    /// Reference: <a href="https://id3.org/ID3v1">Source</a>
     /// </remarks>
     public partial class Id3v11 : KaitaiStruct
     {

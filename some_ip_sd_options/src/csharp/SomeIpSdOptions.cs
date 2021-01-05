@@ -6,8 +6,8 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// FormatOptions are used to transport additional information to the entries. 
-    /// This includes forinstance the information how a service instance is 
+    /// FormatOptions are used to transport additional information to the entries.
+    /// This includes forinstance the information how a service instance is
     /// reachable (IP-Address, TransportProtocol, Port Number).
     /// </summary>
     /// <remarks>

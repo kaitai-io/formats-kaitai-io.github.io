@@ -13,8 +13,8 @@
 class some_ip_sd_t;
 
 /**
- * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded 
- * communication protocol which supports remoteprocedure calls, event notifications 
+ * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
+ * communication protocol which supports remoteprocedure calls, event notifications
  * and the underlying serialization/wire format.
  * \sa https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf Source
  */
@@ -76,12 +76,12 @@ public:
         ~header_t();
 
         /**
-         * [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to 
-         * the user. However, the Message ID shall be unique for the whole 
+         * [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to
+         * the user. However, the Message ID shall be unique for the whole
          * system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and
          * should be handled via a comparable process.
          * [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in
-         * the ID with 2^16 services with 2^15 methods.        
+         * the ID with 2^16 services with 2^15 methods.
          * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID
          */
 
@@ -157,7 +157,7 @@ public:
         };
 
         /**
-         * The Request ID allows a provider and subscriber to differentiate 
+         * The Request ID allows a provider and subscriber to differentiate
          * multiple parallel usesof the same method, event, getter or setter.
          * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID
          */
@@ -235,38 +235,38 @@ public:
         message_id_t* message_id() const { return m_message_id.get(); }
 
         /**
-         * [PRS_SOMEIP_00042] Length field shall contain the length in Byte 
+         * [PRS_SOMEIP_00042] Length field shall contain the length in Byte
          * starting from Request ID/Client ID until the end of the SOME/IP message.
          */
         uint32_t length() const { return m_length; }
 
         /**
-         * The Request ID allows a provider and subscriber to differentiate 
+         * The Request ID allows a provider and subscriber to differentiate
          * multiple parallel uses of the same method, event, getter or setter.
          */
         request_id_t* request_id() const { return m_request_id.get(); }
 
         /**
-         * The Protocol Version identifies the used SOME/IP Header format 
+         * The Protocol Version identifies the used SOME/IP Header format
          * (not including the Payload format).
          */
         uint8_t protocol_version() const { return m_protocol_version; }
 
         /**
-         * Interface Version shall be an 8 Bit field that contains the 
+         * Interface Version shall be an 8 Bit field that contains the
          * MajorVersion of the Service Interface.
          */
         uint8_t interface_version() const { return m_interface_version; }
 
         /**
-         * The Message Type field is used to differentiate different types of 
+         * The Message Type field is used to differentiate different types of
          * messages.
          * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4
          */
         message_type_enum_t message_type() const { return m_message_type; }
 
         /**
-         * The Return Code shall be used to signal whether a request was 
+         * The Return Code shall be used to signal whether a request was
          * successfully processed.
          * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5
          */

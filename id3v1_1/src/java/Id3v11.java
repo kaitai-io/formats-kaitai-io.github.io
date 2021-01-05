@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  * This type is supposed to be used on full .mp3 files, seeking to
  * proper position automatically. If you're interesting in parsing only
  * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
- * @see <a href="http://id3.org/ID3v1">Source</a>
+ * @see <a href="https://id3.org/ID3v1">Source</a>
  */
 public class Id3v11 extends KaitaiStruct {
     public static Id3v11 fromFile(String fileName) throws IOException {

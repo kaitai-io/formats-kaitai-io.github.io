@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://id3.org/id3v2.3.0 Source
 class Id3v23 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -49,6 +52,9 @@ class Id3v23 < Kaitai::Struct::Struct
     attr_reader :byte0
     attr_reader :byte1
   end
+
+  ##
+  # @see '' Section 3. ID3v2 overview
   class Tag < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -96,6 +102,9 @@ class Id3v23 < Kaitai::Struct::Struct
     attr_reader :short0
     attr_reader :short1
   end
+
+  ##
+  # @see '' Section 3.3. ID3v2 frame overview
   class Frame < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

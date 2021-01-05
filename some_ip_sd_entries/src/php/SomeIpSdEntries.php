@@ -2,7 +2,7 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * The entries are used to synchronize the state of services instances and the 
+ * The entries are used to synchronize the state of services instances and the
  * Publish/-Subscribe handling.
  */
 

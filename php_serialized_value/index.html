@@ -269,7 +269,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
   <span class="no">The only PHP values not supported by this format are *resources*,</span>
   <span class="no">which usually correspond to native file or connection handles and cannot be</span>
   <span class="no">meaningfully serialized.</span>
-  
+
   <span class="no">There is no official documentation for this data format;</span>
   <span class="no">this spec was created based on the PHP source code and the behavior of</span>
   <span class="no">`serialize`/`unserialize`. PHP makes no guarantees about compatibility of</span>
@@ -350,7 +350,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_3_object</span>
       <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
         <span class="no">An `object` value (without a class name), as serialized by PHP 3.</span>
-        
+
         <span class="no">PHP 4 through 7.3 included code to deserialize PHP 3 objects,</span>
         <span class="no">which has now been removed from the development repo and will likely</span>
         <span class="no">no longer be included in PHP 7.4. However, apparently this code</span>
@@ -370,13 +370,14 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
     <span class="nt">0x31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> <span class="c1"># &#39;1&#39;</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">null_contents</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicolon</span>
-        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;;&#39;</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">The contents of a null value (`value_type::null`). This structure</span>
       <span class="no">contains no actual data, since there is only a single `NULL` value.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicolon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;;&#39;</span>
   <span class="nt">bool_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a boolean value (`value_type::bool`).</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -391,8 +392,11 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="nt">value</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;value_dec</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">bool_value::true&#39;</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the `bool`, parsed as a boolean.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a boolean value (`value_type::bool`).</span>
   <span class="nt">int_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an integer-like value:</span>
+      <span class="no">either an actual integer (`value_type::int`) or a reference</span>
+      <span class="no">(`value_type::variable_reference`, `value_type::object_reference`).</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -404,11 +408,8 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="nt">value</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_dec.to_i</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the `int`, parsed as an integer.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The contents of an integer-like value:</span>
-      <span class="no">either an actual integer (`value_type::int`) or a reference</span>
-      <span class="no">(`value_type::variable_reference`, `value_type::object_reference`).</span>
   <span class="nt">float_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a floating-point value.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -418,14 +419,20 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The value of the `float`, in ASCII decimal, as generated by PHP&#39;s</span>
           <span class="no">usual double-to-string conversion. In particular, this means that:</span>
-          
+
           <span class="no">* A decimal point may not be included (for integral numbers)</span>
           <span class="no">* The number may use exponent notation (e. g. `1.0E+16`)</span>
           <span class="no">* Positive and negative infinity are represented as `INF`</span>
             <span class="no">and `-INF`, respectively</span>
           <span class="no">* Not-a-number is represented as `NAN`</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a floating-point value.</span>
   <span class="nt">length_prefixed_quoted_string</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">A quoted string prefixed with its length.</span>
+
+      <span class="no">Despite the quotes surrounding the string data, it can contain</span>
+      <span class="no">arbitrary bytes, which are never escaped in any way.</span>
+      <span class="no">This does not cause any ambiguities when parsing - the bounds of</span>
+      <span class="no">the string are determined only by the length field, not by the quotes.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_dec</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
@@ -446,14 +453,12 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The length of the string&#39;s contents in bytes, parsed as an integer.</span>
           <span class="no">The quotes are not counted in this size number.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">A quoted string prefixed with its length.</span>
-      
-      <span class="no">Despite the quotes surrounding the string data, it can contain</span>
-      <span class="no">arbitrary bytes, which are never escaped in any way.</span>
-      <span class="no">This does not cause any ambiguities when parsing - the bounds of</span>
-      <span class="no">the string are determined only by the length field, not by the quotes.</span>
   <span class="nt">string_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of a string value.</span>
+
+      <span class="no">Note: PHP strings can contain arbitrary byte sequences.</span>
+      <span class="no">They are not necessarily valid text in any specific encoding.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -465,12 +470,8 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="nt">value</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string.data</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the string, as a byte array.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The contents of a string value.</span>
-      
-      <span class="no">Note: PHP strings can contain arbitrary byte sequences.</span>
-      <span class="no">They are not necessarily valid text in any specific encoding.</span>
   <span class="nt">mapping_entry</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping entry consisting of a key and a value.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_serialized_value</span>
@@ -478,8 +479,8 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_serialized_value</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the entry.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping entry consisting of a key and a value.</span>
   <span class="nt">count_prefixed_mapping</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping (a sequence of key-value pairs) prefixed with its size.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries_dec</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
@@ -499,8 +500,8 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries_dec.to_i</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The number of key-value pairs in the mapping, parsed as an integer.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping (a sequence of key-value pairs) prefixed with its size.</span>
   <span class="nt">array_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of an array value.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -509,8 +510,10 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The array&#39;s elements. Keys must be of type `int` or `string`,</span>
           <span class="no">values may have any type.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of an array value.</span>
   <span class="nt">php_3_object_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of a PHP 3 object value. Unlike its counterpart in PHP 4</span>
+      <span class="no">and above, it does not contain a class name.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -519,10 +522,10 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The object&#39;s properties. Keys must be of type `string`,</span>
           <span class="no">values may have any type.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The contents of a PHP 3 object value. Unlike its counterpart in PHP 4</span>
-      <span class="no">and above, it does not contain a class name.</span>
   <span class="nt">object_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an object value serialized in the default format.</span>
+      <span class="no">Unlike its PHP 3 counterpart, it contains a class name.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon1</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -536,10 +539,10 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The object&#39;s properties. Keys ust be of type `string`,</span>
           <span class="no">values may have any type.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The contents of an object value serialized in the default format.</span>
-      <span class="no">Unlike its PHP 3 counterpart, it contains a class name.</span>
   <span class="nt">custom_serialized_object_contents</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an object value that implements a custom</span>
+      <span class="no">serialized format using `Serializable`.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon1</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
@@ -560,7 +563,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The custom serialized data. The braces are not included.</span>
-          
+
           <span class="no">Although the surrounding braces make it look like a regular</span>
           <span class="no">serialized object, this field is actually more similar to a string:</span>
           <span class="no">it can contain arbitrary data that is not required to follow</span>
@@ -573,9 +576,6 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The length of the serialized data in bytes, parsed as an integer.</span>
           <span class="no">The braces are not counted in this length number.</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The contents of an object value that implements a custom</span>
-      <span class="no">serialized format using `Serializable`.</span>
 </pre></div>
     </div>
 </section>

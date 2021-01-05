@@ -114,6 +114,11 @@ proc value*(this: Id3v24_U2beSynchsafe): int
 proc value*(this: Id3v24_U4beSynchsafe): int
 proc isInvalid*(this: Id3v24_Frame): bool
 
+
+##[
+@see <a href="http://id3.org/id3v2.4.0-structure">Source</a>
+@see <a href="http://id3.org/id3v2.4.0-frames">Source</a>
+]##
 proc read*(_: typedesc[Id3v24], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Id3v24 =
   template this: untyped = result
   this = new(Id3v24)

@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="https://id3.org/id3v2.3.0">Source</a>
+    /// </remarks>
     public partial class Id3v23 : KaitaiStruct
     {
         public static Id3v23 FromFile(string fileName)
@@ -89,6 +93,10 @@ namespace Kaitai
             public Id3v23 M_Root { get { return m_root; } }
             public Id3v23.U4beSynchsafe M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: Section 3. ID3v2 overview
+        /// </remarks>
         public partial class Tag : KaitaiStruct
         {
             public static Tag FromFile(string fileName)
@@ -176,6 +184,10 @@ namespace Kaitai
             public Id3v23 M_Root { get { return m_root; } }
             public Id3v23.Header M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: Section 3.3. ID3v2 frame overview
+        /// </remarks>
         public partial class Frame : KaitaiStruct
         {
             public static Frame FromFile(string fileName)

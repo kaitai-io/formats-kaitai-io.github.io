@@ -18,7 +18,7 @@ class Id3v11(KaitaiStruct):
     the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
     
     .. seealso::
-       Source - http://id3.org/ID3v1
+       Source - https://id3.org/ID3v1
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

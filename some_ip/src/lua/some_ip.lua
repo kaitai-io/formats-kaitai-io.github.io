@@ -9,8 +9,8 @@ local enum = require("enum")
 
 require("some_ip_sd")
 -- 
--- SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded 
--- communication protocol which supports remoteprocedure calls, event notifications 
+-- SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
+-- communication protocol which supports remoteprocedure calls, event notifications
 -- and the underlying serialization/wire format.
 -- See also: Source (https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf)
 SomeIp = class.class(KaitaiStruct)
@@ -102,33 +102,33 @@ end
 -- The Message ID shall be a 32 Bit identifier that is used to identify
 -- the RPC call to a method of an application or to identify an event.
 -- 
--- [PRS_SOMEIP_00042] Length field shall contain the length in Byte 
+-- [PRS_SOMEIP_00042] Length field shall contain the length in Byte
 -- starting from Request ID/Client ID until the end of the SOME/IP message.
 -- 
--- The Request ID allows a provider and subscriber to differentiate 
+-- The Request ID allows a provider and subscriber to differentiate
 -- multiple parallel uses of the same method, event, getter or setter.
 -- 
--- The Protocol Version identifies the used SOME/IP Header format 
+-- The Protocol Version identifies the used SOME/IP Header format
 -- (not including the Payload format).
 -- 
--- Interface Version shall be an 8 Bit field that contains the 
+-- Interface Version shall be an 8 Bit field that contains the
 -- MajorVersion of the Service Interface.
 -- 
--- The Message Type field is used to differentiate different types of 
+-- The Message Type field is used to differentiate different types of
 -- messages.
 -- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4
 -- 
--- The Return Code shall be used to signal whether a request was 
+-- The Return Code shall be used to signal whether a request was
 -- successfully processed.
 -- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5
 
 -- 
--- [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to 
--- the user. However, the Message ID shall be unique for the whole 
+-- [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to
+-- the user. However, the Message ID shall be unique for the whole
 -- system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and
 -- should be handled via a comparable process.
 -- [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in
--- the ID with 2^16 services with 2^15 methods.        
+-- the ID with 2^16 services with 2^15 methods.
 -- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID
 SomeIp.Header.MessageId = class.class(KaitaiStruct)
 
@@ -177,7 +177,7 @@ end
 -- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.6
 
 -- 
--- The Request ID allows a provider and subscriber to differentiate 
+-- The Request ID allows a provider and subscriber to differentiate
 -- multiple parallel usesof the same method, event, getter or setter.
 -- See also: AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID
 SomeIp.Header.RequestId = class.class(KaitaiStruct)

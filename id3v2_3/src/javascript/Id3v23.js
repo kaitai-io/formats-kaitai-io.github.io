@@ -9,6 +9,10 @@
     root.Id3v23 = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link https://id3.org/id3v2.3.0|Source}
+ */
+
 var Id3v23 = (function() {
   function Id3v23(_io, _parent, _root) {
     this._io = _io;
@@ -61,6 +65,10 @@ var Id3v23 = (function() {
     return U2beSynchsafe;
   })();
 
+  /**
+   * @see Section 3. ID3v2 overview
+   */
+
   var Tag = Id3v23.Tag = (function() {
     function Tag(_io, _parent, _root) {
       this._io = _io;
@@ -112,6 +120,10 @@ var Id3v23 = (function() {
 
     return U4beSynchsafe;
   })();
+
+  /**
+   * @see Section 3.3. ID3v2 frame overview
+   */
 
   var Frame = Id3v23.Frame = (function() {
     function Frame(_io, _parent, _root) {

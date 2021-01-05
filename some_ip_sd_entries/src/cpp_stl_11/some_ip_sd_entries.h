@@ -12,9 +12,10 @@
 #endif
 
 /**
- * The entries are used to synchronize the state of services instances and the 
+ * The entries are used to synchronize the state of services instances and the
  * Publish/-Subscribe handling.
- * \sa https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.3  Entry Format
+ * \sa https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+ * - section 4.1.2.3  Entry Format
  */
 
 class some_ip_sd_entries_t : public kaitai::kstruct {

@@ -284,11 +284,11 @@ https://www.python.org/dev/peps/pep-0574/</li>
   <span class="nt">file-extension</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pickle</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pkl</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
   <span class="nt">xref</span><span class="p">:</span>
     <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pickle</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q7190889</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
   <span class="no">of operations to run on the Pickle Virtual Machine.</span>
@@ -409,94 +409,89 @@ https://www.python.org/dev/peps/pep-0574/</li>
           <span class="no">are determined by the value of the opcode.</span>
 
   <span class="nt">decimalnl_short</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Integer or boolean, encoded with the ASCII characters [0-9-].</span>
 
       <span class="no">The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
       <span class="no">Normally a value would not contain leading &#39;0&#39; characters.</span>
-
-  <span class="nt">decimalnl_long</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
         <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+
+  <span class="nt">decimalnl_long</span><span class="p">:</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
 
   <span class="c1"># TODO Can kaitai express constraint that these are quoted?</span>
   <span class="nt">stringnl</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Quoted string, possibly containing Python string escapes.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
         <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Quoted string, possibly containing Python string escapes.</span>
 
   <span class="nt">stringnl_noescape</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, does not contain string escapes.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
         <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, does not contain string escapes.</span>
 
   <span class="nt">stringnl_noescape_pair</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pair of unquoted, unescaped strings.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val1</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val2</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pair of unquoted, unescaped strings.</span>
 
   <span class="nt">unicodestringnl</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, containing Python Unicode escapes.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
         <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, containing Python Unicode escapes.</span>
 
   <span class="nt">floatnl</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
       <span class="no">or &#39;nan&#39;.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
 
   <span class="nt">long1</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+      <span class="no">encoded as two&#39;s complement.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
-      <span class="no">encoded as two&#39;s complement.</span>
 
   <span class="nt">long4</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+      <span class="no">encoded as two&#39;s complement.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
-      <span class="no">encoded as two&#39;s complement.</span>
 
   <span class="nt">string1</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
       <span class="no">unspecified.</span>
@@ -512,14 +507,13 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="no">- `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
       <span class="no">- `pickletools.dis` uses latin1, and cannot be overriden</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495</span>
-
-  <span class="nt">string4</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="c1"># Not a typo, the length really is a signed integer</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+
+  <span class="nt">string4</span><span class="p">:</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
       <span class="no">unspecified.</span>
@@ -529,29 +523,30 @@ https://www.python.org/dev/peps/pep-0574/</li>
 
       <span class="no">See the documentation for `string1` for further detail about encodings.</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="c1"># Not a typo, the length really is a signed integer</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
 
   <span class="nt">bytes1</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed byte string, between 0 and 255 bytes long.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed byte string, between 0 and 255 bytes long.</span>
 
   <span class="nt">bytes4</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
 
   <span class="nt">bytes8</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
@@ -559,19 +554,25 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
       <span class="no">a 32-bit build of Python, because the string would be larger than</span>
       <span class="no">`sys.maxsize`.</span>
-
-  <span class="nt">bytearray8</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+
+  <span class="nt">bytearray8</span><span class="p">:</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
       <span class="no">The contents are deserilised into a `bytearray` object.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
 
   <span class="nt">unicodestring1</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 255 bytes long</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -579,9 +580,9 @@ https://www.python.org/dev/peps/pep-0574/</li>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 255 bytes long</span>
 
   <span class="nt">unicodestring4</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -589,16 +590,8 @@ https://www.python.org/dev/peps/pep-0574/</li>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
 
   <span class="nt">unicodestring8</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
@@ -606,6 +599,13 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
       <span class="no">a 32-bit build of Python, because the string would be larger than</span>
       <span class="no">`sys.maxsize`.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
 
   <span class="nt">no_arg</span><span class="p">:</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Some opcodes take no argument, this empty type is used for them.</span>

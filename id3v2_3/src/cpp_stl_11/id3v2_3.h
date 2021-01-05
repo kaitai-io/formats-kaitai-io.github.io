@@ -11,6 +11,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * \sa https://id3.org/id3v2.3.0 Source
+ */
+
 class id3v2_3_t : public kaitai::kstruct {
 
 public:
@@ -90,6 +94,10 @@ public:
         id3v2_3_t::u4be_synchsafe_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Section 3. ID3v2 overview
+     */
+
     class tag_t : public kaitai::kstruct {
 
     public:
@@ -164,6 +172,10 @@ public:
         id3v2_3_t* _root() const { return m__root; }
         id3v2_3_t::header_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Section 3.3. ID3v2 frame overview
+     */
 
     class frame_t : public kaitai::kstruct {
 

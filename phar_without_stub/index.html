@@ -321,7 +321,7 @@ standard encoding of the system on which the phar was created.</p>
   <span class="no">allow executing or including phar files as if they were regular PHP scripts.</span>
   <span class="no">PHP 5.3 and later include the phar extension, which adds native support for</span>
   <span class="no">reading and manipulating phar files.</span>
-  
+
   <span class="no">The phar format was originally developed as part of the PEAR library</span>
   <span class="no">PHP_Archive, first released in 2005. Later, a native PHP extension</span>
   <span class="no">named &quot;phar&quot; was developed, which was first released on PECL in 2007,</span>
@@ -329,25 +329,25 @@ standard encoding of the system on which the phar was created.</p>
   <span class="no">superseded the PHP_Archive library, which has not been updated since 2010.</span>
   <span class="no">The phar extension is also no longer released independently on PECL;</span>
   <span class="no">it is now developed and released as part of PHP itself.</span>
-  
+
   <span class="no">Because of current limitations in Kaitai Struct</span>
   <span class="no">(seekaitai-io/kaitai_struct#158 and kaitai-io/kaitai_struct#538),</span>
   <span class="no">the executable PHP stub that precedes the rest of the archive is not handled</span>
   <span class="no">by this spec. Before parsing a phar using this spec, the stub must be</span>
   <span class="no">removed manually.</span>
-  
+
   <span class="no">A phar&#39;s stub is terminated by the special token `__HALT_COMPILER();`</span>
   <span class="no">(which may be followed by at most one space, the PHP tag end `?&gt;`,</span>
   <span class="no">and an optional line terminator). The stub termination sequence is</span>
   <span class="no">immediately followed by the remaining parts of the phar format,</span>
   <span class="no">as described in this spec.</span>
-  
+
   <span class="no">The phar stub usually contains code that loads the phar and runs</span>
   <span class="no">a contained PHP file, but this is not required. A minimal valid phar stub</span>
   <span class="no">is `&lt;?php __HALT_COMPILER();` - such a stub makes it impossible to execute</span>
   <span class="no">the phar directly, but still allows loading or manipulating it using the</span>
   <span class="no">phar extension.</span>
-  
+
   <span class="no">Note: The phar format does not specify any encoding for text fields</span>
   <span class="no">(stub, alias name, and all file names), so these fields may contain arbitrary</span>
   <span class="no">binary data. The actual text encoding used in a specific phar file usually</span>
@@ -379,7 +379,7 @@ standard encoding of the system on which the phar was created.</p>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">The archive&#39;s signature - a digest of all archive data before</span>
       <span class="no">the signature itself.</span>
-      
+
       <span class="no">Note: Almost all of the available &quot;signature&quot; types are actually hashes,</span>
       <span class="no">not signatures, and cannot be used to verify that the archive has not</span>
       <span class="no">been tampered with. Only the OpenSSL signature type is a true</span>
@@ -414,7 +414,7 @@ standard encoding of the system on which the phar was created.</p>
         <span class="no">PHP_Archive 0.12.0 (even though it claims to only support</span>
         <span class="no">API version 1.1.0) and phar extension 1.3.0. This type is not</span>
         <span class="no">documented in the phar extension&#39;s documentation of the phar format.</span>
-        
+
         <span class="no">Note: In older versions of the phar extension, this value was used</span>
         <span class="no">for an undocumented and unimplemented &quot;PGP&quot; signature type</span>
         <span class="no">(`PHAR_SIG_PGP`).</span>
@@ -492,22 +492,13 @@ standard encoding of the system on which the phar was created.</p>
   <span class="nt">api_version</span><span class="p">:</span>
     <span class="nt">meta</span><span class="p">:</span>
       <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">release</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">A phar API version number. This version number is meant to indicate</span>
       <span class="no">which features are used in a specific phar, so that tools reading</span>
       <span class="no">the phar can easily check that they support all necessary features.</span>
-      
+
       <span class="no">The following API versions exist so far:</span>
-      
+
       <span class="no">* 0.5, 0.6, 0.7, 0.7.1: The first official API versions. At this point,</span>
         <span class="no">the phar format was only used by the PHP_Archive library, and the</span>
         <span class="no">API version numbers were identical to the PHP_Archive versions that</span>
@@ -534,6 +525,15 @@ standard encoding of the system on which the phar was created.</p>
         <span class="no">all features from API verison 1.1.1, but it reports API version 1.1.0.)</span>
         <span class="no">Adds the OpenSSL signature type and support for storing</span>
         <span class="no">empty directories.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">release</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
   <span class="nt">global_flags</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
@@ -562,7 +562,7 @@ standard encoding of the system on which the phar was created.</p>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">The length of the manifest, in bytes.</span>
-          
+
           <span class="no">Note: The phar extension does not allow reading manifests</span>
           <span class="no">larger than 100 MiB.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_files</span>

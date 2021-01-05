@@ -274,7 +274,7 @@ section#format-index .row {
     <span class="nt">0x8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bundle</span>      <span class="c1"># dynamically bound bundle file</span>
     <span class="nt">0x9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dylib_stub</span>  <span class="c1"># shared library stub for static linking only, no section contents</span>
     <span class="nt">0xa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dsym</span>        <span class="c1"># companion file with only debug sections</span>
-    <span class="nt">0xb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kext_bundle</span> <span class="c1"># x86_64 kexts    </span>
+    <span class="nt">0xb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kext_bundle</span> <span class="c1"># x86_64 kexts</span>
   <span class="nt">load_command_type</span><span class="p">:</span>
     <span class="c1"># http://opensource.apple.com//source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/mach-o/loader.h</span>
     <span class="nt">0x80000000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">req_dyld</span>
@@ -331,6 +331,7 @@ section#format-index .row {
     <span class="nt">0x32      </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_version</span> <span class="c1"># LC_BUILD_VERSION</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">macho_flags</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{this:flags}&quot;</span>
     <span class="nt">params</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -409,7 +410,6 @@ section#format-index .row {
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x1000000 != 0</span>
       <span class="nt">app_extension_safe</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x2000000 != 0</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{this:flags}&quot;</span>
   <span class="nt">mach_header</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cputype</span>
@@ -434,6 +434,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">macho_flags(flags)</span>
         <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
   <span class="nt">load_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{type}:</span><span class="nv"> </span><span class="s">{body}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -486,7 +487,6 @@ section#format-index .row {
             <span class="s">&#39;load_command_type::routines&#39;</span>                <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">routines_command</span>
             <span class="s">&#39;load_command_type::build_version&#39;</span>           <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">build_version_command</span>
             <span class="s">&#39;load_command_type::segment&#39;</span>                 <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">segment_command</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{type}:</span><span class="nv"> </span><span class="s">{body}&#39;</span>
   <span class="nt">vm_prot</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strip_read</span>
@@ -524,6 +524,7 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b24</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved (unused) bits.</span>
   <span class="nt">uleb128</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value:dec}&quot;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -568,8 +569,8 @@ section#format-index .row {
           <span class="no">((b9  % 128) &lt;&lt; 56) + ((b8 &amp; 0x80 == 0) ? 0 :</span>
           <span class="no">((b10 % 128) &lt;&lt; 63))))))))))</span>
         <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value:dec}&quot;</span>  
   <span class="nt">segment_command_64</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{segname}</span><span class="nv"> </span><span class="s">({initprot}):</span><span class="nv"> </span><span class="s">offs={fileoff},</span><span class="nv"> </span><span class="s">size={filesize}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">segname</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
@@ -598,6 +599,7 @@ section#format-index .row {
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nsects</span>
     <span class="nt">types</span><span class="p">:</span>
       <span class="nt">section_64</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{sect_name}:</span><span class="nv"> </span><span class="s">offs={offset},</span><span class="nv"> </span><span class="s">size={size}&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sect_name</span>
             <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sectname</span>
@@ -664,6 +666,7 @@ section#format-index .row {
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eh_frame_item</span>
                 <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
           <span class="nt">eh_frame_item</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{body}&#39;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -679,7 +682,6 @@ section#format-index .row {
                   <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id</span>
                   <span class="nt">cases</span><span class="p">:</span>
                     <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cie</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{body}&#39;</span>
             <span class="nt">types</span><span class="p">:</span>
               <span class="nt">char_chain</span><span class="p">:</span>
                 <span class="nt">seq</span><span class="p">:</span>
@@ -689,6 +691,7 @@ section#format-index .row {
                     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">char_chain</span>
                     <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chr != 0</span>
               <span class="nt">cie</span><span class="p">:</span>
+                <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version:dec}</span><span class="nv"> </span><span class="s">aug:{augmentation_string}</span><span class="nv"> </span><span class="s">code:{code_alignment_factor}</span><span class="nv"> </span><span class="s">data:{data_alignment_factor}</span><span class="nv"> </span><span class="s">returnReg:{return_address_register}&#39;</span>
                 <span class="nt">seq</span><span class="p">:</span>
                   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
                     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -709,7 +712,6 @@ section#format-index .row {
                   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">augmentation</span>
                     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">augmentation_entry</span>
                     <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;aug_str.chr</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">122&#39;</span>
-                <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version:dec}</span><span class="nv"> </span><span class="s">aug:{augmentation_string}</span><span class="nv"> </span><span class="s">code:{code_alignment_factor}</span><span class="nv"> </span><span class="s">data:{data_alignment_factor}</span><span class="nv"> </span><span class="s">returnReg:{return_address_register}&#39;</span>
               <span class="nt">augmentation_entry</span><span class="p">:</span>
                 <span class="nt">seq</span><span class="p">:</span>
                   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
@@ -729,6 +731,7 @@ section#format-index .row {
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
                 <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
           <span class="nt">cf_string</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;isa={isa},</span><span class="nv"> </span><span class="s">info={info},</span><span class="nv"> </span><span class="s">data={data},</span><span class="nv"> </span><span class="s">length={length}&quot;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isa</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
@@ -738,15 +741,13 @@ section#format-index .row {
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;isa={isa},</span><span class="nv"> </span><span class="s">info={info},</span><span class="nv"> </span><span class="s">data={data},</span><span class="nv"> </span><span class="s">length={length}&quot;</span>
           <span class="nt">cf_string_list</span><span class="p">:</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cf_string</span>
                 <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{sect_name}:</span><span class="nv"> </span><span class="s">offs={offset},</span><span class="nv"> </span><span class="s">size={size}&#39;</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{segname}</span><span class="nv"> </span><span class="s">({initprot}):</span><span class="nv"> </span><span class="s">offs={fileoff},</span><span class="nv"> </span><span class="s">size={filesize}&#39;</span>
   <span class="nt">dyld_info_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;rebase={rebase_off},</span><span class="nv"> </span><span class="s">bind={bind_off},</span><span class="nv"> </span><span class="s">weakBind={weak_bind_off},</span><span class="nv"> </span><span class="s">lazyBind={lazy_bind_off},</span><span class="nv"> </span><span class="s">export={export_off}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rebase_off</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -768,7 +769,6 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_size</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;rebase={rebase_off},</span><span class="nv"> </span><span class="s">bind={bind_off},</span><span class="nv"> </span><span class="s">weakBind={weak_bind_off},</span><span class="nv"> </span><span class="s">lazyBind={lazy_bind_off},</span><span class="nv"> </span><span class="s">export={export_off}&#39;</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">rebase</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
@@ -799,6 +799,7 @@ section#format-index .row {
             <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.opcode == opcode::done</span>
         <span class="nt">types</span><span class="p">:</span>
           <span class="nt">rebase_item</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{opcode},</span><span class="nv"> </span><span class="s">imm:{immediate},</span><span class="nv"> </span><span class="s">uleb:{uleb},</span><span class="nv"> </span><span class="s">skip:{skip}&quot;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode_and_immediate</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -821,7 +822,6 @@ section#format-index .row {
               <span class="nt">immediate</span><span class="p">:</span>
                 <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;opcode_and_immediate</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0x0f&quot;</span>
                 <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{opcode},</span><span class="nv"> </span><span class="s">imm:{immediate},</span><span class="nv"> </span><span class="s">uleb:{uleb},</span><span class="nv"> </span><span class="s">skip:{skip}&quot;</span>
         <span class="nt">enums</span><span class="p">:</span>
           <span class="nt">opcode</span><span class="p">:</span>
             <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">done</span>
@@ -834,6 +834,7 @@ section#format-index .row {
             <span class="nt">0x70</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do_rebase_add_address_uleb</span>
             <span class="nt">0x80</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do_rebase_uleb_times_skipping_uleb</span>
       <span class="nt">bind_item</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{opcode},</span><span class="nv"> </span><span class="s">imm:{immediate},</span><span class="nv"> </span><span class="s">uleb:{uleb},</span><span class="nv"> </span><span class="s">skip:{skip},</span><span class="nv"> </span><span class="s">symbol:{symbol}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode_and_immediate</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -861,7 +862,6 @@ section#format-index .row {
           <span class="nt">immediate</span><span class="p">:</span>
             <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;opcode_and_immediate</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0x0f&quot;</span>
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{opcode},</span><span class="nv"> </span><span class="s">imm:{immediate},</span><span class="nv"> </span><span class="s">uleb:{uleb},</span><span class="nv"> </span><span class="s">skip:{skip},</span><span class="nv"> </span><span class="s">symbol:{symbol}&quot;</span>
       <span class="nt">bind_data</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
@@ -874,6 +874,7 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_item</span>
             <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
       <span class="nt">export_node</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{children_count}</span><span class="nv"> </span><span class="s">children,</span><span class="nv"> </span><span class="s">term_size={terminal_size.value}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">terminal_size</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uleb128</span>
@@ -885,9 +886,9 @@ section#format-index .row {
             <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">children_count</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">terminal</span>
             <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">terminal_size.value</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{children_count}</span><span class="nv"> </span><span class="s">children,</span><span class="nv"> </span><span class="s">term_size={terminal_size.value}&quot;</span>
         <span class="nt">types</span><span class="p">:</span>
           <span class="nt">child</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name}:</span><span class="nv"> </span><span class="s">{node_offset}&quot;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
@@ -898,7 +899,6 @@ section#format-index .row {
               <span class="nt">value</span><span class="p">:</span>
                 <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node_offset.value</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_node</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name}:</span><span class="nv"> </span><span class="s">{node_offset}&quot;</span>
     <span class="nt">enums</span><span class="p">:</span>
       <span class="nt">bind_opcode</span><span class="p">:</span>
         <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">done</span>
@@ -915,6 +915,7 @@ section#format-index .row {
         <span class="nt">0xb0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do_bind_add_address_immediate_scaled</span>
         <span class="nt">0xc0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do_bind_uleb_times_skipping_uleb</span>
   <span class="nt">symtab_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;symbols:</span><span class="nv"> </span><span class="s">{n_syms:dec},</span><span class="nv"> </span><span class="s">strtab:</span><span class="nv"> </span><span class="s">{str_off}&quot;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sym_off</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symoff</span>
@@ -944,9 +945,8 @@ section#format-index .row {
       <span class="nt">strs</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str_off</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str_table</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str_size</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;symbols:</span><span class="nv"> </span><span class="s">{n_syms:dec},</span><span class="nv"> </span><span class="s">strtab:</span><span class="nv"> </span><span class="s">{str_off}&quot;</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str_table</span>
     <span class="nt">types</span><span class="p">:</span>
       <span class="nt">str_table</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
@@ -960,6 +960,7 @@ section#format-index .row {
             <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_ == &quot;&quot;</span>
             <span class="nt">eos-error</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
       <span class="nt">nlist_64</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;un={un}</span><span class="nv"> </span><span class="s">type={type}</span><span class="nv"> </span><span class="s">sect={sect}</span><span class="nv"> </span><span class="s">desc={desc}</span><span class="nv"> </span><span class="s">value={value}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">un</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -973,12 +974,12 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
         <span class="nt">instances</span><span class="p">:</span>
           <span class="nt">name</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.str_off + un</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
             <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
             <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">un != 0</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;un={un}</span><span class="nv"> </span><span class="s">type={type}</span><span class="nv"> </span><span class="s">sect={sect}</span><span class="nv"> </span><span class="s">desc={desc}</span><span class="nv"> </span><span class="s">value={value}&quot;</span>
       <span class="nt">nlist</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;un={un}</span><span class="nv"> </span><span class="s">type={type}</span><span class="nv"> </span><span class="s">sect={sect}</span><span class="nv"> </span><span class="s">desc={desc}</span><span class="nv"> </span><span class="s">value={value}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">un</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -992,11 +993,10 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
         <span class="nt">instances</span><span class="p">:</span>
           <span class="nt">name</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.str_off + un</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
             <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
             <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">un != 0</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;un={un}</span><span class="nv"> </span><span class="s">type={type}</span><span class="nv"> </span><span class="s">sect={sect}</span><span class="nv"> </span><span class="s">desc={desc}</span><span class="nv"> </span><span class="s">value={value}&quot;</span>
   <span class="nt">dysymtab_command</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i_local_sym</span>
@@ -1061,6 +1061,7 @@ section#format-index .row {
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_indirect_syms</span>
   <span class="nt">lc_str</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{value}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
@@ -1069,18 +1070,18 @@ section#format-index .row {
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ptr</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{value}&#39;</span>
   <span class="nt">dylinker_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lc_str</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
   <span class="nt">uuid_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;uuid={uuid}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;uuid={uuid}&#39;</span>
   <span class="nt">version</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{major:dec}.{minor:dec}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">p1</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
@@ -1090,7 +1091,6 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">release</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{major:dec}.{minor:dec}&#39;</span>
   <span class="nt">encryption_info_command</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cryptoff</span>
@@ -1125,33 +1125,34 @@ section#format-index .row {
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lc_str</span>
   <span class="nt">routines_command_64</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_address</span>
-          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_module</span>
-          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-          <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">48</span> <span class="c1"># u8 * 6</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_module</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">48</span> <span class="c1"># u8 * 6</span>
   <span class="nt">routines_command</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_address</span>
-          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_module</span>
-          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-          <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">24</span> <span class="c1"># u4 * 6</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_module</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">24</span> <span class="c1"># u4 * 6</span>
   <span class="nt">version_min_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version},</span><span class="nv"> </span><span class="s">r:{reserved}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sdk</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version},</span><span class="nv"> </span><span class="s">r:{reserved}&#39;</span>
   <span class="nt">source_version_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version:dec}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;v:{version:dec}&#39;</span>
   <span class="nt">entry_point_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;entry_off={entry_off},</span><span class="nv"> </span><span class="s">stack_size={stack_size}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_off</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entryoff</span>
@@ -1159,8 +1160,8 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stack_size</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stacksize</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;entry_off={entry_off},</span><span class="nv"> </span><span class="s">stack_size={stack_size}&#39;</span>
   <span class="nt">dylib_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_offset</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -1173,16 +1174,16 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
   <span class="nt">rpath_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{path}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path_offset</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
         <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{path}&#39;</span>
   <span class="nt">linkedit_data_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;offs={data_off},</span><span class="nv"> </span><span class="s">size={data_size}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_off</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dataoff</span>
@@ -1190,8 +1191,8 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
         <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">datasize</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;offs={data_off},</span><span class="nv"> </span><span class="s">size={data_size}&#39;</span>
   <span class="nt">code_signature_command</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;offs={data_off},</span><span class="nv"> </span><span class="s">size={data_size}&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_off</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
@@ -1201,9 +1202,8 @@ section#format-index .row {
       <span class="nt">code_signature</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_off</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cs_blob</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;offs={data_off},</span><span class="nv"> </span><span class="s">size={data_size}&#39;</span>        
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cs_blob</span>
   <span class="nt">cs_blob</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
@@ -1278,9 +1278,9 @@ section#format-index .row {
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
           <span class="nt">hashes</span><span class="p">:</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_offset - 8 - hash_size * n_special_slots</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_size</span>
             <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
             <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_special_slots + n_code_slots</span>
-            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_size</span>
       <span class="nt">blob_index</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
@@ -1290,8 +1290,8 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
         <span class="nt">instances</span><span class="p">:</span>
           <span class="nt">blob</span><span class="p">:</span>
-            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset - 8</span>
             <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._io</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset - 8</span>
             <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cs_blob</span>
         <span class="nt">enums</span><span class="p">:</span>
@@ -1305,6 +1305,7 @@ section#format-index .row {
             <span class="nt">0x1000</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">alternate_code_directories</span> <span class="c1"># CSSLOT_ALTERNATE_CODEDIRECTORIES</span>
             <span class="nt">0x10000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_slot</span>             <span class="c1"># CSSLOT_SIGNATURESLOT</span>
       <span class="nt">data</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
@@ -1312,8 +1313,8 @@ section#format-index .row {
             <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
             <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4 - (length &amp; 3)</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
       <span class="nt">match</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{match_op}</span><span class="nv"> </span><span class="s">{data.value:str}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match_op</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
@@ -1332,8 +1333,8 @@ section#format-index .row {
             <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">greater_than</span>
             <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">less_equal</span>
             <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">greater_equal</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{match_op}</span><span class="nv"> </span><span class="s">{data.value:str}&quot;</span>
       <span class="nt">expr</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{data}&#39;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
@@ -1383,34 +1384,34 @@ section#format-index .row {
             <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left_cert</span>
         <span class="nt">types</span><span class="p">:</span>
           <span class="nt">ident_expr</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;identifier</span><span class="nv"> </span><span class="s">{identifier.value:str}&quot;</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identifier</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;identifier</span><span class="nv"> </span><span class="s">{identifier.value:str}&quot;</span>
           <span class="nt">apple_generic_anchor_expr</span><span class="p">:</span>
+            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;anchor</span><span class="nv"> </span><span class="s">apple</span><span class="nv"> </span><span class="s">generic&quot;</span>
             <span class="nt">instances</span><span class="p">:</span>
               <span class="nt">value</span><span class="p">:</span>
                 <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;&quot;anchor</span><span class="nv"> </span><span class="s">apple</span><span class="nv"> </span><span class="s">generic&quot;&#39;</span>
-            <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;anchor</span><span class="nv"> </span><span class="s">apple</span><span class="nv"> </span><span class="s">generic&quot;</span>
           <span class="nt">cert_slot_expr</span><span class="p">:</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
                 <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
           <span class="nt">and_expr</span><span class="p">:</span>
-            <span class="nt">seq</span><span class="p">:</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">right</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
             <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;({left})</span><span class="nv"> </span><span class="s">AND</span><span class="nv"> </span><span class="s">({right})&quot;</span>
-          <span class="nt">or_expr</span><span class="p">:</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">right</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+          <span class="nt">or_expr</span><span class="p">:</span>
             <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;({left})</span><span class="nv"> </span><span class="s">OR</span><span class="nv"> </span><span class="s">({right})&quot;</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">right</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
           <span class="nt">anchor_hash_expr</span><span class="p">:</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
@@ -1431,16 +1432,7 @@ section#format-index .row {
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
           <span class="nt">cert_field_expr</span><span class="p">:</span>
-            <span class="nt">seq</span><span class="p">:</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
-                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
             <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{cert_slot}[{data.value:str}]</span><span class="nv"> </span><span class="s">{match}&quot;</span>
-          <span class="nt">cert_generic_expr</span><span class="p">:</span>
             <span class="nt">seq</span><span class="p">:</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
@@ -1449,8 +1441,16 @@ section#format-index .row {
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
               <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
                 <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
+          <span class="nt">cert_generic_expr</span><span class="p">:</span>
             <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{cert_slot}[{data.value:hex}]</span><span class="nv"> </span><span class="s">{match}&quot;</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{data}&#39;</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
+                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert_slot</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">match</span>
       <span class="nt">requirement</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kind</span>
@@ -1458,10 +1458,10 @@ section#format-index .row {
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
       <span class="nt">entitlement</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data:str}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
             <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data:str}&quot;</span>
       <span class="nt">requirements_blob_index</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
@@ -1471,8 +1471,8 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
         <span class="nt">instances</span><span class="p">:</span>
           <span class="nt">value</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cs_blob</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset - 8</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cs_blob</span>
         <span class="nt">enums</span><span class="p">:</span>
           <span class="nt">requirement_type</span><span class="p">:</span>
             <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>        <span class="c1"># kSecHostRequirementType</span>

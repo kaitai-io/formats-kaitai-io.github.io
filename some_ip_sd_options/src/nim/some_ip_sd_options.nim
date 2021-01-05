@@ -105,8 +105,8 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdLoadBalancingOption], io: Kait
 
 
 ##[
-FormatOptions are used to transport additional information to the entries. 
-This includes forinstance the information how a service instance is 
+FormatOptions are used to transport additional information to the entries.
+This includes forinstance the information how a service instance is
 reachable (IP-Address, TransportProtocol, Port Number).
 
 @see <a href="https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf

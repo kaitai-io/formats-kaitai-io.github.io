@@ -17,7 +17,7 @@
  * This type is supposed to be used on full .mp3 files, seeking to
  * proper position automatically. If you're interesting in parsing only
  * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
- * \sa http://id3.org/ID3v1 Source
+ * \sa https://id3.org/ID3v1 Source
  */
 
 class id3v1_1_t : public kaitai::kstruct {

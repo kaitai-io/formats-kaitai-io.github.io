@@ -17,7 +17,7 @@ class GenmidiOp2(KaitaiStruct):
     Major users of DMX sound library include:
     
     * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
-    * Raptor: Call of the Shadows 
+    * Raptor: Call of the Shadows
     
     .. seealso::
        http://doom.wikia.com/wiki/GENMIDI - http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip

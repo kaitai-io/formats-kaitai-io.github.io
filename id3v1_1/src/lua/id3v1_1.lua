@@ -14,7 +14,7 @@ local str_decode = require("string_decode")
 -- This type is supposed to be used on full .mp3 files, seeking to
 -- proper position automatically. If you're interesting in parsing only
 -- the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
--- See also: Source (http://id3.org/ID3v1)
+-- See also: Source (https://id3.org/ID3v1)
 Id3v11 = class.class(KaitaiStruct)
 
 function Id3v11:_init(io, parent, root)

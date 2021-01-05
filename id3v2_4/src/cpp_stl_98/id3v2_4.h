@@ -11,6 +11,11 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * \sa http://id3.org/id3v2.4.0-structure Source
+ * \sa http://id3.org/id3v2.4.0-frames Source
+ */
+
 class id3v2_4_t : public kaitai::kstruct {
 
 public:

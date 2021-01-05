@@ -13,7 +13,7 @@ end
 # out-of-band data. Originally it was developed to provide 802.11n
 # radio information, but can be used for other purposes as well.
 # 
-# Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap  
+# Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
 # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
 class PacketPpi < Kaitai::Struct::Struct
 
