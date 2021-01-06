@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see '' Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+# @see https://en.wikipedia.org/wiki/GUID_Partition_Table Source
 class GptPartitionTable < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

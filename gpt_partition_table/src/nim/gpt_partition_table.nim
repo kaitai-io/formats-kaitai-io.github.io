@@ -45,7 +45,7 @@ proc entries*(this: GptPartitionTable_PartitionHeader): seq[GptPartitionTable_Pa
 
 
 ##[
-@see "Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table"
+@see <a href="https://en.wikipedia.org/wiki/GUID_Partition_Table">Source</a>
 ]##
 proc read*(_: typedesc[GptPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GptPartitionTable =
   template this: untyped = result

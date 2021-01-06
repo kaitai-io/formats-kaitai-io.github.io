@@ -8,7 +8,7 @@ local str_decode = require("string_decode")
 local stringstream = require("string_stream")
 
 -- 
--- See also: Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+-- See also: Source (https://en.wikipedia.org/wiki/GUID_Partition_Table)
 GptPartitionTable = class.class(KaitaiStruct)
 
 function GptPartitionTable:_init(io, parent, root)

@@ -45,7 +45,7 @@ proc bootCode*(this: ApmPartitionTable_PartitionEntry): seq[byte]
 
 
 ##[
-@see "Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map"
+@see <a href="https://en.wikipedia.org/wiki/Apple_Partition_Map">Source</a>
 ]##
 proc read*(_: typedesc[ApmPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ApmPartitionTable =
   template this: untyped = result

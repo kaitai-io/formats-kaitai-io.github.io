@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see '' Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+# @see https://en.wikipedia.org/wiki/Apple_Partition_Map Source
 class ApmPartitionTable < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

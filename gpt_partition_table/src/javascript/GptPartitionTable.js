@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+ * @see {@link https://en.wikipedia.org/wiki/GUID_Partition_Table|Source}
  */
 
 var GptPartitionTable = (function() {

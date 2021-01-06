@@ -8,7 +8,7 @@ local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
 -- 
--- See also: Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+-- See also: Source (https://en.wikipedia.org/wiki/Apple_Partition_Map)
 ApmPartitionTable = class.class(KaitaiStruct)
 
 function ApmPartitionTable:_init(io, parent, root)

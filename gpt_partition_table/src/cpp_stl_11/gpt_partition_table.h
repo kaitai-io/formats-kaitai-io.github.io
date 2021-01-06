@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+ * \sa https://en.wikipedia.org/wiki/GUID_Partition_Table Source
  */
 
 class gpt_partition_table_t : public kaitai::kstruct {

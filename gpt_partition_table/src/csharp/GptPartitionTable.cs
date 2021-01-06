@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+    /// Reference: <a href="https://en.wikipedia.org/wiki/GUID_Partition_Table">Source</a>
     /// </remarks>
     public partial class GptPartitionTable : KaitaiStruct
     {

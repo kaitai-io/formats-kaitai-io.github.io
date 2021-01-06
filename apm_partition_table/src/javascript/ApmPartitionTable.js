@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+ * @see {@link https://en.wikipedia.org/wiki/Apple_Partition_Map|Source}
  */
 
 var ApmPartitionTable = (function() {

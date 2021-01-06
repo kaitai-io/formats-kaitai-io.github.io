@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 /**
- * @see "Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map"
+ * @see <a href="https://en.wikipedia.org/wiki/Apple_Partition_Map">Source</a>
  */
 public class ApmPartitionTable extends KaitaiStruct {
     public static ApmPartitionTable fromFile(String fileName) throws IOException {

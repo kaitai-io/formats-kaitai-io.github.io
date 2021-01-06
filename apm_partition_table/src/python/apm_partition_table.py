@@ -11,7 +11,7 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class ApmPartitionTable(KaitaiStruct):
     """
     .. seealso::
-       Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+       Source - https://en.wikipedia.org/wiki/Apple_Partition_Map
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

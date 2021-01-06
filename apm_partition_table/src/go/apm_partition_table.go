@@ -8,7 +8,7 @@ import (
 
 
 /**
- * @see "Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map"
+ * @see <a href="https://en.wikipedia.org/wiki/Apple_Partition_Map">Source</a>
  */
 type ApmPartitionTable struct {
 	_io *kaitai.Stream

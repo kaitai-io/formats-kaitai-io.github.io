@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 /**
- * @see "Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table"
+ * @see <a href="https://en.wikipedia.org/wiki/GUID_Partition_Table">Source</a>
  */
 public class GptPartitionTable extends KaitaiStruct {
     public static GptPartitionTable fromFile(String fileName) throws IOException {

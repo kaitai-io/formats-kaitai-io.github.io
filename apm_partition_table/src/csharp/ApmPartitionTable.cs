@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+    /// Reference: <a href="https://en.wikipedia.org/wiki/Apple_Partition_Map">Source</a>
     /// </remarks>
     public partial class ApmPartitionTable : KaitaiStruct
     {

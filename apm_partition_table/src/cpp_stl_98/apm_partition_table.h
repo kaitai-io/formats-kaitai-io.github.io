@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
+ * \sa https://en.wikipedia.org/wiki/Apple_Partition_Map Source
  */
 
 class apm_partition_table_t : public kaitai::kstruct {

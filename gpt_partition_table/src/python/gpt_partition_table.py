@@ -11,7 +11,7 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class GptPartitionTable(KaitaiStruct):
     """
     .. seealso::
-       Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table
+       Source - https://en.wikipedia.org/wiki/GUID_Partition_Table
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
