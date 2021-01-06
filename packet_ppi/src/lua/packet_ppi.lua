@@ -15,7 +15,7 @@ require("ethernet_frame")
 -- radio information, but can be used for other purposes as well.
 -- 
 -- Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
--- See also: PPI header format spec, section 3 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 3 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi = class.class(KaitaiStruct)
 
 PacketPpi.PfhType = enum.Enum {
@@ -181,7 +181,7 @@ end
 
 
 -- 
--- See also: PPI header format spec, section 4.1.3 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 4.1.3 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.Radio80211nMacExtBody = class.class(KaitaiStruct)
 
 function PacketPpi.Radio80211nMacExtBody:_init(io, parent, root)
@@ -237,7 +237,7 @@ end
 -- Greenfield.
 
 -- 
--- See also: PPI header format spec, section 3.1 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 3.1 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.PacketPpiHeader = class.class(KaitaiStruct)
 
 function PacketPpi.PacketPpiHeader:_init(io, parent, root)
@@ -256,7 +256,7 @@ end
 
 
 -- 
--- See also: PPI header format spec, section 4.1.2 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 4.1.2 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.Radio80211CommonBody = class.class(KaitaiStruct)
 
 function PacketPpi.Radio80211CommonBody:_init(io, parent, root)
@@ -280,7 +280,7 @@ end
 
 
 -- 
--- See also: PPI header format spec, section 3.1 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 3.1 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.PacketPpiField = class.class(KaitaiStruct)
 
 function PacketPpi.PacketPpiField:_init(io, parent, root)
@@ -313,7 +313,7 @@ end
 
 
 -- 
--- See also: PPI header format spec, section 4.1.4 (https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+-- See also: PPI header format spec, section 4.1.4 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.Radio80211nMacPhyExtBody = class.class(KaitaiStruct)
 
 function PacketPpi.Radio80211nMacPhyExtBody:_init(io, parent, root)

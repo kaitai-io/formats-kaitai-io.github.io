@@ -19,7 +19,7 @@ class PacketPpi(KaitaiStruct):
     Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
     
     .. seealso::
-       PPI header format spec, section 3 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+       PPI header format spec, section 3 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
     """
 
     class PfhType(Enum):
@@ -177,7 +177,7 @@ class PacketPpi(KaitaiStruct):
     class Radio80211nMacExtBody(KaitaiStruct):
         """
         .. seealso::
-           PPI header format spec, section 4.1.3 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+           PPI header format spec, section 4.1.3 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -215,7 +215,7 @@ class PacketPpi(KaitaiStruct):
     class PacketPpiHeader(KaitaiStruct):
         """
         .. seealso::
-           PPI header format spec, section 3.1 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+           PPI header format spec, section 3.1 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -233,7 +233,7 @@ class PacketPpi(KaitaiStruct):
     class Radio80211CommonBody(KaitaiStruct):
         """
         .. seealso::
-           PPI header format spec, section 4.1.2 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+           PPI header format spec, section 4.1.2 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -256,7 +256,7 @@ class PacketPpi(KaitaiStruct):
     class PacketPpiField(KaitaiStruct):
         """
         .. seealso::
-           PPI header format spec, section 3.1 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+           PPI header format spec, section 3.1 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -287,7 +287,7 @@ class PacketPpi(KaitaiStruct):
     class Radio80211nMacPhyExtBody(KaitaiStruct):
         """
         .. seealso::
-           PPI header format spec, section 4.1.4 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+           PPI header format spec, section 4.1.4 - https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

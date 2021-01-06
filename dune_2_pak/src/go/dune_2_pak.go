@@ -6,6 +6,10 @@ import (
 	"io"
 )
 
+
+/**
+ * @see <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+ */
 type Dune2Pak struct {
 	Dir *Dune2Pak_Files
 	_io *kaitai.Stream

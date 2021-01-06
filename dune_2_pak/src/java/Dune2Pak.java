@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * @see <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+ */
 public class Dune2Pak extends KaitaiStruct {
     public static Dune2Pak fromFile(String fileName) throws IOException {
         return new Dune2Pak(new ByteBufferKaitaiStream(fileName));

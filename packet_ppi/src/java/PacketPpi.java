@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * radio information, but can be used for other purposes as well.
  * 
  * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
  */
 public class PacketPpi extends KaitaiStruct {
     public static PacketPpi fromFile(String fileName) throws IOException {
@@ -242,7 +242,7 @@ public class PacketPpi extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+     * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
      */
     public static class Radio80211nMacExtBody extends KaitaiStruct {
         public static Radio80211nMacExtBody fromFile(String fileName) throws IOException {
@@ -366,7 +366,7 @@ public class PacketPpi extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+     * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
      */
     public static class PacketPpiHeader extends KaitaiStruct {
         public static PacketPpiHeader fromFile(String fileName) throws IOException {
@@ -408,7 +408,7 @@ public class PacketPpi extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
+     * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
      */
     public static class Radio80211CommonBody extends KaitaiStruct {
         public static Radio80211CommonBody fromFile(String fileName) throws IOException {
@@ -465,7 +465,7 @@ public class PacketPpi extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+     * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
      */
     public static class PacketPpiField extends KaitaiStruct {
         public static PacketPpiField fromFile(String fileName) throws IOException {
@@ -536,7 +536,7 @@ public class PacketPpi extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+     * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
      */
     public static class Radio80211nMacPhyExtBody extends KaitaiStruct {
         public static Radio80211nMacPhyExtBody fromFile(String fileName) throws IOException {

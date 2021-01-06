@@ -177,7 +177,7 @@ class Nitf < Kaitai::Struct::Struct
     end
     def has_mask
       return @has_mask unless @has_mask.nil?
-      @has_mask =  ((image_sub_header.img_compression[0..(1 - 1)] == "M") || (image_sub_header.img_compression[1..(2 - 1)] == "M")) 
+      @has_mask = image_sub_header.img_compression[0..(2 - 1)] == "MM"
       @has_mask
     end
     attr_reader :image_sub_header

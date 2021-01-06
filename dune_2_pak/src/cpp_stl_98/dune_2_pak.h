@@ -11,6 +11,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * \sa http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood) Source
+ */
+
 class dune_2_pak_t : public kaitai::kstruct {
 
 public:

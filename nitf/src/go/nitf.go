@@ -436,7 +436,7 @@ func (this *Nitf_ImageSegment) HasMask() (v bool, err error) {
 	if (this._f_hasMask) {
 		return this.hasMask, nil
 	}
-	this.hasMask = bool( ((this.ImageSubHeader.ImgCompression[0:1] == "M") || (this.ImageSubHeader.ImgCompression[1:2] == "M")) )
+	this.hasMask = bool(this.ImageSubHeader.ImgCompression[0:2] == "MM")
 	this._f_hasMask = true
 	return this.hasMask, nil
 }

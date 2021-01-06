@@ -485,7 +485,7 @@ proc read*(_: typedesc[Nitf_ImageSegment], io: KaitaiStream, root: KaitaiStruct,
 proc hasMask(this: Nitf_ImageSegment): bool = 
   if this.hasMaskInst != nil:
     return this.hasMaskInst
-  let hasMaskInstExpr = bool( ((this.imageSubHeader.imgCompression.substr(0, 1 - 1) == "M") or (this.imageSubHeader.imgCompression.substr(1, 2 - 1) == "M")) )
+  let hasMaskInstExpr = bool(this.imageSubHeader.imgCompression.substr(0, 2 - 1) == "MM")
   this.hasMaskInst = hasMaskInstExpr
   if this.hasMaskInst != nil:
     return this.hasMaskInst

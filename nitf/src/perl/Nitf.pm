@@ -403,7 +403,7 @@ sub _read {
 sub has_mask {
     my ($self) = @_;
     return $self->{has_mask} if ($self->{has_mask});
-    $self->{has_mask} =  (($self->image_sub_header()->img_compression()[0:1] eq "M") || ($self->image_sub_header()->img_compression()[1:2] eq "M")) ;
+    $self->{has_mask} = $self->image_sub_header()->img_compression()[0:2] eq "MM";
     return $self->{has_mask};
 }
 

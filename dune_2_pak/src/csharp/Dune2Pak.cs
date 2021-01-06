@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+    /// </remarks>
     public partial class Dune2Pak : KaitaiStruct
     {
         public static Dune2Pak FromFile(string fileName)

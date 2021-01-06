@@ -149,7 +149,7 @@ class Nitf(KaitaiStruct):
             if hasattr(self, '_m_has_mask'):
                 return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
-            self._m_has_mask =  (((self.image_sub_header.img_compression)[0:1] == u"M") or ((self.image_sub_header.img_compression)[1:2] == u"M")) 
+            self._m_has_mask = (self.image_sub_header.img_compression)[0:2] == u"MM"
             return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
 

@@ -209,7 +209,7 @@ void nitf_t::image_segment_t::_clean_up() {
 bool nitf_t::image_segment_t::has_mask() {
     if (f_has_mask)
         return m_has_mask;
-    m_has_mask =  ((image_sub_header()->img_compression().substr(0, (1) - (0)) == (std::string("M"))) || (image_sub_header()->img_compression().substr(1, (2) - (1)) == (std::string("M")))) ;
+    m_has_mask = image_sub_header()->img_compression().substr(0, (2) - (0)) == (std::string("MM"));
     f_has_mask = true;
     return m_has_mask;
 }

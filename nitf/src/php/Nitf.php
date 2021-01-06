@@ -230,7 +230,7 @@ namespace Nitf {
         public function hasMask() {
             if ($this->_m_hasMask !== null)
                 return $this->_m_hasMask;
-            $this->_m_hasMask =  ((\Kaitai\Struct\Stream::substring($this->imageSubHeader()->imgCompression(), 0, 1) == "M") || (\Kaitai\Struct\Stream::substring($this->imageSubHeader()->imgCompression(), 1, 2) == "M")) ;
+            $this->_m_hasMask = \Kaitai\Struct\Stream::substring($this->imageSubHeader()->imgCompression(), 0, 2) == "MM";
             return $this->_m_hasMask;
         }
         protected $_m_imageSubHeader;

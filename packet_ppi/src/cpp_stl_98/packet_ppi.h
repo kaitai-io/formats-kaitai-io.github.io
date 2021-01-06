@@ -20,7 +20,7 @@ class ethernet_frame_t;
  * radio information, but can be used for other purposes as well.
  * 
  * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
- * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
+ * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
  */
 
 class packet_ppi_t : public kaitai::kstruct {
@@ -184,7 +184,7 @@ public:
     };
 
     /**
-     * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
      */
 
     class radio_802_11n_mac_ext_body_t : public kaitai::kstruct {
@@ -286,7 +286,7 @@ public:
     };
 
     /**
-     * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
      */
 
     class packet_ppi_header_t : public kaitai::kstruct {
@@ -320,7 +320,7 @@ public:
     };
 
     /**
-     * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
      */
 
     class radio_802_11_common_body_t : public kaitai::kstruct {
@@ -364,7 +364,7 @@ public:
     };
 
     /**
-     * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
      */
 
     class packet_ppi_field_t : public kaitai::kstruct {
@@ -406,7 +406,7 @@ public:
     };
 
     /**
-     * \sa https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
      */
 
     class radio_802_11n_mac_phy_ext_body_t : public kaitai::kstruct {

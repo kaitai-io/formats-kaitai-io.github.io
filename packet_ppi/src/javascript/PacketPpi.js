@@ -16,7 +16,7 @@
  * radio information, but can be used for other purposes as well.
  * 
  * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
- * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3}
+ * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3}
  */
 
 var PacketPpi = (function() {
@@ -298,7 +298,7 @@ var PacketPpi = (function() {
   })();
 
   /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}
    */
 
   var Radio80211nMacExtBody = PacketPpi.Radio80211nMacExtBody = (function() {
@@ -372,7 +372,7 @@ var PacketPpi = (function() {
   })();
 
   /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
    */
 
   var PacketPpiHeader = PacketPpi.PacketPpiHeader = (function() {
@@ -394,7 +394,7 @@ var PacketPpi = (function() {
   })();
 
   /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}
    */
 
   var Radio80211CommonBody = PacketPpi.Radio80211CommonBody = (function() {
@@ -421,7 +421,7 @@ var PacketPpi = (function() {
   })();
 
   /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
    */
 
   var PacketPpiField = PacketPpi.PacketPpiField = (function() {
@@ -461,7 +461,7 @@ var PacketPpi = (function() {
   })();
 
   /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.4}
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.4}
    */
 
   var Radio80211nMacPhyExtBody = PacketPpi.Radio80211nMacPhyExtBody = (function() {

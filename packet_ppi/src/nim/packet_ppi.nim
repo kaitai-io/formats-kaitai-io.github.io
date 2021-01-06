@@ -217,7 +217,7 @@ radio information, but can be used for other purposes as well.
 
 Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
 
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
 ]##
 proc read*(_: typedesc[PacketPpi], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PacketPpi =
   template this: untyped = result
@@ -275,7 +275,7 @@ proc fromFile*(_: typedesc[PacketPpi_PacketPpiFields], filename: string): Packet
 
 
 ##[
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
 ]##
 proc read*(_: typedesc[PacketPpi_Radio80211nMacExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacExtBody =
   template this: untyped = result
@@ -358,7 +358,7 @@ proc fromFile*(_: typedesc[PacketPpi_MacFlags], filename: string): PacketPpi_Mac
 
 
 ##[
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
 ]##
 proc read*(_: typedesc[PacketPpi_PacketPpiHeader], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiHeader =
   template this: untyped = result
@@ -382,7 +382,7 @@ proc fromFile*(_: typedesc[PacketPpi_PacketPpiHeader], filename: string): Packet
 
 
 ##[
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
 ]##
 proc read*(_: typedesc[PacketPpi_Radio80211CommonBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211CommonBody =
   template this: untyped = result
@@ -416,7 +416,7 @@ proc fromFile*(_: typedesc[PacketPpi_Radio80211CommonBody], filename: string): P
 
 
 ##[
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
 ]##
 proc read*(_: typedesc[PacketPpi_PacketPpiField], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiFields): PacketPpi_PacketPpiField =
   template this: untyped = result
@@ -459,7 +459,7 @@ proc fromFile*(_: typedesc[PacketPpi_PacketPpiField], filename: string): PacketP
 
 
 ##[
-@see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
 ]##
 proc read*(_: typedesc[PacketPpi_Radio80211nMacPhyExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacPhyExtBody =
   template this: untyped = result

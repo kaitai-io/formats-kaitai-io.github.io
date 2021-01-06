@@ -14,7 +14,7 @@ namespace Kaitai
     /// Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
+    /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
     /// </remarks>
     public partial class PacketPpi : KaitaiStruct
     {
@@ -205,7 +205,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
         /// </remarks>
         public partial class Radio80211nMacExtBody : KaitaiStruct
         {
@@ -319,7 +319,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
         /// </remarks>
         public partial class PacketPpiHeader : KaitaiStruct
         {
@@ -356,7 +356,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
         /// </remarks>
         public partial class Radio80211CommonBody : KaitaiStruct
         {
@@ -408,7 +408,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
         /// </remarks>
         public partial class PacketPpiField : KaitaiStruct
         {
@@ -467,7 +467,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
         /// </remarks>
         public partial class Radio80211nMacPhyExtBody : KaitaiStruct
         {

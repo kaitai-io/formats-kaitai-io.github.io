@@ -107,7 +107,7 @@ namespace Ogg {
          * BOS (Beginning Of Stream) mark. This page is the first page in
          * the logical bitstream. The BOS flag must be set on the first
          * page of every logical bitstream, and must not be set on any
-         * other page.    
+         * other page.
          */
         public function isBeginningOfStream() { return $this->_m_isBeginningOfStream; }
 

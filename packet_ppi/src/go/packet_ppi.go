@@ -13,7 +13,7 @@ import (
  * radio information, but can be used for other purposes as well.
  * 
  * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
  */
 
 type PacketPpi_PfhType int
@@ -246,7 +246,7 @@ func (this *PacketPpi_PacketPpiFields) Read(io *kaitai.Stream, parent *PacketPpi
 }
 
 /**
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
  */
 type PacketPpi_Radio80211nMacExtBody struct {
 	Flags *PacketPpi_MacFlags
@@ -394,7 +394,7 @@ func (this *PacketPpi_MacFlags) Read(io *kaitai.Stream, parent interface{}, root
  */
 
 /**
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
  */
 type PacketPpi_PacketPpiHeader struct {
 	PphVersion uint8
@@ -439,7 +439,7 @@ func (this *PacketPpi_PacketPpiHeader) Read(io *kaitai.Stream, parent *PacketPpi
 }
 
 /**
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.2</a>
  */
 type PacketPpi_Radio80211CommonBody struct {
 	TsfTimer uint64
@@ -514,7 +514,7 @@ func (this *PacketPpi_Radio80211CommonBody) Read(io *kaitai.Stream, parent *Pack
 }
 
 /**
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
  */
 type PacketPpi_PacketPpiField struct {
 	PfhType PacketPpi_PfhType
@@ -600,7 +600,7 @@ func (this *PacketPpi_PacketPpiField) Read(io *kaitai.Stream, parent *PacketPpi_
 }
 
 /**
- * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
  */
 type PacketPpi_Radio80211nMacPhyExtBody struct {
 	Flags *PacketPpi_MacFlags

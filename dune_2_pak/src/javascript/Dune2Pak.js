@@ -9,6 +9,10 @@
     root.Dune2Pak = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)|Source}
+ */
+
 var Dune2Pak = (function() {
   function Dune2Pak(_io, _parent, _root) {
     this._io = _io;

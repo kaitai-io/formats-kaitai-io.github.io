@@ -19,7 +19,9 @@ import java.nio.charset.Charset;
  * 
  * * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
  * * Raptor: Call of the Shadows
- * @see <a href="http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip">http://doom.wikia.com/wiki/GENMIDI</a>
+ * @see <a href="http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip">Source</a>
+ * @see <a href="http://doom.wikia.com/wiki/GENMIDI">Source</a>
+ * @see <a href="http://www.shikadi.net/moddingwiki/OP2_Bank_Format">Source</a>
  */
 public class GenmidiOp2 extends KaitaiStruct {
     public static GenmidiOp2 fromFile(String fileName) throws IOException {

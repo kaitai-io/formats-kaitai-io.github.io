@@ -20,7 +20,15 @@ class GenmidiOp2(KaitaiStruct):
     * Raptor: Call of the Shadows
     
     .. seealso::
-       http://doom.wikia.com/wiki/GENMIDI - http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip
+       Source - http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip
+    
+    
+    .. seealso::
+       Source - http://doom.wikia.com/wiki/GENMIDI
+    
+    
+    .. seealso::
+       Source - http://www.shikadi.net/moddingwiki/OP2_Bank_Format
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

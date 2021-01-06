@@ -183,7 +183,7 @@ function Nitf.ImageSegment.property.has_mask:get()
     return self._m_has_mask
   end
 
-  self._m_has_mask =  ((string.sub(self.image_sub_header.img_compression, 0 + 1, 1) == "M") or (string.sub(self.image_sub_header.img_compression, 1 + 1, 2) == "M")) 
+  self._m_has_mask = string.sub(self.image_sub_header.img_compression, 0 + 1, 2) == "MM"
   return self._m_has_mask
 end
 

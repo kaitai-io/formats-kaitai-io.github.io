@@ -197,7 +197,7 @@ var Nitf = (function() {
       get: function() {
         if (this._m_hasMask !== undefined)
           return this._m_hasMask;
-        this._m_hasMask =  ((this.imageSubHeader.imgCompression.substring(0, 1) == "M") || (this.imageSubHeader.imgCompression.substring(1, 2) == "M")) ;
+        this._m_hasMask = this.imageSubHeader.imgCompression.substring(0, 2) == "MM";
         return this._m_hasMask;
       }
     });

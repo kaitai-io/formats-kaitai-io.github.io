@@ -305,7 +305,7 @@ public class Nitf extends KaitaiStruct {
         public Boolean hasMask() {
             if (this.hasMask != null)
                 return this.hasMask;
-            boolean _tmp = (boolean) ( ((imageSubHeader().imgCompression().substring(0, 1).equals("M")) || (imageSubHeader().imgCompression().substring(1, 2).equals("M"))) );
+            boolean _tmp = (boolean) (imageSubHeader().imgCompression().substring(0, 2).equals("MM"));
             this.hasMask = _tmp;
             return this.hasMask;
         }

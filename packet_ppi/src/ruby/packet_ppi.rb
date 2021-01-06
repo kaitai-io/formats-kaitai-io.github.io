@@ -14,7 +14,7 @@ end
 # radio information, but can be used for other purposes as well.
 # 
 # Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
-# @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
+# @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
 class PacketPpi < Kaitai::Struct::Struct
 
   PFH_TYPE = {
@@ -177,7 +177,7 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
   class Radio80211nMacExtBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -248,7 +248,7 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
   class PacketPpiHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -269,7 +269,7 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
   class Radio80211CommonBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -300,7 +300,7 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
   class PacketPpiField < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -335,7 +335,7 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
   class Radio80211nMacPhyExtBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

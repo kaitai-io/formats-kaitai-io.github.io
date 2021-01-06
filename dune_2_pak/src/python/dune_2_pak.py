@@ -9,6 +9,10 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dune2Pak(KaitaiStruct):
+    """
+    .. seealso::
+       Source - http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

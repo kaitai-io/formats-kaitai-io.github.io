@@ -277,7 +277,7 @@ namespace Kaitai
                 {
                     if (f_hasMask)
                         return _hasMask;
-                    _hasMask = (bool) ( ((ImageSubHeader.ImgCompression.Substring(0, 1 - 0) == "M") || (ImageSubHeader.ImgCompression.Substring(1, 2 - 1) == "M")) );
+                    _hasMask = (bool) (ImageSubHeader.ImgCompression.Substring(0, 2 - 0) == "MM");
                     f_hasMask = true;
                     return _hasMask;
                 }
