@@ -291,7 +291,7 @@ Publish/-Subscribe handling.</p>
   <span class="p">}</span>
   <span class="nx">SomeIpSdEntries</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">SdEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -300,15 +300,15 @@ Publish/-Subscribe handling.</p>
 
   <span class="kd">var</span> <span class="nx">SdEntry</span> <span class="o">=</span> <span class="nx">SomeIpSdEntries</span><span class="p">.</span><span class="nx">SdEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">SdEntry</span><span class="p">.</span><span class="nx">EntryTypes</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">FIND</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">OFFER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">SUBSCRIBE</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-      <span class="nx">SUBSCRIBE_ACK</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+      <span class="nx">FIND</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">OFFER</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">SUBSCRIBE</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+      <span class="nx">SUBSCRIBE_ACK</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;FIND&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;OFFER&quot;</span><span class="p">,</span>
-      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;SUBSCRIBE&quot;</span><span class="p">,</span>
-      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;SUBSCRIBE_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;FIND&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;OFFER&quot;</span><span class="p">,</span>
+      <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;SUBSCRIBE&quot;</span><span class="p">,</span>
+      <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;SUBSCRIBE_ACK&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">SdEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -348,13 +348,13 @@ Publish/-Subscribe handling.</p>
         <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">indexFirstOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">indexSecondOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">numberFirstOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">numberSecondOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numberFirstOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numberSecondOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">serviceId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">instanceId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">majorVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">ttl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ttl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">24</span><span class="p">);</span>
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="nx">SdEntryHeader</span><span class="p">;</span>
@@ -385,9 +385,9 @@ Publish/-Subscribe handling.</p>
       <span class="p">}</span>
       <span class="nx">SdEventgroupEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">initialDataRequested</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">initialDataRequested</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">eventGroupId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="p">}</span>
@@ -411,7 +411,7 @@ Publish/-Subscribe handling.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

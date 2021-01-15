@@ -293,66 +293,66 @@ and the underlying serialization/wire format.</p>
   <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Header</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">messageId</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="mi">4294934784</span><span class="o">:</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="k">case</span> <span class="mf">4294934784</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
       <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SomeIpSd</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
       <span class="k">break</span><span class="p">;</span>
     <span class="k">default</span><span class="o">:</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
       <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="kd">var</span> <span class="nx">Header</span> <span class="o">=</span> <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">Header</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">Header</span><span class="p">.</span><span class="nx">MessageTypeEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">REQUEST</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">REQUEST_NO_RETURN</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">NOTIFICATION</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">REQUEST_ACK</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
-      <span class="nx">REQUEST_NO_RETURN_ACK</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
-      <span class="nx">NOTIFICATION_ACK</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
-      <span class="nx">RESPONSE</span><span class="o">:</span> <span class="mi">128</span><span class="p">,</span>
-      <span class="nx">ERROR</span><span class="o">:</span> <span class="mi">129</span><span class="p">,</span>
-      <span class="nx">RESPONSE_ACK</span><span class="o">:</span> <span class="mi">192</span><span class="p">,</span>
-      <span class="nx">ERROR_ACK</span><span class="o">:</span> <span class="mi">193</span><span class="p">,</span>
+      <span class="nx">REQUEST</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">REQUEST_NO_RETURN</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">NOTIFICATION</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">REQUEST_ACK</span><span class="o">:</span> <span class="mf">64</span><span class="p">,</span>
+      <span class="nx">REQUEST_NO_RETURN_ACK</span><span class="o">:</span> <span class="mf">65</span><span class="p">,</span>
+      <span class="nx">NOTIFICATION_ACK</span><span class="o">:</span> <span class="mf">66</span><span class="p">,</span>
+      <span class="nx">RESPONSE</span><span class="o">:</span> <span class="mf">128</span><span class="p">,</span>
+      <span class="nx">ERROR</span><span class="o">:</span> <span class="mf">129</span><span class="p">,</span>
+      <span class="nx">RESPONSE_ACK</span><span class="o">:</span> <span class="mf">192</span><span class="p">,</span>
+      <span class="nx">ERROR_ACK</span><span class="o">:</span> <span class="mf">193</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;REQUEST&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;REQUEST_NO_RETURN&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;NOTIFICATION&quot;</span><span class="p">,</span>
-      <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;REQUEST_ACK&quot;</span><span class="p">,</span>
-      <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;REQUEST_NO_RETURN_ACK&quot;</span><span class="p">,</span>
-      <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;NOTIFICATION_ACK&quot;</span><span class="p">,</span>
-      <span class="mi">128</span><span class="o">:</span> <span class="s2">&quot;RESPONSE&quot;</span><span class="p">,</span>
-      <span class="mi">129</span><span class="o">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
-      <span class="mi">192</span><span class="o">:</span> <span class="s2">&quot;RESPONSE_ACK&quot;</span><span class="p">,</span>
-      <span class="mi">193</span><span class="o">:</span> <span class="s2">&quot;ERROR_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;REQUEST&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;REQUEST_NO_RETURN&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;NOTIFICATION&quot;</span><span class="p">,</span>
+      <span class="mf">64</span><span class="o">:</span> <span class="s2">&quot;REQUEST_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">65</span><span class="o">:</span> <span class="s2">&quot;REQUEST_NO_RETURN_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">66</span><span class="o">:</span> <span class="s2">&quot;NOTIFICATION_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">128</span><span class="o">:</span> <span class="s2">&quot;RESPONSE&quot;</span><span class="p">,</span>
+      <span class="mf">129</span><span class="o">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+      <span class="mf">192</span><span class="o">:</span> <span class="s2">&quot;RESPONSE_ACK&quot;</span><span class="p">,</span>
+      <span class="mf">193</span><span class="o">:</span> <span class="s2">&quot;ERROR_ACK&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="nx">Header</span><span class="p">.</span><span class="nx">ReturnCodeEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">OK</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">NOT_OK</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">UNKNOWN_SERVICE</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">UNKNOWN_METHOD</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">NOT_READY</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-      <span class="nx">NOT_REACHABLE</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">TIME_OUT</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-      <span class="nx">WRONG_PROTOCOL_VERSION</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
-      <span class="nx">WRONG_INTERFACE_VERSION</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-      <span class="nx">MALFORMED_MESSAGE</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">WRONG_MESSAGE_TYPE</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="nx">OK</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">NOT_OK</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">UNKNOWN_SERVICE</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">UNKNOWN_METHOD</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">NOT_READY</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+      <span class="nx">NOT_REACHABLE</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">TIME_OUT</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+      <span class="nx">WRONG_PROTOCOL_VERSION</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+      <span class="nx">WRONG_INTERFACE_VERSION</span><span class="o">:</span> <span class="mf">8</span><span class="p">,</span>
+      <span class="nx">MALFORMED_MESSAGE</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">WRONG_MESSAGE_TYPE</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;NOT_OK&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN_SERVICE&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN_METHOD&quot;</span><span class="p">,</span>
-      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;NOT_READY&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;NOT_REACHABLE&quot;</span><span class="p">,</span>
-      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;TIME_OUT&quot;</span><span class="p">,</span>
-      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;WRONG_PROTOCOL_VERSION&quot;</span><span class="p">,</span>
-      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;WRONG_INTERFACE_VERSION&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;MALFORMED_MESSAGE&quot;</span><span class="p">,</span>
-      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;WRONG_MESSAGE_TYPE&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;NOT_OK&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN_SERVICE&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN_METHOD&quot;</span><span class="p">,</span>
+      <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;NOT_READY&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;NOT_REACHABLE&quot;</span><span class="p">,</span>
+      <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;TIME_OUT&quot;</span><span class="p">,</span>
+      <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;WRONG_PROTOCOL_VERSION&quot;</span><span class="p">,</span>
+      <span class="mf">8</span><span class="o">:</span> <span class="s2">&quot;WRONG_INTERFACE_VERSION&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;MALFORMED_MESSAGE&quot;</span><span class="p">,</span>
+      <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;WRONG_MESSAGE_TYPE&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">Header</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -363,11 +363,11 @@ and the underlying serialization/wire format.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">Header</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_messageId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_messageId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
       <span class="kd">var</span> <span class="nx">_io__raw_messageId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_messageId</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">messageId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MessageId</span><span class="p">(</span><span class="nx">_io__raw_messageId</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_requestId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_requestId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
       <span class="kd">var</span> <span class="nx">_io__raw_requestId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_requestId</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">requestId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RequestId</span><span class="p">(</span><span class="nx">_io__raw_requestId</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">protocolVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
@@ -396,12 +396,12 @@ and the underlying serialization/wire format.</p>
       <span class="p">}</span>
       <span class="nx">MessageId</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">serviceId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">subId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">subId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subId</span> <span class="o">==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">methodId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">methodId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">15</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subId</span> <span class="o">==</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">eventId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">eventId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">15</span><span class="p">);</span>
         <span class="p">}</span>
       <span class="p">}</span>
 
@@ -413,7 +413,7 @@ and the underlying serialization/wire format.</p>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
@@ -468,7 +468,7 @@ and the underlying serialization/wire format.</p>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
@@ -486,7 +486,7 @@ and the underlying serialization/wire format.</p>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isValidServiceDiscovery</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isValidServiceDiscovery</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isValidServiceDiscovery</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">messageId</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">4294934784</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">protocolVersion</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">interfaceVersion</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">messageType</span> <span class="o">==</span> <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">MessageTypeEnum</span><span class="p">.</span><span class="nx">NOTIFICATION</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">returnCode</span> <span class="o">==</span> <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">ReturnCodeEnum</span><span class="p">.</span><span class="nx">OK</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isValidServiceDiscovery</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">messageId</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mf">4294934784</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">protocolVersion</span> <span class="o">==</span> <span class="mf">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">interfaceVersion</span> <span class="o">==</span> <span class="mf">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">messageType</span> <span class="o">==</span> <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">MessageTypeEnum</span><span class="p">.</span><span class="nx">NOTIFICATION</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">returnCode</span> <span class="o">==</span> <span class="nx">SomeIp</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">ReturnCodeEnum</span><span class="p">.</span><span class="nx">OK</span><span class="p">))</span> <span class="p">;</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isValidServiceDiscovery</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -544,7 +544,7 @@ and the underlying serialization/wire format.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

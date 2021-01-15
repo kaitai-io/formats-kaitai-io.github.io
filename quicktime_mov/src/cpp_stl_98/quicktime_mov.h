@@ -221,7 +221,7 @@ public:
 
         /**
          * A time value that indicates the time scale for this
-         * movie—that is, the number of time units that pass per second
+         * movie - the number of time units that pass per second
          * in its time coordinate system. A time coordinate system that
          * measures time in sixtieths of a second, for example, has a
          * time scale of 60.
@@ -231,7 +231,7 @@ public:
         /**
          * A time value that indicates the duration of the movie in
          * time scale units. Note that this property is derived from
-         * the movie’s tracks. The value of this field corresponds to
+         * the movie's tracks. The value of this field corresponds to
          * the duration of the longest track in the movie.
          */
         uint32_t duration() const { return m_duration; }
@@ -242,7 +242,7 @@ public:
         fixed32_t* preferred_rate() const { return m_preferred_rate; }
 
         /**
-         * How loud to play this movie’s sound. A value of 1.0 indicates full volume.
+         * How loud to play this movie's sound. A value of 1.0 indicates full volume.
          */
         fixed16_t* preferred_volume() const { return m_preferred_volume; }
         std::string reserved1() const { return m_reserved1; }

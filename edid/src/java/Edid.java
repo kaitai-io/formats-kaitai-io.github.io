@@ -676,7 +676,7 @@ public class Edid extends KaitaiStruct {
     public int mfgWeek() { return mfgWeek; }
 
     /**
-     * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+     * Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.
      */
     public int mfgYearMod() { return mfgYearMod; }
 
@@ -702,7 +702,7 @@ public class Edid extends KaitaiStruct {
     public int screenSizeV() { return screenSizeV; }
 
     /**
-     * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+     * Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)
      */
     public int gammaMod() { return gammaMod; }
     public int featuresFlags() { return featuresFlags; }

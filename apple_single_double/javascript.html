@@ -335,11 +335,11 @@ understands how to access data in AppleSingle container.</p>
 
 <span class="kd">var</span> <span class="nx">AppleSingleDouble</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">AppleSingleDouble</span><span class="p">.</span><span class="nx">FileType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-    <span class="nx">APPLE_SINGLE</span><span class="o">:</span> <span class="mi">333312</span><span class="p">,</span>
-    <span class="nx">APPLE_DOUBLE</span><span class="o">:</span> <span class="mi">333319</span><span class="p">,</span>
+    <span class="nx">APPLE_SINGLE</span><span class="o">:</span> <span class="mf">333312</span><span class="p">,</span>
+    <span class="nx">APPLE_DOUBLE</span><span class="o">:</span> <span class="mf">333319</span><span class="p">,</span>
 
-    <span class="mi">333312</span><span class="o">:</span> <span class="s2">&quot;APPLE_SINGLE&quot;</span><span class="p">,</span>
-    <span class="mi">333319</span><span class="o">:</span> <span class="s2">&quot;APPLE_DOUBLE&quot;</span><span class="p">,</span>
+    <span class="mf">333312</span><span class="o">:</span> <span class="s2">&quot;APPLE_SINGLE&quot;</span><span class="p">,</span>
+    <span class="mf">333319</span><span class="o">:</span> <span class="s2">&quot;APPLE_DOUBLE&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="kd">function</span> <span class="nx">AppleSingleDouble</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -352,45 +352,45 @@ understands how to access data in AppleSingle container.</p>
   <span class="nx">AppleSingleDouble</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">numEntries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numEntries</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Entry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="kd">var</span> <span class="nx">Entry</span> <span class="o">=</span> <span class="nx">AppleSingleDouble</span><span class="p">.</span><span class="nx">Entry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">Entry</span><span class="p">.</span><span class="nx">Types</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">DATA_FORK</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">RESOURCE_FORK</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">REAL_NAME</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">COMMENT</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-      <span class="nx">ICON_BW</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">ICON_COLOR</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-      <span class="nx">FILE_DATES_INFO</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-      <span class="nx">FINDER_INFO</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">MACINTOSH_FILE_INFO</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-      <span class="nx">PRODOS_FILE_INFO</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
-      <span class="nx">MSDOS_FILE_INFO</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-      <span class="nx">AFP_SHORT_NAME</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-      <span class="nx">AFP_FILE_INFO</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
-      <span class="nx">AFP_DIRECTORY_ID</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+      <span class="nx">DATA_FORK</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">RESOURCE_FORK</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">REAL_NAME</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">COMMENT</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+      <span class="nx">ICON_BW</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">ICON_COLOR</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+      <span class="nx">FILE_DATES_INFO</span><span class="o">:</span> <span class="mf">8</span><span class="p">,</span>
+      <span class="nx">FINDER_INFO</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">MACINTOSH_FILE_INFO</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+      <span class="nx">PRODOS_FILE_INFO</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+      <span class="nx">MSDOS_FILE_INFO</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+      <span class="nx">AFP_SHORT_NAME</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+      <span class="nx">AFP_FILE_INFO</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+      <span class="nx">AFP_DIRECTORY_ID</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
 
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;DATA_FORK&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;RESOURCE_FORK&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;REAL_NAME&quot;</span><span class="p">,</span>
-      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;COMMENT&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;ICON_BW&quot;</span><span class="p">,</span>
-      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;ICON_COLOR&quot;</span><span class="p">,</span>
-      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;FILE_DATES_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;FINDER_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;MACINTOSH_FILE_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;PRODOS_FILE_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;MSDOS_FILE_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;AFP_SHORT_NAME&quot;</span><span class="p">,</span>
-      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;AFP_FILE_INFO&quot;</span><span class="p">,</span>
-      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;AFP_DIRECTORY_ID&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;DATA_FORK&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;RESOURCE_FORK&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;REAL_NAME&quot;</span><span class="p">,</span>
+      <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;COMMENT&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;ICON_BW&quot;</span><span class="p">,</span>
+      <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;ICON_COLOR&quot;</span><span class="p">,</span>
+      <span class="mf">8</span><span class="o">:</span> <span class="s2">&quot;FILE_DATES_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;FINDER_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;MACINTOSH_FILE_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;PRODOS_FILE_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;MSDOS_FILE_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;AFP_SHORT_NAME&quot;</span><span class="p">,</span>
+      <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;AFP_FILE_INFO&quot;</span><span class="p">,</span>
+      <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;AFP_DIRECTORY_ID&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">Entry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -443,8 +443,8 @@ understands how to access data in AppleSingle container.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">FinderInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">fileType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">fileCreator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fileType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fileCreator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">folderId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
@@ -498,7 +498,7 @@ understands how to access data in AppleSingle container.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

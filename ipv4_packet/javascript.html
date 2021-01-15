@@ -313,9 +313,9 @@ section#format-index .row {
     <span class="k">this</span><span class="p">.</span><span class="nx">ttl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">headerChecksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">srcIpAddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">dstIpAddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">ihlBytes</span> <span class="o">-</span> <span class="mi">20</span><span class="p">));</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">srcIpAddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dstIpAddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">ihlBytes</span> <span class="o">-</span> <span class="mf">20</span><span class="p">));</span>
     <span class="kd">var</span> <span class="nx">_io__raw_options</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_options</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ipv4Options</span><span class="p">(</span><span class="nx">_io__raw_options</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">totalLength</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">ihlBytes</span><span class="p">));</span>
@@ -333,7 +333,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Ipv4Options</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Ipv4Option</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -354,13 +354,13 @@ section#format-index .row {
     <span class="nx">Ipv4Option</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">&gt;</span> <span class="mf">2</span> <span class="o">?</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mf">2</span><span class="p">)</span> <span class="o">:</span> <span class="mf">0</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Ipv4Option</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_copy</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_copy</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_copy</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">7</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_copy</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mf">128</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mf">7</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_copy</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -368,7 +368,7 @@ section#format-index .row {
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_optClass</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_optClass</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_optClass</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mi">96</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">5</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_optClass</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mf">96</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mf">5</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_optClass</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -376,7 +376,7 @@ section#format-index .row {
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_number</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_number</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_number</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_number</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mf">31</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_number</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -387,7 +387,7 @@ section#format-index .row {
     <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mf">240</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mf">4</span><span class="p">);</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">});</span>
@@ -395,7 +395,7 @@ section#format-index .row {
     <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ihl</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihl</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihl</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihl</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">&amp;</span> <span class="mf">15</span><span class="p">);</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihl</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">});</span>
@@ -403,7 +403,7 @@ section#format-index .row {
     <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ihlBytes</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihlBytes</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihlBytes</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ihl</span> <span class="o">*</span> <span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihlBytes</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ihl</span> <span class="o">*</span> <span class="mf">4</span><span class="p">);</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ihlBytes</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">});</span>
@@ -421,7 +421,7 @@ section#format-index .row {
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

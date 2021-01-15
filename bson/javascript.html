@@ -312,12 +312,12 @@ section#format-index .row {
   <span class="p">}</span>
   <span class="nx">Bson</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mf">5</span><span class="p">));</span>
     <span class="kd">var</span> <span class="nx">_io__raw_fields</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">fields</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ElementsList</span><span class="p">(</span><span class="nx">_io__raw_fields</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/2&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">0</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/2&quot;</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
@@ -347,21 +347,21 @@ section#format-index .row {
 
   <span class="kd">var</span> <span class="nx">BinData</span> <span class="o">=</span> <span class="nx">Bson</span><span class="p">.</span><span class="nx">BinData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">BinData</span><span class="p">.</span><span class="nx">Subtype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">GENERIC</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">FUNCTION</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">BYTE_ARRAY_DEPRECATED</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">UUID_DEPRECATED</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">UUID</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-      <span class="nx">MD5</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">CUSTOM</span><span class="o">:</span> <span class="mi">128</span><span class="p">,</span>
+      <span class="nx">GENERIC</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">FUNCTION</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">BYTE_ARRAY_DEPRECATED</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">UUID_DEPRECATED</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">UUID</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+      <span class="nx">MD5</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">CUSTOM</span><span class="o">:</span> <span class="mf">128</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;GENERIC&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;FUNCTION&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;BYTE_ARRAY_DEPRECATED&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;UUID_DEPRECATED&quot;</span><span class="p">,</span>
-      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;UUID&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;MD5&quot;</span><span class="p">,</span>
-      <span class="mi">128</span><span class="o">:</span> <span class="s2">&quot;CUSTOM&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;GENERIC&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;FUNCTION&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;BYTE_ARRAY_DEPRECATED&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;UUID_DEPRECATED&quot;</span><span class="p">,</span>
+      <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;UUID&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;MD5&quot;</span><span class="p">,</span>
+      <span class="mf">128</span><span class="o">:</span> <span class="s2">&quot;CUSTOM&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">BinData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -419,7 +419,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">ElementsList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">elements</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Element</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -438,7 +438,7 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">Cstring</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
@@ -458,10 +458,10 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nb">String</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/string/seq/2&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">0</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">terminator</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/string/seq/2&quot;</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
 
@@ -470,51 +470,51 @@ section#format-index .row {
 
   <span class="kd">var</span> <span class="nx">Element</span> <span class="o">=</span> <span class="nx">Bson</span><span class="p">.</span><span class="nx">Element</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">Element</span><span class="p">.</span><span class="nx">BsonType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">MIN_KEY</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-      <span class="nx">END_OF_OBJECT</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">NUMBER_DOUBLE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">STRING</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">DOCUMENT</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">ARRAY</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-      <span class="nx">BIN_DATA</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">UNDEFINED</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-      <span class="nx">OBJECT_ID</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
-      <span class="nx">BOOLEAN</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-      <span class="nx">UTC_DATETIME</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">JST_NULL</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-      <span class="nx">REG_EX</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
-      <span class="nx">DB_POINTER</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-      <span class="nx">JAVASCRIPT</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-      <span class="nx">SYMBOL</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
-      <span class="nx">CODE_WITH_SCOPE</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-      <span class="nx">NUMBER_INT</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
-      <span class="nx">TIMESTAMP</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
-      <span class="nx">NUMBER_LONG</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
-      <span class="nx">NUMBER_DECIMAL</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
-      <span class="nx">MAX_KEY</span><span class="o">:</span> <span class="mi">127</span><span class="p">,</span>
+      <span class="nx">MIN_KEY</span><span class="o">:</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>
+      <span class="nx">END_OF_OBJECT</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">NUMBER_DOUBLE</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">STRING</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">DOCUMENT</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">ARRAY</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+      <span class="nx">BIN_DATA</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">UNDEFINED</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+      <span class="nx">OBJECT_ID</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+      <span class="nx">BOOLEAN</span><span class="o">:</span> <span class="mf">8</span><span class="p">,</span>
+      <span class="nx">UTC_DATETIME</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">JST_NULL</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+      <span class="nx">REG_EX</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+      <span class="nx">DB_POINTER</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+      <span class="nx">JAVASCRIPT</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+      <span class="nx">SYMBOL</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+      <span class="nx">CODE_WITH_SCOPE</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
+      <span class="nx">NUMBER_INT</span><span class="o">:</span> <span class="mf">16</span><span class="p">,</span>
+      <span class="nx">TIMESTAMP</span><span class="o">:</span> <span class="mf">17</span><span class="p">,</span>
+      <span class="nx">NUMBER_LONG</span><span class="o">:</span> <span class="mf">18</span><span class="p">,</span>
+      <span class="nx">NUMBER_DECIMAL</span><span class="o">:</span> <span class="mf">19</span><span class="p">,</span>
+      <span class="nx">MAX_KEY</span><span class="o">:</span> <span class="mf">127</span><span class="p">,</span>
 
       <span class="s2">&quot;-1&quot;</span><span class="o">:</span> <span class="s2">&quot;MIN_KEY&quot;</span><span class="p">,</span>
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;END_OF_OBJECT&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;NUMBER_DOUBLE&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;DOCUMENT&quot;</span><span class="p">,</span>
-      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;ARRAY&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;BIN_DATA&quot;</span><span class="p">,</span>
-      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;UNDEFINED&quot;</span><span class="p">,</span>
-      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;OBJECT_ID&quot;</span><span class="p">,</span>
-      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;UTC_DATETIME&quot;</span><span class="p">,</span>
-      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;JST_NULL&quot;</span><span class="p">,</span>
-      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;REG_EX&quot;</span><span class="p">,</span>
-      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;DB_POINTER&quot;</span><span class="p">,</span>
-      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;JAVASCRIPT&quot;</span><span class="p">,</span>
-      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;SYMBOL&quot;</span><span class="p">,</span>
-      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;CODE_WITH_SCOPE&quot;</span><span class="p">,</span>
-      <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;NUMBER_INT&quot;</span><span class="p">,</span>
-      <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;TIMESTAMP&quot;</span><span class="p">,</span>
-      <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;NUMBER_LONG&quot;</span><span class="p">,</span>
-      <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;NUMBER_DECIMAL&quot;</span><span class="p">,</span>
-      <span class="mi">127</span><span class="o">:</span> <span class="s2">&quot;MAX_KEY&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;END_OF_OBJECT&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;NUMBER_DOUBLE&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;DOCUMENT&quot;</span><span class="p">,</span>
+      <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;ARRAY&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;BIN_DATA&quot;</span><span class="p">,</span>
+      <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;UNDEFINED&quot;</span><span class="p">,</span>
+      <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;OBJECT_ID&quot;</span><span class="p">,</span>
+      <span class="mf">8</span><span class="o">:</span> <span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;UTC_DATETIME&quot;</span><span class="p">,</span>
+      <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;JST_NULL&quot;</span><span class="p">,</span>
+      <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;REG_EX&quot;</span><span class="p">,</span>
+      <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;DB_POINTER&quot;</span><span class="p">,</span>
+      <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;JAVASCRIPT&quot;</span><span class="p">,</span>
+      <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;SYMBOL&quot;</span><span class="p">,</span>
+      <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;CODE_WITH_SCOPE&quot;</span><span class="p">,</span>
+      <span class="mf">16</span><span class="o">:</span> <span class="s2">&quot;NUMBER_INT&quot;</span><span class="p">,</span>
+      <span class="mf">17</span><span class="o">:</span> <span class="s2">&quot;TIMESTAMP&quot;</span><span class="p">,</span>
+      <span class="mf">18</span><span class="o">:</span> <span class="s2">&quot;NUMBER_LONG&quot;</span><span class="p">,</span>
+      <span class="mf">19</span><span class="o">:</span> <span class="s2">&quot;NUMBER_DECIMAL&quot;</span><span class="p">,</span>
+      <span class="mf">127</span><span class="o">:</span> <span class="s2">&quot;MAX_KEY&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">Element</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -622,7 +622,7 @@ section#format-index .row {
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">|</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b2</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b3</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">|</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b2</span> <span class="o">&lt;&lt;</span> <span class="mf">8</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b3</span> <span class="o">&lt;&lt;</span> <span class="mf">16</span><span class="p">));</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -664,9 +664,9 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">F16</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">exponent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">significandHi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">49</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">str</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">exponent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">15</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">significandHi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">49</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">significandLo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
     <span class="p">}</span>
@@ -737,7 +737,7 @@ section#format-index .row {
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

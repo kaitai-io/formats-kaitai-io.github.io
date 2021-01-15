@@ -284,105 +284,105 @@ used for that purpose in Windows and Google Chrome projects.</p>
 
 <span class="kd">var</span> <span class="nx">WindowsMinidump</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">WindowsMinidump</span><span class="p">.</span><span class="nx">StreamTypes</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-    <span class="nx">UNUSED</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">RESERVED_0</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nx">RESERVED_1</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nx">THREAD_LIST</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="nx">MODULE_LIST</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-    <span class="nx">MEMORY_LIST</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="nx">EXCEPTION</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nx">SYSTEM_INFO</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
-    <span class="nx">THREAD_EX_LIST</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="nx">MEMORY_64_LIST</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-    <span class="nx">COMMENT_A</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="nx">COMMENT_W</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
-    <span class="nx">HANDLE_DATA</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-    <span class="nx">FUNCTION_TABLE</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-    <span class="nx">UNLOADED_MODULE_LIST</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
-    <span class="nx">MISC_INFO</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-    <span class="nx">MEMORY_INFO_LIST</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="nx">THREAD_INFO_LIST</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
-    <span class="nx">HANDLE_OPERATION_LIST</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
-    <span class="nx">TOKEN</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
-    <span class="nx">JAVA_SCRIPT_DATA</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="nx">SYSTEM_MEMORY_INFO</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
-    <span class="nx">PROCESS_VM_VOUNTERS</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
-    <span class="nx">IPT_TRACE</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
-    <span class="nx">THREAD_NAMES</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="nx">CE_NULL</span><span class="o">:</span> <span class="mi">32768</span><span class="p">,</span>
-    <span class="nx">CE_SYSTEM_INFO</span><span class="o">:</span> <span class="mi">32769</span><span class="p">,</span>
-    <span class="nx">CE_EXCEPTION</span><span class="o">:</span> <span class="mi">32770</span><span class="p">,</span>
-    <span class="nx">CE_MODULE_LIST</span><span class="o">:</span> <span class="mi">32771</span><span class="p">,</span>
-    <span class="nx">CE_PROCESS_LIST</span><span class="o">:</span> <span class="mi">32772</span><span class="p">,</span>
-    <span class="nx">CE_THREAD_LIST</span><span class="o">:</span> <span class="mi">32773</span><span class="p">,</span>
-    <span class="nx">CE_THREAD_CONTEXT_LIST</span><span class="o">:</span> <span class="mi">32774</span><span class="p">,</span>
-    <span class="nx">CE_THREAD_CALL_STACK_LIST</span><span class="o">:</span> <span class="mi">32775</span><span class="p">,</span>
-    <span class="nx">CE_MEMORY_VIRTUAL_LIST</span><span class="o">:</span> <span class="mi">32776</span><span class="p">,</span>
-    <span class="nx">CE_MEMORY_PHYSICAL_LIST</span><span class="o">:</span> <span class="mi">32777</span><span class="p">,</span>
-    <span class="nx">CE_BUCKET_PARAMETERS</span><span class="o">:</span> <span class="mi">32778</span><span class="p">,</span>
-    <span class="nx">CE_PROCESS_MODULE_MAP</span><span class="o">:</span> <span class="mi">32779</span><span class="p">,</span>
-    <span class="nx">CE_DIAGNOSIS_LIST</span><span class="o">:</span> <span class="mi">32780</span><span class="p">,</span>
-    <span class="nx">MD_CRASHPAD_INFO_STREAM</span><span class="o">:</span> <span class="mi">1129316353</span><span class="p">,</span>
-    <span class="nx">MD_RAW_BREAKPAD_INFO</span><span class="o">:</span> <span class="mi">1197932545</span><span class="p">,</span>
-    <span class="nx">MD_RAW_ASSERTION_INFO</span><span class="o">:</span> <span class="mi">1197932546</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_CPU_INFO</span><span class="o">:</span> <span class="mi">1197932547</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_PROC_STATUS</span><span class="o">:</span> <span class="mi">1197932548</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_LSB_RELEASE</span><span class="o">:</span> <span class="mi">1197932549</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_CMD_LINE</span><span class="o">:</span> <span class="mi">1197932550</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_ENVIRON</span><span class="o">:</span> <span class="mi">1197932551</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_AUXV</span><span class="o">:</span> <span class="mi">1197932552</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_MAPS</span><span class="o">:</span> <span class="mi">1197932553</span><span class="p">,</span>
-    <span class="nx">MD_LINUX_DSO_DEBUG</span><span class="o">:</span> <span class="mi">1197932554</span><span class="p">,</span>
+    <span class="nx">UNUSED</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+    <span class="nx">RESERVED_0</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+    <span class="nx">RESERVED_1</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+    <span class="nx">THREAD_LIST</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+    <span class="nx">MODULE_LIST</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+    <span class="nx">MEMORY_LIST</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+    <span class="nx">EXCEPTION</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+    <span class="nx">SYSTEM_INFO</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+    <span class="nx">THREAD_EX_LIST</span><span class="o">:</span> <span class="mf">8</span><span class="p">,</span>
+    <span class="nx">MEMORY_64_LIST</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+    <span class="nx">COMMENT_A</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+    <span class="nx">COMMENT_W</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+    <span class="nx">HANDLE_DATA</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+    <span class="nx">FUNCTION_TABLE</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+    <span class="nx">UNLOADED_MODULE_LIST</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+    <span class="nx">MISC_INFO</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
+    <span class="nx">MEMORY_INFO_LIST</span><span class="o">:</span> <span class="mf">16</span><span class="p">,</span>
+    <span class="nx">THREAD_INFO_LIST</span><span class="o">:</span> <span class="mf">17</span><span class="p">,</span>
+    <span class="nx">HANDLE_OPERATION_LIST</span><span class="o">:</span> <span class="mf">18</span><span class="p">,</span>
+    <span class="nx">TOKEN</span><span class="o">:</span> <span class="mf">19</span><span class="p">,</span>
+    <span class="nx">JAVA_SCRIPT_DATA</span><span class="o">:</span> <span class="mf">20</span><span class="p">,</span>
+    <span class="nx">SYSTEM_MEMORY_INFO</span><span class="o">:</span> <span class="mf">21</span><span class="p">,</span>
+    <span class="nx">PROCESS_VM_VOUNTERS</span><span class="o">:</span> <span class="mf">22</span><span class="p">,</span>
+    <span class="nx">IPT_TRACE</span><span class="o">:</span> <span class="mf">23</span><span class="p">,</span>
+    <span class="nx">THREAD_NAMES</span><span class="o">:</span> <span class="mf">24</span><span class="p">,</span>
+    <span class="nx">CE_NULL</span><span class="o">:</span> <span class="mf">32768</span><span class="p">,</span>
+    <span class="nx">CE_SYSTEM_INFO</span><span class="o">:</span> <span class="mf">32769</span><span class="p">,</span>
+    <span class="nx">CE_EXCEPTION</span><span class="o">:</span> <span class="mf">32770</span><span class="p">,</span>
+    <span class="nx">CE_MODULE_LIST</span><span class="o">:</span> <span class="mf">32771</span><span class="p">,</span>
+    <span class="nx">CE_PROCESS_LIST</span><span class="o">:</span> <span class="mf">32772</span><span class="p">,</span>
+    <span class="nx">CE_THREAD_LIST</span><span class="o">:</span> <span class="mf">32773</span><span class="p">,</span>
+    <span class="nx">CE_THREAD_CONTEXT_LIST</span><span class="o">:</span> <span class="mf">32774</span><span class="p">,</span>
+    <span class="nx">CE_THREAD_CALL_STACK_LIST</span><span class="o">:</span> <span class="mf">32775</span><span class="p">,</span>
+    <span class="nx">CE_MEMORY_VIRTUAL_LIST</span><span class="o">:</span> <span class="mf">32776</span><span class="p">,</span>
+    <span class="nx">CE_MEMORY_PHYSICAL_LIST</span><span class="o">:</span> <span class="mf">32777</span><span class="p">,</span>
+    <span class="nx">CE_BUCKET_PARAMETERS</span><span class="o">:</span> <span class="mf">32778</span><span class="p">,</span>
+    <span class="nx">CE_PROCESS_MODULE_MAP</span><span class="o">:</span> <span class="mf">32779</span><span class="p">,</span>
+    <span class="nx">CE_DIAGNOSIS_LIST</span><span class="o">:</span> <span class="mf">32780</span><span class="p">,</span>
+    <span class="nx">MD_CRASHPAD_INFO_STREAM</span><span class="o">:</span> <span class="mf">1129316353</span><span class="p">,</span>
+    <span class="nx">MD_RAW_BREAKPAD_INFO</span><span class="o">:</span> <span class="mf">1197932545</span><span class="p">,</span>
+    <span class="nx">MD_RAW_ASSERTION_INFO</span><span class="o">:</span> <span class="mf">1197932546</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_CPU_INFO</span><span class="o">:</span> <span class="mf">1197932547</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_PROC_STATUS</span><span class="o">:</span> <span class="mf">1197932548</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_LSB_RELEASE</span><span class="o">:</span> <span class="mf">1197932549</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_CMD_LINE</span><span class="o">:</span> <span class="mf">1197932550</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_ENVIRON</span><span class="o">:</span> <span class="mf">1197932551</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_AUXV</span><span class="o">:</span> <span class="mf">1197932552</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_MAPS</span><span class="o">:</span> <span class="mf">1197932553</span><span class="p">,</span>
+    <span class="nx">MD_LINUX_DSO_DEBUG</span><span class="o">:</span> <span class="mf">1197932554</span><span class="p">,</span>
 
-    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;UNUSED&quot;</span><span class="p">,</span>
-    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RESERVED_0&quot;</span><span class="p">,</span>
-    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;RESERVED_1&quot;</span><span class="p">,</span>
-    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;THREAD_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;MODULE_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;MEMORY_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;EXCEPTION&quot;</span><span class="p">,</span>
-    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;SYSTEM_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;THREAD_EX_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;MEMORY_64_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;COMMENT_A&quot;</span><span class="p">,</span>
-    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;COMMENT_W&quot;</span><span class="p">,</span>
-    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;HANDLE_DATA&quot;</span><span class="p">,</span>
-    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;FUNCTION_TABLE&quot;</span><span class="p">,</span>
-    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;UNLOADED_MODULE_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;MISC_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;MEMORY_INFO_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;THREAD_INFO_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;HANDLE_OPERATION_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;TOKEN&quot;</span><span class="p">,</span>
-    <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;JAVA_SCRIPT_DATA&quot;</span><span class="p">,</span>
-    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;SYSTEM_MEMORY_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;PROCESS_VM_VOUNTERS&quot;</span><span class="p">,</span>
-    <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;IPT_TRACE&quot;</span><span class="p">,</span>
-    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;THREAD_NAMES&quot;</span><span class="p">,</span>
-    <span class="mi">32768</span><span class="o">:</span> <span class="s2">&quot;CE_NULL&quot;</span><span class="p">,</span>
-    <span class="mi">32769</span><span class="o">:</span> <span class="s2">&quot;CE_SYSTEM_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">32770</span><span class="o">:</span> <span class="s2">&quot;CE_EXCEPTION&quot;</span><span class="p">,</span>
-    <span class="mi">32771</span><span class="o">:</span> <span class="s2">&quot;CE_MODULE_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32772</span><span class="o">:</span> <span class="s2">&quot;CE_PROCESS_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32773</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32774</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_CONTEXT_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32775</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_CALL_STACK_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32776</span><span class="o">:</span> <span class="s2">&quot;CE_MEMORY_VIRTUAL_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32777</span><span class="o">:</span> <span class="s2">&quot;CE_MEMORY_PHYSICAL_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">32778</span><span class="o">:</span> <span class="s2">&quot;CE_BUCKET_PARAMETERS&quot;</span><span class="p">,</span>
-    <span class="mi">32779</span><span class="o">:</span> <span class="s2">&quot;CE_PROCESS_MODULE_MAP&quot;</span><span class="p">,</span>
-    <span class="mi">32780</span><span class="o">:</span> <span class="s2">&quot;CE_DIAGNOSIS_LIST&quot;</span><span class="p">,</span>
-    <span class="mi">1129316353</span><span class="o">:</span> <span class="s2">&quot;MD_CRASHPAD_INFO_STREAM&quot;</span><span class="p">,</span>
-    <span class="mi">1197932545</span><span class="o">:</span> <span class="s2">&quot;MD_RAW_BREAKPAD_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">1197932546</span><span class="o">:</span> <span class="s2">&quot;MD_RAW_ASSERTION_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">1197932547</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_CPU_INFO&quot;</span><span class="p">,</span>
-    <span class="mi">1197932548</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_PROC_STATUS&quot;</span><span class="p">,</span>
-    <span class="mi">1197932549</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_LSB_RELEASE&quot;</span><span class="p">,</span>
-    <span class="mi">1197932550</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_CMD_LINE&quot;</span><span class="p">,</span>
-    <span class="mi">1197932551</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_ENVIRON&quot;</span><span class="p">,</span>
-    <span class="mi">1197932552</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_AUXV&quot;</span><span class="p">,</span>
-    <span class="mi">1197932553</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_MAPS&quot;</span><span class="p">,</span>
-    <span class="mi">1197932554</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_DSO_DEBUG&quot;</span><span class="p">,</span>
+    <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;UNUSED&quot;</span><span class="p">,</span>
+    <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;RESERVED_0&quot;</span><span class="p">,</span>
+    <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;RESERVED_1&quot;</span><span class="p">,</span>
+    <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;THREAD_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;MODULE_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;MEMORY_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;EXCEPTION&quot;</span><span class="p">,</span>
+    <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;SYSTEM_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">8</span><span class="o">:</span> <span class="s2">&quot;THREAD_EX_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;MEMORY_64_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;COMMENT_A&quot;</span><span class="p">,</span>
+    <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;COMMENT_W&quot;</span><span class="p">,</span>
+    <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;HANDLE_DATA&quot;</span><span class="p">,</span>
+    <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;FUNCTION_TABLE&quot;</span><span class="p">,</span>
+    <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;UNLOADED_MODULE_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;MISC_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">16</span><span class="o">:</span> <span class="s2">&quot;MEMORY_INFO_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">17</span><span class="o">:</span> <span class="s2">&quot;THREAD_INFO_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">18</span><span class="o">:</span> <span class="s2">&quot;HANDLE_OPERATION_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">19</span><span class="o">:</span> <span class="s2">&quot;TOKEN&quot;</span><span class="p">,</span>
+    <span class="mf">20</span><span class="o">:</span> <span class="s2">&quot;JAVA_SCRIPT_DATA&quot;</span><span class="p">,</span>
+    <span class="mf">21</span><span class="o">:</span> <span class="s2">&quot;SYSTEM_MEMORY_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">22</span><span class="o">:</span> <span class="s2">&quot;PROCESS_VM_VOUNTERS&quot;</span><span class="p">,</span>
+    <span class="mf">23</span><span class="o">:</span> <span class="s2">&quot;IPT_TRACE&quot;</span><span class="p">,</span>
+    <span class="mf">24</span><span class="o">:</span> <span class="s2">&quot;THREAD_NAMES&quot;</span><span class="p">,</span>
+    <span class="mf">32768</span><span class="o">:</span> <span class="s2">&quot;CE_NULL&quot;</span><span class="p">,</span>
+    <span class="mf">32769</span><span class="o">:</span> <span class="s2">&quot;CE_SYSTEM_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">32770</span><span class="o">:</span> <span class="s2">&quot;CE_EXCEPTION&quot;</span><span class="p">,</span>
+    <span class="mf">32771</span><span class="o">:</span> <span class="s2">&quot;CE_MODULE_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32772</span><span class="o">:</span> <span class="s2">&quot;CE_PROCESS_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32773</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32774</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_CONTEXT_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32775</span><span class="o">:</span> <span class="s2">&quot;CE_THREAD_CALL_STACK_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32776</span><span class="o">:</span> <span class="s2">&quot;CE_MEMORY_VIRTUAL_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32777</span><span class="o">:</span> <span class="s2">&quot;CE_MEMORY_PHYSICAL_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">32778</span><span class="o">:</span> <span class="s2">&quot;CE_BUCKET_PARAMETERS&quot;</span><span class="p">,</span>
+    <span class="mf">32779</span><span class="o">:</span> <span class="s2">&quot;CE_PROCESS_MODULE_MAP&quot;</span><span class="p">,</span>
+    <span class="mf">32780</span><span class="o">:</span> <span class="s2">&quot;CE_DIAGNOSIS_LIST&quot;</span><span class="p">,</span>
+    <span class="mf">1129316353</span><span class="o">:</span> <span class="s2">&quot;MD_CRASHPAD_INFO_STREAM&quot;</span><span class="p">,</span>
+    <span class="mf">1197932545</span><span class="o">:</span> <span class="s2">&quot;MD_RAW_BREAKPAD_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">1197932546</span><span class="o">:</span> <span class="s2">&quot;MD_RAW_ASSERTION_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">1197932547</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_CPU_INFO&quot;</span><span class="p">,</span>
+    <span class="mf">1197932548</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_PROC_STATUS&quot;</span><span class="p">,</span>
+    <span class="mf">1197932549</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_LSB_RELEASE&quot;</span><span class="p">,</span>
+    <span class="mf">1197932550</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_CMD_LINE&quot;</span><span class="p">,</span>
+    <span class="mf">1197932551</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_ENVIRON&quot;</span><span class="p">,</span>
+    <span class="mf">1197932552</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_AUXV&quot;</span><span class="p">,</span>
+    <span class="mf">1197932553</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_MAPS&quot;</span><span class="p">,</span>
+    <span class="mf">1197932554</span><span class="o">:</span> <span class="s2">&quot;MD_LINUX_DSO_DEBUG&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="kd">function</span> <span class="nx">WindowsMinidump</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -393,13 +393,13 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">WindowsMinidump</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic1</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic1</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic1</span><span class="p">,</span> <span class="p">[</span><span class="mf">77</span><span class="p">,</span> <span class="mf">68</span><span class="p">,</span> <span class="mf">77</span><span class="p">,</span> <span class="mf">80</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">77</span><span class="p">,</span> <span class="mf">68</span><span class="p">,</span> <span class="mf">77</span><span class="p">,</span> <span class="mf">80</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic1</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic2</span><span class="p">,</span> <span class="p">[</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic2</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/1&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic2</span><span class="p">,</span> <span class="p">[</span><span class="mf">147</span><span class="p">,</span> <span class="mf">167</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">147</span><span class="p">,</span> <span class="mf">167</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic2</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/1&quot;</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">numStreams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
@@ -424,7 +424,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nx">ThreadList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numThreads</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numThreads</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numThreads</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numThreads</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">threads</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Thread</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -494,17 +494,17 @@ used for that purpose in Windows and Google Chrome projects.</p>
 
   <span class="kd">var</span> <span class="nx">SystemInfo</span> <span class="o">=</span> <span class="nx">WindowsMinidump</span><span class="p">.</span><span class="nx">SystemInfo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">SystemInfo</span><span class="p">.</span><span class="nx">CpuArchs</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">INTEL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">ARM</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">IA64</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-      <span class="nx">AMD64</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mi">65535</span><span class="p">,</span>
+      <span class="nx">INTEL</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">ARM</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">IA64</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+      <span class="nx">AMD64</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mf">65535</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;INTEL&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;ARM&quot;</span><span class="p">,</span>
-      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;IA64&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;AMD64&quot;</span><span class="p">,</span>
-      <span class="mi">65535</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;INTEL&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;ARM&quot;</span><span class="p">,</span>
+      <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;IA64&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;AMD64&quot;</span><span class="p">,</span>
+      <span class="mf">65535</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">SystemInfo</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -532,7 +532,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_servicePack</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_servicePack</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsServicePack</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsServicePack</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
           <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
           <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsServicePack</span><span class="p">);</span>
@@ -565,8 +565,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numParams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">15</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mf">15</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">params</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -725,7 +725,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nx">MemoryList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numMemRanges</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">memRanges</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numMemRanges</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numMemRanges</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numMemRanges</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">memRanges</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MemoryDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -781,7 +781,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
       <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsStreams</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_m_streams</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numStreams</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numStreams</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numStreams</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_m_streams</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dir</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
@@ -802,7 +802,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

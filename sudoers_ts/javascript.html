@@ -278,15 +278,15 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
 
 <span class="kd">var</span> <span class="nx">SudoersTs</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">SudoersTs</span><span class="p">.</span><span class="nx">TsType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-    <span class="nx">GLOBAL</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nx">TTY</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nx">PPID</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="nx">LOCKEXCL</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">GLOBAL</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+    <span class="nx">TTY</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+    <span class="nx">PPID</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+    <span class="nx">LOCKEXCL</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
 
-    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
-    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;TTY&quot;</span><span class="p">,</span>
-    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;PPID&quot;</span><span class="p">,</span>
-    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;LOCKEXCL&quot;</span><span class="p">,</span>
+    <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+    <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;TTY&quot;</span><span class="p">,</span>
+    <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;PPID&quot;</span><span class="p">,</span>
+    <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;LOCKEXCL&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="kd">function</span> <span class="nx">SudoersTs</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -298,7 +298,7 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
   <span class="p">}</span>
   <span class="nx">SudoersTs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">records</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">records</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -372,10 +372,10 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">TsFlag</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">reserved0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">anyuid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">6</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">anyuid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">8</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
@@ -486,18 +486,18 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">version</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+      <span class="k">case</span> <span class="mf">1</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mf">4</span><span class="p">));</span>
         <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RecordV1</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+      <span class="k">case</span> <span class="mf">2</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mf">4</span><span class="p">));</span>
         <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RecordV2</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">default</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenRecord</span> <span class="o">-</span> <span class="mf">4</span><span class="p">));</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -526,7 +526,7 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

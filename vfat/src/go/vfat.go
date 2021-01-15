@@ -627,7 +627,7 @@ func (this *Vfat_BiosParamBlock) Read(io *kaitai.Stream, parent *Vfat_BootSector
 
 /**
  * Physical sectors per track for disks with INT 13h CHS
- * geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero
+ * geometry, e.g., 15 for a "1.20 MB" (1200 KB) floppy. A zero
  * entry indicates that this entry is reserved, but not used.
  */
 

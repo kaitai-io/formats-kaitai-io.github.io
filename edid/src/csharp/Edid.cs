@@ -782,7 +782,7 @@ namespace Kaitai
         public byte MfgWeek { get { return _mfgWeek; } }
 
         /// <summary>
-        /// Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+        /// Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.
         /// </summary>
         public byte MfgYearMod { get { return _mfgYearMod; } }
 
@@ -808,7 +808,7 @@ namespace Kaitai
         public byte ScreenSizeV { get { return _screenSizeV; } }
 
         /// <summary>
-        /// Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+        /// Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)
         /// </summary>
         public byte GammaMod { get { return _gammaMod; } }
         public byte FeaturesFlags { get { return _featuresFlags; } }

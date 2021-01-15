@@ -106,7 +106,7 @@ section#format-index .row {
             <div class="col-md-8">
                 <p><p>This type of executables could be found inside the UEFI firmware. The UEFI
 firmware is stored in SPI flash memory, which is a chip soldered on a
-system’s motherboard. UEFI firmware is very modular: it usually contains
+system's motherboard. UEFI firmware is very modular: it usually contains
 dozens, if not hundreds, of executables. To store all these separates files,
 the firmware is laid out in volumes using the Firmware File System (FFS), a
 file system specifically designed to store firmware images. The volumes
@@ -324,7 +324,7 @@ provides an opportunity for use of a smaller system flash part.</p>
 <span class="cm">/**</span>
 <span class="cm"> * This type of executables could be found inside the UEFI firmware. The UEFI</span>
 <span class="cm"> * firmware is stored in SPI flash memory, which is a chip soldered on a</span>
-<span class="cm"> * system’s motherboard. UEFI firmware is very modular: it usually contains</span>
+<span class="cm"> * system&#39;s motherboard. UEFI firmware is very modular: it usually contains</span>
 <span class="cm"> * dozens, if not hundreds, of executables. To store all these separates files,</span>
 <span class="cm"> * the firmware is laid out in volumes using the Firmware File System (FFS), a</span>
 <span class="cm"> * file system specifically designed to store firmware images. The volumes</span>
@@ -352,98 +352,98 @@ provides an opportunity for use of a smaller system flash part.</p>
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">UefiTe</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_teHdr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">40</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_teHdr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">40</span><span class="p">);</span>
     <span class="kd">var</span> <span class="nx">_io__raw_teHdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_teHdr</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">teHdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TeHeader</span><span class="p">(</span><span class="nx">_io__raw_teHdr</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">sections</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">teHdr</span><span class="p">.</span><span class="nx">numSections</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">teHdr</span><span class="p">.</span><span class="nx">numSections</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">teHdr</span><span class="p">.</span><span class="nx">numSections</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">sections</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Section</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="kd">var</span> <span class="nx">TeHeader</span> <span class="o">=</span> <span class="nx">UefiTe</span><span class="p">.</span><span class="nx">TeHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">TeHeader</span><span class="p">.</span><span class="nx">MachineType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">I386</span><span class="o">:</span> <span class="mi">332</span><span class="p">,</span>
-      <span class="nx">R4000</span><span class="o">:</span> <span class="mi">358</span><span class="p">,</span>
-      <span class="nx">WCEMIPSV2</span><span class="o">:</span> <span class="mi">361</span><span class="p">,</span>
-      <span class="nx">ALPHA</span><span class="o">:</span> <span class="mi">388</span><span class="p">,</span>
-      <span class="nx">SH3</span><span class="o">:</span> <span class="mi">418</span><span class="p">,</span>
-      <span class="nx">SH3DSP</span><span class="o">:</span> <span class="mi">419</span><span class="p">,</span>
-      <span class="nx">SH4</span><span class="o">:</span> <span class="mi">422</span><span class="p">,</span>
-      <span class="nx">SH5</span><span class="o">:</span> <span class="mi">424</span><span class="p">,</span>
-      <span class="nx">ARM</span><span class="o">:</span> <span class="mi">448</span><span class="p">,</span>
-      <span class="nx">THUMB</span><span class="o">:</span> <span class="mi">450</span><span class="p">,</span>
-      <span class="nx">ARMNT</span><span class="o">:</span> <span class="mi">452</span><span class="p">,</span>
-      <span class="nx">AM33</span><span class="o">:</span> <span class="mi">467</span><span class="p">,</span>
-      <span class="nx">POWERPC</span><span class="o">:</span> <span class="mi">496</span><span class="p">,</span>
-      <span class="nx">POWERPCFP</span><span class="o">:</span> <span class="mi">497</span><span class="p">,</span>
-      <span class="nx">IA64</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
-      <span class="nx">MIPS16</span><span class="o">:</span> <span class="mi">614</span><span class="p">,</span>
-      <span class="nx">MIPSFPU</span><span class="o">:</span> <span class="mi">870</span><span class="p">,</span>
-      <span class="nx">MIPSFPU16</span><span class="o">:</span> <span class="mi">1126</span><span class="p">,</span>
-      <span class="nx">EBC</span><span class="o">:</span> <span class="mi">3772</span><span class="p">,</span>
-      <span class="nx">RISCV32</span><span class="o">:</span> <span class="mi">20530</span><span class="p">,</span>
-      <span class="nx">RISCV64</span><span class="o">:</span> <span class="mi">20580</span><span class="p">,</span>
-      <span class="nx">RISCV128</span><span class="o">:</span> <span class="mi">20776</span><span class="p">,</span>
-      <span class="nx">AMD64</span><span class="o">:</span> <span class="mi">34404</span><span class="p">,</span>
-      <span class="nx">M32R</span><span class="o">:</span> <span class="mi">36929</span><span class="p">,</span>
-      <span class="nx">ARM64</span><span class="o">:</span> <span class="mi">43620</span><span class="p">,</span>
+      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">I386</span><span class="o">:</span> <span class="mf">332</span><span class="p">,</span>
+      <span class="nx">R4000</span><span class="o">:</span> <span class="mf">358</span><span class="p">,</span>
+      <span class="nx">WCEMIPSV2</span><span class="o">:</span> <span class="mf">361</span><span class="p">,</span>
+      <span class="nx">ALPHA</span><span class="o">:</span> <span class="mf">388</span><span class="p">,</span>
+      <span class="nx">SH3</span><span class="o">:</span> <span class="mf">418</span><span class="p">,</span>
+      <span class="nx">SH3DSP</span><span class="o">:</span> <span class="mf">419</span><span class="p">,</span>
+      <span class="nx">SH4</span><span class="o">:</span> <span class="mf">422</span><span class="p">,</span>
+      <span class="nx">SH5</span><span class="o">:</span> <span class="mf">424</span><span class="p">,</span>
+      <span class="nx">ARM</span><span class="o">:</span> <span class="mf">448</span><span class="p">,</span>
+      <span class="nx">THUMB</span><span class="o">:</span> <span class="mf">450</span><span class="p">,</span>
+      <span class="nx">ARMNT</span><span class="o">:</span> <span class="mf">452</span><span class="p">,</span>
+      <span class="nx">AM33</span><span class="o">:</span> <span class="mf">467</span><span class="p">,</span>
+      <span class="nx">POWERPC</span><span class="o">:</span> <span class="mf">496</span><span class="p">,</span>
+      <span class="nx">POWERPCFP</span><span class="o">:</span> <span class="mf">497</span><span class="p">,</span>
+      <span class="nx">IA64</span><span class="o">:</span> <span class="mf">512</span><span class="p">,</span>
+      <span class="nx">MIPS16</span><span class="o">:</span> <span class="mf">614</span><span class="p">,</span>
+      <span class="nx">MIPSFPU</span><span class="o">:</span> <span class="mf">870</span><span class="p">,</span>
+      <span class="nx">MIPSFPU16</span><span class="o">:</span> <span class="mf">1126</span><span class="p">,</span>
+      <span class="nx">EBC</span><span class="o">:</span> <span class="mf">3772</span><span class="p">,</span>
+      <span class="nx">RISCV32</span><span class="o">:</span> <span class="mf">20530</span><span class="p">,</span>
+      <span class="nx">RISCV64</span><span class="o">:</span> <span class="mf">20580</span><span class="p">,</span>
+      <span class="nx">RISCV128</span><span class="o">:</span> <span class="mf">20776</span><span class="p">,</span>
+      <span class="nx">AMD64</span><span class="o">:</span> <span class="mf">34404</span><span class="p">,</span>
+      <span class="nx">M32R</span><span class="o">:</span> <span class="mf">36929</span><span class="p">,</span>
+      <span class="nx">ARM64</span><span class="o">:</span> <span class="mf">43620</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
-      <span class="mi">332</span><span class="o">:</span> <span class="s2">&quot;I386&quot;</span><span class="p">,</span>
-      <span class="mi">358</span><span class="o">:</span> <span class="s2">&quot;R4000&quot;</span><span class="p">,</span>
-      <span class="mi">361</span><span class="o">:</span> <span class="s2">&quot;WCEMIPSV2&quot;</span><span class="p">,</span>
-      <span class="mi">388</span><span class="o">:</span> <span class="s2">&quot;ALPHA&quot;</span><span class="p">,</span>
-      <span class="mi">418</span><span class="o">:</span> <span class="s2">&quot;SH3&quot;</span><span class="p">,</span>
-      <span class="mi">419</span><span class="o">:</span> <span class="s2">&quot;SH3DSP&quot;</span><span class="p">,</span>
-      <span class="mi">422</span><span class="o">:</span> <span class="s2">&quot;SH4&quot;</span><span class="p">,</span>
-      <span class="mi">424</span><span class="o">:</span> <span class="s2">&quot;SH5&quot;</span><span class="p">,</span>
-      <span class="mi">448</span><span class="o">:</span> <span class="s2">&quot;ARM&quot;</span><span class="p">,</span>
-      <span class="mi">450</span><span class="o">:</span> <span class="s2">&quot;THUMB&quot;</span><span class="p">,</span>
-      <span class="mi">452</span><span class="o">:</span> <span class="s2">&quot;ARMNT&quot;</span><span class="p">,</span>
-      <span class="mi">467</span><span class="o">:</span> <span class="s2">&quot;AM33&quot;</span><span class="p">,</span>
-      <span class="mi">496</span><span class="o">:</span> <span class="s2">&quot;POWERPC&quot;</span><span class="p">,</span>
-      <span class="mi">497</span><span class="o">:</span> <span class="s2">&quot;POWERPCFP&quot;</span><span class="p">,</span>
-      <span class="mi">512</span><span class="o">:</span> <span class="s2">&quot;IA64&quot;</span><span class="p">,</span>
-      <span class="mi">614</span><span class="o">:</span> <span class="s2">&quot;MIPS16&quot;</span><span class="p">,</span>
-      <span class="mi">870</span><span class="o">:</span> <span class="s2">&quot;MIPSFPU&quot;</span><span class="p">,</span>
-      <span class="mi">1126</span><span class="o">:</span> <span class="s2">&quot;MIPSFPU16&quot;</span><span class="p">,</span>
-      <span class="mi">3772</span><span class="o">:</span> <span class="s2">&quot;EBC&quot;</span><span class="p">,</span>
-      <span class="mi">20530</span><span class="o">:</span> <span class="s2">&quot;RISCV32&quot;</span><span class="p">,</span>
-      <span class="mi">20580</span><span class="o">:</span> <span class="s2">&quot;RISCV64&quot;</span><span class="p">,</span>
-      <span class="mi">20776</span><span class="o">:</span> <span class="s2">&quot;RISCV128&quot;</span><span class="p">,</span>
-      <span class="mi">34404</span><span class="o">:</span> <span class="s2">&quot;AMD64&quot;</span><span class="p">,</span>
-      <span class="mi">36929</span><span class="o">:</span> <span class="s2">&quot;M32R&quot;</span><span class="p">,</span>
-      <span class="mi">43620</span><span class="o">:</span> <span class="s2">&quot;ARM64&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+      <span class="mf">332</span><span class="o">:</span> <span class="s2">&quot;I386&quot;</span><span class="p">,</span>
+      <span class="mf">358</span><span class="o">:</span> <span class="s2">&quot;R4000&quot;</span><span class="p">,</span>
+      <span class="mf">361</span><span class="o">:</span> <span class="s2">&quot;WCEMIPSV2&quot;</span><span class="p">,</span>
+      <span class="mf">388</span><span class="o">:</span> <span class="s2">&quot;ALPHA&quot;</span><span class="p">,</span>
+      <span class="mf">418</span><span class="o">:</span> <span class="s2">&quot;SH3&quot;</span><span class="p">,</span>
+      <span class="mf">419</span><span class="o">:</span> <span class="s2">&quot;SH3DSP&quot;</span><span class="p">,</span>
+      <span class="mf">422</span><span class="o">:</span> <span class="s2">&quot;SH4&quot;</span><span class="p">,</span>
+      <span class="mf">424</span><span class="o">:</span> <span class="s2">&quot;SH5&quot;</span><span class="p">,</span>
+      <span class="mf">448</span><span class="o">:</span> <span class="s2">&quot;ARM&quot;</span><span class="p">,</span>
+      <span class="mf">450</span><span class="o">:</span> <span class="s2">&quot;THUMB&quot;</span><span class="p">,</span>
+      <span class="mf">452</span><span class="o">:</span> <span class="s2">&quot;ARMNT&quot;</span><span class="p">,</span>
+      <span class="mf">467</span><span class="o">:</span> <span class="s2">&quot;AM33&quot;</span><span class="p">,</span>
+      <span class="mf">496</span><span class="o">:</span> <span class="s2">&quot;POWERPC&quot;</span><span class="p">,</span>
+      <span class="mf">497</span><span class="o">:</span> <span class="s2">&quot;POWERPCFP&quot;</span><span class="p">,</span>
+      <span class="mf">512</span><span class="o">:</span> <span class="s2">&quot;IA64&quot;</span><span class="p">,</span>
+      <span class="mf">614</span><span class="o">:</span> <span class="s2">&quot;MIPS16&quot;</span><span class="p">,</span>
+      <span class="mf">870</span><span class="o">:</span> <span class="s2">&quot;MIPSFPU&quot;</span><span class="p">,</span>
+      <span class="mf">1126</span><span class="o">:</span> <span class="s2">&quot;MIPSFPU16&quot;</span><span class="p">,</span>
+      <span class="mf">3772</span><span class="o">:</span> <span class="s2">&quot;EBC&quot;</span><span class="p">,</span>
+      <span class="mf">20530</span><span class="o">:</span> <span class="s2">&quot;RISCV32&quot;</span><span class="p">,</span>
+      <span class="mf">20580</span><span class="o">:</span> <span class="s2">&quot;RISCV64&quot;</span><span class="p">,</span>
+      <span class="mf">20776</span><span class="o">:</span> <span class="s2">&quot;RISCV128&quot;</span><span class="p">,</span>
+      <span class="mf">34404</span><span class="o">:</span> <span class="s2">&quot;AMD64&quot;</span><span class="p">,</span>
+      <span class="mf">36929</span><span class="o">:</span> <span class="s2">&quot;M32R&quot;</span><span class="p">,</span>
+      <span class="mf">43620</span><span class="o">:</span> <span class="s2">&quot;ARM64&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="nx">TeHeader</span><span class="p">.</span><span class="nx">SubsystemEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">NATIVE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">WINDOWS_GUI</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">WINDOWS_CUI</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">POSIX_CUI</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
-      <span class="nx">WINDOWS_CE_GUI</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">EFI_APPLICATION</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-      <span class="nx">EFI_BOOT_SERVICE_DRIVER</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
-      <span class="nx">EFI_RUNTIME_DRIVER</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-      <span class="nx">EFI_ROM</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-      <span class="nx">XBOX</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
-      <span class="nx">WINDOWS_BOOT_APPLICATION</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+      <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">NATIVE</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">WINDOWS_GUI</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">WINDOWS_CUI</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">POSIX_CUI</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+      <span class="nx">WINDOWS_CE_GUI</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">EFI_APPLICATION</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+      <span class="nx">EFI_BOOT_SERVICE_DRIVER</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+      <span class="nx">EFI_RUNTIME_DRIVER</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+      <span class="nx">EFI_ROM</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+      <span class="nx">XBOX</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+      <span class="nx">WINDOWS_BOOT_APPLICATION</span><span class="o">:</span> <span class="mf">16</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;NATIVE&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_GUI&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_CUI&quot;</span><span class="p">,</span>
-      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;POSIX_CUI&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_CE_GUI&quot;</span><span class="p">,</span>
-      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;EFI_APPLICATION&quot;</span><span class="p">,</span>
-      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;EFI_BOOT_SERVICE_DRIVER&quot;</span><span class="p">,</span>
-      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;EFI_RUNTIME_DRIVER&quot;</span><span class="p">,</span>
-      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;EFI_ROM&quot;</span><span class="p">,</span>
-      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;XBOX&quot;</span><span class="p">,</span>
-      <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_BOOT_APPLICATION&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;NATIVE&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_GUI&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_CUI&quot;</span><span class="p">,</span>
+      <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;POSIX_CUI&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_CE_GUI&quot;</span><span class="p">,</span>
+      <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;EFI_APPLICATION&quot;</span><span class="p">,</span>
+      <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;EFI_BOOT_SERVICE_DRIVER&quot;</span><span class="p">,</span>
+      <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;EFI_RUNTIME_DRIVER&quot;</span><span class="p">,</span>
+      <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;EFI_ROM&quot;</span><span class="p">,</span>
+      <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;XBOX&quot;</span><span class="p">,</span>
+      <span class="mf">16</span><span class="o">:</span> <span class="s2">&quot;WINDOWS_BOOT_APPLICATION&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">TeHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -454,9 +454,9 @@ provides an opportunity for use of a smaller system flash part.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">TeHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="p">[</span><span class="mi">86</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mi">86</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/te_header/seq/0&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="p">[</span><span class="mf">86</span><span class="p">,</span> <span class="mf">90</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">86</span><span class="p">,</span> <span class="mf">90</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s2">&quot;/types/te_header/seq/0&quot;</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">machine</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numSections</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
@@ -512,7 +512,7 @@ provides an opportunity for use of a smaller system flash part.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">Section</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="mf">0</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">virtualSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">virtualAddress</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">sizeOfRawData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
@@ -551,7 +551,7 @@ provides an opportunity for use of a smaller system flash part.</p>
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

@@ -306,7 +306,7 @@ func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_
 
 /**
  * A time value that indicates the time scale for this
- * movie—that is, the number of time units that pass per second
+ * movie - the number of time units that pass per second
  * in its time coordinate system. A time coordinate system that
  * measures time in sixtieths of a second, for example, has a
  * time scale of 60.
@@ -315,7 +315,7 @@ func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_
 /**
  * A time value that indicates the duration of the movie in
  * time scale units. Note that this property is derived from
- * the movie’s tracks. The value of this field corresponds to
+ * the movie's tracks. The value of this field corresponds to
  * the duration of the longest track in the movie.
  */
 
@@ -324,7 +324,7 @@ func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_
  */
 
 /**
- * How loud to play this movie’s sound. A value of 1.0 indicates full volume.
+ * How loud to play this movie's sound. A value of 1.0 indicates full volume.
  */
 
 /**

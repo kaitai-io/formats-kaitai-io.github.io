@@ -315,7 +315,7 @@ section#format-index .row {
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">indexOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
   <span class="p">}</span>
@@ -330,7 +330,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Sectors</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Sector</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -376,7 +376,7 @@ section#format-index .row {
     <span class="nx">Texture12</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">textures</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TextureIndex</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -416,14 +416,14 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
       <span class="p">}</span>
       <span class="nx">TextureBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="mf">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">masked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">columnDirectory</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">patches</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">);</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">patches</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Patch</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="p">}</span>
       <span class="p">}</span>
@@ -517,8 +517,8 @@ section#format-index .row {
     <span class="nx">Pnames</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">names</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">names</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">names</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="mf">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
 
@@ -550,55 +550,55 @@ section#format-index .row {
 
   <span class="kd">var</span> <span class="nx">Sector</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Sector</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">Sector</span><span class="p">.</span><span class="nx">SpecialSector</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-      <span class="nx">NORMAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_FLICKER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_STROBE_FAST</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_STROBE_SLOW</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_STROBE_HURT</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_HELLSLIME</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_NUKAGE</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_GLOW</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-      <span class="nx">SECRET</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
-      <span class="nx">D_SECTOR_DOOR_CLOSE_IN_30</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_END</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_STROBE_SLOW_SYNC</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_STROBE_FAST_SYNC</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-      <span class="nx">D_SECTOR_DOOR_RAISE_IN_5_MINS</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
-      <span class="nx">D_FRICTION_LOW</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_SUPER_HELLSLIME</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
-      <span class="nx">D_LIGHT_FIRE_FLICKER</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_LAVA_WIMPY</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
-      <span class="nx">D_DAMAGE_LAVA_HEFTY</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
-      <span class="nx">D_SCROLL_EAST_LAVA_DAMAGE</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-      <span class="nx">LIGHT_PHASED</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
-      <span class="nx">LIGHT_SEQUENCE_START</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
-      <span class="nx">LIGHT_SEQUENCE_SPECIAL1</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
-      <span class="nx">LIGHT_SEQUENCE_SPECIAL2</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+      <span class="nx">NORMAL</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_FLICKER</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_FAST</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_SLOW</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_HURT</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_HELLSLIME</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_NUKAGE</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_GLOW</span><span class="o">:</span> <span class="mf">8</span><span class="p">,</span>
+      <span class="nx">SECRET</span><span class="o">:</span> <span class="mf">9</span><span class="p">,</span>
+      <span class="nx">D_SECTOR_DOOR_CLOSE_IN_30</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_END</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_SLOW_SYNC</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_FAST_SYNC</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+      <span class="nx">D_SECTOR_DOOR_RAISE_IN_5_MINS</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+      <span class="nx">D_FRICTION_LOW</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_SUPER_HELLSLIME</span><span class="o">:</span> <span class="mf">16</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_FIRE_FLICKER</span><span class="o">:</span> <span class="mf">17</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_LAVA_WIMPY</span><span class="o">:</span> <span class="mf">18</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_LAVA_HEFTY</span><span class="o">:</span> <span class="mf">19</span><span class="p">,</span>
+      <span class="nx">D_SCROLL_EAST_LAVA_DAMAGE</span><span class="o">:</span> <span class="mf">20</span><span class="p">,</span>
+      <span class="nx">LIGHT_PHASED</span><span class="o">:</span> <span class="mf">21</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_START</span><span class="o">:</span> <span class="mf">22</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_SPECIAL1</span><span class="o">:</span> <span class="mf">23</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_SPECIAL2</span><span class="o">:</span> <span class="mf">24</span><span class="p">,</span>
 
-      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
-      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FLICKER&quot;</span><span class="p">,</span>
-      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST&quot;</span><span class="p">,</span>
-      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW&quot;</span><span class="p">,</span>
-      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_HURT&quot;</span><span class="p">,</span>
-      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_HELLSLIME&quot;</span><span class="p">,</span>
-      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_NUKAGE&quot;</span><span class="p">,</span>
-      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_GLOW&quot;</span><span class="p">,</span>
-      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;SECRET&quot;</span><span class="p">,</span>
-      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_CLOSE_IN_30&quot;</span><span class="p">,</span>
-      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_END&quot;</span><span class="p">,</span>
-      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW_SYNC&quot;</span><span class="p">,</span>
-      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST_SYNC&quot;</span><span class="p">,</span>
-      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_RAISE_IN_5_MINS&quot;</span><span class="p">,</span>
-      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;D_FRICTION_LOW&quot;</span><span class="p">,</span>
-      <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_SUPER_HELLSLIME&quot;</span><span class="p">,</span>
-      <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FIRE_FLICKER&quot;</span><span class="p">,</span>
-      <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_WIMPY&quot;</span><span class="p">,</span>
-      <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_HEFTY&quot;</span><span class="p">,</span>
-      <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;D_SCROLL_EAST_LAVA_DAMAGE&quot;</span><span class="p">,</span>
-      <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;LIGHT_PHASED&quot;</span><span class="p">,</span>
-      <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_START&quot;</span><span class="p">,</span>
-      <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL1&quot;</span><span class="p">,</span>
-      <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL2&quot;</span><span class="p">,</span>
+      <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+      <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FLICKER&quot;</span><span class="p">,</span>
+      <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST&quot;</span><span class="p">,</span>
+      <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW&quot;</span><span class="p">,</span>
+      <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_HURT&quot;</span><span class="p">,</span>
+      <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_HELLSLIME&quot;</span><span class="p">,</span>
+      <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_NUKAGE&quot;</span><span class="p">,</span>
+      <span class="mf">8</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_GLOW&quot;</span><span class="p">,</span>
+      <span class="mf">9</span><span class="o">:</span> <span class="s2">&quot;SECRET&quot;</span><span class="p">,</span>
+      <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_CLOSE_IN_30&quot;</span><span class="p">,</span>
+      <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_END&quot;</span><span class="p">,</span>
+      <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW_SYNC&quot;</span><span class="p">,</span>
+      <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST_SYNC&quot;</span><span class="p">,</span>
+      <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_RAISE_IN_5_MINS&quot;</span><span class="p">,</span>
+      <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;D_FRICTION_LOW&quot;</span><span class="p">,</span>
+      <span class="mf">16</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_SUPER_HELLSLIME&quot;</span><span class="p">,</span>
+      <span class="mf">17</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FIRE_FLICKER&quot;</span><span class="p">,</span>
+      <span class="mf">18</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_WIMPY&quot;</span><span class="p">,</span>
+      <span class="mf">19</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_HEFTY&quot;</span><span class="p">,</span>
+      <span class="mf">20</span><span class="o">:</span> <span class="s2">&quot;D_SCROLL_EAST_LAVA_DAMAGE&quot;</span><span class="p">,</span>
+      <span class="mf">21</span><span class="o">:</span> <span class="s2">&quot;LIGHT_PHASED&quot;</span><span class="p">,</span>
+      <span class="mf">22</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_START&quot;</span><span class="p">,</span>
+      <span class="mf">23</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL1&quot;</span><span class="p">,</span>
+      <span class="mf">24</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL2&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">Sector</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -611,8 +611,8 @@ section#format-index .row {
     <span class="nx">Sector</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">floorZ</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">ceilZ</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">floorFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">ceilFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">floorFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ceilFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">light</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">specialType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
@@ -642,7 +642,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Vertexes</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vertex</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -663,9 +663,9 @@ section#format-index .row {
     <span class="nx">Sidedef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">offsetX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">offsetY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">upperTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">lowerTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">normalTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">upperTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lowerTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">normalTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">sectorId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
     <span class="p">}</span>
 
@@ -682,7 +682,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Things</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Thing</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -702,7 +702,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Linedefs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Linedef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -723,7 +723,7 @@ section#format-index .row {
     <span class="nx">IndexEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">8</span><span class="p">),</span> <span class="mf">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">IndexEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -800,7 +800,7 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Sidedefs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Sidedef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
@@ -824,7 +824,7 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">linedefsInBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span><span class="p">));</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">linedefsInBlock</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blocklist</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
@@ -849,14 +849,14 @@ section#format-index .row {
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">*</span> <span class="mf">2</span><span class="p">));</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span> <span class="o">=</span> <span class="p">[]</span>
-          <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
           <span class="k">do</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
             <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span> <span class="o">==</span> <span class="o">-</span><span class="mf">1</span><span class="p">));</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">;</span>
         <span class="p">}</span>
@@ -898,7 +898,7 @@ section#format-index .row {
       <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">indexOffset</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IndexEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
@@ -927,7 +927,7 @@ section#format-index .row {
 
     <footer id="main-footer">
         <div class="container">
-            &copy; 2015-2020 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
 
             <h3>Contacts</h3>
 

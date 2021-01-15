@@ -575,7 +575,7 @@ public:
     uint8_t mfg_week() const { return m_mfg_week; }
 
     /**
-     * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+     * Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.
      */
     uint8_t mfg_year_mod() const { return m_mfg_year_mod; }
 
@@ -601,7 +601,7 @@ public:
     uint8_t screen_size_v() const { return m_screen_size_v; }
 
     /**
-     * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+     * Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)
      */
     uint8_t gamma_mod() const { return m_gamma_mod; }
     uint8_t features_flags() const { return m_features_flags; }

@@ -153,7 +153,7 @@ proc read*(_: typedesc[Edid], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.mfgWeek = mfgWeekExpr
 
   ##[
-  Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+  Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.
   ]##
   let mfgYearModExpr = this.io.readU1()
   this.mfgYearMod = mfgYearModExpr
@@ -185,7 +185,7 @@ proc read*(_: typedesc[Edid], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.screenSizeV = screenSizeVExpr
 
   ##[
-  Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+  Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)
   ]##
   let gammaModExpr = this.io.readU1()
   this.gammaMod = gammaModExpr

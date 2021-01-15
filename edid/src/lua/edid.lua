@@ -99,7 +99,7 @@ end
 -- 
 -- Week of manufacture. Week numbering is not consistent between manufacturers.
 -- 
--- Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+-- Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.
 -- 
 -- EDID version, usually 1 (for 1.3).
 -- 
@@ -109,7 +109,7 @@ end
 -- 
 -- Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector).
 -- 
--- Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54).
+-- Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54).
 -- 
 -- Phosphor or filter chromaticity structure, which provides info on colorimetry and white point.
 -- See also: Standard, section 3.7
