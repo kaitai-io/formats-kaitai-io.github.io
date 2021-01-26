@@ -129,7 +129,7 @@ to do this:</p>
 </li>
 <li><code>application/zlib</code>, you can use
 <ul>
-<li><code>openssl zlib -d -in input.nbt.zlib -out output.nbt</code> (does not work on most systems)</li>
+<li><code>openssl zlib -d -in input-zlib.nbt -out output.nbt</code> (does not work on most systems)</li>
 <li><code>python3 -c &quot;import sys, zlib; sys.stdout.buffer.write( zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt</code></li>
 </ul>
 </li>
@@ -143,19 +143,18 @@ a <a href="https://wiki.vg/NBT#Bedrock_edition">Bedrock edition</a> NBT format,
 which uses little-endian encoding and has a few other differences, but it isn't
 as popular as the Java edition format.</p>
 <p><strong>Implementation note:</strong> strings in <code>TAG_String</code> are incorrectly decoded with
-standard UTF-8, while they are encoded in <a href="https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8"><strong>Modified UTF-8</strong></a> (MUTF-8). That's because MUTF-8 is usually not supported natively by most target
+standard UTF-8, while they are encoded in <a href="https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8"><strong>Modified UTF-8</strong></a> (MUTF-8). That's because MUTF-8 is not supported natively by most target
 languages, and thus one must use external libraries to achieve a fully-compliant
 decoder. But decoding in standard UTF-8 is still better than nothing, and
 it usually works fine.</p>
-<p>All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are
+<p>All Unicode code points with incompatible representations in MUTF-8 and UTF-8 are
 U+0000 (<em>NUL</em>), U+D800-U+DFFF (<em>High</em> and <em>Low Surrogates</em>) and U+10000-U+10FFFF
-(<em>Supplementary</em> Planes; includes e.g. emoticons, pictograms).
+(all <em>Supplementary</em> Planes; includes e.g. emoticons, pictograms).
 A <em>MUTF-8</em>-encoded string containing these code points cannot be successfully
 decoded as UTF-8. The behavior in this case depends on the target language -
 usually an exception is thrown, or the bytes that are not valid UTF-8
 are replaced or ignored.</p>
-<hr />
-<p>Sample files:</p>
+<p><strong>Sample files:</strong></p>
 <ul>
 <li><a href="https://wiki.vg/NBT#Download">https://wiki.vg/NBT#Download</a></li>
 <li><a href="https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat">https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat</a></li>
@@ -426,7 +425,7 @@ are replaced or ignored.</p>
     <span class="o">*</span> <span class="p">`</span><span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s">&quot;import sys, gzip; sys.stdout.buffer.write(</span>
       <span class="n">gzip</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="n">buffer</span><span class="p">.</span><span class="n">read</span><span class="p">())</span> <span class="p">)</span><span class="s">&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>
   <span class="o">*</span> <span class="p">`</span><span class="n">application</span><span class="o">/</span><span class="n">zlib</span><span class="p">`,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">use</span>
-    <span class="o">*</span> <span class="p">`</span><span class="n">openssl</span> <span class="n">zlib</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="ow">in</span> <span class="n">input</span><span class="p">.</span><span class="n">nbt</span><span class="p">.</span><span class="n">zlib</span> <span class="o">-</span><span class="k">out</span> <span class="n">output</span><span class="p">.</span><span class="n">nbt</span><span class="p">`</span> <span class="p">(</span><span class="n">does</span> <span class="ow">not</span> <span class="n">work</span> <span class="n">on</span> <span class="n">most</span> <span class="n">systems</span><span class="p">)</span>
+    <span class="o">*</span> <span class="p">`</span><span class="n">openssl</span> <span class="n">zlib</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="ow">in</span> <span class="n">input</span><span class="o">-</span><span class="n">zlib</span><span class="p">.</span><span class="n">nbt</span> <span class="o">-</span><span class="k">out</span> <span class="n">output</span><span class="p">.</span><span class="n">nbt</span><span class="p">`</span> <span class="p">(</span><span class="n">does</span> <span class="ow">not</span> <span class="n">work</span> <span class="n">on</span> <span class="n">most</span> <span class="n">systems</span><span class="p">)</span>
     <span class="o">*</span> <span class="p">`</span><span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s">&quot;import sys, zlib; sys.stdout.buffer.write(</span>
       <span class="n">zlib</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="n">buffer</span><span class="p">.</span><span class="n">read</span><span class="p">())</span> <span class="p">)</span><span class="s">&quot; &lt; input-zlib.nbt &gt; output.nbt`</span>
   <span class="o">*</span> <span class="n">something</span> <span class="k">else</span> <span class="p">(</span><span class="n">especially</span> <span class="p">`</span><span class="n">image</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">pcx</span><span class="p">`</span> <span class="ow">and</span> <span class="p">`</span><span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span><span class="p">`),</span>
@@ -443,22 +442,20 @@ are replaced or ignored.</p>
 <span class="o">**</span><span class="n">Implementation</span> <span class="n">note</span><span class="p">:</span><span class="o">**</span> <span class="n">strings</span> <span class="ow">in</span> <span class="p">`</span><span class="n">TAG_String</span><span class="p">`</span> <span class="n">are</span> <span class="n">incorrectly</span> <span class="n">decoded</span> <span class="n">with</span>
 <span class="n">standard</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="k">while</span> <span class="n">they</span> <span class="n">are</span> <span class="n">encoded</span> <span class="ow">in</span> <span class="o">[**</span><span class="n">Modified</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="o">**]</span><span class="p">(</span>
   <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="p">.</span><span class="n">oracle</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">javase</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">io</span><span class="o">/</span><span class="n">DataInput</span><span class="p">.</span><span class="n">html</span><span class="c">#modified-utf-8</span>
-<span class="p">)</span> <span class="p">(</span><span class="n">MUTF</span><span class="o">-</span><span class="mi">8</span><span class="p">).</span> <span class="n">That</span><span class="sc">&#39;s because MUTF-8 is usually not supported natively by most target</span>
+<span class="p">)</span> <span class="p">(</span><span class="n">MUTF</span><span class="o">-</span><span class="mi">8</span><span class="p">).</span> <span class="n">That</span><span class="sc">&#39;s because MUTF-8 is not supported natively by most target</span>
 <span class="n">languages</span><span class="p">,</span> <span class="ow">and</span> <span class="n">thus</span> <span class="n">one</span> <span class="n">must</span> <span class="n">use</span> <span class="n">external</span> <span class="n">libraries</span> <span class="n">to</span> <span class="n">achieve</span> <span class="n">a</span> <span class="n">fully</span><span class="o">-</span><span class="n">compliant</span>
 <span class="n">decoder</span><span class="p">.</span> <span class="n">But</span> <span class="n">decoding</span> <span class="ow">in</span> <span class="n">standard</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="ow">is</span> <span class="n">still</span> <span class="n">better</span> <span class="n">than</span> <span class="n">nothing</span><span class="p">,</span> <span class="ow">and</span>
 <span class="n">it</span> <span class="n">usually</span> <span class="n">works</span> <span class="n">fine</span><span class="p">.</span>
 
-<span class="n">All</span> <span class="n">Unicode</span> <span class="n">codepoints</span> <span class="n">with</span> <span class="n">incompatible</span> <span class="n">representations</span> <span class="ow">in</span> <span class="n">MUTF</span><span class="o">-</span><span class="mi">8</span> <span class="ow">and</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">are</span>
+<span class="n">All</span> <span class="n">Unicode</span> <span class="n">code</span> <span class="n">points</span> <span class="n">with</span> <span class="n">incompatible</span> <span class="n">representations</span> <span class="ow">in</span> <span class="n">MUTF</span><span class="o">-</span><span class="mi">8</span> <span class="ow">and</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">are</span>
 <span class="n">U</span><span class="o">+</span><span class="mi">0000</span> <span class="p">(</span><span class="err">_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
-<span class="p">(</span><span class="err">_Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
+<span class="p">(</span><span class="n">all</span> <span class="err">_Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
 <span class="n">A</span> <span class="err">_MUTF-8_-encoded string containing these code points cannot be successfully</span>
 <span class="n">decoded</span> <span class="k">as</span> <span class="n">UTF</span><span class="o">-</span><span class="mf">8.</span> <span class="n">The</span> <span class="n">behavior</span> <span class="ow">in</span> <span class="n">this</span> <span class="k">case</span> <span class="n">depends</span> <span class="n">on</span> <span class="n">the</span> <span class="n">target</span> <span class="n">language</span> <span class="o">-</span>
 <span class="n">usually</span> <span class="n">an</span> <span class="n">exception</span> <span class="ow">is</span> <span class="n">thrown</span><span class="p">,</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">bytes</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">valid</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
 <span class="n">are</span> <span class="n">replaced</span> <span class="ow">or</span> <span class="n">ignored</span><span class="p">.</span>
 
-<span class="o">---</span>
-
-<span class="n">Sample</span> <span class="n">files</span><span class="p">:</span>
+<span class="o">**</span><span class="n">Sample</span> <span class="n">files</span><span class="p">:</span><span class="o">**</span>
 
   <span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">wiki</span><span class="p">.</span><span class="n">vg</span><span class="o">/</span><span class="n">NBT</span><span class="c">#Download&gt;</span>
   <span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">twoolie</span><span class="o">/</span><span class="n">NBT</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">f9e892e</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">world_test</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">scoreboard</span><span class="p">.</span><span class="n">dat</span><span class="o">&gt;</span>
